@@ -31,7 +31,7 @@ getFeaturedCollections().then(collections => {
     index: String(i + 1).padStart(2, '0'),
     scene: col.category ?? 'Work',
     title: col.title,
-    subtitle: col.category ?? '',
+    subtitle: col.subtitle ?? col.category ?? '',
     img: col.coverImage ? imageUrl(col.coverImage, 1200) : '',
     url: col.url ?? '#',
     linkType: col.linkType ?? 'external-gallery',

@@ -64,6 +64,12 @@ export const galleryCollection = defineType({
       initialValue: false,
     }),
     defineField({
+      name: 'subtitle',
+      title: 'Subtitle',
+      type: 'string',
+      description: 'Location & year shown on the reel card — e.g. "Maryland · 2024"',
+    }),
+    defineField({
       name: 'order',
       title: 'Display Order',
       type: 'number',

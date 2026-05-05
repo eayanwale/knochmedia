@@ -6,13 +6,14 @@ import ScrollTrigger from 'gsap/ScrollTrigger';
 
 gsap.registerPlugin(ScrollTrigger);
 
-// Static card data — replaced by Sanity fetch in KNOCH-025
+// Static fallback — mirrors the 3 featured Sanity galleryCollection documents.
+// Sanity is the source of truth; this only renders if the API fetch returns empty.
 const CARDS = [
   {
     index: '01',
     scene: 'Wedding',
-    title: 'Fayo &amp; Femi',
-    subtitle: 'Maryland · 2024',
+    title: 'Fayo &amp; Femi\'s Introduction',
+    subtitle: 'Wedding',
     img: '/assets/portfolio/cover-fayo-femi.jpg',
     url: 'https://knoch.pic-time.com/-fayofemi/gallery',
     linkType: 'external-gallery',
@@ -20,29 +21,20 @@ const CARDS = [
   {
     index: '02',
     scene: 'Wedding',
-    title: 'Shawn &amp; Bekki',
-    subtitle: 'Maryland · 2024',
-    img: '/assets/portfolio/cover-shawn-bekki.jpg',
-    url: 'https://knoch.pic-time.com/-shawnbekki/gallery',
-    linkType: 'external-gallery',
-  },
-  {
-    index: '03',
-    scene: 'Wedding',
-    title: 'Alex &amp; Morgan',
-    subtitle: 'Maryland · 2024',
+    title: 'Alex &amp; Morgan\'s Wedding',
+    subtitle: 'Wedding',
     img: '/assets/portfolio/cover-alex-morgan.jpg',
     url: 'https://knoch.pic-time.com/-alexmorgan/gallery',
     linkType: 'external-gallery',
   },
   {
-    index: '04',
-    scene: 'Sports &amp; Events',
-    title: 'The Woodsmen',
-    subtitle: 'Garrett Co. · 2024',
-    img: '/assets/portfolio/cover-woodsmen.jpg',
-    url: '/gallery/woodsmen/',
-    linkType: 'internal-page',
+    index: '03',
+    scene: 'Wedding',
+    title: 'Shawn &amp; Bekki\'s Wedding',
+    subtitle: 'Wedding',
+    img: '/assets/portfolio/cover-shawn-bekki.jpg',
+    url: 'https://knoch.pic-time.com/-shawnbekki/gallery',
+    linkType: 'external-gallery',
   },
 ];
 
