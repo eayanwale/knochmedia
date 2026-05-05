@@ -97,7 +97,7 @@
 .hero-bg {
   position: absolute;
   inset: 0;
-  background-image: url('/assets/hero/hero-01.jpg');
+  background-image: url('/assets/reel/reel-01.png');
   background-size: cover;
   background-position: center;
   filter: brightness(0.45) grayscale(0.4) contrast(1.15);
