@@ -1,5 +1,12 @@
 # Photography Portfolio – Motion Concept
 
+## Quick Links
+
+| Page | Preview |
+|------|---------|
+| Dashboard | [dashboard.html](https://raw.githack.com/eayanwale/knochmedia/dev/dashboard.html) |
+| Portfolio | [src/index.html](https://raw.githack.com/eayanwale/knochmedia/dev/src/index.html) |
+
 An experimental, story-driven photography portfolio built with GSAP and ScrollTrigger. This project explores how motion, typography, and layout can work together to create a cinematic, immersive web experience rather than a traditional image gallery.
 
 ## Overview
