@@ -1,6 +1,6 @@
 # KNOCH-005 — Hero Section: Loader + Reveal Sequence
 
-## Status: TODO
+## Status: MERGED TO DEV
 ## Priority: P0 (critical)
 ## Epic: EPIC-002 — Homepage
 
