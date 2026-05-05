@@ -20,8 +20,8 @@ Thumbs.db
 # Git internal (already tracked by git itself)
 .git
 
-# Claude Code workspace config (local to each dev's machine)
-.claude/
+# Claude Code local-only machine settings (not shared)
+.claude/settings.local.json
 
 # Legacy / removed files
 claude-code-setup-guide.md
