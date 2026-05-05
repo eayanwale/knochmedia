@@ -1,7 +1,7 @@
 # Knoch Media — Ticket Summary
 
 > **Living document.** Updated whenever tickets are created, modified, split, or closed.  
-> Last updated: 2026-05-05 | Total tickets: 30 | Open: 15 | In progress: 0 | In review: 1 | Done: 11 | Deferred: 3
+> Last updated: 2026-05-05 | Total tickets: 30 | Open: 14 | In progress: 0 | In review: 1 | Done: 12 | Deferred: 3
 
 ---
 
@@ -59,8 +59,8 @@ Build top-to-bottom in scroll order. Wire each section to Sanity immediately aft
 | [KNOCH-005](tickets/KNOCH-005.md) | Hero — Film Counter Loader + Reveal Sequence | `✅` | `feature/KNOCH-005-hero-section` | QA PASSED — merged to test. Hero images stay static. |
 | [KNOCH-006](tickets/KNOCH-006.md) | Interlude — Word-by-Word Scroll Reveal | `✅` | `feature/KNOCH-006-interlude-manifesto` | QA PASSED — merged to test |
 | [KNOCH-007](tickets/KNOCH-007.md) | Horizontal Reel — Pinned Scroll Carousel | `✅` | `feature/KNOCH-007-horizontal-reel` | Sanity-driven (3 featured collections); cinematic full-greyscale filter; inner parallax; KNOCH-025 included |
-| [KNOCH-008](tickets/KNOCH-008.md) | Pinned Frame — Parallax + Animated Counters | `🔵` | `feature/KNOCH-008-pinned-frame` | Studio stats section |
-| [KNOCH-009](tickets/KNOCH-009.md) | Testimonial Pull-Quote Section | `⬜` | — | Scroll-stagger reveal → wire via KNOCH-024 |
+| [KNOCH-008](tickets/KNOCH-008.md) | Pinned Frame — Parallax + Animated Counters | `✅` | `feature/KNOCH-008-pinned-frame` | QA PASSED — merged to test |
+| [KNOCH-009](tickets/KNOCH-009.md) | Testimonial Pull-Quote Section | `🔵` | `feature/KNOCH-009-testimonial-section` | Scroll-stagger reveal → wire via KNOCH-024 |
 | [KNOCH-010](tickets/KNOCH-010.md) | Portfolio Grid — Asymmetric 12-Col Archive | `⬜` | — | 7 tiles, contact-sheet layout |
 
 ---
@@ -176,6 +176,95 @@ All modifications to this document and ticket files are logged here. Tester agen
 
 ---
 
+### 2026-05-05 — KNOCH-009 PR opened — IN REVIEW
+
+**Action:** PR #12 opened dev → test
+**Tickets affected:** KNOCH-009
+**Reason:** Builder agent completed testimonial pull-quote section; PR open for tester/code review
+**Changes:**
+- KNOCH-009: Status changed MERGED TO DEV → IN REVIEW
+- PR #12 opened: dev → test at https://github.com/eayanwale/knochmedia/pull/12
+- Files delivered:
+  - `src/css/testimonial.css` — section layout (14rem 8vw padding, 1px border-top), quote mark (8rem Fraunces amber), pull-quote (clamp 28–56px, 22ch max-width, em amber italic), attribution (10px mono, 0.3em LS, muted), mobile ≤800px, reduced-motion overrides
+  - `src/js/testimonial.js` — GSAP stagger from y:40 opacity:0, duration:1.2, stagger:0.15, expo.out, ScrollTrigger top 75%, once:true, prefers-reduced-motion guard
+  - `src/index.html` — testimonial section inserted between #frame and #cta; testimonial.css linked in head
+  - `src/js/main.js` — initTestimonial() import and call after initFrame()
+- Build: 27 modules, 14.18 kB CSS / 3.54 kB gz, 142.07 kB JS / 52.77 kB gz, 89ms
+- Header counts updated: In progress 1→0, In review 0→1
+**Requested by:** Builder agent
+
+---
+
+### 2026-05-05 — KNOCH-009 implementation started — IN PROGRESS
+
+**Action:** Feature branch created; implementation in progress
+**Tickets affected:** KNOCH-009
+**Reason:** Builder agent starting testimonial pull-quote section implementation
+**Changes:**
+- KNOCH-009: Status changed TODO → IN PROGRESS
+- Branch `feature/KNOCH-009-testimonial-section` created from dev
+- Header counts updated: Open 15→14, In progress 0→1
+**Requested by:** Builder agent
+
+---
+
+### 2026-05-05 — KNOCH-008 PR opened — IN REVIEW
+
+**Action:** PR #11 opened dev → test
+**Tickets affected:** KNOCH-008
+**Reason:** Builder agent completed implementation of pinned parallax + animated studio stats section
+**Changes:**
+- KNOCH-008: Status changed TODO → IN PROGRESS → MERGED TO DEV → IN REVIEW
+- Branch `feature/KNOCH-008-pinned-frame` created, implemented, merged into `dev`
+- PR #11 opened: dev → test at https://github.com/eayanwale/knochmedia/pull/11
+- Files delivered:
+  - `src/css/frame.css` — section layout, parallax bg, stat typography, grain overlay, mobile stack, reduced-motion overrides
+  - `src/js/frame.js` — GSAP parallax tween, .big headline reveal, three animated counters with toLocaleString and once:true
+  - `src/index.html` — complete #frame section markup with ARIA labels, frame.css linked in head
+  - `src/js/main.js` — initFrame() import and call after initInterlude()
+- Build: 25 modules, 13.33 kB CSS / 3.39 kB gz, 141.77 kB JS / 52.71 kB gz, 96ms
+- Header counts updated: In progress 1→0, In review 0→1
+**Requested by:** Builder agent
+
+---
+
+### 2026-05-05 — KNOCH-008 QA PASSED — merged to test
+
+**Action:** PR #11 merged (dev → test) — KNOCH-008 QA PASSED
+**Tickets affected:** KNOCH-008
+**Reason:** Tester agent verified all 13 acceptance criteria and all additional checks; build clean at 98ms
+**Changes:**
+- KNOCH-008: Status changed IN REVIEW → QA PASSED
+- PR #11 merged with full merge commit; branch `feature/KNOCH-008-pinned-frame` deleted
+- All test plan checkboxes ticked in PR body
+- Test report written: `docs/test-reports/KNOCH-008-test-report.md`
+- Header counts updated: In review 1→0, Done 11→12
+- Non-blocking note: headline/counter tweens not behind `prefers-reduced-motion` guard (parallax-only guard meets AC; full motion guard is KNOCH-021 scope)
+**Completed by:** Tester Agent
+
+---
+
+### 2026-05-05 — KNOCH-007 + KNOCH-022/023/025 DONE — reel + CMS layer complete
+
+**Action:** KNOCH-007 implemented and merged to test; KNOCH-022/023/025 completed in same session
+**Tickets affected:** KNOCH-007, KNOCH-022, KNOCH-023, KNOCH-025, KNOCH-026 (deferred)
+**Changes:**
+- KNOCH-007: ⬜ → ✅ Done. Branch `feature/KNOCH-007-horizontal-reel` merged to test.
+  - Horizontal pinned carousel, GSAP ScrollTrigger scrub:0.8, inner parallax via containerAnimation
+  - Full cinematic greyscale filter (grayscale(1)) at rest; colour reveals on hover
+  - Film-notch L-bracket corners, FRAME label, meta slide-up on hover
+  - Mobile: CSS snap scroll replaces GSAP pin at ≤800px
+  - Studio files from CMS branch cherry-picked onto this branch and committed
+- KNOCH-022: 🔵 → ✅ Done. Sanity Studio running locally and deployed; all schemas live; 5 testimonials, 7 gallery collections, services entered.
+- KNOCH-023: 🔵 → ✅ Done. `src/js/sanity.js` hardened with optional chaining, null guards, console logging for debug; `imageUrl()` helper; meta tags in index.html.
+- KNOCH-025: ⬜ → ✅ Done (bundled with KNOCH-007). `main.js` fetches `getFeaturedCollections()` → maps to card shape → `initReel()`. Static CARDS fallback uses Sanity CDN URLs directly. `subtitle` field added to `galleryCollection` schema (Studio: fill in "Maryland · 2024" style labels per collection).
+- KNOCH-026: ⬜ → ⏸ Deferred. Hero images are LCP-critical and design-tied — static files are correct. Sanity CDN adds latency with no benefit here.
+- KNOCH-027: Added to CMS table (was missing). Open — blocked until KNOCH-013.
+- Stat counts: In progress 2→0, Done 7→11, Open 19→16, Deferred 2→3
+**Requested by:** Enoch / Builder agent
+
+---
+
 ### 2026-05-05 — KNOCH-006 QA PASSED — re-test after fix
 
 **Action:** Re-test by Tester Agent. All 15 ACs pass. PR #10 merged to test.
@@ -208,47 +297,6 @@ All modifications to this document and ticket files are logged here. Tester agen
 **Passing checks:** CSS layout/label/blockquote/signature/word/mobile/reduced-motion all correct. GSAP parameters correct. `interlude.css` linked in head. `initInterlude()` imported+called in main.js. `.grain` class applied. Token names correct. Build clean (20 modules, 88ms).
 **Full report:** `docs/test-reports/KNOCH-006-test-report.md`
 **Completed by:** Tester Agent
-
----
-
-### 2026-05-05 — KNOCH-008 PR opened — IN REVIEW
-
-**Action:** PR #11 opened dev → test
-**Tickets affected:** KNOCH-008
-**Reason:** Builder agent completed implementation of pinned parallax + animated studio stats section
-**Changes:**
-- KNOCH-008: Status changed TODO → IN PROGRESS → MERGED TO DEV → IN REVIEW
-- Branch `feature/KNOCH-008-pinned-frame` created, implemented, merged into `dev`
-- PR #11 opened: dev → test at https://github.com/eayanwale/knochmedia/pull/11
-- Files delivered:
-  - `src/css/frame.css` — section layout, parallax bg, stat typography, grain overlay, mobile stack, reduced-motion overrides
-  - `src/js/frame.js` — GSAP parallax tween, .big headline reveal, three animated counters with toLocaleString and once:true
-  - `src/index.html` — complete #frame section markup with ARIA labels, frame.css linked in head
-  - `src/js/main.js` — initFrame() import and call after initInterlude()
-- Build: 25 modules, 13.33 kB CSS / 3.39 kB gz, 141.77 kB JS / 52.71 kB gz, 96ms
-- Header counts updated: In progress 1→0, In review 0→1
-**Requested by:** Builder agent
-
----
-
-### 2026-05-05 — KNOCH-007 + KNOCH-022/023/025 DONE — reel + CMS layer complete
-
-**Action:** KNOCH-007 implemented and merged to test; KNOCH-022/023/025 completed in same session
-**Tickets affected:** KNOCH-007, KNOCH-022, KNOCH-023, KNOCH-025, KNOCH-026 (deferred)
-**Changes:**
-- KNOCH-007: ⬜ → ✅ Done. Branch `feature/KNOCH-007-horizontal-reel` merged to test.
-  - Horizontal pinned carousel, GSAP ScrollTrigger scrub:0.8, inner parallax via containerAnimation
-  - Full cinematic greyscale filter (grayscale(1)) at rest; colour reveals on hover
-  - Film-notch L-bracket corners, FRAME label, meta slide-up on hover
-  - Mobile: CSS snap scroll replaces GSAP pin at ≤800px
-  - Studio files from CMS branch cherry-picked onto this branch and committed
-- KNOCH-022: 🔵 → ✅ Done. Sanity Studio running locally and deployed; all schemas live; 5 testimonials, 7 gallery collections, services entered.
-- KNOCH-023: 🔵 → ✅ Done. `src/js/sanity.js` hardened with optional chaining, null guards, console logging for debug; `imageUrl()` helper; meta tags in index.html.
-- KNOCH-025: ⬜ → ✅ Done (bundled with KNOCH-007). `main.js` fetches `getFeaturedCollections()` → maps to card shape → `initReel()`. Static CARDS fallback uses Sanity CDN URLs directly. `subtitle` field added to `galleryCollection` schema (Studio: fill in "Maryland · 2024" style labels per collection).
-- KNOCH-026: ⬜ → ⏸ Deferred. Hero images are LCP-critical and design-tied — static files are correct. Sanity CDN adds latency with no benefit here.
-- KNOCH-027: Added to CMS table (was missing). Open — blocked until KNOCH-013.
-- Stat counts: In progress 2→0, Done 7→11, Open 19→16, Deferred 2→3
-**Requested by:** Enoch / Builder agent
 
 ---
 
