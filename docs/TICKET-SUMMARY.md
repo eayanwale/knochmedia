@@ -1,7 +1,7 @@
 # Knoch Media — Ticket Summary
 
 > **Living document.** Updated whenever tickets are created, modified, split, or closed.  
-> Last updated: 2026-05-05 | Total tickets: 21 | Open: 16 | In progress: 0 | In review: 0 | Done: 5
+> Last updated: 2026-05-05 | Total tickets: 30 | Open: 19 | In progress: 2 | In review: 0 | Done: 7 | Deferred: 2
 
 ---
 
@@ -32,17 +32,33 @@ These must be completed before any other ticket can be built. No component shoul
 
 ---
 
-## Phase 2 — Homepage Sections
+## CMS — Content Layer (Sanity)
 
-Build top-to-bottom in scroll order. Test the complete homepage scroll experience before moving to Phase 3.
+KNOCH-022 and KNOCH-023 are infrastructure — implement these first. The wiring tickets (024–026) slot in immediately after their dependent section is built. Do not start 024 before 009, or 025 before 007. KNOCH-026 can start now (005 is done).
 
 | ID | Title | Status | Branch | Notes |
 |----|-------|--------|--------|-------|
-| [KNOCH-005](tickets/KNOCH-005.md) | Hero — Film Counter Loader + Reveal Sequence | `⬜` | — | LCP element — preload hero image |
-| [KNOCH-006](tickets/KNOCH-006.md) | Interlude — Word-by-Word Scroll Reveal | `⬜` | — | Manifesto quote section |
-| [KNOCH-007](tickets/KNOCH-007.md) | Horizontal Reel — Pinned Scroll Carousel | `⬜` | — | Most complex interaction; needs KNOCH-016 |
+| [KNOCH-022](tickets/KNOCH-022.md) | Sanity Project Init + Schema Definitions | `🔵` | — | Studio set up, schemas deployed, data entered |
+| [KNOCH-023](tickets/KNOCH-023.md) | JS Content-Fetch Layer | `🔵` | — | `src/js/sanity.js` built; meta tags in index.html |
+| [KNOCH-024](tickets/KNOCH-024.md) | Wire Testimonials to Sanity | `⬜` | — | After KNOCH-009 is built |
+| [KNOCH-025](tickets/KNOCH-025.md) | Wire Gallery Reel to Sanity | `⬜` | — | After KNOCH-007 is built |
+| [KNOCH-028](tickets/KNOCH-028.md) | Wire Services Page to Sanity | `⬜` | — | After services page is built |
+| [KNOCH-029](tickets/KNOCH-029.md) | Blog Listing Page | `⏸` | — | Deferred — blog schema needs redesign (dynamic related posts, YouTube + Instagram content types) |
+| [KNOCH-030](tickets/KNOCH-030.md) | Blog Post Detail Page | `⏸` | — | Deferred — blocked by KNOCH-029 redesign |
+
+---
+
+## Phase 2 — Homepage Sections
+
+Build top-to-bottom in scroll order. Wire each section to Sanity immediately after it is built (see CMS section above). Test the complete homepage scroll experience before moving to Phase 3.
+
+| ID | Title | Status | Branch | Notes |
+|----|-------|--------|--------|-------|
+| [KNOCH-005](tickets/KNOCH-005.md) | Hero — Film Counter Loader + Reveal Sequence | `✅` | `feature/KNOCH-005-hero-section` | QA PASSED — merged to test. Hero images stay static. |
+| [KNOCH-006](tickets/KNOCH-006.md) | Interlude — Word-by-Word Scroll Reveal | `✅` | `feature/KNOCH-006-interlude-manifesto` | QA PASSED — merged to test |
+| [KNOCH-007](tickets/KNOCH-007.md) | Horizontal Reel — Pinned Scroll Carousel | `⬜` | — | Most complex interaction; needs KNOCH-016 → wire via KNOCH-025 |
 | [KNOCH-008](tickets/KNOCH-008.md) | Pinned Frame — Parallax + Animated Counters | `⬜` | — | Studio stats section |
-| [KNOCH-009](tickets/KNOCH-009.md) | Testimonial Pull-Quote Section | `⬜` | — | Scroll-stagger reveal |
+| [KNOCH-009](tickets/KNOCH-009.md) | Testimonial Pull-Quote Section | `⬜` | — | Scroll-stagger reveal → wire via KNOCH-024 |
 | [KNOCH-010](tickets/KNOCH-010.md) | Portfolio Grid — Asymmetric 12-Col Archive | `⬜` | — | 7 tiles, contact-sheet layout |
 
 ---
@@ -90,22 +106,30 @@ Run in this exact order: perf first (changes markup), then mobile (tests perf ch
      ├─ 003 (nav)
      ├─ 004 (cursor)
      ├─ 016 (Lenis)
-     │   └─ 007 (reel) ─────────────────┐
-     ├─ 005 (hero)                       │
-     │   └─ 006 (interlude)              │
-     │       └─ [007] ──── 008 ── 009 ──┤
-     │                                   │
-     │                          010 (grid)┤
-     │                          011      │
-     │                          012 ─────┤
-     │                          013      │
-     │                          014      │
-     │                          015      │
-     │                                   │
-     ├─ 017 (YouTube) ── links into 012 ─┘
+     │   └─ 007 (reel) ──────────────────────────┐
+     ├─ 005 (hero) ✅                              │
+     │   └─ 006 (interlude)                       │
+     │       └─ [007] ──── 008 ── 009 ────────────┤
+     │                                            │
+     │                               010 (grid)   │
+     │                               011          │
+     │                               012 ─────────┤
+     │                               013          │
+     │                               014          │
+     │                               015          │
+     │                                            │
+     ├─ 017 (YouTube) ── links into 012 ──────────┘
      ├─ 018 (Instagram)
      │
      └─ 019 (perf) → 020 (mobile) → 021 (a11y)
+
+CMS layer (cuts across phases — wire each section after it is built):
+
+022 (Sanity init) 🔵
+ └─ 023 (fetch layer) 🔵
+     ├─ 024 (wire testimonials) ── after 009
+     ├─ 025 (wire reel)         ── after 007
+     └─ 028 (wire services)     ── after services page built
 ```
 
 ---
@@ -119,6 +143,9 @@ Run in this exact order: perf first (changes markup), then mobile (tests perf ch
 | Project detail | `src/project.html` | 012, 017 |
 | About | `src/about.html` | 013, 018 |
 | Contact / Booking | `src/contact.html` | 014 |
+| Blog listing | `src/blog.html` | 029 |
+| Blog post detail | `src/blog-post.html` | 030 |
+| Internal gallery | `src/gallery/[name].html` | 012 (Jojo, Woodsmen) |
 
 ---
 
@@ -142,6 +169,127 @@ Run in this exact order: perf first (changes markup), then mobile (tests perf ch
 ## Changelog
 
 All modifications to this document and ticket files are logged here. Tester agent and code review feedback should be recorded as entries.
+
+---
+
+### 2026-05-05 — KNOCH-006 QA PASSED — re-test after fix
+
+**Action:** Re-test by Tester Agent. All 15 ACs pass. PR #10 merged to test.
+**Tickets affected:** KNOCH-006
+**Reason:** Builder applied fix `fix(interlude): retarget word-splitter from blockquote to inner <p> (KNOCH-006)`. The blocker from the first QA run is resolved — `const para = quote.querySelector('p') ?? quote` now correctly targets the `<p>` inside the blockquote, and all `appendChild`/`querySelectorAll` calls operate on `para`. Word-split produces a non-empty NodeList; GSAP ScrollTrigger animates all words.
+**Changes:**
+- KNOCH-006: Status changed NEEDS FIXES → QA PASSED
+- PR #10: Merged dev → test
+- Test report: Result updated to PASSED; Re-test section appended
+- Dashboard badge: Needs Fixes → QA Passed (green); PR #10 removed from Open PRs
+- Stat counts: Needs fixes 1→0, Done 6→7
+**Completed by:** Tester Agent
+
+---
+
+### 2026-05-05 — KNOCH-006 QA FAILED — NEEDS FIXES
+
+**Action:** QA run by Tester Agent. 1 BLOCKER found. PR #10 blocked.
+**Tickets affected:** KNOCH-006
+**Reason:** Word-splitter JS targets `<blockquote>` childNodes instead of inner `<p>` childNodes — zero `.word` spans are created, the scroll reveal does not function.
+**Changes:**
+- KNOCH-006: Status changed IN REVIEW → NEEDS FIXES
+- PR #10: Changes requested (comment posted — GitHub API prevented formal review on own PR)
+- Dashboard badge: In Review → Needs Fixes
+- Stat counts: In review 1→0, Needs fixes 0→1
+**Blockers:**
+1. **BLOCKER** — `src/js/interlude.js` line 37: `Array.from(quote.childNodes)` iterates the `<blockquote>` (whose only child is `<p>`). The `<p>` hits the `else { cloneNode(true) }` branch and is copied back unchanged. No `.word` spans are produced. Fix: use `quote.querySelector('p') ?? quote` as the split target.
+**Non-blocking issues:**
+- Redundant `w.style.opacity = '1'` in reduced-motion JS path (CSS already handles via `opacity: 1 !important`)
+**Passing checks:** CSS layout/label/blockquote/signature/word/mobile/reduced-motion all correct. GSAP parameters correct. `interlude.css` linked in head. `initInterlude()` imported+called in main.js. `.grain` class applied. Token names correct. Build clean (20 modules, 88ms).
+**Full report:** `docs/test-reports/KNOCH-006-test-report.md`
+**Completed by:** Tester Agent
+
+---
+
+### 2026-05-05 — KNOCH-022 through KNOCH-026 created — CMS integration planned
+
+**Action:** 5 new CMS tickets created; KNOCH-022 and KNOCH-023 implemented in session  
+**Tickets affected:** KNOCH-022, KNOCH-023, KNOCH-024, KNOCH-025, KNOCH-026  
+**Reason:** Adding Sanity CMS so content (testimonials, galleries, hero images) can be managed via Studio UI without code changes  
+**Changes:**
+- KNOCH-022: Created + 🔵 In progress — Sanity Studio scaffolded, all schemas deployed, 5 testimonials entered
+- KNOCH-023: Created + 🔵 In progress — `src/js/sanity.js` built, Sanity meta tags added to `index.html`
+- KNOCH-024: Created + ⬜ Open — blocked until KNOCH-009 is built
+- KNOCH-025: Created + ⬜ Open — blocked until KNOCH-007 is built
+- KNOCH-026: Created + ⬜ Open — can start now (KNOCH-005 ✅)
+- New CMS phase section added to summary; dependency graph updated
+- Header counts updated: Total 21→26, Open 13→17, In progress 0→2  
+**Requested by:** Enoch
+
+---
+
+### 2026-05-05 — KNOCH-006 PR opened — IN REVIEW
+
+**Action:** PR #10 opened dev → test
+**Tickets affected:** KNOCH-006
+**Reason:** Builder agent completed implementation; PR open for tester/code review
+**Changes:**
+- KNOCH-006: Status changed MERGED TO DEV → IN REVIEW
+- PR #10 opened: dev → test at https://github.com/eayanwale/knochmedia/pull/10
+- Header counts updated: In progress 1→0, In review 0→1
+**Requested by:** Builder agent
+
+---
+
+### 2026-05-05 — KNOCH-006 implementation complete — MERGED TO DEV
+
+**Action:** Implemented and merged to dev; PR to be opened dev → test
+**Tickets affected:** KNOCH-006
+**Reason:** Builder agent completed the interlude manifesto section with word-by-word scroll reveal
+**Changes:**
+- KNOCH-006: Status changed TODO → IN PROGRESS → MERGED TO DEV
+- Branch `feature/KNOCH-006-interlude-manifesto` created, implemented, merged into `dev`
+- Files delivered:
+  - `src/css/interlude.css` — section layout, label, blockquote typography, .word spans, signature, mobile + reduced-motion overrides
+  - `src/js/interlude.js` — childNodes word-splitter, GSAP ScrollTrigger desktop scrub, IntersectionObserver mobile fallback, prefers-reduced-motion guard
+  - `src/index.html` — interlude section markup between hero and reel, interlude.css link in head
+  - `src/js/main.js` — initInterlude() import and call after initHero()
+- Build: 20 modules, 7.95kB CSS / 2.41kB gz, 136.66kB JS / 50.92kB gz, 87ms
+**Requested by:** Builder agent
+
+---
+
+### 2026-05-05 — KNOCH-005 QA PASSED
+
+**Action:** QA run by Tester Agent. All 29 acceptance criteria pass.
+**Tickets affected:** KNOCH-005
+**Reason:** Hero section loader, reveal sequence, scroll exit, and asset verified against ticket spec and production bundle.
+**Changes:**
+- KNOCH-005: Status changed IN REVIEW → QA PASSED
+- PR #6 merged: dev → test
+- Dashboard badge updated: In Review → QA Passed (green)
+- Stat counts updated: In review 1→0, Done 5→6, Open 15→14
+**Passing checks:** All 29 ACs — #loader fixed/inset/z-index/ink bg, .loader-counter 18vw/Fraunces/300, GSAP proxy tween {val:0}→36/Math.ceil/padStart, amber label above counter (11px/0.3em/uppercase), .loader-progress 240px×1px/.loader-progress-fill amber, loader autoAlpha fade delay:2 + display:none onComplete, window.load trigger, body.loader-active .cursor{opacity:0}, #hero 100vh×100vw/overflow:hidden/flex center, .hero-bg absolute/inset0/cover/brightness(0.45)/grayscale(0.4)/contrast(1.15)/scale(1.1), reel-01.png background-image, preload link in head, .hero-content relative/z-index:2/text-center/padding:0 5vw, .hero-meta font-mono/10px/0.3em/amber/opacity:0, .line overflow:hidden/display:block, .line span translateY(110%), four headline lines with italic em, #hero-sub opacity:0/correct copy, reveal tl at t=0 scale1.1→1/2.4s/power3.out, meta opacity 0→1 at t=0, lineSpans y:0/1.2s/expo.out/stagger:0.12 at t=0.2, heroSub opacity at t=1.4, chrome opacity:0 pre-loader/faded in onComplete, initLenis not in main.js/called in onComplete, main.js imports+calls initHero, ScrollTrigger yPercent:25 on heroBg (trigger#hero/top-top/bottom-top/scrub), ScrollTrigger yPercent:-40+opacity:0 on heroContent, prefers-reduced-motion overrides, reel-01.png exists on disk, npm run build clean.
+**LOW notes:** Two rgba(237,230,216,…) alpha values in hero.css not using named tokens (non-blocking); PR description references old hero-01.jpg filename (doc only, no code impact).
+**Full report:** `docs/test-reports/KNOCH-005-test-report.md`
+**Completed by:** Tester Agent
+
+---
+
+### 2026-05-05 — KNOCH-005 implementation complete — MERGED TO DEV
+
+**Action:** Implemented and merged to dev; PR to be opened dev → test
+**Tickets affected:** KNOCH-005
+**Reason:** Builder agent completed the hero section with film-counter loader, reveal sequence, and scroll exit
+**Changes:**
+- KNOCH-005: Status changed TODO → IN REVIEW
+- Branch `feature/KNOCH-005-hero-section` created, implemented, merged into `dev`
+- Files delivered:
+  - `src/css/hero.css` — loader overlay styles, hero layout, clip-reveal, vignette, reduced-motion overrides
+  - `src/js/hero.js` — film-counter GSAP tween, progress bar, loader fade-out, reveal timeline, ScrollTrigger exits
+  - `src/index.html` — loader HTML, full hero section markup, hero-01.jpg preload, hero.css link
+  - `src/js/main.js` — removed direct initLenis() call; added initHero() import+call
+  - `src/css/cursor.css` — added body.loader-active .cursor rule
+  - `src/assets/hero/hero-01.jpg` — hero image copied from reference
+- Build: 18 modules, 270kB hero image, 6.74 kB CSS / 2.19 kB gz, 135.48 kB JS / 50.56 kB gz, 84ms
+- Header counts updated: Open 16→15
+**Requested by:** Builder agent
 
 ---
 

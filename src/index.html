@@ -9,6 +9,10 @@
     <meta name="description" content="Knoch Media — cinematic photography and visual storytelling studio." />
     <meta name="theme-color" content="#0a0a0a" />
 
+    <!-- Sanity CMS config (KNOCH-023) -->
+    <meta name="sanity-project-id" content="2779g58e" />
+    <meta name="sanity-dataset" content="production" />
+
     <!--
       Google Fonts — preconnect both origins before the stylesheet request
       so DNS + TLS handshakes are done by the time the browser parses the
@@ -42,6 +46,18 @@
     <link rel="stylesheet" href="/css/chrome.css" />
     <!-- Custom cursor + film-grain overlay (KNOCH-004) -->
     <link rel="stylesheet" href="/css/cursor.css" />
+    <!-- Hero section + film-counter loader (KNOCH-005) -->
+    <link rel="stylesheet" href="/css/hero.css" />
+    <!-- Interlude / manifesto word-reveal section (KNOCH-006) -->
+    <link rel="stylesheet" href="/css/interlude.css" />
+
+    <!--
+      LCP image preload — hero-01.jpg is the largest contentful paint element.
+      Preloading it here in <head> lets the browser start the fetch before
+      it parses the CSS background-image declaration, shaving ~200–400ms off
+      LCP on first load. fetchpriority="high" promotes it above other resources.
+    -->
+    <link rel="preload" as="image" href="/assets/reel/reel-01.png" fetchpriority="high" />
   </head>
   <body>
 
@@ -99,13 +115,94 @@
     </div>
 
     <!--
-      Page content stubs — full sections built in Phase 2 tickets.
-      .grain class activates the SVG feTurbulence film-grain ::after overlay.
-      IDs match chrome nav anchor targets (KNOCH-003).
+      Film-counter loader — full-screen fixed overlay (z-index: --z-loader 10000).
+      Covers the entire page while assets load. JS (hero.js) drives the counter
+      00→36 via a GSAP tween on a proxy object, fills the progress bar, then fades
+      this element out after 2s and calls loader.style.display='none'.
+      aria-hidden: true — purely cosmetic; screen-readers skip to main content.
+      role="status" removed intentionally: the loader is visual-only branding,
+      not a functional progress indicator for AT (KNOCH-021 will revisit if needed).
     -->
-    <section id="hero" class="hero-bg grain" aria-label="Hero">
-      <!-- KNOCH-005: Film counter loader + full-bleed hero image -->
-    </section>
+    <div id="loader" aria-hidden="true">
+      <span class="loader-label">Loading roll &middot; 36 exposures</span>
+      <span class="loader-counter">00</span>
+      <div class="loader-progress" aria-hidden="true">
+        <div class="loader-progress-fill"></div>
+      </div>
+    </div>
+
+    <!--
+      Hero section — first viewport, 100vh × 100vw.
+      .grain activates the SVG feTurbulence film-grain ::after overlay (KNOCH-004).
+      .hero-bg is a separate child div (not on the section itself) so that the
+      scale(1.1)→scale(1) GSAP tween only affects the background image, not the
+      hero-content text on top.
+      aria-label provides an accessible region name for screen readers.
+    -->
+    <section id="hero" class="grain" aria-label="Hero — cinematic photography studio">
+
+      <!-- Full-bleed background image — brightness/contrast/grayscale in CSS;
+           scale(1.1) initial state for the reveal scale-down animation.
+           ::after hosts the radial vignette gradient (defined in hero.css). -->
+      <div class="hero-bg" role="img" aria-label="Hero photograph by Knoch Media"></div>
+
+      <!-- Centered content stack — meta label, headline, sub text -->
+      <div class="hero-content">
+
+        <!-- Amber mono label — film roll identifier / editorial context -->
+        <p class="hero-meta">[ FILM 01 &mdash; A WEDDING IN MAY ]</p>
+
+        <!--
+          H1 headline — four lines, each in a clip-reveal wrapper.
+          .line has overflow: hidden; inner span starts at translateY(110%)
+          and slides up into view. GSAP stagger 0.12s creates the cascade.
+          "staged." and "remembered." wrapped in <em> for italic amber treatment.
+        -->
+        <h1 class="hero-headline" aria-label="Nothing staged. Everything remembered.">
+          <div class="line"><span>Nothing</span></div>
+          <div class="line"><span><em>staged.</em></span></div>
+          <div class="line"><span>Everything</span></div>
+          <div class="line"><span><em>remembered.</em></span></div>
+        </h1>
+
+        <!-- Scroll prompt — all-caps mono, muted; fades in last -->
+        <p id="hero-sub" aria-label="Cinematic photography and film — scroll to explore">
+          CINEMATIC PHOTOGRAPHY &amp; FILM &middot; SCROLL &#8595;
+        </p>
+
+      </div><!-- /.hero-content -->
+
+    </section><!-- /#hero -->
+
+    <!-- ── INTERLUDE / MANIFESTO ─────────────────────────────── -->
+    <!--
+      Transitional breathing-room section between hero and reel.
+      .grain applies the SVG feTurbulence film-grain ::after overlay
+      (defined in cursor.css — not re-implemented here).
+      aria-label gives screen readers a meaningful region name.
+      The blockquote <p> text is left intact so AT reads the full
+      sentence; JS wraps words in <span class="word"> (inline elements)
+      which screen readers traverse transparently.
+    -->
+    <section id="interlude" class="interlude grain" aria-label="Studio manifesto">
+
+      <!-- Amber mono label — top-left; faded in by JS via .is-visible class -->
+      <p class="interlude-label">— A note before we begin</p>
+
+      <!--
+        Editorial blockquote — Fraunces 300 at clamp(28px,5vw,64px).
+        JS (interlude.js) splits the inner <p>'s childNodes into .word spans
+        at init time, preserving the <em> element for italic amber styling.
+        The <em> wraps "quietly" — the sole emphasis word in the manifesto.
+      -->
+      <blockquote class="interlude-quote">
+        <p>I don't photograph weddings. I attend them &mdash; <em>quietly</em> &mdash; and bring back what was beautiful.</p>
+      </blockquote>
+
+      <!-- Cosmetic signature — aria-hidden so AT skips it -->
+      <p class="interlude-sig" aria-hidden="true">— Enoch Knoch &middot; Founder</p>
+
+    </section><!-- /#interlude -->
 
     <section id="reel" aria-label="Work">
       <!-- KNOCH-007: Horizontal reel carousel -->
