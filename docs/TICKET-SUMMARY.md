@@ -1,7 +1,7 @@
 # Knoch Media — Ticket Summary
 
 > **Living document.** Updated whenever tickets are created, modified, split, or closed.  
-> Last updated: 2026-05-05 | Total tickets: 21 | Open: 13 | In progress: 1 | In review: 0 | Done: 6
+> Last updated: 2026-05-05 | Total tickets: 21 | Open: 13 | In progress: 0 | In review: 1 | Done: 6
 
 ---
 
@@ -142,6 +142,19 @@ Run in this exact order: perf first (changes markup), then mobile (tests perf ch
 ## Changelog
 
 All modifications to this document and ticket files are logged here. Tester agent and code review feedback should be recorded as entries.
+
+---
+
+### 2026-05-05 — KNOCH-006 PR opened — IN REVIEW
+
+**Action:** PR #10 opened dev → test
+**Tickets affected:** KNOCH-006
+**Reason:** Builder agent completed implementation; PR open for tester/code review
+**Changes:**
+- KNOCH-006: Status changed MERGED TO DEV → IN REVIEW
+- PR #10 opened: dev → test at https://github.com/eayanwale/knochmedia/pull/10
+- Header counts updated: In progress 1→0, In review 0→1
+**Requested by:** Builder agent
 
 ---
 
