@@ -1,6 +1,6 @@
 # KNOCH-009 — Testimonial Section
 
-## Status: MERGED TO DEV
+## Status: IN REVIEW
 ## Priority: P2 (medium)
 ## Epic: EPIC-002 — Homepage
 

@@ -1,7 +1,7 @@
 # Knoch Media — Ticket Summary
 
 > **Living document.** Updated whenever tickets are created, modified, split, or closed.  
-> Last updated: 2026-05-05 | Total tickets: 30 | Open: 14 | In progress: 1 | In review: 0 | Done: 12 | Deferred: 3
+> Last updated: 2026-05-05 | Total tickets: 30 | Open: 14 | In progress: 0 | In review: 1 | Done: 12 | Deferred: 3
 
 ---
 
@@ -208,6 +208,25 @@ All modifications to this document and ticket files are logged here. Tester agen
 **Passing checks:** CSS layout/label/blockquote/signature/word/mobile/reduced-motion all correct. GSAP parameters correct. `interlude.css` linked in head. `initInterlude()` imported+called in main.js. `.grain` class applied. Token names correct. Build clean (20 modules, 88ms).
 **Full report:** `docs/test-reports/KNOCH-006-test-report.md`
 **Completed by:** Tester Agent
+
+---
+
+### 2026-05-05 — KNOCH-009 PR opened — IN REVIEW
+
+**Action:** PR #12 opened dev → test
+**Tickets affected:** KNOCH-009
+**Reason:** Builder agent completed testimonial pull-quote section; PR open for tester/code review
+**Changes:**
+- KNOCH-009: Status changed MERGED TO DEV → IN REVIEW
+- PR #12 opened: dev → test at https://github.com/eayanwale/knochmedia/pull/12
+- Files delivered:
+  - `src/css/testimonial.css` — section layout (14rem 8vw padding, 1px border-top), quote mark (8rem Fraunces amber), pull-quote (clamp 28–56px, 22ch max-width, em amber italic), attribution (10px mono, 0.3em LS, muted), mobile ≤800px, reduced-motion overrides
+  - `src/js/testimonial.js` — GSAP stagger from y:40 opacity:0, duration:1.2, stagger:0.15, expo.out, ScrollTrigger top 75%, once:true, prefers-reduced-motion guard
+  - `src/index.html` — testimonial section inserted between #frame and #cta; testimonial.css linked in head
+  - `src/js/main.js` — initTestimonial() import and call after initFrame()
+- Build: 27 modules, 14.18 kB CSS / 3.54 kB gz, 142.07 kB JS / 52.77 kB gz, 89ms
+- Header counts updated: In progress 1→0, In review 0→1
+**Requested by:** Builder agent
 
 ---
 
