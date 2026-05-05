@@ -4,6 +4,7 @@ import { initHero } from './hero.js';
 import { initInterlude } from './interlude.js';
 import { initReel } from './reel.js';
 import { initFrame } from './frame.js';
+import { initTestimonial } from './testimonial.js';
 import { getFeaturedCollections, imageUrl } from './sanity.js';
 
 // NOTE: initLenis() is intentionally NOT called here.
@@ -28,6 +29,9 @@ initInterlude();
 
 // Pinned frame — parallax bg + animated studio stats (KNOCH-008)
 initFrame();
+
+// Testimonial pull-quote — scroll-stagger reveal (KNOCH-009)
+initTestimonial();
 
 // Horizontal reel — fetch featured collections from Sanity then init (KNOCH-007 + KNOCH-025)
 getFeaturedCollections().then(collections => {

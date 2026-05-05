@@ -1,7 +1,7 @@
 # Knoch Media — Ticket Summary
 
 > **Living document.** Updated whenever tickets are created, modified, split, or closed.  
-> Last updated: 2026-05-05 | Total tickets: 30 | Open: 15 | In progress: 0 | In review: 0 | Done: 12 | Deferred: 3
+> Last updated: 2026-05-05 | Total tickets: 30 | Open: 14 | In progress: 1 | In review: 0 | Done: 12 | Deferred: 3
 
 ---
 
@@ -60,7 +60,7 @@ Build top-to-bottom in scroll order. Wire each section to Sanity immediately aft
 | [KNOCH-006](tickets/KNOCH-006.md) | Interlude — Word-by-Word Scroll Reveal | `✅` | `feature/KNOCH-006-interlude-manifesto` | QA PASSED — merged to test |
 | [KNOCH-007](tickets/KNOCH-007.md) | Horizontal Reel — Pinned Scroll Carousel | `✅` | `feature/KNOCH-007-horizontal-reel` | Sanity-driven (3 featured collections); cinematic full-greyscale filter; inner parallax; KNOCH-025 included |
 | [KNOCH-008](tickets/KNOCH-008.md) | Pinned Frame — Parallax + Animated Counters | `✅` | `feature/KNOCH-008-pinned-frame` | QA PASSED — merged to test |
-| [KNOCH-009](tickets/KNOCH-009.md) | Testimonial Pull-Quote Section | `⬜` | — | Scroll-stagger reveal → wire via KNOCH-024 |
+| [KNOCH-009](tickets/KNOCH-009.md) | Testimonial Pull-Quote Section | `🔵` | `feature/KNOCH-009-testimonial-section` | Scroll-stagger reveal → wire via KNOCH-024 |
 | [KNOCH-010](tickets/KNOCH-010.md) | Portfolio Grid — Asymmetric 12-Col Archive | `⬜` | — | 7 tiles, contact-sheet layout |
 
 ---
@@ -208,6 +208,19 @@ All modifications to this document and ticket files are logged here. Tester agen
 **Passing checks:** CSS layout/label/blockquote/signature/word/mobile/reduced-motion all correct. GSAP parameters correct. `interlude.css` linked in head. `initInterlude()` imported+called in main.js. `.grain` class applied. Token names correct. Build clean (20 modules, 88ms).
 **Full report:** `docs/test-reports/KNOCH-006-test-report.md`
 **Completed by:** Tester Agent
+
+---
+
+### 2026-05-05 — KNOCH-009 implementation started — IN PROGRESS
+
+**Action:** Feature branch created; implementation in progress
+**Tickets affected:** KNOCH-009
+**Reason:** Builder agent starting testimonial pull-quote section implementation
+**Changes:**
+- KNOCH-009: Status changed TODO → IN PROGRESS
+- Branch `feature/KNOCH-009-testimonial-section` created from dev
+- Header counts updated: Open 15→14, In progress 0→1
+**Requested by:** Builder agent
 
 ---
 

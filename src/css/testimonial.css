@@ -1,0 +1,112 @@
+/*
+  testimonial.css — Editorial pull-quote section (KNOCH-009)
+  =============================================================
+  Positioned between the pinned frame (#frame) and the CTA (#cta).
+  A single high-impact testimonial breaks the visual rhythm after the
+  studio-credentials section and adds social proof before the full archive.
+
+  Design decisions:
+  - 14rem vertical padding gives the quote maximum breathing room on
+    all viewport sizes; 8vw horizontal keeps it from running edge-to-edge.
+  - 22ch max-width forces tight, newspaper-style line breaks that feel
+    intentional rather than reflowed from a container width.
+  - The 8rem quote mark is pure decoration — aria-hidden, user-select:none,
+    line-height:0.5 so it doesn't add excess vertical space below it.
+  - Border-top uses rgba(--paper, 0.08) — just enough to punctuate the
+    section boundary without drawing attention away from the quote itself.
+*/
+
+/* ── Section shell ──────────────────────────────────────── */
+
+.testimonial {
+  padding: 14rem 8vw;
+  text-align: center;
+  border-top: 1px solid rgba(237, 230, 216, 0.08);
+
+  /*
+    Overflow hidden on the section rather than on each child prevents
+    the stagger reveal (y: 40px translate) from creating a brief
+    horizontal scrollbar on narrow viewports.
+  */
+  overflow: hidden;
+}
+
+/* ── Decorative opening quotation mark ──────────────────── */
+
+.testimonial-mark {
+  font-family: var(--font-serif);
+  font-size: 8rem;
+  line-height: 0.5;     /* pulls the mark up; prevents excess gap below */
+  color: var(--amber);
+  margin-bottom: 2rem;
+  display: block;
+
+  /*
+    user-select: none prevents accidental text selection when a visitor
+    clicks near the quote. The mark is purely decorative.
+  */
+  user-select: none;
+}
+
+/* ── Pull-quote text ────────────────────────────────────── */
+
+.testimonial-quote {
+  font-family: var(--font-serif);
+  font-weight: 300;
+  font-size: clamp(28px, 4vw, 56px);
+  line-height: 1.25;
+  letter-spacing: -0.015em;
+  max-width: 22ch;
+  margin: 0 auto;
+  color: var(--paper);
+}
+
+/*
+  <em> inside the quote renders in italic amber — signals the emotionally
+  loaded phrase "better than we had imagined." without losing readability.
+  Fraunces italic optical axis is different from the regular face, giving
+  it a slightly more calligraphic quality at display sizes.
+*/
+.testimonial-quote em {
+  font-style: italic;
+  color: var(--amber);
+}
+
+/* ── Attribution line ───────────────────────────────────── */
+
+.testimonial-attr {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.3em;
+  color: rgba(237, 230, 216, 0.5);   /* muted paper — intentionally quiet */
+  text-transform: uppercase;
+  margin-top: 3rem;
+  display: block;
+}
+
+/* ── Reduced-motion override ────────────────────────────── */
+
+/*
+  When the user has requested reduced motion, skip the GSAP stagger
+  reveal entirely by making all children immediately visible at their
+  final state. testimonial.js checks this flag before registering the
+  ScrollTrigger, but the CSS guard ensures correctness even if JS is slow.
+*/
+@media (prefers-reduced-motion: reduce) {
+  .testimonial > * {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+
+/* ── Mobile ≤ 800px ─────────────────────────────────────── */
+
+@media (max-width: 800px) {
+  .testimonial {
+    padding: 8rem 6vw;
+  }
+
+  .testimonial-mark {
+    font-size: 6rem;
+  }
+}
