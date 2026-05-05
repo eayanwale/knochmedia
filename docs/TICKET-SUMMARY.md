@@ -1,7 +1,7 @@
 # Knoch Media — Ticket Summary
 
 > **Living document.** Updated whenever tickets are created, modified, split, or closed.  
-> Last updated: 2026-05-05 | Total tickets: 30 | Open: 15 | In progress: 0 | In review: 1 | Done: 11 | Deferred: 3
+> Last updated: 2026-05-05 | Total tickets: 30 | Open: 15 | In progress: 0 | In review: 0 | Done: 12 | Deferred: 3
 
 ---
 
@@ -59,7 +59,7 @@ Build top-to-bottom in scroll order. Wire each section to Sanity immediately aft
 | [KNOCH-005](tickets/KNOCH-005.md) | Hero — Film Counter Loader + Reveal Sequence | `✅` | `feature/KNOCH-005-hero-section` | QA PASSED — merged to test. Hero images stay static. |
 | [KNOCH-006](tickets/KNOCH-006.md) | Interlude — Word-by-Word Scroll Reveal | `✅` | `feature/KNOCH-006-interlude-manifesto` | QA PASSED — merged to test |
 | [KNOCH-007](tickets/KNOCH-007.md) | Horizontal Reel — Pinned Scroll Carousel | `✅` | `feature/KNOCH-007-horizontal-reel` | Sanity-driven (3 featured collections); cinematic full-greyscale filter; inner parallax; KNOCH-025 included |
-| [KNOCH-008](tickets/KNOCH-008.md) | Pinned Frame — Parallax + Animated Counters | `🔵` | `feature/KNOCH-008-pinned-frame` | Studio stats section |
+| [KNOCH-008](tickets/KNOCH-008.md) | Pinned Frame — Parallax + Animated Counters | `✅` | `feature/KNOCH-008-pinned-frame` | QA PASSED — merged to test |
 | [KNOCH-009](tickets/KNOCH-009.md) | Testimonial Pull-Quote Section | `⬜` | — | Scroll-stagger reveal → wire via KNOCH-024 |
 | [KNOCH-010](tickets/KNOCH-010.md) | Portfolio Grid — Asymmetric 12-Col Archive | `⬜` | — | 7 tiles, contact-sheet layout |
 
@@ -228,6 +228,22 @@ All modifications to this document and ticket files are logged here. Tester agen
 - Build: 25 modules, 13.33 kB CSS / 3.39 kB gz, 141.77 kB JS / 52.71 kB gz, 96ms
 - Header counts updated: In progress 1→0, In review 0→1
 **Requested by:** Builder agent
+
+---
+
+### 2026-05-05 — KNOCH-008 QA PASSED — merged to test
+
+**Action:** PR #11 merged (dev → test) — KNOCH-008 QA PASSED
+**Tickets affected:** KNOCH-008
+**Reason:** Tester agent verified all 13 acceptance criteria and all additional checks; build clean at 98ms
+**Changes:**
+- KNOCH-008: Status changed IN REVIEW → QA PASSED
+- PR #11 merged with full merge commit; branch `feature/KNOCH-008-pinned-frame` deleted
+- All test plan checkboxes ticked in PR body
+- Test report written: `docs/test-reports/KNOCH-008-test-report.md`
+- Header counts updated: In review 1→0, Done 11→12
+- Non-blocking note: headline/counter tweens not behind `prefers-reduced-motion` guard (parallax-only guard meets AC; full motion guard is KNOCH-021 scope)
+**Completed by:** Tester Agent
 
 ---
 
