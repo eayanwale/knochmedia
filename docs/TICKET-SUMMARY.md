@@ -1,7 +1,7 @@
 # Knoch Media — Ticket Summary
 
 > **Living document.** Updated whenever tickets are created, modified, split, or closed.  
-> Last updated: 2026-05-05 | Total tickets: 21 | Open: 19 | In progress: 0 | In review: 1 | Done: 1
+> Last updated: 2026-05-05 | Total tickets: 21 | Open: 18 | In progress: 0 | In review: 1 | Done: 2
 
 ---
 
@@ -25,8 +25,8 @@ These must be completed before any other ticket can be built. No component shoul
 | ID | Title | Status | Branch | Notes |
 |----|-------|--------|--------|-------|
 | [KNOCH-001](tickets/KNOCH-001.md) | Project Scaffolding & Build Setup (Vite) | `✅` | `feature/KNOCH-001-project-scaffold` | Entry point for all other work |
-| [KNOCH-002](tickets/KNOCH-002.md) | Design Tokens & CSS Custom Properties | `🔵` | `feature/KNOCH-002-design-tokens` | PR #2 open — dev → test |
-| [KNOCH-016](tickets/KNOCH-016.md) | Smooth Scrolling — Lenis + ScrollTrigger Sync | `⬜` | — | Must precede KNOCH-007 |
+| [KNOCH-002](tickets/KNOCH-002.md) | Design Tokens & CSS Custom Properties | `✅` | `feature/KNOCH-002-design-tokens` | QA PASSED — merged to test |
+| [KNOCH-016](tickets/KNOCH-016.md) | Smooth Scrolling — Lenis + ScrollTrigger Sync | `🔵` | `feature/KNOCH-016-lenis-smooth-scroll` | PR #3 open — dev → test |
 | [KNOCH-003](tickets/KNOCH-003.md) | Cinematic Chrome Navigation + Timecode Bar | `⬜` | — | Fixed overlay, all pages |
 | [KNOCH-004](tickets/KNOCH-004.md) | Custom Cursor & Film-Grain Overlay | `⬜` | — | Desktop only |
 
@@ -142,6 +142,37 @@ Run in this exact order: perf first (changes markup), then mobile (tests perf ch
 ## Changelog
 
 All modifications to this document and ticket files are logged here. Tester agent and code review feedback should be recorded as entries.
+
+---
+
+### 2026-05-05 — KNOCH-016 implementation complete — PR #3 open
+
+**Action:** Implemented and PR opened dev → test
+**Tickets affected:** KNOCH-016
+**Reason:** Builder agent completed Lenis smooth scroll layer
+**Changes:**
+- KNOCH-016: Status changed TODO → IN PROGRESS → MERGED TO DEV → IN REVIEW
+- Branch `feature/KNOCH-016-lenis-smooth-scroll` created, implemented, merged into `dev`
+- PR #3 opened: dev → test at https://github.com/eayanwale/knochmedia/pull/3
+- Files delivered: `src/js/lenis.js` (Lenis module + GSAP sync), `src/js/main.js` (updated bootstrap)
+- Build verified: vite v8.0.10, 12 modules, 131.73 kB JS / 49.59 kB gzip (expected — GSAP+Lenis bundled)
+**Requested by:** Builder agent
+
+---
+
+### 2026-05-05 — KNOCH-002 QA PASSED
+
+**Action:** QA run by Tester Agent. All 11 acceptance criteria pass.
+**Tickets affected:** KNOCH-002
+**Reason:** Design token layer verified against ticket spec, reference values, and production build output.
+**Changes:**
+- KNOCH-002: Status changed IN REVIEW → QA PASSED
+- PR #2 merged: dev → test
+- Dashboard badge updated: In Review → QA Passed (green)
+- Stat counts updated: In review 1→0, Done 1→2
+**Passing checks:** All 11 ACs — tokens.css on :root, exact color values (#0a0a0a/#ede6d8/#e8a23a/#7a2418/rgba), 4 semantic tokens, 3 font stacks, 6-step spacing scale (4–128px), 3 easing cubic-beziers, z-index layers (10000/9999/50), 2 radius tokens, global.css reset + imports, pointer:fine cursor scoping, light-mode stub, global.css linked in index.html.
+**Full report:** `docs/test-reports/KNOCH-002-test-report.md`
+**Completed by:** Tester Agent
 
 ---
 
