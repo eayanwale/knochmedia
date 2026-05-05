@@ -243,6 +243,22 @@ All modifications to this document and ticket files are logged here. Tester agen
 
 ---
 
+### 2026-05-05 — KNOCH-008 QA PASSED — merged to test
+
+**Action:** QA run by Tester Agent. All 13 ACs pass. PR #11 merged to test.
+**Tickets affected:** KNOCH-008
+**Reason:** All acceptance criteria verified — CSS layout, sticky parallax, counter animation, headline reveal, toLocaleString formatting, ARIA labels, mobile stack, and reduced-motion guard all confirmed correct.
+**Changes:**
+- KNOCH-008: Status changed IN REVIEW → QA PASSED
+- PR #11: Merged dev → test
+- Test report written: `docs/test-reports/KNOCH-008-test-report.md`
+- Dashboard badge: In Review → QA Passed (green); PR #11 removed from Open PRs
+- Stat counts: In review 1→0, Done 11→12
+**Non-blocking LOW note:** `.big` headline reveal and counter tweens lack `prefers-reduced-motion` guards (they fall back gracefully to static HTML) — full guard will be added in KNOCH-021 accessibility pass.
+**Completed by:** Tester Agent
+
+---
+
 ### 2026-05-05 — KNOCH-008 PR opened — IN REVIEW
 
 **Action:** PR #11 opened dev → test
