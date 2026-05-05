@@ -1,7 +1,7 @@
 # Knoch Media — Ticket Summary
 
 > **Living document.** Updated whenever tickets are created, modified, split, or closed.  
-> Last updated: 2026-05-05 | Total tickets: 30 | Open: 19 | In progress: 2 | In review: 0 | Done: 7 | Deferred: 2
+> Last updated: 2026-05-05 | Total tickets: 30 | Open: 16 | In progress: 0 | In review: 0 | Done: 11 | Deferred: 3
 
 ---
 
@@ -38,10 +38,12 @@ KNOCH-022 and KNOCH-023 are infrastructure — implement these first. The wiring
 
 | ID | Title | Status | Branch | Notes |
 |----|-------|--------|--------|-------|
-| [KNOCH-022](tickets/KNOCH-022.md) | Sanity Project Init + Schema Definitions | `🔵` | — | Studio set up, schemas deployed, data entered |
-| [KNOCH-023](tickets/KNOCH-023.md) | JS Content-Fetch Layer | `🔵` | — | `src/js/sanity.js` built; meta tags in index.html |
+| [KNOCH-022](tickets/KNOCH-022.md) | Sanity Project Init + Schema Definitions | `✅` | `feature/KNOCH-022-023-sanity-cms-setup` | Studio scaffolded; testimonial, galleryCollection, service schemas deployed; all 5 testimonials + 7 collections entered |
+| [KNOCH-023](tickets/KNOCH-023.md) | JS Content-Fetch Layer | `✅` | `feature/KNOCH-022-023-sanity-cms-setup` | `src/js/sanity.js` built with hardened fetch, logging, and `imageUrl()` helper; meta tags in index.html |
 | [KNOCH-024](tickets/KNOCH-024.md) | Wire Testimonials to Sanity | `⬜` | — | After KNOCH-009 is built |
-| [KNOCH-025](tickets/KNOCH-025.md) | Wire Gallery Reel to Sanity | `⬜` | — | After KNOCH-007 is built |
+| [KNOCH-025](tickets/KNOCH-025.md) | Wire Gallery Reel to Sanity | `✅` | `feature/KNOCH-007-horizontal-reel` | `main.js` fetches `getFeaturedCollections()` → `initReel()`; 3 featured collections with Sanity CDN images; `subtitle` field added to schema |
+| [KNOCH-026](tickets/KNOCH-026.md) | Migrate Hero Images to Sanity CDN | `⏸` | — | Deferred — hero is LCP-critical and design-tied; static files are the correct approach |
+| [KNOCH-027](tickets/KNOCH-027.md) | Wire About Page to Sanity | `⬜` | — | After KNOCH-013 (about page) is built |
 | [KNOCH-028](tickets/KNOCH-028.md) | Wire Services Page to Sanity | `⬜` | — | After services page is built |
 | [KNOCH-029](tickets/KNOCH-029.md) | Blog Listing Page | `⏸` | — | Deferred — blog schema needs redesign (dynamic related posts, YouTube + Instagram content types) |
 | [KNOCH-030](tickets/KNOCH-030.md) | Blog Post Detail Page | `⏸` | — | Deferred — blocked by KNOCH-029 redesign |
@@ -56,7 +58,7 @@ Build top-to-bottom in scroll order. Wire each section to Sanity immediately aft
 |----|-------|--------|--------|-------|
 | [KNOCH-005](tickets/KNOCH-005.md) | Hero — Film Counter Loader + Reveal Sequence | `✅` | `feature/KNOCH-005-hero-section` | QA PASSED — merged to test. Hero images stay static. |
 | [KNOCH-006](tickets/KNOCH-006.md) | Interlude — Word-by-Word Scroll Reveal | `✅` | `feature/KNOCH-006-interlude-manifesto` | QA PASSED — merged to test |
-| [KNOCH-007](tickets/KNOCH-007.md) | Horizontal Reel — Pinned Scroll Carousel | `⬜` | — | Most complex interaction; needs KNOCH-016 → wire via KNOCH-025 |
+| [KNOCH-007](tickets/KNOCH-007.md) | Horizontal Reel — Pinned Scroll Carousel | `✅` | `feature/KNOCH-007-horizontal-reel` | Sanity-driven (3 featured collections); cinematic full-greyscale filter; inner parallax; KNOCH-025 included |
 | [KNOCH-008](tickets/KNOCH-008.md) | Pinned Frame — Parallax + Animated Counters | `⬜` | — | Studio stats section |
 | [KNOCH-009](tickets/KNOCH-009.md) | Testimonial Pull-Quote Section | `⬜` | — | Scroll-stagger reveal → wire via KNOCH-024 |
 | [KNOCH-010](tickets/KNOCH-010.md) | Portfolio Grid — Asymmetric 12-Col Archive | `⬜` | — | 7 tiles, contact-sheet layout |
@@ -125,10 +127,12 @@ Run in this exact order: perf first (changes markup), then mobile (tests perf ch
 
 CMS layer (cuts across phases — wire each section after it is built):
 
-022 (Sanity init) 🔵
- └─ 023 (fetch layer) 🔵
+022 (Sanity init) ✅
+ └─ 023 (fetch layer) ✅
      ├─ 024 (wire testimonials) ── after 009
-     ├─ 025 (wire reel)         ── after 007
+     ├─ 025 (wire reel) ✅       ── done with 007
+     ├─ 026 (hero images) ⏸     ── deferred (hero stays static)
+     ├─ 027 (wire about) ──       after 013
      └─ 028 (wire services)     ── after services page built
 ```
 
@@ -204,6 +208,27 @@ All modifications to this document and ticket files are logged here. Tester agen
 **Passing checks:** CSS layout/label/blockquote/signature/word/mobile/reduced-motion all correct. GSAP parameters correct. `interlude.css` linked in head. `initInterlude()` imported+called in main.js. `.grain` class applied. Token names correct. Build clean (20 modules, 88ms).
 **Full report:** `docs/test-reports/KNOCH-006-test-report.md`
 **Completed by:** Tester Agent
+
+---
+
+### 2026-05-05 — KNOCH-007 + KNOCH-022/023/025 DONE — reel + CMS layer complete
+
+**Action:** KNOCH-007 implemented and merged to test; KNOCH-022/023/025 completed in same session
+**Tickets affected:** KNOCH-007, KNOCH-022, KNOCH-023, KNOCH-025, KNOCH-026 (deferred)
+**Changes:**
+- KNOCH-007: ⬜ → ✅ Done. Branch `feature/KNOCH-007-horizontal-reel` merged to test.
+  - Horizontal pinned carousel, GSAP ScrollTrigger scrub:0.8, inner parallax via containerAnimation
+  - Full cinematic greyscale filter (grayscale(1)) at rest; colour reveals on hover
+  - Film-notch L-bracket corners, FRAME label, meta slide-up on hover
+  - Mobile: CSS snap scroll replaces GSAP pin at ≤800px
+  - Studio files from CMS branch cherry-picked onto this branch and committed
+- KNOCH-022: 🔵 → ✅ Done. Sanity Studio running locally and deployed; all schemas live; 5 testimonials, 7 gallery collections, services entered.
+- KNOCH-023: 🔵 → ✅ Done. `src/js/sanity.js` hardened with optional chaining, null guards, console logging for debug; `imageUrl()` helper; meta tags in index.html.
+- KNOCH-025: ⬜ → ✅ Done (bundled with KNOCH-007). `main.js` fetches `getFeaturedCollections()` → maps to card shape → `initReel()`. Static CARDS fallback uses Sanity CDN URLs directly. `subtitle` field added to `galleryCollection` schema (Studio: fill in "Maryland · 2024" style labels per collection).
+- KNOCH-026: ⬜ → ⏸ Deferred. Hero images are LCP-critical and design-tied — static files are correct. Sanity CDN adds latency with no benefit here.
+- KNOCH-027: Added to CMS table (was missing). Open — blocked until KNOCH-013.
+- Stat counts: In progress 2→0, Done 7→11, Open 19→16, Deferred 2→3
+**Requested by:** Enoch / Builder agent
 
 ---
 

@@ -1,5 +1,8 @@
 # KNOCH-025 — Sanity CMS: Wire Gallery/Reel Section
 
+## Status: DONE — merged to test (2026-05-05)
+## Branch: feature/KNOCH-007-horizontal-reel
+
 ## Description
 Replace any hardcoded gallery/reel items in the horizontal reel (KNOCH-007) with live data from Sanity. Featured collections drive the homepage reel; all collections feed the /portfolio page.
 

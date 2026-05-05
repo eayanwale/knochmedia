@@ -1,5 +1,8 @@
 # KNOCH-023 — Sanity CMS: JS Content-Fetch Layer
 
+## Status: DONE — merged to test (2026-05-05)
+## Branch: feature/KNOCH-022-023-sanity-cms-setup
+
 ## Description
 Create a thin, reusable JS module that fetches content from Sanity's CDN API. All sections that consume CMS data (testimonials, gallery) import from this module — no raw fetch calls scattered across files.
 

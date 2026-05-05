@@ -1,5 +1,8 @@
 # KNOCH-022 — Sanity CMS: Project Init + Schema Definitions
 
+## Status: DONE — merged to test (2026-05-05)
+## Branch: feature/KNOCH-022-023-sanity-cms-setup
+
 ## Description
 Initialize a Sanity project inside the repo and define schemas for all manageable content types. This is the foundation ticket — all subsequent CMS tickets depend on it.
 
