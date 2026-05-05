@@ -36,6 +36,7 @@ match their ticket specifications exactly.
    - Write test report with verdict PASS
    - Approve the PR (`gh pr review --approve`)
    - Merge the PR into `test` (`gh pr merge --merge --no-squash`)
+   - **Tick off the PR test plan checkboxes:** read the current PR body with `gh pr view <number> --json body -q '.body'`, replace every `- [ ]` with `- [x]` in the Test plan section, then update the PR body with `gh pr edit <number> --body "<updated body>"`
    - Update ticket status to `QA PASSED` in **both**:
      - The ticket file `docs/tickets/KNOCH-XXX.md` — change the `## Status:` line
      - `docs/TICKET-SUMMARY.md` — change the status symbol to `✅` in the ticket's table row
@@ -45,6 +46,7 @@ match their ticket specifications exactly.
 4. If ANY check fails:
    - Write test report with verdict FAIL and detailed issue list at `docs/test-reports/KNOCH-XXX-test-report.md`
    - Request changes on the PR (`gh pr review --request-changes`)
+   - **Tick off only the passing items in the PR test plan:** read the PR body, check off `- [ ]` → `- [x]` for items that passed, leave failing items unchecked, update with `gh pr edit <number> --body "<updated body>"`
    - Update ticket status to `NEEDS FIXES` in **both** the ticket file and `docs/TICKET-SUMMARY.md` (symbol: `🔁`)
    - Add a Changelog entry to `docs/TICKET-SUMMARY.md` listing the issues found and what the builder must fix
    - Update the summary header counts
@@ -88,6 +90,14 @@ For each ticket whose status changes, find its `<tr>` by matching the ticket ID 
    - `const done = N` in the `<script>` block — drives the progress bar width
 
 3. **Open PRs section** — when a PR is merged into `test` (QA PASSED), remove its `<div class="pr-row">` from the PRs section. If a re-test is needed (NEEDS FIXES), the PR row stays but the badge inside it can be updated to Needs Fixes.
+
+## Re-test Workflow
+When a ticket status is `NEEDS FIXES` and fixes have been applied on `dev`:
+1. Read the existing test report at `docs/test-reports/KNOCH-XXX-test-report.md`
+2. Re-run all checks against the current state of the files
+3. **Update the top-level Result field** in the header table at the top of the report to reflect the new outcome — e.g. `**PASSED** *(re-test YYYY-MM-DD)*` or `**FAILED** *(re-test YYYY-MM-DD)*`
+4. Append a `## Re-test — YYYY-MM-DD` section at the bottom with: what was fixed, build output, full criterion checklist, verdict
+5. Then follow the normal PASS or FAIL path (update ticket, TICKET-SUMMARY, dashboard, commit, push, merge)
 
 ## Test Report Format
 Every test report must follow this structure:

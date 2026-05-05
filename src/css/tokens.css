@@ -1,0 +1,52 @@
+/* ============================================================
+   KNOCH MEDIA — Design Tokens
+   Single source of truth for the entire design system.
+   All values here match the reference mockups exactly.
+   No component should hard-code a value that lives here.
+   ============================================================ */
+
+:root {
+
+  /* ── Color — Core palette ── */
+  --ink:   #0a0a0a;                       /* near-black primary background */
+  --paper: #ede6d8;                       /* warm off-white — all text on dark */
+  --amber: #e8a23a;                       /* gold accent — active states, highlights */
+  --rust:  #7a2418;                       /* deep red — error states only, used sparingly */
+  --muted: rgba(237, 230, 216, 0.45);     /* dimmed paper for secondary text */
+
+  /* ── Color — Semantic surface tokens ── */
+  --color-surface:    rgba(237, 230, 216, 0.04);  /* elevated card / panel background */
+  --color-border:     rgba(237, 230, 216, 0.10);  /* subtle dividers */
+  --color-text-dim:   rgba(237, 230, 216, 0.45);  /* secondary / meta text (same as --muted) */
+  --color-text-faint: rgba(237, 230, 216, 0.20);  /* placeholder / disabled text */
+
+  /* ── Typography — Font stacks ── */
+  --font-serif: 'Fraunces', Georgia, serif;
+  --font-mono:  'JetBrains Mono', ui-monospace, monospace;
+  --font-sans:  'Inter Tight', system-ui, sans-serif;
+
+  /* ── Spacing — 4 px base, power-of-2 scale ── */
+  --space-xs:  4px;
+  --space-sm:  8px;
+  --space-md:  16px;
+  --space-lg:  32px;
+  --space-xl:  64px;
+  --space-2xl: 128px;
+
+  /* ── Border radius ── */
+  --radius-sm: 2px;
+  --radius-md: 4px;
+
+  /* ── Easing — cubic-bezier values mirroring GSAP defaults ── */
+  /* power4.out equivalent — fast start, long settle */
+  --ease-out-expo:  cubic-bezier(0.16, 1, 0.3, 1);
+  /* slightly tighter expo — used for scene transitions */
+  --ease-cinematic: cubic-bezier(0.22, 1, 0.36, 1);
+  /* back ease with mild overshoot — interactive UI elements */
+  --ease-spring:    cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  /* ── Z-index layers ── */
+  --z-loader: 10000;   /* film counter / intro loader — above everything */
+  --z-cursor:  9999;   /* custom cursor dot + ring */
+  --z-chrome:    50;   /* fixed navigation overlay */
+}

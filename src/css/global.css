@@ -1,0 +1,85 @@
+/* ============================================================
+   KNOCH MEDIA — Global / Reset Styles
+   Imports tokens, then applies the baseline document styles.
+   Component stylesheets are imported after this file.
+   ============================================================ */
+
+@import './tokens.css';
+
+/* ── Box model reset ── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* ── Document root ── */
+html {
+  background-color: var(--ink);
+  color: var(--paper);
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  /* Prevent layout shift from scrollbar appearing/disappearing */
+  overflow-y: scroll;
+  scroll-behavior: auto; /* Lenis (KNOCH-016) overrides this */
+}
+
+body {
+  background-color: var(--ink);
+  color: var(--paper);
+  min-height: 100dvh;
+  /* cursor: none applied only on devices with fine pointer (desktop) */
+}
+
+/* ── Custom cursor — desktop only ── */
+@media (pointer: fine) {
+  body {
+    cursor: none;
+  }
+}
+
+/* ── Typography baseline ── */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-serif);
+  font-weight: 300;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
+/* ── Links ── */
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* ── Media ── */
+img,
+video,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+/* ── Lists ── */
+ul,
+ol {
+  list-style: none;
+}
+
+/* ── Focus — keyboard-only visible ring ── */
+:focus-visible {
+  outline: 2px solid var(--amber);
+  outline-offset: 3px;
+}
+
+/* ── Light mode stub — dark is primary; this block is intentionally empty.
+   Component-level overrides will live here once a light-mode toggle
+   is wired up (post-Phase-5). ── */
+@media (prefers-color-scheme: light) {
+}
