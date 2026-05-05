@@ -1,7 +1,7 @@
 # Knoch Media — Ticket Summary
 
 > **Living document.** Updated whenever tickets are created, modified, split, or closed.  
-> Last updated: 2026-05-05 | Total tickets: 30 | Open: 14 | In progress: 0 | In review: 1 | Done: 12 | Deferred: 3
+> Last updated: 2026-05-05 | Total tickets: 30 | Open: 14 | In progress: 0 | In review: 0 | Done: 13 | Deferred: 3
 
 ---
 
@@ -60,7 +60,7 @@ Build top-to-bottom in scroll order. Wire each section to Sanity immediately aft
 | [KNOCH-006](tickets/KNOCH-006.md) | Interlude — Word-by-Word Scroll Reveal | `✅` | `feature/KNOCH-006-interlude-manifesto` | QA PASSED — merged to test |
 | [KNOCH-007](tickets/KNOCH-007.md) | Horizontal Reel — Pinned Scroll Carousel | `✅` | `feature/KNOCH-007-horizontal-reel` | Sanity-driven (3 featured collections); cinematic full-greyscale filter; inner parallax; KNOCH-025 included |
 | [KNOCH-008](tickets/KNOCH-008.md) | Pinned Frame — Parallax + Animated Counters | `✅` | `feature/KNOCH-008-pinned-frame` | QA PASSED — merged to test |
-| [KNOCH-009](tickets/KNOCH-009.md) | Testimonial Pull-Quote Section | `🔵` | `feature/KNOCH-009-testimonial-section` | Scroll-stagger reveal → wire via KNOCH-024 |
+| [KNOCH-009](tickets/KNOCH-009.md) | Testimonial Pull-Quote Section | `✅` | `feature/KNOCH-009-testimonial-section` | QA PASSED — merged to test |
 | [KNOCH-010](tickets/KNOCH-010.md) | Portfolio Grid — Asymmetric 12-Col Archive | `⬜` | — | 7 tiles, contact-sheet layout |
 
 ---
@@ -173,6 +173,21 @@ CMS layer (cuts across phases — wire each section after it is built):
 ## Changelog
 
 All modifications to this document and ticket files are logged here. Tester agent and code review feedback should be recorded as entries.
+
+---
+
+### 2026-05-05 — KNOCH-009 QA PASSED — merged to test
+
+**Action:** PR #12 merged (dev → test) — KNOCH-009 QA PASSED
+**Tickets affected:** KNOCH-009
+**Reason:** Tester agent verified all 8 acceptance criteria and all additional checks; build clean at 87ms, 27 modules
+**Changes:**
+- KNOCH-009: Status changed IN REVIEW → QA PASSED
+- PR #12 merged with full merge commit; branch `feature/KNOCH-009-testimonial-section` deleted
+- All test plan checkboxes ticked in ticket file
+- Test report written: `docs/test-reports/KNOCH-009-test-report.md`
+- Header counts updated: In review 1→0, Done 12→13
+**Completed by:** Tester Agent
 
 ---
 
