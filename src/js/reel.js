@@ -7,14 +7,15 @@ import ScrollTrigger from 'gsap/ScrollTrigger';
 gsap.registerPlugin(ScrollTrigger);
 
 // Static fallback — mirrors the 3 featured Sanity galleryCollection documents.
-// Sanity is the source of truth; this only renders if the API fetch returns empty.
+// Images point directly to Sanity CDN so fallback and live mode are pixel-identical.
+// Only used when the Sanity API fetch returns empty (network failure, etc.).
 const CARDS = [
   {
     index: '01',
     scene: 'Wedding',
     title: 'Fayo &amp; Femi\'s Introduction',
     subtitle: 'Wedding',
-    img: '/assets/portfolio/cover-fayo-femi.jpg',
+    img: 'https://cdn.sanity.io/images/2779g58e/production/03d0018d5f27d7cbaf49c38c47349a5c48f92a04-1600x1067.jpg?w=1200&auto=format',
     url: 'https://knoch.pic-time.com/-fayofemi/gallery',
     linkType: 'external-gallery',
   },
@@ -23,7 +24,7 @@ const CARDS = [
     scene: 'Wedding',
     title: 'Alex &amp; Morgan\'s Wedding',
     subtitle: 'Wedding',
-    img: '/assets/portfolio/cover-alex-morgan.jpg',
+    img: 'https://cdn.sanity.io/images/2779g58e/production/958e9c61cceb999dc0f6b478138d268384c3cb54-7008x4672.jpg?w=1200&auto=format',
     url: 'https://knoch.pic-time.com/-alexmorgan/gallery',
     linkType: 'external-gallery',
   },
@@ -32,7 +33,7 @@ const CARDS = [
     scene: 'Wedding',
     title: 'Shawn &amp; Bekki\'s Wedding',
     subtitle: 'Wedding',
-    img: '/assets/portfolio/cover-shawn-bekki.jpg',
+    img: 'https://cdn.sanity.io/images/2779g58e/production/471e43f5f31b05082fd6d39fb928704a6b47417a-1600x1067.jpg?w=1200&auto=format',
     url: 'https://knoch.pic-time.com/-shawnbekki/gallery',
     linkType: 'external-gallery',
   },
