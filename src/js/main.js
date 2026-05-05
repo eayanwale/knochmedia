@@ -2,6 +2,8 @@ import { initChrome } from './chrome.js';
 import { initCursor } from './cursor.js';
 import { initHero } from './hero.js';
 import { initInterlude } from './interlude.js';
+import { initReel } from './reel.js';
+import { getFeaturedCollections, imageUrl } from './sanity.js';
 
 // NOTE: initLenis() is intentionally NOT called here.
 // hero.js calls initLenis() inside the loader's onComplete callback
@@ -22,3 +24,17 @@ initHero();
 
 // Interlude manifesto — word-by-word scroll-driven reveal (KNOCH-006)
 initInterlude();
+
+// Horizontal reel — fetch featured collections from Sanity then init (KNOCH-007 + KNOCH-025)
+getFeaturedCollections().then(collections => {
+  const cards = collections.map((col, i) => ({
+    index: String(i + 1).padStart(2, '0'),
+    scene: col.category ?? 'Work',
+    title: col.title,
+    subtitle: col.subtitle ?? col.category ?? '',
+    img: col.coverImage ? imageUrl(col.coverImage, 1200) : '',
+    url: col.url ?? '#',
+    linkType: col.linkType ?? 'external-gallery',
+  }));
+  initReel(cards.length ? cards : undefined);
+});
