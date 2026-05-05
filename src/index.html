@@ -39,8 +39,18 @@
     <link rel="stylesheet" href="/src/css/global.css" />
     <!-- Chrome navigation overlay (KNOCH-003) -->
     <link rel="stylesheet" href="/src/css/chrome.css" />
+    <!-- Custom cursor + film-grain overlay (KNOCH-004) -->
+    <link rel="stylesheet" href="/src/css/cursor.css" />
   </head>
   <body>
+
+    <!--
+      Custom cursor — fixed amber ring tracked by GSAP quickTo.
+      Hidden on touch / coarse-pointer devices via CSS.
+      Progressive enhancement: body retains cursor:pointer if JS fails.
+      KNOCH-005 (loader) will hide this during the intro sequence.
+    -->
+    <div class="cursor" id="cursor" aria-hidden="true"></div>
 
     <!--
       Chrome navigation overlay — fixed full-viewport layer.
@@ -87,7 +97,26 @@
       <span id="frame-display">FRAME 01 / 36</span>
     </div>
 
-    <!-- Page content will be built here -->
+    <!--
+      Page content stubs — full sections built in Phase 2 tickets.
+      .grain class activates the SVG feTurbulence film-grain ::after overlay.
+      IDs match chrome nav anchor targets (KNOCH-003).
+    -->
+    <section id="hero" class="hero-bg grain" aria-label="Hero">
+      <!-- KNOCH-005: Film counter loader + full-bleed hero image -->
+    </section>
+
+    <section id="reel" aria-label="Work">
+      <!-- KNOCH-007: Horizontal reel carousel -->
+    </section>
+
+    <section id="frame" class="pinned-frame grain" aria-label="Studio">
+      <!-- KNOCH-008: Pinned frame parallax + counters -->
+    </section>
+
+    <section id="cta" aria-label="Inquire">
+      <!-- KNOCH-014: Contact / qualified inquiry form -->
+    </section>
 
     <!--
       Main JS entry — Vite resolves this as an ES module. GSAP ScrollTrigger
