@@ -176,41 +176,6 @@ All modifications to this document and ticket files are logged here. Tester agen
 
 ---
 
-### 2026-05-05 — KNOCH-006 QA PASSED — re-test after fix
-
-**Action:** Re-test by Tester Agent. All 15 ACs pass. PR #10 merged to test.
-**Tickets affected:** KNOCH-006
-**Reason:** Builder applied fix `fix(interlude): retarget word-splitter from blockquote to inner <p> (KNOCH-006)`. The blocker from the first QA run is resolved — `const para = quote.querySelector('p') ?? quote` now correctly targets the `<p>` inside the blockquote, and all `appendChild`/`querySelectorAll` calls operate on `para`. Word-split produces a non-empty NodeList; GSAP ScrollTrigger animates all words.
-**Changes:**
-- KNOCH-006: Status changed NEEDS FIXES → QA PASSED
-- PR #10: Merged dev → test
-- Test report: Result updated to PASSED; Re-test section appended
-- Dashboard badge: Needs Fixes → QA Passed (green); PR #10 removed from Open PRs
-- Stat counts: Needs fixes 1→0, Done 6→7
-**Completed by:** Tester Agent
-
----
-
-### 2026-05-05 — KNOCH-006 QA FAILED — NEEDS FIXES
-
-**Action:** QA run by Tester Agent. 1 BLOCKER found. PR #10 blocked.
-**Tickets affected:** KNOCH-006
-**Reason:** Word-splitter JS targets `<blockquote>` childNodes instead of inner `<p>` childNodes — zero `.word` spans are created, the scroll reveal does not function.
-**Changes:**
-- KNOCH-006: Status changed IN REVIEW → NEEDS FIXES
-- PR #10: Changes requested (comment posted — GitHub API prevented formal review on own PR)
-- Dashboard badge: In Review → Needs Fixes
-- Stat counts: In review 1→0, Needs fixes 0→1
-**Blockers:**
-1. **BLOCKER** — `src/js/interlude.js` line 37: `Array.from(quote.childNodes)` iterates the `<blockquote>` (whose only child is `<p>`). The `<p>` hits the `else { cloneNode(true) }` branch and is copied back unchanged. No `.word` spans are produced. Fix: use `quote.querySelector('p') ?? quote` as the split target.
-**Non-blocking issues:**
-- Redundant `w.style.opacity = '1'` in reduced-motion JS path (CSS already handles via `opacity: 1 !important`)
-**Passing checks:** CSS layout/label/blockquote/signature/word/mobile/reduced-motion all correct. GSAP parameters correct. `interlude.css` linked in head. `initInterlude()` imported+called in main.js. `.grain` class applied. Token names correct. Build clean (20 modules, 88ms).
-**Full report:** `docs/test-reports/KNOCH-006-test-report.md`
-**Completed by:** Tester Agent
-
----
-
 ### 2026-05-05 — KNOCH-009 PR opened — IN REVIEW
 
 **Action:** PR #12 opened dev → test
@@ -240,22 +205,6 @@ All modifications to this document and ticket files are logged here. Tester agen
 - Branch `feature/KNOCH-009-testimonial-section` created from dev
 - Header counts updated: Open 15→14, In progress 0→1
 **Requested by:** Builder agent
-
----
-
-### 2026-05-05 — KNOCH-008 QA PASSED — merged to test
-
-**Action:** QA run by Tester Agent. All 13 ACs pass. PR #11 merged to test.
-**Tickets affected:** KNOCH-008
-**Reason:** All acceptance criteria verified — CSS layout, sticky parallax, counter animation, headline reveal, toLocaleString formatting, ARIA labels, mobile stack, and reduced-motion guard all confirmed correct.
-**Changes:**
-- KNOCH-008: Status changed IN REVIEW → QA PASSED
-- PR #11: Merged dev → test
-- Test report written: `docs/test-reports/KNOCH-008-test-report.md`
-- Dashboard badge: In Review → QA Passed (green); PR #11 removed from Open PRs
-- Stat counts: In review 1→0, Done 11→12
-**Non-blocking LOW note:** `.big` headline reveal and counter tweens lack `prefers-reduced-motion` guards (they fall back gracefully to static HTML) — full guard will be added in KNOCH-021 accessibility pass.
-**Completed by:** Tester Agent
 
 ---
 
@@ -313,6 +262,41 @@ All modifications to this document and ticket files are logged here. Tester agen
 - KNOCH-027: Added to CMS table (was missing). Open — blocked until KNOCH-013.
 - Stat counts: In progress 2→0, Done 7→11, Open 19→16, Deferred 2→3
 **Requested by:** Enoch / Builder agent
+
+---
+
+### 2026-05-05 — KNOCH-006 QA PASSED — re-test after fix
+
+**Action:** Re-test by Tester Agent. All 15 ACs pass. PR #10 merged to test.
+**Tickets affected:** KNOCH-006
+**Reason:** Builder applied fix `fix(interlude): retarget word-splitter from blockquote to inner <p> (KNOCH-006)`. The blocker from the first QA run is resolved — `const para = quote.querySelector('p') ?? quote` now correctly targets the `<p>` inside the blockquote, and all `appendChild`/`querySelectorAll` calls operate on `para`. Word-split produces a non-empty NodeList; GSAP ScrollTrigger animates all words.
+**Changes:**
+- KNOCH-006: Status changed NEEDS FIXES → QA PASSED
+- PR #10: Merged dev → test
+- Test report: Result updated to PASSED; Re-test section appended
+- Dashboard badge: Needs Fixes → QA Passed (green); PR #10 removed from Open PRs
+- Stat counts: Needs fixes 1→0, Done 6→7
+**Completed by:** Tester Agent
+
+---
+
+### 2026-05-05 — KNOCH-006 QA FAILED — NEEDS FIXES
+
+**Action:** QA run by Tester Agent. 1 BLOCKER found. PR #10 blocked.
+**Tickets affected:** KNOCH-006
+**Reason:** Word-splitter JS targets `<blockquote>` childNodes instead of inner `<p>` childNodes — zero `.word` spans are created, the scroll reveal does not function.
+**Changes:**
+- KNOCH-006: Status changed IN REVIEW → NEEDS FIXES
+- PR #10: Changes requested (comment posted — GitHub API prevented formal review on own PR)
+- Dashboard badge: In Review → Needs Fixes
+- Stat counts: In review 1→0, Needs fixes 0→1
+**Blockers:**
+1. **BLOCKER** — `src/js/interlude.js` line 37: `Array.from(quote.childNodes)` iterates the `<blockquote>` (whose only child is `<p>`). The `<p>` hits the `else { cloneNode(true) }` branch and is copied back unchanged. No `.word` spans are produced. Fix: use `quote.querySelector('p') ?? quote` as the split target.
+**Non-blocking issues:**
+- Redundant `w.style.opacity = '1'` in reduced-motion JS path (CSS already handles via `opacity: 1 !important`)
+**Passing checks:** CSS layout/label/blockquote/signature/word/mobile/reduced-motion all correct. GSAP parameters correct. `interlude.css` linked in head. `initInterlude()` imported+called in main.js. `.grain` class applied. Token names correct. Build clean (20 modules, 88ms).
+**Full report:** `docs/test-reports/KNOCH-006-test-report.md`
+**Completed by:** Tester Agent
 
 ---
 
