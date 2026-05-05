@@ -1,7 +1,7 @@
 # Knoch Media — Ticket Summary
 
 > **Living document.** Updated whenever tickets are created, modified, split, or closed.  
-> Last updated: 2026-05-05 | Total tickets: 21 | Open: 20 | In progress: 1 | Done: 0
+> Last updated: 2026-05-05 | Total tickets: 21 | Open: 20 | In progress: 0 | Done: 1
 
 ---
 
@@ -24,7 +24,7 @@ These must be completed before any other ticket can be built. No component shoul
 
 | ID | Title | Status | Branch | Notes |
 |----|-------|--------|--------|-------|
-| [KNOCH-001](tickets/KNOCH-001.md) | Project Scaffolding & Build Setup (Vite) | `🔵` | `feature/KNOCH-001-project-scaffold` | Entry point for all other work |
+| [KNOCH-001](tickets/KNOCH-001.md) | Project Scaffolding & Build Setup (Vite) | `✅` | `feature/KNOCH-001-project-scaffold` | Entry point for all other work |
 | [KNOCH-002](tickets/KNOCH-002.md) | Design Tokens & CSS Custom Properties | `⬜` | — | Depends on KNOCH-001 |
 | [KNOCH-016](tickets/KNOCH-016.md) | Smooth Scrolling — Lenis + ScrollTrigger Sync | `⬜` | — | Must precede KNOCH-007 |
 | [KNOCH-003](tickets/KNOCH-003.md) | Cinematic Chrome Navigation + Timecode Bar | `⬜` | — | Fixed overlay, all pages |
@@ -142,6 +142,37 @@ Run in this exact order: perf first (changes markup), then mobile (tests perf ch
 ## Changelog
 
 All modifications to this document and ticket files are logged here. Tester agent and code review feedback should be recorded as entries.
+
+---
+
+### 2026-05-05 — KNOCH-001 QA PASSED on re-test
+
+**Action:** Re-test by Tester Agent. All 8 acceptance criteria now pass.
+**Tickets affected:** KNOCH-001
+**Reason:** Builder applied the two fixes identified in the initial QA run: `src/js/main.js` and `src/css/global.css` were created as empty stub files. `npm run build` now exits cleanly (`vite v8.0.10`, 5 modules transformed, `dist/` emitted with hashed assets in 33ms).
+**Changes:**
+- KNOCH-001: Status changed NEEDS FIXES → QA PASSED
+- Dashboard badge updated: Needs Fixes → QA Passed (green)
+- Stat counts updated: In progress 1→0, Done 0→1
+**Passing checks:** All 8 ACs — directory tree, vanilla Vite, dev script, npm run build (now PASS), Google Fonts in index.html, .gitignore, package scripts, vite.config base + outDir.
+**Full report:** `docs/test-reports/KNOCH-001-test-report.md` (Re-test section appended)
+**Completed by:** Tester Agent
+
+---
+
+### 2026-05-05 — KNOCH-001 QA FAILED — Needs Fixes
+
+**Action:** QA run by Tester Agent. Build pipeline blocked by missing stub files.
+**Tickets affected:** KNOCH-001
+**Reason:** `npm run build` exits with a hard error — `src/js/main.js` does not exist (only `.gitkeep` present). `src/index.html` references this file as a `<script type="module">` entry, so Vite cannot resolve it and emits no `dist/` output. `src/css/global.css` is similarly absent but does not block the build on its own.
+**Changes:**
+- KNOCH-001: Status changed IN REVIEW → NEEDS FIXES
+**Failing checks:**
+1. **BLOCKER — AC-4 (`npm run build`):** `Error: Failed to resolve /src/js/main.js from src/index.html`. Fix: create `src/js/main.js` as a minimal stub ES module.
+2. **LOW — `src/css/global.css` missing:** Browser will 404 on the stylesheet link. Fix: create `src/css/global.css` as an empty stub (content will be added in KNOCH-002).
+**Passing checks:** AC-1 (directory tree), AC-2 (vanilla Vite), AC-5 (Google Fonts in index.html), AC-6 (.gitignore), AC-7 (package scripts), AC-8 (vite.config base + outDir), GSAP/Lenis as npm deps.
+**Full report:** `docs/test-reports/KNOCH-001-test-report.md`
+**Requested by:** Tester Agent
 
 ---
 
