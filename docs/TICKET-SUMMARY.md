@@ -1,7 +1,7 @@
 # Knoch Media — Ticket Summary
 
 > **Living document.** Updated whenever tickets are created, modified, split, or closed.  
-> Last updated: 2026-05-05 | Total tickets: 30 | Open: 16 | In progress: 0 | In review: 0 | Done: 11 | Deferred: 3
+> Last updated: 2026-05-05 | Total tickets: 30 | Open: 15 | In progress: 1 | In review: 0 | Done: 11 | Deferred: 3
 
 ---
 
@@ -59,7 +59,7 @@ Build top-to-bottom in scroll order. Wire each section to Sanity immediately aft
 | [KNOCH-005](tickets/KNOCH-005.md) | Hero — Film Counter Loader + Reveal Sequence | `✅` | `feature/KNOCH-005-hero-section` | QA PASSED — merged to test. Hero images stay static. |
 | [KNOCH-006](tickets/KNOCH-006.md) | Interlude — Word-by-Word Scroll Reveal | `✅` | `feature/KNOCH-006-interlude-manifesto` | QA PASSED — merged to test |
 | [KNOCH-007](tickets/KNOCH-007.md) | Horizontal Reel — Pinned Scroll Carousel | `✅` | `feature/KNOCH-007-horizontal-reel` | Sanity-driven (3 featured collections); cinematic full-greyscale filter; inner parallax; KNOCH-025 included |
-| [KNOCH-008](tickets/KNOCH-008.md) | Pinned Frame — Parallax + Animated Counters | `⬜` | — | Studio stats section |
+| [KNOCH-008](tickets/KNOCH-008.md) | Pinned Frame — Parallax + Animated Counters | `🔵` | `feature/KNOCH-008-pinned-frame` | Studio stats section |
 | [KNOCH-009](tickets/KNOCH-009.md) | Testimonial Pull-Quote Section | `⬜` | — | Scroll-stagger reveal → wire via KNOCH-024 |
 | [KNOCH-010](tickets/KNOCH-010.md) | Portfolio Grid — Asymmetric 12-Col Archive | `⬜` | — | 7 tiles, contact-sheet layout |
 
