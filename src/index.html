@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Knoch — A Working Studio</title>
+
+    <!-- Primary meta -->
+    <meta name="description" content="Knoch Media — cinematic photography and visual storytelling studio." />
+
+    <!--
+      Google Fonts — preconnect both origins before the stylesheet request
+      so DNS + TLS handshakes are done by the time the browser parses the
+      <link rel="stylesheet"> below. crossorigin is required on the static
+      origin because font files are fetched with CORS.
+    -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+    <!--
+      Font families in load order: Fraunces (display/headlines) → JetBrains
+      Mono (UI chrome, labels) → Inter Tight (body copy). All weights that
+      will be used across the design system are requested in a single URL to
+      minimise the number of Google Fonts round-trips.
+
+      Fraunces: optical size axis (opsz 9..144) + italic for editorial pull-
+      quotes. Weights 300 and 400 cover the --font-serif token variants.
+      JetBrains Mono: 400 + 500 for timecodes and nav labels (KNOCH-003).
+      Inter Tight: 400 + 500 for body and UI copy (KNOCH-002).
+      &display=swap keeps LCP fast — text renders in the fallback font while
+      the web font loads, then swaps once the FOUT window closes.
+    -->
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;1,9..144,400&family=Inter+Tight:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap"
+    />
+
+    <!-- Global design-token stylesheet — will be populated in KNOCH-002 -->
+    <link rel="stylesheet" href="/src/css/global.css" />
+  </head>
+  <body>
+
+    <!-- Page content will be built here -->
+
+    <!--
+      Main JS entry — Vite resolves this as an ES module. GSAP ScrollTrigger
+      and Lenis will be imported here once KNOCH-002 (tokens) and KNOCH-016
+      (smooth scroll) are implemented. Using type="module" gives us top-level
+      await, import.meta, and automatic defer behaviour.
+    -->
+    <script type="module" src="/src/js/main.js"></script>
+  </body>
+</html>
