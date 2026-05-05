@@ -1,7 +1,7 @@
 # Knoch Media — Ticket Summary
 
 > **Living document.** Updated whenever tickets are created, modified, split, or closed.  
-> Last updated: 2026-05-05 | Total tickets: 21 | Open: 15 | In progress: 0 | In review: 0 | Done: 5
+> Last updated: 2026-05-05 | Total tickets: 21 | Open: 15 | In progress: 0 | In review: 1 | Done: 5
 
 ---
 
@@ -38,7 +38,7 @@ Build top-to-bottom in scroll order. Test the complete homepage scroll experienc
 
 | ID | Title | Status | Branch | Notes |
 |----|-------|--------|--------|-------|
-| [KNOCH-005](tickets/KNOCH-005.md) | Hero — Film Counter Loader + Reveal Sequence | `🔵` | `feature/KNOCH-005-hero-section` | Merged to dev — PR pending |
+| [KNOCH-005](tickets/KNOCH-005.md) | Hero — Film Counter Loader + Reveal Sequence | `🔵` | `feature/KNOCH-005-hero-section` | PR #6 open dev → test |
 | [KNOCH-006](tickets/KNOCH-006.md) | Interlude — Word-by-Word Scroll Reveal | `⬜` | — | Manifesto quote section |
 | [KNOCH-007](tickets/KNOCH-007.md) | Horizontal Reel — Pinned Scroll Carousel | `⬜` | — | Most complex interaction; needs KNOCH-016 |
 | [KNOCH-008](tickets/KNOCH-008.md) | Pinned Frame — Parallax + Animated Counters | `⬜` | — | Studio stats section |
@@ -151,7 +151,7 @@ All modifications to this document and ticket files are logged here. Tester agen
 **Tickets affected:** KNOCH-005
 **Reason:** Builder agent completed the hero section with film-counter loader, reveal sequence, and scroll exit
 **Changes:**
-- KNOCH-005: Status changed TODO → MERGED TO DEV
+- KNOCH-005: Status changed TODO → IN REVIEW
 - Branch `feature/KNOCH-005-hero-section` created, implemented, merged into `dev`
 - Files delivered:
   - `src/css/hero.css` — loader overlay styles, hero layout, clip-reveal, vignette, reduced-motion overrides
