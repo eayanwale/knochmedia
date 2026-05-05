@@ -145,15 +145,20 @@ All modifications to this document and ticket files are logged here. Tester agen
 
 ---
 
-### 2026-05-05 — KNOCH-006 started — IN PROGRESS
+### 2026-05-05 — KNOCH-006 implementation complete — MERGED TO DEV
 
-**Action:** Implementation started on feature branch
+**Action:** Implemented and merged to dev; PR to be opened dev → test
 **Tickets affected:** KNOCH-006
-**Reason:** Builder agent beginning interlude manifesto section implementation
+**Reason:** Builder agent completed the interlude manifesto section with word-by-word scroll reveal
 **Changes:**
-- KNOCH-006: Status changed TODO → IN PROGRESS
-- Branch `feature/KNOCH-006-interlude-manifesto` created from `dev`
-- Header counts updated: Open 14→13, In progress 0→1
+- KNOCH-006: Status changed TODO → IN PROGRESS → MERGED TO DEV
+- Branch `feature/KNOCH-006-interlude-manifesto` created, implemented, merged into `dev`
+- Files delivered:
+  - `src/css/interlude.css` — section layout, label, blockquote typography, .word spans, signature, mobile + reduced-motion overrides
+  - `src/js/interlude.js` — childNodes word-splitter, GSAP ScrollTrigger desktop scrub, IntersectionObserver mobile fallback, prefers-reduced-motion guard
+  - `src/index.html` — interlude section markup between hero and reel, interlude.css link in head
+  - `src/js/main.js` — initInterlude() import and call after initHero()
+- Build: 20 modules, 7.95kB CSS / 2.41kB gz, 136.66kB JS / 50.92kB gz, 87ms
 **Requested by:** Builder agent
 
 ---
