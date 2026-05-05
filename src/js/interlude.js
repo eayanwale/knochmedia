@@ -34,8 +34,12 @@ export function initInterlude() {
   // nodes to preserve natural word-wrap. <em> elements are wrapped in a
   // <span class="word"> that contains the whole <em>, so the italic +
   // amber styling still applies and screen readers read it normally.
-  const nodes = Array.from(quote.childNodes)
-  quote.innerHTML = ''
+  // The blockquote contains a <p> — split that, not the blockquote itself.
+  // Targeting the blockquote directly meant the <p> fell into the else-branch
+  // and got cloned as-is, producing zero .word spans.
+  const para = quote.querySelector('p') ?? quote
+  const nodes = Array.from(para.childNodes)
+  para.innerHTML = ''
 
   nodes.forEach(node => {
     if (node.nodeType === Node.TEXT_NODE) {
@@ -47,10 +51,10 @@ export function initInterlude() {
           const span = document.createElement('span')
           span.className = 'word'
           span.textContent = part
-          quote.appendChild(span)
+          para.appendChild(span)
         } else if (part) {
           // Whitespace run — keep as a text node so the browser wraps naturally
-          quote.appendChild(document.createTextNode(part))
+          para.appendChild(document.createTextNode(part))
         }
       })
     } else if (node.nodeName === 'EM') {
@@ -59,14 +63,14 @@ export function initInterlude() {
       const span = document.createElement('span')
       span.className = 'word'
       span.appendChild(node.cloneNode(true))
-      quote.appendChild(span)
+      para.appendChild(span)
     } else {
       // Any other node type (e.g. nested inline elements) — preserve as-is
-      quote.appendChild(node.cloneNode(true))
+      para.appendChild(node.cloneNode(true))
     }
   })
 
-  const words = quote.querySelectorAll('.word')
+  const words = para.querySelectorAll('.word')
 
   // ── Accessibility: mark the inner <p> as a paragraph for AT ──────────
   // The DOM manipulation above preserves text content; screen readers
