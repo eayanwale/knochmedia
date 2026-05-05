@@ -35,10 +35,57 @@
       href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;1,9..144,400&family=Inter+Tight:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap"
     />
 
-    <!-- Global design-token stylesheet — will be populated in KNOCH-002 -->
+    <!-- Global design-token stylesheet (KNOCH-002) -->
     <link rel="stylesheet" href="/src/css/global.css" />
+    <!-- Chrome navigation overlay (KNOCH-003) -->
+    <link rel="stylesheet" href="/src/css/chrome.css" />
   </head>
   <body>
+
+    <!--
+      Chrome navigation overlay — fixed full-viewport layer.
+      pointer-events: none on .chrome itself; children opt back in.
+      mix-blend-mode: difference inverts the white text automatically
+      over any background — no JS color-switching needed.
+      KNOCH-005 (loader) will fade this in after the intro completes.
+    -->
+    <div class="chrome" id="chrome">
+      <div class="chrome-grid">
+
+        <!-- Wordmark / logo -->
+        <a class="mark" href="/" aria-label="Knoch — scroll to top">Knoch<span class="dot" aria-hidden="true">.</span></a>
+
+        <!-- Center nav — hidden on mobile ≤800px -->
+        <nav class="nav-center" aria-label="Main navigation">
+          <a href="#reel"  data-scroll-to="#reel">Work</a>
+          <a href="#frame" data-scroll-to="#frame">Studio</a>
+          <a href="#cta"   data-scroll-to="#cta">Inquire</a>
+        </nav>
+
+        <!-- REC timecode indicator — cosmetic, aria-hidden -->
+        <div class="nav-right" aria-hidden="true">
+          <span class="rec-dot"></span>
+          <span>REC · <span id="tc">00:00:00</span></span>
+        </div>
+
+      </div>
+    </div>
+
+    <!--
+      Bottom timecode bar — cosmetic chrome, aria-hidden.
+      scroll-progress is a progressbar for AT users despite the cosmetic context.
+    -->
+    <div class="timecode-bar" aria-hidden="true">
+      <span>K/M · 2026 · MARYLAND</span>
+      <div class="scroll-progress"
+           id="scroll-progress"
+           role="progressbar"
+           aria-valuenow="0"
+           aria-valuemin="0"
+           aria-valuemax="100"
+           aria-label="Page scroll progress"></div>
+      <span id="frame-display">FRAME 01 / 36</span>
+    </div>
 
     <!-- Page content will be built here -->
 
