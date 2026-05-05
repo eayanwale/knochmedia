@@ -4,7 +4,7 @@
 
 | | Link |
 |--|------|
-| Production | [knochmedia.vercel.app](https://knochmedia.vercel.app) |
+| Production | [knochmedia.xyz](https://knochmedia.xyz) |
 | WIP Preview | [knochmedia-git-test-eayanwales-projects.vercel.app](http://knochmedia-git-test-eayanwales-projects.vercel.app/) |
 | Dashboard | [dashboard.html](https://raw.githack.com/eayanwale/knochmedia/dev/dashboard.html) |
 
