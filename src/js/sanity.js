@@ -1,12 +1,23 @@
-const PROJECT_ID = document.querySelector('meta[name="sanity-project-id"]').content
-const DATASET = document.querySelector('meta[name="sanity-dataset"]').content
+const PROJECT_ID = document.querySelector('meta[name="sanity-project-id"]')?.content ?? ''
+const DATASET    = document.querySelector('meta[name="sanity-dataset"]')?.content ?? ''
 const BASE = `https://${PROJECT_ID}.api.sanity.io/v2024-01-01/data/query/${DATASET}`
 
 async function fetchQuery(groq) {
+  if (!PROJECT_ID || !DATASET) {
+    console.warn('[Sanity] project-id or dataset meta tag missing — using static fallback')
+    return []
+  }
   try {
-    const res = await fetch(`${BASE}?query=${encodeURIComponent(groq)}`)
-    const { result } = await res.json()
-    return result ?? []
+    const url = `${BASE}?query=${encodeURIComponent(groq)}`
+    console.log('[Sanity] fetching:', url)
+    const res = await fetch(url)
+    if (!res.ok) {
+      console.error('[Sanity] HTTP error:', res.status, res.statusText)
+      return []
+    }
+    const json = await res.json()
+    console.log('[Sanity] result count:', json.result?.length ?? 0)
+    return json.result ?? []
   } catch (err) {
     console.error('[Sanity] fetch failed:', err)
     return []

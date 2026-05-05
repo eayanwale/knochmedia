@@ -50,6 +50,8 @@
     <link rel="stylesheet" href="/css/hero.css" />
     <!-- Interlude / manifesto word-reveal section (KNOCH-006) -->
     <link rel="stylesheet" href="/css/interlude.css" />
+    <!-- Horizontal reel carousel (KNOCH-007) -->
+    <link rel="stylesheet" href="/css/reel.css" />
 
     <!--
       LCP image preload — hero-01.jpg is the largest contentful paint element.
@@ -204,8 +206,26 @@
 
     </section><!-- /#interlude -->
 
-    <section id="reel" aria-label="Work">
-      <!-- KNOCH-007: Horizontal reel carousel -->
+    <!--
+      Horizontal reel — pinned scroll carousel (KNOCH-007).
+      .reel-track holds a static .reel-intro panel; reel.js appends
+      the six .reel-card elements and the trailing .reel-spacer at
+      init time. KNOCH-025 will replace the static CARDS array with
+      Sanity data without changing this markup.
+    -->
+    <section id="reel" aria-label="Selected work">
+      <div class="reel-track">
+
+        <div class="reel-intro">
+          <p class="reel-intro-label">Selected Work</p>
+          <h2 class="reel-intro-headline">Selected <em>work.</em></h2>
+          <p class="reel-intro-desc">Cinematic photography and videography<br>crafted for lasting impression.</p>
+          <p class="reel-scroll-hint" aria-hidden="true">&#x2192;&nbsp;&#x2192;&nbsp;&#x2192;&nbsp; Scroll to explore</p>
+        </div>
+
+        <!-- Cards injected by reel.js (KNOCH-007) -->
+
+      </div>
     </section>
 
     <section id="frame" class="pinned-frame grain" aria-label="Studio">
