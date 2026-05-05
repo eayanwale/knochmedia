@@ -1,7 +1,7 @@
 # Knoch Media — Ticket Summary
 
 > **Living document.** Updated whenever tickets are created, modified, split, or closed.  
-> Last updated: 2026-05-05 | Total tickets: 21 | Open: 14 | In progress: 0 | In review: 0 | Done: 6
+> Last updated: 2026-05-05 | Total tickets: 21 | Open: 13 | In progress: 0 | In review: 1 | Done: 6
 
 ---
 
@@ -39,7 +39,7 @@ Build top-to-bottom in scroll order. Test the complete homepage scroll experienc
 | ID | Title | Status | Branch | Notes |
 |----|-------|--------|--------|-------|
 | [KNOCH-005](tickets/KNOCH-005.md) | Hero — Film Counter Loader + Reveal Sequence | `✅` | `feature/KNOCH-005-hero-section` | QA PASSED — merged to test |
-| [KNOCH-006](tickets/KNOCH-006.md) | Interlude — Word-by-Word Scroll Reveal | `⬜` | — | Manifesto quote section |
+| [KNOCH-006](tickets/KNOCH-006.md) | Interlude — Word-by-Word Scroll Reveal | `🔵` | `feature/KNOCH-006-interlude-manifesto` | Manifesto quote section |
 | [KNOCH-007](tickets/KNOCH-007.md) | Horizontal Reel — Pinned Scroll Carousel | `⬜` | — | Most complex interaction; needs KNOCH-016 |
 | [KNOCH-008](tickets/KNOCH-008.md) | Pinned Frame — Parallax + Animated Counters | `⬜` | — | Studio stats section |
 | [KNOCH-009](tickets/KNOCH-009.md) | Testimonial Pull-Quote Section | `⬜` | — | Scroll-stagger reveal |
@@ -142,6 +142,37 @@ Run in this exact order: perf first (changes markup), then mobile (tests perf ch
 ## Changelog
 
 All modifications to this document and ticket files are logged here. Tester agent and code review feedback should be recorded as entries.
+
+---
+
+### 2026-05-05 — KNOCH-006 PR opened — IN REVIEW
+
+**Action:** PR #10 opened dev → test
+**Tickets affected:** KNOCH-006
+**Reason:** Builder agent completed implementation; PR open for tester/code review
+**Changes:**
+- KNOCH-006: Status changed MERGED TO DEV → IN REVIEW
+- PR #10 opened: dev → test at https://github.com/eayanwale/knochmedia/pull/10
+- Header counts updated: In progress 1→0, In review 0→1
+**Requested by:** Builder agent
+
+---
+
+### 2026-05-05 — KNOCH-006 implementation complete — MERGED TO DEV
+
+**Action:** Implemented and merged to dev; PR to be opened dev → test
+**Tickets affected:** KNOCH-006
+**Reason:** Builder agent completed the interlude manifesto section with word-by-word scroll reveal
+**Changes:**
+- KNOCH-006: Status changed TODO → IN PROGRESS → MERGED TO DEV
+- Branch `feature/KNOCH-006-interlude-manifesto` created, implemented, merged into `dev`
+- Files delivered:
+  - `src/css/interlude.css` — section layout, label, blockquote typography, .word spans, signature, mobile + reduced-motion overrides
+  - `src/js/interlude.js` — childNodes word-splitter, GSAP ScrollTrigger desktop scrub, IntersectionObserver mobile fallback, prefers-reduced-motion guard
+  - `src/index.html` — interlude section markup between hero and reel, interlude.css link in head
+  - `src/js/main.js` — initInterlude() import and call after initHero()
+- Build: 20 modules, 7.95kB CSS / 2.41kB gz, 136.66kB JS / 50.92kB gz, 87ms
+**Requested by:** Builder agent
 
 ---
 

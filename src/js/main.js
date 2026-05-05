@@ -1,6 +1,7 @@
 import { initChrome } from './chrome.js';
 import { initCursor } from './cursor.js';
 import { initHero } from './hero.js';
+import { initInterlude } from './interlude.js';
 
 // NOTE: initLenis() is intentionally NOT called here.
 // hero.js calls initLenis() inside the loader's onComplete callback
@@ -18,3 +19,6 @@ initCursor();
 // Hero loader + reveal sequence + scroll exit (KNOCH-005)
 // Also bootstraps Lenis (KNOCH-016) in its onComplete callback.
 initHero();
+
+// Interlude manifesto — word-by-word scroll-driven reveal (KNOCH-006)
+initInterlude();
