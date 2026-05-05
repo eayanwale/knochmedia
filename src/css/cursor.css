@@ -53,6 +53,16 @@
   opacity: 0;
 }
 
+/* Hide cursor during the film-counter loader (KNOCH-005).
+   hero.js adds 'loader-active' to <body> before the loader starts and removes
+   it in the loader's onComplete callback. Using a class (rather than direct
+   opacity: 0 on .cursor) lets this coexist with the GSAP-managed cursor
+   visibility without fighting inline styles. */
+body.loader-active .cursor {
+  opacity: 0;
+  pointer-events: none;
+}
+
 /* Hide cursor on touch devices and mobile */
 @media (max-width: 800px) {
   .cursor {

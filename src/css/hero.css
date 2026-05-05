@@ -1,0 +1,224 @@
+/* ============================================================
+   KNOCH MEDIA — Hero Section + Film-Counter Loader
+   KNOCH-005: Full-screen loader → reveal sequence → scroll exit.
+
+   Architecture overview:
+   ┌─ #loader ──────────────────────────────────────────────────┐
+   │  z-index: --z-loader (10000); covers everything on load.   │
+   │  Counter (18vw Fraunces), amber label, 240px progress bar. │
+   └────────────────────────────────────────────────────────────┘
+   ┌─ #hero ─────────────────────────────────────────────────────┐
+   │  100vh × 100vw, overflow: hidden.                          │
+   │  └─ .hero-bg   — full-bleed BG image, scale(1.1) initial;  │
+   │  │               brightness(0.45) grayscale(0.4).          │
+   │  │   └─ ::after — radial vignette gradient overlay.        │
+   │  └─ .hero-content — centered z-2 text stack.               │
+   │       └─ .hero-meta, .hero-headline, #hero-sub             │
+   └────────────────────────────────────────────────────────────┘
+   ============================================================ */
+
+
+/* ── Film-Counter Loader ──────────────────────────────────── */
+
+#loader {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-loader);
+  background: var(--ink);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  /* autoAlpha: 0 set by GSAP — using visibility + opacity atomically */
+}
+
+/* Amber mono label above the counter */
+.loader-label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--amber);
+  /* Position above the counter with a fixed gap */
+  margin-bottom: 16px;
+}
+
+/* Large film-frame counter — Fraunces light, viewport-scaled */
+.loader-counter {
+  font-family: var(--font-serif);
+  font-size: 18vw;
+  font-weight: 300;
+  line-height: 1;
+  color: var(--paper);
+  letter-spacing: -0.04em;
+  /* Will contain: '00' → '36' via GSAP tween */
+}
+
+/* Progress bar container */
+.loader-progress {
+  width: 240px;
+  height: 1px;
+  background: rgba(237, 230, 216, 0.15);
+  /* Vertical spacing below counter */
+  margin-top: 32px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Amber fill — width animated 0→100% by GSAP */
+.loader-progress-fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0%;
+  height: 100%;
+  background: var(--amber);
+  /* transform-origin left so the fill grows from left edge */
+  transform-origin: left center;
+}
+
+
+/* ── Hero Section ─────────────────────────────────────────── */
+
+#hero {
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Full-bleed background image with cinematic colour treatment.
+   scale(1.1) set here as initial state; GSAP will animate to scale(1)
+   during the reveal. The extra 10% prevents any white edge flash. */
+.hero-bg {
+  position: absolute;
+  inset: 0;
+  background-image: url('/assets/reel/reel-01.png');
+  background-size: cover;
+  background-position: center;
+  filter: brightness(0.45) grayscale(0.4) contrast(1.15);
+  transform: scale(1.1);
+  /* will-change hints GPU compositor for scale tween */
+  will-change: transform;
+}
+
+/* Radial vignette — darkens edges to draw eye to centre.
+   Sits above the bg image, below .hero-content (z-index not needed here
+   because .hero-bg::after is a child of .hero-bg which has no z-index
+   stacking context that would conflict — content uses position:relative z-2). */
+.hero-bg::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse at center,
+    transparent 30%,
+    var(--ink) 95%
+  );
+}
+
+/* ── Hero content stack ── */
+
+.hero-content {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  padding: 0 5vw;
+  /* will-change so GSAP's yPercent tween stays composited */
+  will-change: transform, opacity;
+}
+
+/* Amber mono meta label — [ FILM 01 — A WEDDING IN MAY ] */
+.hero-meta {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--amber);
+  margin-bottom: 24px;
+  opacity: 0; /* revealed by GSAP timeline */
+}
+
+/* H1 headline — Fraunces display, very large */
+.hero-headline {
+  font-family: var(--font-serif);
+  font-weight: 300;
+  font-size: clamp(48px, 9.5vw, 156px);
+  line-height: 0.92;
+  letter-spacing: -0.04em;
+  color: var(--paper);
+  margin: 0;
+}
+
+/* Clip-reveal container per line.
+   overflow: hidden clips the span before it slides up into view.
+   display: block keeps each line on its own row. */
+.hero-headline .line {
+  overflow: hidden;
+  display: block;
+}
+
+/* The actual text node that slides up from translateY(110%).
+   display: block inside overflow:hidden parent — this is the
+   standard "mask reveal" technique. GSAP will tween to translateY(0). */
+.hero-headline .line span {
+  display: block;
+  transform: translateY(110%);
+  will-change: transform;
+}
+
+/* Italic amber highlight for "staged." and "remembered." */
+.hero-headline em {
+  font-style: italic;
+  color: var(--amber);
+  /* Inherit size/weight from .hero-headline — only colour/style differs */
+}
+
+/* Sub-text — scroll prompt */
+#hero-sub {
+  margin-top: 3rem;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: rgba(237, 230, 216, 0.6);
+  opacity: 0; /* revealed by GSAP timeline */
+}
+
+
+/* ── Mobile / reduced-motion overrides ───────────────────── */
+
+@media (max-width: 800px) {
+  /* Reduce counter size on small screens */
+  .loader-counter {
+    font-size: 28vw;
+  }
+
+  /* Tighten the label kerning at small scale */
+  .loader-label {
+    font-size: 10px;
+    letter-spacing: 0.2em;
+  }
+}
+
+/* Respect prefers-reduced-motion — skip animations, show final states.
+   The loader still appears (for image-load buffering) but snaps instantly. */
+@media (prefers-reduced-motion: reduce) {
+  .hero-bg {
+    transform: scale(1); /* skip the scale-down reveal */
+  }
+
+  .hero-headline .line span {
+    transform: translateY(0); /* skip the line reveal */
+  }
+
+  .hero-meta,
+  #hero-sub {
+    opacity: 1; /* already visible, no fade */
+  }
+}
