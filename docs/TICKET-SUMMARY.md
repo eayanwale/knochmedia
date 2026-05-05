@@ -1,7 +1,7 @@
 # Knoch Media — Ticket Summary
 
 > **Living document.** Updated whenever tickets are created, modified, split, or closed.  
-> Last updated: 2026-05-05 | Total tickets: 21 | Open: 14 | In progress: 0 | In review: 0 | Done: 6
+> Last updated: 2026-05-05 | Total tickets: 21 | Open: 13 | In progress: 1 | In review: 0 | Done: 6
 
 ---
 
@@ -39,7 +39,7 @@ Build top-to-bottom in scroll order. Test the complete homepage scroll experienc
 | ID | Title | Status | Branch | Notes |
 |----|-------|--------|--------|-------|
 | [KNOCH-005](tickets/KNOCH-005.md) | Hero — Film Counter Loader + Reveal Sequence | `✅` | `feature/KNOCH-005-hero-section` | QA PASSED — merged to test |
-| [KNOCH-006](tickets/KNOCH-006.md) | Interlude — Word-by-Word Scroll Reveal | `⬜` | — | Manifesto quote section |
+| [KNOCH-006](tickets/KNOCH-006.md) | Interlude — Word-by-Word Scroll Reveal | `🔵` | `feature/KNOCH-006-interlude-manifesto` | Manifesto quote section |
 | [KNOCH-007](tickets/KNOCH-007.md) | Horizontal Reel — Pinned Scroll Carousel | `⬜` | — | Most complex interaction; needs KNOCH-016 |
 | [KNOCH-008](tickets/KNOCH-008.md) | Pinned Frame — Parallax + Animated Counters | `⬜` | — | Studio stats section |
 | [KNOCH-009](tickets/KNOCH-009.md) | Testimonial Pull-Quote Section | `⬜` | — | Scroll-stagger reveal |
@@ -142,6 +142,19 @@ Run in this exact order: perf first (changes markup), then mobile (tests perf ch
 ## Changelog
 
 All modifications to this document and ticket files are logged here. Tester agent and code review feedback should be recorded as entries.
+
+---
+
+### 2026-05-05 — KNOCH-006 started — IN PROGRESS
+
+**Action:** Implementation started on feature branch
+**Tickets affected:** KNOCH-006
+**Reason:** Builder agent beginning interlude manifesto section implementation
+**Changes:**
+- KNOCH-006: Status changed TODO → IN PROGRESS
+- Branch `feature/KNOCH-006-interlude-manifesto` created from `dev`
+- Header counts updated: Open 14→13, In progress 0→1
+**Requested by:** Builder agent
 
 ---
 

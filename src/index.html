@@ -44,6 +44,8 @@
     <link rel="stylesheet" href="/css/cursor.css" />
     <!-- Hero section + film-counter loader (KNOCH-005) -->
     <link rel="stylesheet" href="/css/hero.css" />
+    <!-- Interlude / manifesto word-reveal section (KNOCH-006) -->
+    <link rel="stylesheet" href="/css/interlude.css" />
 
     <!--
       LCP image preload — hero-01.jpg is the largest contentful paint element.
@@ -167,6 +169,36 @@
       </div><!-- /.hero-content -->
 
     </section><!-- /#hero -->
+
+    <!-- ── INTERLUDE / MANIFESTO ─────────────────────────────── -->
+    <!--
+      Transitional breathing-room section between hero and reel.
+      .grain applies the SVG feTurbulence film-grain ::after overlay
+      (defined in cursor.css — not re-implemented here).
+      aria-label gives screen readers a meaningful region name.
+      The blockquote <p> text is left intact so AT reads the full
+      sentence; JS wraps words in <span class="word"> (inline elements)
+      which screen readers traverse transparently.
+    -->
+    <section id="interlude" class="interlude grain" aria-label="Studio manifesto">
+
+      <!-- Amber mono label — top-left; faded in by JS via .is-visible class -->
+      <p class="interlude-label">— A note before we begin</p>
+
+      <!--
+        Editorial blockquote — Fraunces 300 at clamp(28px,5vw,64px).
+        JS (interlude.js) splits the inner <p>'s childNodes into .word spans
+        at init time, preserving the <em> element for italic amber styling.
+        The <em> wraps "quietly" — the sole emphasis word in the manifesto.
+      -->
+      <blockquote class="interlude-quote">
+        <p>I don't photograph weddings. I attend them &mdash; <em>quietly</em> &mdash; and bring back what was beautiful.</p>
+      </blockquote>
+
+      <!-- Cosmetic signature — aria-hidden so AT skips it -->
+      <p class="interlude-sig" aria-hidden="true">— Enoch Knoch &middot; Founder</p>
+
+    </section><!-- /#interlude -->
 
     <section id="reel" aria-label="Work">
       <!-- KNOCH-007: Horizontal reel carousel -->

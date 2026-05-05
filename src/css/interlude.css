@@ -1,0 +1,138 @@
+/* ============================================================
+   KNOCH-006 — Interlude / Manifesto Section
+   Transitional 100vh breathing-room between hero and reel.
+   A single editorial blockquote scrubbed word-by-word via
+   GSAP ScrollTrigger (desktop) / IntersectionObserver (mobile).
+   ============================================================ */
+
+/* ── Section shell ── */
+.interlude {
+  position: relative;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 8vw;
+  /* Background inherits --ink from body; no explicit background needed
+     so that the .grain ::after overlay (from cursor.css) renders correctly
+     over whatever the section's stacking context produces. */
+  background: var(--ink);
+}
+
+/* ── Amber category label (top-left) ── */
+.interlude-label {
+  position: absolute;
+  top: 18vh;
+  left: 8vw;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--amber);
+  /* Starts invisible; GSAP or CSS transition fades it in.
+     We tie it to the same ScrollTrigger as the words so it
+     appears in sync with the first words becoming visible. */
+  opacity: 0;
+  transition: opacity 0.6s var(--ease-cinematic);
+}
+
+/* Fade label in once any word has been triggered.
+   interlude.js adds .is-visible on the section when the
+   IntersectionObserver fires (mobile) or GSAP begins (desktop). */
+.interlude.is-visible .interlude-label {
+  opacity: 1;
+}
+
+/* ── Editorial blockquote ── */
+.interlude-quote {
+  font-family: var(--font-serif);
+  font-weight: 300;
+  font-size: clamp(28px, 5vw, 64px);
+  line-height: 1.15;
+  max-width: 22ch;
+  color: var(--paper);
+
+  /* Reset browser blockquote margin */
+  margin: 0;
+  padding: 0;
+  border: none;
+}
+
+/* ── <em> — italic amber emphasis word ── */
+.interlude-quote em {
+  color: var(--amber);
+  font-style: italic;
+  /* font-style is inherited by the <em> inside .word spans —
+     keeping the rule here rather than on .word em ensures that
+     if the span is ever missing (e.g. JS off), the em still italicises. */
+}
+
+/* ── Individual word spans (injected by JS) ── */
+.word {
+  display: inline;
+  /* JS sets opacity via GSAP; CSS sets the starting state so
+     there's no flash of fully-visible words before GSAP initialises. */
+  opacity: 0.15;
+  /* will-change allows the browser to promote each word to its own
+     compositor layer, avoiding layout/paint during the scrub. */
+  will-change: opacity;
+}
+
+/* ── Signature (bottom-right) ── */
+.interlude-sig {
+  position: absolute;
+  bottom: 10vh;
+  right: 8vw;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--paper);
+  opacity: 0.4;
+  /* aria-hidden="true" is set in HTML; this is purely cosmetic chrome */
+}
+
+/* ── Mobile (≤800px) ── */
+@media (max-width: 800px) {
+  .interlude {
+    /* min-height instead of fixed height lets the section grow if
+       large text wraps to many lines on a narrow viewport. */
+    height: auto;
+    min-height: 100vh;
+  }
+
+  /* On mobile the JS word-split still runs but GSAP is skipped.
+     Instead, IntersectionObserver adds .is-visible to the QUOTE element
+     and this transition fades the whole block in at once — far less
+     compositor work than 15+ simultaneous opacity tweens. */
+  .interlude-quote {
+    opacity: 0;
+    transition: opacity 0.8s var(--ease-cinematic);
+  }
+
+  /* All words visible at their natural opacity once the block fades in */
+  .interlude-quote.is-visible {
+    opacity: 1;
+  }
+
+  .interlude-quote.is-visible .word {
+    opacity: 1;
+  }
+}
+
+/* ── Reduced motion ── */
+@media (prefers-reduced-motion: reduce) {
+  /* Skip all animation; show the section content immediately at full opacity */
+  .interlude-label {
+    opacity: 1;
+    transition: none;
+  }
+
+  .interlude-quote {
+    opacity: 1 !important;
+    transition: none !important;
+  }
+
+  .word {
+    opacity: 1 !important;
+    will-change: auto;
+  }
+}
