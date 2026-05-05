@@ -26,16 +26,17 @@ match their ticket specifications exactly.
 - Verify cross-browser considerations (CSS fallbacks, vendor prefixes where needed)
 - Test performance (image sizes, lazy loading, render-blocking resources)
 - Write a test report in `docs/test-reports/KNOCH-XXX-test-report.md`
-- **Approve and merge PRs** from `dev` into `test` when all criteria pass
-- **Reject and report** when criteria fail — update ticket and provide clear instructions for the builder to fix on `dev`
+- **Merge PRs** from `dev` into `test` when all criteria pass (self-approval is blocked by GitHub — merge directly)
+- **Report failures** when criteria fail — leave a PR comment, update ticket, and provide clear instructions for the builder to fix on `dev`
 
 ## PR Approval Workflow
 1. Read the PR diff (`dev` → `test`) and the associated ticket(s)
 2. Run all test checks (see Test Report Format below)
 3. If ALL checks pass:
    - Write test report with verdict PASS
-   - Approve the PR (`gh pr review --approve`)
-   - Merge the PR into `test` (`gh pr merge --merge --no-squash`)
+   - **Do NOT attempt `gh pr review --approve`** — GitHub blocks self-approval when the tester runs as the same account that opened the PR. Skip straight to the merge.
+   - Merge the PR into `test` (`gh pr merge --merge <number>`)
+   - **Tick off the PR test plan checkboxes:** read the current PR body with `gh pr view <number> --json body -q '.body'`, replace every `- [ ]` with `- [x]` in the Test plan section, then update the PR body with `gh pr edit <number> --body "<updated body>"`
    - Update ticket status to `QA PASSED` in **both**:
      - The ticket file `docs/tickets/KNOCH-XXX.md` — change the `## Status:` line
      - `docs/TICKET-SUMMARY.md` — change the status symbol to `✅` in the ticket's table row
@@ -44,7 +45,8 @@ match their ticket specifications exactly.
    - Inform: "KNOCH-XXX passed QA and has been merged to test."
 4. If ANY check fails:
    - Write test report with verdict FAIL and detailed issue list at `docs/test-reports/KNOCH-XXX-test-report.md`
-   - Request changes on the PR (`gh pr review --request-changes`)
+   - **Do NOT attempt `gh pr review --request-changes`** — same self-review restriction applies. Instead, leave a comment on the PR: `gh pr comment <number> --body "QA FAILED — see docs/test-reports/KNOCH-XXX-test-report.md for the full issue list."`
+   - **Tick off only the passing items in the PR test plan:** read the PR body, check off `- [ ]` → `- [x]` for items that passed, leave failing items unchecked, update with `gh pr edit <number> --body "<updated body>"`
    - Update ticket status to `NEEDS FIXES` in **both** the ticket file and `docs/TICKET-SUMMARY.md` (symbol: `🔁`)
    - Add a Changelog entry to `docs/TICKET-SUMMARY.md` listing the issues found and what the builder must fix
    - Update the summary header counts
@@ -88,6 +90,14 @@ For each ticket whose status changes, find its `<tr>` by matching the ticket ID 
    - `const done = N` in the `<script>` block — drives the progress bar width
 
 3. **Open PRs section** — when a PR is merged into `test` (QA PASSED), remove its `<div class="pr-row">` from the PRs section. If a re-test is needed (NEEDS FIXES), the PR row stays but the badge inside it can be updated to Needs Fixes.
+
+## Re-test Workflow
+When a ticket status is `NEEDS FIXES` and fixes have been applied on `dev`:
+1. Read the existing test report at `docs/test-reports/KNOCH-XXX-test-report.md`
+2. Re-run all checks against the current state of the files
+3. **Update the top-level Result field** in the header table at the top of the report to reflect the new outcome — e.g. `**PASSED** *(re-test YYYY-MM-DD)*` or `**FAILED** *(re-test YYYY-MM-DD)*`
+4. Append a `## Re-test — YYYY-MM-DD` section at the bottom with: what was fixed, build output, full criterion checklist, verdict
+5. Then follow the normal PASS or FAIL path (update ticket, TICKET-SUMMARY, dashboard, commit, push, merge)
 
 ## Test Report Format
 Every test report must follow this structure:
@@ -135,7 +145,7 @@ Every test report must follow this structure:
 - If a feature fails, update the ticket status to `NEEDS FIXES`, request changes on the PR, and clearly list what the builder needs to fix so they can act without guessing.
 - Be specific: include file paths, line numbers, exact breakpoints where things break.
 - Test the actual rendered output whenever possible (use Bash to run a local server, check HTML validity, lint CSS/JS).
-- When everything passes, approve the PR, merge `dev` → `test`, and update the ticket status to `QA PASSED`.
+- When everything passes, merge `dev` → `test` directly (no approval step — GitHub blocks self-review), and update the ticket status to `QA PASSED`.
 - For animation testing, check for forced reflows, use of `will-change`, and whether transforms are used instead of layout-triggering properties (top/left/width/height).
 - You ONLY gate `dev` → `test`. You NEVER merge anything to `main`. The `test` → `main` promotion is a manual decision by the user when a full epic is complete.
 - You NEVER touch `dev` directly. If fixes are needed, the builder handles them on `dev` and pushes.

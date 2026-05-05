@@ -1,0 +1,175 @@
+/* ============================================================
+   KNOCH MEDIA — Chrome Navigation
+   Full-viewport fixed overlay. mix-blend-mode: difference means
+   white text inverts to near-black over light sections automatically
+   with zero JS — GPU-composited, no color-switching logic needed.
+   ============================================================ */
+
+/* ── Top chrome shell ── */
+.chrome {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: var(--z-chrome);
+  padding: 28px 36px;
+  mix-blend-mode: difference;
+}
+
+/* Re-enable pointer events for interactive children only */
+.chrome > * {
+  pointer-events: auto;
+}
+
+/* Three-column grid: logo | nav | rec */
+.chrome-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  align-items: start;
+}
+
+/* ── Wordmark / logo ── */
+.mark {
+  font-family: var(--font-serif);
+  font-size: 17px;
+  font-weight: 400;
+  color: var(--paper);
+  letter-spacing: -0.01em;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.mark .dot {
+  color: var(--amber);
+}
+
+.mark:focus-visible {
+  outline: 2px solid var(--amber);
+  outline-offset: 4px;
+}
+
+/* ── Center nav links ── */
+.nav-center {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--paper);
+}
+
+.nav-center a {
+  position: relative;
+  padding: 4px 0;
+  color: inherit;
+  text-decoration: none;
+}
+
+/* Underline-slide hover — amber line grows from left */
+.nav-center a::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background: var(--amber);
+  transition: width 0.4s var(--ease-cinematic);
+}
+
+.nav-center a:hover::after {
+  width: 100%;
+}
+
+/* Show underline on keyboard focus too — mirrors hover */
+.nav-center a:focus-visible::after {
+  width: 100%;
+}
+
+.nav-center a:focus-visible {
+  outline: 2px solid var(--amber);
+  outline-offset: 4px;
+  border-radius: var(--radius-sm);
+}
+
+/* ── REC indicator ── */
+.nav-right {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  color: var(--paper);
+}
+
+.rec-dot {
+  width: 6px;
+  height: 6px;
+  background: var(--amber);
+  border-radius: 50%;
+  flex-shrink: 0;
+  animation: pulse 1.6s ease-in-out infinite;
+}
+
+/* pulse keyframe — shared with dashboard dot, defined globally here */
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.3; }
+}
+
+/* ── Bottom timecode bar ── */
+.timecode-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 18px 36px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: var(--z-chrome);
+  pointer-events: none;
+  mix-blend-mode: difference;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  color: var(--paper);
+}
+
+/* Scroll-progress line — amber fill via --p CSS variable set by JS */
+.scroll-progress {
+  flex: 1;
+  margin: 0 24px;
+  height: 1px;
+  background: rgba(237, 230, 216, 0.15);
+  position: relative;
+}
+
+.scroll-progress::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: var(--p, 0%);
+  height: 100%;
+  background: var(--amber);
+}
+
+/* ── Mobile ≤800px ── */
+@media (max-width: 800px) {
+  .chrome {
+    padding: 18px 20px;
+  }
+
+  /* Hide center links — logo and REC remain */
+  .nav-center {
+    display: none;
+  }
+
+  .timecode-bar {
+    padding: 14px 20px;
+  }
+}

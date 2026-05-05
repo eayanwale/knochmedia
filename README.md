@@ -2,10 +2,11 @@
 
 ## Quick Links
 
-| Page | Preview |
-|------|---------|
+| | Link |
+|--|------|
+| Production | [knochmedia.vercel.app](https://knochmedia.vercel.app) |
+| Dev preview | [knochmedia-git-dev-eayanwale.vercel.app](https://knochmedia-git-dev-eayanwale.vercel.app) |
 | Dashboard | [dashboard.html](https://raw.githack.com/eayanwale/knochmedia/dev/dashboard.html) |
-| Portfolio | [src/index.html](https://raw.githack.com/eayanwale/knochmedia/dev/src/index.html) |
 
 An experimental, story-driven photography portfolio built with GSAP and ScrollTrigger. This project explores how motion, typography, and layout can work together to create a cinematic, immersive web experience rather than a traditional image gallery.
 

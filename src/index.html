@@ -7,6 +7,7 @@
 
     <!-- Primary meta -->
     <meta name="description" content="Knoch Media — cinematic photography and visual storytelling studio." />
+    <meta name="theme-color" content="#0a0a0a" />
 
     <!--
       Google Fonts — preconnect both origins before the stylesheet request
@@ -35,12 +36,88 @@
       href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;1,9..144,400&family=Inter+Tight:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap"
     />
 
-    <!-- Global design-token stylesheet — will be populated in KNOCH-002 -->
-    <link rel="stylesheet" href="/src/css/global.css" />
+    <!-- Global design-token stylesheet (KNOCH-002) -->
+    <link rel="stylesheet" href="/css/global.css" />
+    <!-- Chrome navigation overlay (KNOCH-003) -->
+    <link rel="stylesheet" href="/css/chrome.css" />
+    <!-- Custom cursor + film-grain overlay (KNOCH-004) -->
+    <link rel="stylesheet" href="/css/cursor.css" />
   </head>
   <body>
 
-    <!-- Page content will be built here -->
+    <!--
+      Custom cursor — fixed amber ring tracked by GSAP quickTo.
+      Hidden on touch / coarse-pointer devices via CSS.
+      Progressive enhancement: body retains cursor:pointer if JS fails.
+      KNOCH-005 (loader) will hide this during the intro sequence.
+    -->
+    <div class="cursor" id="cursor" aria-hidden="true"></div>
+
+    <!--
+      Chrome navigation overlay — fixed full-viewport layer.
+      pointer-events: none on .chrome itself; children opt back in.
+      mix-blend-mode: difference inverts the white text automatically
+      over any background — no JS color-switching needed.
+      KNOCH-005 (loader) will fade this in after the intro completes.
+    -->
+    <div class="chrome" id="chrome">
+      <div class="chrome-grid">
+
+        <!-- Wordmark / logo -->
+        <a class="mark" href="/" aria-label="Knoch — scroll to top">Knoch<span class="dot" aria-hidden="true">.</span></a>
+
+        <!-- Center nav — hidden on mobile ≤800px -->
+        <nav class="nav-center" aria-label="Main navigation">
+          <a href="#reel"  data-scroll-to="#reel">Work</a>
+          <a href="#frame" data-scroll-to="#frame">Studio</a>
+          <a href="#cta"   data-scroll-to="#cta">Inquire</a>
+        </nav>
+
+        <!-- REC timecode indicator — cosmetic, aria-hidden -->
+        <div class="nav-right" aria-hidden="true">
+          <span class="rec-dot"></span>
+          <span>REC · <span id="tc">00:00:00</span></span>
+        </div>
+
+      </div>
+    </div>
+
+    <!--
+      Bottom timecode bar — cosmetic chrome, aria-hidden.
+      scroll-progress is a progressbar for AT users despite the cosmetic context.
+    -->
+    <div class="timecode-bar" aria-hidden="true">
+      <span>K/M · 2026 · MARYLAND</span>
+      <div class="scroll-progress"
+           id="scroll-progress"
+           role="progressbar"
+           aria-valuenow="0"
+           aria-valuemin="0"
+           aria-valuemax="100"
+           aria-label="Page scroll progress"></div>
+      <span id="frame-display">FRAME 01 / 36</span>
+    </div>
+
+    <!--
+      Page content stubs — full sections built in Phase 2 tickets.
+      .grain class activates the SVG feTurbulence film-grain ::after overlay.
+      IDs match chrome nav anchor targets (KNOCH-003).
+    -->
+    <section id="hero" class="hero-bg grain" aria-label="Hero">
+      <!-- KNOCH-005: Film counter loader + full-bleed hero image -->
+    </section>
+
+    <section id="reel" aria-label="Work">
+      <!-- KNOCH-007: Horizontal reel carousel -->
+    </section>
+
+    <section id="frame" class="pinned-frame grain" aria-label="Studio">
+      <!-- KNOCH-008: Pinned frame parallax + counters -->
+    </section>
+
+    <section id="cta" aria-label="Inquire">
+      <!-- KNOCH-014: Contact / qualified inquiry form -->
+    </section>
 
     <!--
       Main JS entry — Vite resolves this as an ES module. GSAP ScrollTrigger
@@ -48,6 +125,6 @@
       (smooth scroll) are implemented. Using type="module" gives us top-level
       await, import.meta, and automatic defer behaviour.
     -->
-    <script type="module" src="/src/js/main.js"></script>
+    <script type="module" src="/js/main.js"></script>
   </body>
 </html>

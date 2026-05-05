@@ -1,7 +1,7 @@
 # Knoch Media — Ticket Summary
 
 > **Living document.** Updated whenever tickets are created, modified, split, or closed.  
-> Last updated: 2026-05-05 | Total tickets: 21 | Open: 20 | In progress: 0 | Done: 1
+> Last updated: 2026-05-05 | Total tickets: 21 | Open: 16 | In progress: 0 | In review: 0 | Done: 5
 
 ---
 
@@ -25,10 +25,10 @@ These must be completed before any other ticket can be built. No component shoul
 | ID | Title | Status | Branch | Notes |
 |----|-------|--------|--------|-------|
 | [KNOCH-001](tickets/KNOCH-001.md) | Project Scaffolding & Build Setup (Vite) | `✅` | `feature/KNOCH-001-project-scaffold` | Entry point for all other work |
-| [KNOCH-002](tickets/KNOCH-002.md) | Design Tokens & CSS Custom Properties | `⬜` | — | Depends on KNOCH-001 |
-| [KNOCH-016](tickets/KNOCH-016.md) | Smooth Scrolling — Lenis + ScrollTrigger Sync | `⬜` | — | Must precede KNOCH-007 |
-| [KNOCH-003](tickets/KNOCH-003.md) | Cinematic Chrome Navigation + Timecode Bar | `⬜` | — | Fixed overlay, all pages |
-| [KNOCH-004](tickets/KNOCH-004.md) | Custom Cursor & Film-Grain Overlay | `⬜` | — | Desktop only |
+| [KNOCH-002](tickets/KNOCH-002.md) | Design Tokens & CSS Custom Properties | `✅` | `feature/KNOCH-002-design-tokens` | QA PASSED — merged to test |
+| [KNOCH-016](tickets/KNOCH-016.md) | Smooth Scrolling — Lenis + ScrollTrigger Sync | `✅` | `feature/KNOCH-016-lenis-smooth-scroll` | QA PASSED — merged to test |
+| [KNOCH-003](tickets/KNOCH-003.md) | Cinematic Chrome Navigation + Timecode Bar | `✅` | `feature/KNOCH-003-chrome-navigation` | QA PASSED — merged to test |
+| [KNOCH-004](tickets/KNOCH-004.md) | Custom Cursor & Film-Grain Overlay | `✅` | `feature/KNOCH-004-cursor-film-grain` | QA PASSED — merged to test |
 
 ---
 
@@ -142,6 +142,130 @@ Run in this exact order: perf first (changes markup), then mobile (tests perf ch
 ## Changelog
 
 All modifications to this document and ticket files are logged here. Tester agent and code review feedback should be recorded as entries.
+
+---
+
+### 2026-05-05 — KNOCH-004 QA PASSED
+
+**Action:** QA run by Tester Agent. All 8 acceptance criteria pass.
+**Tickets affected:** KNOCH-004
+**Reason:** Custom cursor and film-grain overlay verified against ticket spec and production bundle.
+**Changes:**
+- KNOCH-004: Status changed IN REVIEW → QA PASSED
+- PR #5 merged: dev → test
+- Dashboard badge updated: In Review → QA Passed (green)
+- Stat counts updated: In review 1→0, Done 4→5
+**Passing checks:** All 8 ACs — .cursor fixed properties (position/24px/amber border/border-radius/pointer-events/z-index/mix-blend-mode), 2px amber ::before dot, GSAP quickTo x+y (0.35s/power3.out) with GSAP auto-detecting CSS translate(-50%,-50%) for correct centering, .cursor.grow (80px/rgba amber fill/event delegation on a+button+.reel-card+.tile+.cta .button), mobile hidden (width<=800px + pointer:coarse), feTurbulence grain (baseFrequency:0.9/numOctaves:2/opacity:0.17/static data URI), no canvas/rAF in grain, cursor:none scoped to @media(pointer:fine) for progressive enhancement.
+**Full report:** `docs/test-reports/KNOCH-004-test-report.md`
+**Completed by:** Tester Agent
+
+---
+
+### 2026-05-05 — KNOCH-004 implementation complete — PR #5 open
+
+**Action:** Implemented and PR opened dev → test
+**Tickets affected:** KNOCH-004
+**Reason:** Builder agent completed the custom cursor + film-grain overlay layer
+**Changes:**
+- KNOCH-004: Status changed TODO → IN PROGRESS → MERGED TO DEV → IN REVIEW
+- Branch `feature/KNOCH-004-cursor-film-grain` created, implemented, merged into `dev`
+- PR #5 opened: dev → test at https://github.com/eayanwale/knochmedia/pull/5
+- Files delivered: `src/css/cursor.css` (cursor ring + grow state + .grain::after film-grain overlay), `src/js/cursor.js` (GSAP quickTo tracking + grow/shrink), `src/index.html` (cursor element + section stubs with .grain class), `src/js/main.js` (initCursor call)
+- Build: 16 modules, 4.53 kB CSS / 1.67 kB gz, 133.78 kB JS / 50.23 kB gz, 79ms
+**Requested by:** Builder agent
+
+---
+
+### 2026-05-05 — KNOCH-003 QA PASSED
+
+**Action:** QA run by Tester Agent. All 10 acceptance criteria pass.
+**Tickets affected:** KNOCH-003
+**Reason:** Chrome navigation overlay verified against ticket spec, reference design, and production bundle.
+**Changes:**
+- KNOCH-003: Status changed IN REVIEW → QA PASSED
+- PR #4 merged: dev → test
+- Dashboard badge updated: In Review → QA Passed (green)
+- Stat counts updated: In review 1→0, Done 3→4
+**Passing checks:** All 10 ACs — .chrome fixed properties (position/inset/pointer-events/z-index/mix-blend-mode), 3-col grid, Fraunces wordmark with amber dot, 11px mono nav links with ease-cinematic underline-slide, setInterval timecode, bottom timecode bar with K/M·2026·MARYLAND, 800px breakpoint hides nav-center, focus-visible outlines, frame counter Math.ceil formula 1–36. LOW note: role="progressbar" inside aria-hidden parent (KNOCH-021 scope).
+**Full report:** `docs/test-reports/KNOCH-003-test-report.md`
+**Completed by:** Tester Agent
+
+---
+
+### 2026-05-05 — KNOCH-003 implementation complete — PR #4 open
+
+**Action:** Implemented and PR opened dev → test
+**Tickets affected:** KNOCH-003
+**Reason:** Builder agent completed the chrome navigation overlay
+**Changes:**
+- KNOCH-003: Status changed TODO → IN PROGRESS → MERGED TO DEV → IN REVIEW
+- Branch `feature/KNOCH-003-chrome-navigation` created, implemented, merged into `dev`
+- PR #4 opened: dev → test at https://github.com/eayanwale/knochmedia/pull/4
+- Files delivered: `src/css/chrome.css`, `src/js/chrome.js`, `src/index.html` updated, `src/js/main.js` updated
+- Build: 14 modules, 3.29 kB CSS / 1.27 kB gz, 133.02 kB JS / 50.04 kB gz, 79ms
+**Requested by:** Builder agent
+
+---
+
+### 2026-05-05 — KNOCH-016 QA PASSED
+
+**Action:** QA run by Tester Agent. All 9 acceptance criteria pass.
+**Tickets affected:** KNOCH-016
+**Reason:** Lenis module verified against ticket spec, Lenis v1.3.23 API, and production bundle.
+**Changes:**
+- KNOCH-016: Status changed IN REVIEW → QA PASSED
+- PR #3 merged: dev → test
+- Dashboard badge updated: In Review → QA Passed (green)
+- Stat counts updated: In review 1→0, Done 2→3
+**Passing checks:** All 9 ACs — lenis in package.json, constructor options (duration/easing/orientation/smoothWheel/autoRaf), GSAP ticker add + lagSmoothing(0), ScrollTrigger proxy with scrollTop getter/setter + getBoundingClientRect, lenis.on('scroll') sync, pointer:coarse touch guard, stopLenis/startLenis exports, 5 named exports from lenis.js, scrollTo() with duration 1.5 + touch fallback, main.js bootstrap, npm run build clean.
+**Full report:** `docs/test-reports/KNOCH-016-test-report.md`
+**Completed by:** Tester Agent
+
+---
+
+### 2026-05-05 — KNOCH-016 implementation complete — PR #3 open
+
+**Action:** Implemented and PR opened dev → test
+**Tickets affected:** KNOCH-016
+**Reason:** Builder agent completed Lenis smooth scroll layer
+**Changes:**
+- KNOCH-016: Status changed TODO → IN PROGRESS → MERGED TO DEV → IN REVIEW
+- Branch `feature/KNOCH-016-lenis-smooth-scroll` created, implemented, merged into `dev`
+- PR #3 opened: dev → test at https://github.com/eayanwale/knochmedia/pull/3
+- Files delivered: `src/js/lenis.js` (Lenis module + GSAP sync), `src/js/main.js` (updated bootstrap)
+- Build verified: vite v8.0.10, 12 modules, 131.73 kB JS / 49.59 kB gzip (expected — GSAP+Lenis bundled)
+**Requested by:** Builder agent
+
+---
+
+### 2026-05-05 — KNOCH-002 QA PASSED
+
+**Action:** QA run by Tester Agent. All 11 acceptance criteria pass.
+**Tickets affected:** KNOCH-002
+**Reason:** Design token layer verified against ticket spec, reference values, and production build output.
+**Changes:**
+- KNOCH-002: Status changed IN REVIEW → QA PASSED
+- PR #2 merged: dev → test
+- Dashboard badge updated: In Review → QA Passed (green)
+- Stat counts updated: In review 1→0, Done 1→2
+**Passing checks:** All 11 ACs — tokens.css on :root, exact color values (#0a0a0a/#ede6d8/#e8a23a/#7a2418/rgba), 4 semantic tokens, 3 font stacks, 6-step spacing scale (4–128px), 3 easing cubic-beziers, z-index layers (10000/9999/50), 2 radius tokens, global.css reset + imports, pointer:fine cursor scoping, light-mode stub, global.css linked in index.html.
+**Full report:** `docs/test-reports/KNOCH-002-test-report.md`
+**Completed by:** Tester Agent
+
+---
+
+### 2026-05-05 — KNOCH-002 implementation complete — PR #2 open
+
+**Action:** Implemented and PR opened dev → test  
+**Tickets affected:** KNOCH-002  
+**Reason:** Builder agent completed the full design token layer  
+**Changes:**
+- KNOCH-002: Status changed TODO → IN PROGRESS → MERGED TO DEV → IN REVIEW
+- Branch `feature/KNOCH-002-design-tokens` created, implemented, and merged into `dev`
+- PR #2 opened: dev → test at https://github.com/eayanwale/knochmedia/pull/2
+- Files delivered: `src/css/tokens.css` (all design tokens on `:root`), `src/css/global.css` (imports tokens + baseline reset)
+- Build verified: `vite v8.0.10`, 5 modules transformed, `dist/` emitted cleanly in 110ms
+**Requested by:** Builder agent
 
 ---
 
