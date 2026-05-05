@@ -94,14 +94,14 @@
   height: 100%;
   background-size: cover;
   background-position: center;
-  filter: grayscale(0.3) brightness(0.85);
-  transition: filter 0.6s var(--ease-cinematic);
+  filter: grayscale(1) contrast(1.08) brightness(0.82);
+  transition: filter 0.7s var(--ease-cinematic);
   will-change: transform;
 }
 
 .reel-card:hover .reel-card-img,
 .reel-card:focus-visible .reel-card-img {
-  filter: grayscale(0) brightness(1);
+  filter: grayscale(0) contrast(1.05) brightness(0.95);
 }
 
 /* ── Film-notch L-bracket corners ───────────────────────────────── */
