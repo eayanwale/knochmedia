@@ -1,7 +1,7 @@
 # Knoch Media — Ticket Summary
 
 > **Living document.** Updated whenever tickets are created, modified, split, or closed.  
-> Last updated: 2026-05-05 | Total tickets: 26 | Open: 17 | In progress: 2 | In review: 0 | Needs fixes: 0 | Done: 7
+> Last updated: 2026-05-05 | Total tickets: 30 | Open: 19 | In progress: 2 | In review: 0 | Done: 7 | Deferred: 2
 
 ---
 
@@ -43,6 +43,8 @@ KNOCH-022 and KNOCH-023 are infrastructure — implement these first. The wiring
 | [KNOCH-024](tickets/KNOCH-024.md) | Wire Testimonials to Sanity | `⬜` | — | After KNOCH-009 is built |
 | [KNOCH-025](tickets/KNOCH-025.md) | Wire Gallery Reel to Sanity | `⬜` | — | After KNOCH-007 is built |
 | [KNOCH-028](tickets/KNOCH-028.md) | Wire Services Page to Sanity | `⬜` | — | After services page is built |
+| [KNOCH-029](tickets/KNOCH-029.md) | Blog Listing Page | `⏸` | — | Deferred — blog schema needs redesign (dynamic related posts, YouTube + Instagram content types) |
+| [KNOCH-030](tickets/KNOCH-030.md) | Blog Post Detail Page | `⏸` | — | Deferred — blocked by KNOCH-029 redesign |
 
 ---
 
@@ -141,6 +143,9 @@ CMS layer (cuts across phases — wire each section after it is built):
 | Project detail | `src/project.html` | 012, 017 |
 | About | `src/about.html` | 013, 018 |
 | Contact / Booking | `src/contact.html` | 014 |
+| Blog listing | `src/blog.html` | 029 |
+| Blog post detail | `src/blog-post.html` | 030 |
+| Internal gallery | `src/gallery/[name].html` | 012 (Jojo, Woodsmen) |
 
 ---
 
