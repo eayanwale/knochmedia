@@ -1,6 +1,6 @@
 # KNOCH-006 — Interlude / Manifesto Section
 
-## Status: IN REVIEW
+## Status: QA PASSED
 ## Priority: P1 (high)
 ## Epic: EPIC-002 — Homepage
 

@@ -1,7 +1,7 @@
 # Knoch Media — Ticket Summary
 
 > **Living document.** Updated whenever tickets are created, modified, split, or closed.  
-> Last updated: 2026-05-05 | Total tickets: 21 | Open: 13 | In progress: 0 | In review: 1 | Done: 6
+> Last updated: 2026-05-05 | Total tickets: 26 | Open: 17 | In progress: 2 | In review: 0 | Needs fixes: 0 | Done: 7
 
 ---
 
@@ -32,17 +32,31 @@ These must be completed before any other ticket can be built. No component shoul
 
 ---
 
-## Phase 2 — Homepage Sections
+## CMS — Content Layer (Sanity)
 
-Build top-to-bottom in scroll order. Test the complete homepage scroll experience before moving to Phase 3.
+KNOCH-022 and KNOCH-023 are infrastructure — implement these first. The wiring tickets (024–026) slot in immediately after their dependent section is built. Do not start 024 before 009, or 025 before 007. KNOCH-026 can start now (005 is done).
 
 | ID | Title | Status | Branch | Notes |
 |----|-------|--------|--------|-------|
-| [KNOCH-005](tickets/KNOCH-005.md) | Hero — Film Counter Loader + Reveal Sequence | `✅` | `feature/KNOCH-005-hero-section` | QA PASSED — merged to test |
-| [KNOCH-006](tickets/KNOCH-006.md) | Interlude — Word-by-Word Scroll Reveal | `🔵` | `feature/KNOCH-006-interlude-manifesto` | Manifesto quote section |
-| [KNOCH-007](tickets/KNOCH-007.md) | Horizontal Reel — Pinned Scroll Carousel | `⬜` | — | Most complex interaction; needs KNOCH-016 |
+| [KNOCH-022](tickets/KNOCH-022.md) | Sanity Project Init + Schema Definitions | `🔵` | — | Studio set up, schemas deployed, data entered |
+| [KNOCH-023](tickets/KNOCH-023.md) | JS Content-Fetch Layer | `🔵` | — | `src/js/sanity.js` built; meta tags in index.html |
+| [KNOCH-024](tickets/KNOCH-024.md) | Wire Testimonials to Sanity | `⬜` | — | After KNOCH-009 is built |
+| [KNOCH-025](tickets/KNOCH-025.md) | Wire Gallery Reel to Sanity | `⬜` | — | After KNOCH-007 is built |
+| [KNOCH-028](tickets/KNOCH-028.md) | Wire Services Page to Sanity | `⬜` | — | After services page is built |
+
+---
+
+## Phase 2 — Homepage Sections
+
+Build top-to-bottom in scroll order. Wire each section to Sanity immediately after it is built (see CMS section above). Test the complete homepage scroll experience before moving to Phase 3.
+
+| ID | Title | Status | Branch | Notes |
+|----|-------|--------|--------|-------|
+| [KNOCH-005](tickets/KNOCH-005.md) | Hero — Film Counter Loader + Reveal Sequence | `✅` | `feature/KNOCH-005-hero-section` | QA PASSED — merged to test. Hero images stay static. |
+| [KNOCH-006](tickets/KNOCH-006.md) | Interlude — Word-by-Word Scroll Reveal | `✅` | `feature/KNOCH-006-interlude-manifesto` | QA PASSED — merged to test |
+| [KNOCH-007](tickets/KNOCH-007.md) | Horizontal Reel — Pinned Scroll Carousel | `⬜` | — | Most complex interaction; needs KNOCH-016 → wire via KNOCH-025 |
 | [KNOCH-008](tickets/KNOCH-008.md) | Pinned Frame — Parallax + Animated Counters | `⬜` | — | Studio stats section |
-| [KNOCH-009](tickets/KNOCH-009.md) | Testimonial Pull-Quote Section | `⬜` | — | Scroll-stagger reveal |
+| [KNOCH-009](tickets/KNOCH-009.md) | Testimonial Pull-Quote Section | `⬜` | — | Scroll-stagger reveal → wire via KNOCH-024 |
 | [KNOCH-010](tickets/KNOCH-010.md) | Portfolio Grid — Asymmetric 12-Col Archive | `⬜` | — | 7 tiles, contact-sheet layout |
 
 ---
@@ -90,22 +104,30 @@ Run in this exact order: perf first (changes markup), then mobile (tests perf ch
      ├─ 003 (nav)
      ├─ 004 (cursor)
      ├─ 016 (Lenis)
-     │   └─ 007 (reel) ─────────────────┐
-     ├─ 005 (hero)                       │
-     │   └─ 006 (interlude)              │
-     │       └─ [007] ──── 008 ── 009 ──┤
-     │                                   │
-     │                          010 (grid)┤
-     │                          011      │
-     │                          012 ─────┤
-     │                          013      │
-     │                          014      │
-     │                          015      │
-     │                                   │
-     ├─ 017 (YouTube) ── links into 012 ─┘
+     │   └─ 007 (reel) ──────────────────────────┐
+     ├─ 005 (hero) ✅                              │
+     │   └─ 006 (interlude)                       │
+     │       └─ [007] ──── 008 ── 009 ────────────┤
+     │                                            │
+     │                               010 (grid)   │
+     │                               011          │
+     │                               012 ─────────┤
+     │                               013          │
+     │                               014          │
+     │                               015          │
+     │                                            │
+     ├─ 017 (YouTube) ── links into 012 ──────────┘
      ├─ 018 (Instagram)
      │
      └─ 019 (perf) → 020 (mobile) → 021 (a11y)
+
+CMS layer (cuts across phases — wire each section after it is built):
+
+022 (Sanity init) 🔵
+ └─ 023 (fetch layer) 🔵
+     ├─ 024 (wire testimonials) ── after 009
+     ├─ 025 (wire reel)         ── after 007
+     └─ 028 (wire services)     ── after services page built
 ```
 
 ---
@@ -142,6 +164,58 @@ Run in this exact order: perf first (changes markup), then mobile (tests perf ch
 ## Changelog
 
 All modifications to this document and ticket files are logged here. Tester agent and code review feedback should be recorded as entries.
+
+---
+
+### 2026-05-05 — KNOCH-006 QA PASSED — re-test after fix
+
+**Action:** Re-test by Tester Agent. All 15 ACs pass. PR #10 merged to test.
+**Tickets affected:** KNOCH-006
+**Reason:** Builder applied fix `fix(interlude): retarget word-splitter from blockquote to inner <p> (KNOCH-006)`. The blocker from the first QA run is resolved — `const para = quote.querySelector('p') ?? quote` now correctly targets the `<p>` inside the blockquote, and all `appendChild`/`querySelectorAll` calls operate on `para`. Word-split produces a non-empty NodeList; GSAP ScrollTrigger animates all words.
+**Changes:**
+- KNOCH-006: Status changed NEEDS FIXES → QA PASSED
+- PR #10: Merged dev → test
+- Test report: Result updated to PASSED; Re-test section appended
+- Dashboard badge: Needs Fixes → QA Passed (green); PR #10 removed from Open PRs
+- Stat counts: Needs fixes 1→0, Done 6→7
+**Completed by:** Tester Agent
+
+---
+
+### 2026-05-05 — KNOCH-006 QA FAILED — NEEDS FIXES
+
+**Action:** QA run by Tester Agent. 1 BLOCKER found. PR #10 blocked.
+**Tickets affected:** KNOCH-006
+**Reason:** Word-splitter JS targets `<blockquote>` childNodes instead of inner `<p>` childNodes — zero `.word` spans are created, the scroll reveal does not function.
+**Changes:**
+- KNOCH-006: Status changed IN REVIEW → NEEDS FIXES
+- PR #10: Changes requested (comment posted — GitHub API prevented formal review on own PR)
+- Dashboard badge: In Review → Needs Fixes
+- Stat counts: In review 1→0, Needs fixes 0→1
+**Blockers:**
+1. **BLOCKER** — `src/js/interlude.js` line 37: `Array.from(quote.childNodes)` iterates the `<blockquote>` (whose only child is `<p>`). The `<p>` hits the `else { cloneNode(true) }` branch and is copied back unchanged. No `.word` spans are produced. Fix: use `quote.querySelector('p') ?? quote` as the split target.
+**Non-blocking issues:**
+- Redundant `w.style.opacity = '1'` in reduced-motion JS path (CSS already handles via `opacity: 1 !important`)
+**Passing checks:** CSS layout/label/blockquote/signature/word/mobile/reduced-motion all correct. GSAP parameters correct. `interlude.css` linked in head. `initInterlude()` imported+called in main.js. `.grain` class applied. Token names correct. Build clean (20 modules, 88ms).
+**Full report:** `docs/test-reports/KNOCH-006-test-report.md`
+**Completed by:** Tester Agent
+
+---
+
+### 2026-05-05 — KNOCH-022 through KNOCH-026 created — CMS integration planned
+
+**Action:** 5 new CMS tickets created; KNOCH-022 and KNOCH-023 implemented in session  
+**Tickets affected:** KNOCH-022, KNOCH-023, KNOCH-024, KNOCH-025, KNOCH-026  
+**Reason:** Adding Sanity CMS so content (testimonials, galleries, hero images) can be managed via Studio UI without code changes  
+**Changes:**
+- KNOCH-022: Created + 🔵 In progress — Sanity Studio scaffolded, all schemas deployed, 5 testimonials entered
+- KNOCH-023: Created + 🔵 In progress — `src/js/sanity.js` built, Sanity meta tags added to `index.html`
+- KNOCH-024: Created + ⬜ Open — blocked until KNOCH-009 is built
+- KNOCH-025: Created + ⬜ Open — blocked until KNOCH-007 is built
+- KNOCH-026: Created + ⬜ Open — can start now (KNOCH-005 ✅)
+- New CMS phase section added to summary; dependency graph updated
+- Header counts updated: Total 21→26, Open 13→17, In progress 0→2  
+**Requested by:** Enoch
 
 ---
 
