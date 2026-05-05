@@ -1,19 +1,22 @@
 import { defineConfig } from 'vite'
+import { resolve } from 'path'
 
 export default defineConfig({
-  // Serve from root so absolute asset paths (/src/css/global.css) resolve
-  // correctly in both dev server and production build.
+  // root: 'src' makes index.html the entry at the Vite root so the build
+  // outputs dist/index.html (not dist/src/index.html). Asset paths in HTML
+  // use /css/... and /js/... (relative to src root, no /src/ prefix needed).
+  root: 'src',
   base: '/',
 
   build: {
-    outDir: 'dist',
+    outDir: '../dist',
+    emptyOutDir: true,
 
     // Multi-page setup: additional HTML entry points (portfolio, about, contact,
     // project detail) will be added here as their tickets are implemented.
-    // Vite handles each HTML file as a separate entry and emits separate chunks.
     rollupOptions: {
       input: {
-        main: 'src/index.html'
+        main: resolve(__dirname, 'src/index.html')
       }
     }
   }
