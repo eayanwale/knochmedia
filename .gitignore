@@ -1,5 +1,32 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+
+# Environment variables — never commit secrets
+.env
+.env.local
+.env.*.local
+
+# Vite cache
+.vite/
+
+# Editor / OS artifacts
+.DS_Store
+Thumbs.db
+*.log
+
+# Git internal (already tracked by git itself)
 .git
-.claude/
+
+# Claude Code local-only machine settings (not shared)
+.claude/settings.local.json
+
+# Legacy / removed files
+claude-code-setup-guide.md
+
+# Terraform (from earlier project iteration)
 .terraform
 *.hcl
 *.tfvars
