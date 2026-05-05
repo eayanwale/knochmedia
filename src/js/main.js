@@ -3,6 +3,7 @@ import { initCursor } from './cursor.js';
 import { initHero } from './hero.js';
 import { initInterlude } from './interlude.js';
 import { initReel } from './reel.js';
+import { initFrame } from './frame.js';
 import { getFeaturedCollections, imageUrl } from './sanity.js';
 
 // NOTE: initLenis() is intentionally NOT called here.
@@ -24,6 +25,9 @@ initHero();
 
 // Interlude manifesto — word-by-word scroll-driven reveal (KNOCH-006)
 initInterlude();
+
+// Pinned frame — parallax bg + animated studio stats (KNOCH-008)
+initFrame();
 
 // Horizontal reel — fetch featured collections from Sanity then init (KNOCH-007 + KNOCH-025)
 getFeaturedCollections().then(collections => {

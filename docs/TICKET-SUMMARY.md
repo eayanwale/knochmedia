@@ -1,7 +1,7 @@
 # Knoch Media — Ticket Summary
 
 > **Living document.** Updated whenever tickets are created, modified, split, or closed.  
-> Last updated: 2026-05-05 | Total tickets: 30 | Open: 16 | In progress: 0 | In review: 0 | Done: 11 | Deferred: 3
+> Last updated: 2026-05-05 | Total tickets: 30 | Open: 15 | In progress: 0 | In review: 1 | Done: 11 | Deferred: 3
 
 ---
 
@@ -59,7 +59,7 @@ Build top-to-bottom in scroll order. Wire each section to Sanity immediately aft
 | [KNOCH-005](tickets/KNOCH-005.md) | Hero — Film Counter Loader + Reveal Sequence | `✅` | `feature/KNOCH-005-hero-section` | QA PASSED — merged to test. Hero images stay static. |
 | [KNOCH-006](tickets/KNOCH-006.md) | Interlude — Word-by-Word Scroll Reveal | `✅` | `feature/KNOCH-006-interlude-manifesto` | QA PASSED — merged to test |
 | [KNOCH-007](tickets/KNOCH-007.md) | Horizontal Reel — Pinned Scroll Carousel | `✅` | `feature/KNOCH-007-horizontal-reel` | Sanity-driven (3 featured collections); cinematic full-greyscale filter; inner parallax; KNOCH-025 included |
-| [KNOCH-008](tickets/KNOCH-008.md) | Pinned Frame — Parallax + Animated Counters | `⬜` | — | Studio stats section |
+| [KNOCH-008](tickets/KNOCH-008.md) | Pinned Frame — Parallax + Animated Counters | `🔵` | `feature/KNOCH-008-pinned-frame` | Studio stats section |
 | [KNOCH-009](tickets/KNOCH-009.md) | Testimonial Pull-Quote Section | `⬜` | — | Scroll-stagger reveal → wire via KNOCH-024 |
 | [KNOCH-010](tickets/KNOCH-010.md) | Portfolio Grid — Asymmetric 12-Col Archive | `⬜` | — | 7 tiles, contact-sheet layout |
 
@@ -208,6 +208,26 @@ All modifications to this document and ticket files are logged here. Tester agen
 **Passing checks:** CSS layout/label/blockquote/signature/word/mobile/reduced-motion all correct. GSAP parameters correct. `interlude.css` linked in head. `initInterlude()` imported+called in main.js. `.grain` class applied. Token names correct. Build clean (20 modules, 88ms).
 **Full report:** `docs/test-reports/KNOCH-006-test-report.md`
 **Completed by:** Tester Agent
+
+---
+
+### 2026-05-05 — KNOCH-008 PR opened — IN REVIEW
+
+**Action:** PR #11 opened dev → test
+**Tickets affected:** KNOCH-008
+**Reason:** Builder agent completed implementation of pinned parallax + animated studio stats section
+**Changes:**
+- KNOCH-008: Status changed TODO → IN PROGRESS → MERGED TO DEV → IN REVIEW
+- Branch `feature/KNOCH-008-pinned-frame` created, implemented, merged into `dev`
+- PR #11 opened: dev → test at https://github.com/eayanwale/knochmedia/pull/11
+- Files delivered:
+  - `src/css/frame.css` — section layout, parallax bg, stat typography, grain overlay, mobile stack, reduced-motion overrides
+  - `src/js/frame.js` — GSAP parallax tween, .big headline reveal, three animated counters with toLocaleString and once:true
+  - `src/index.html` — complete #frame section markup with ARIA labels, frame.css linked in head
+  - `src/js/main.js` — initFrame() import and call after initInterlude()
+- Build: 25 modules, 13.33 kB CSS / 3.39 kB gz, 141.77 kB JS / 52.71 kB gz, 96ms
+- Header counts updated: In progress 1→0, In review 0→1
+**Requested by:** Builder agent
 
 ---
 

@@ -52,6 +52,8 @@
     <link rel="stylesheet" href="/css/interlude.css" />
     <!-- Horizontal reel carousel (KNOCH-007) -->
     <link rel="stylesheet" href="/css/reel.css" />
+    <!-- Pinned frame parallax + studio stats (KNOCH-008) -->
+    <link rel="stylesheet" href="/css/frame.css" />
 
     <!--
       LCP image preload — hero-01.jpg is the largest contentful paint element.
@@ -228,9 +230,56 @@
       </div>
     </section>
 
-    <section id="frame" class="pinned-frame grain" aria-label="Studio">
-      <!-- KNOCH-008: Pinned frame parallax + counters -->
-    </section>
+    <!--
+      Pinned frame — full-bleed parallax + animated studio stats (KNOCH-008).
+      height: 200vh on .pinned-frame gives the sticky panel room to travel.
+      .bg inset: -10% prevents white edges during the yPercent parallax move.
+      Counters start at their final value as plain text so they're readable if
+      JS fails or if the user has prefers-reduced-motion: reduce.
+    -->
+    <section id="frame" class="pinned-frame grain" aria-label="Studio — by the numbers">
+      <div class="sticky">
+
+        <div class="bg" id="parallax-bg" role="img" aria-label="Studio photograph by Knoch Media"></div>
+        <div class="overlay" aria-hidden="true"></div>
+
+        <div class="content">
+
+          <!-- Left: brand statement -->
+          <div class="frame-left">
+            <p class="meta-tag">— THE STUDIO &middot; BY THE NUMBERS</p>
+            <h2 class="big">Eight years. <em>Twelve&nbsp;thousand</em> frames. One pair of hands.</h2>
+          </div>
+
+          <!-- Right: animated stat counters -->
+          <div class="stats" aria-label="Studio statistics">
+
+            <div class="stat">
+              <!--
+                data-count drives the GSAP tween target.
+                Initial inner HTML is the plain number so AT reads it correctly
+                before JS runs. hasEm in frame.js wraps the output in <em> for
+                the amber italic treatment on the first and third stats.
+              -->
+              <div class="n" data-count="47" aria-label="47 projects from 2018 to 2026"><em>47</em></div>
+              <div class="l" aria-hidden="true">Projects &middot; 2018&ndash;2026</div>
+            </div>
+
+            <div class="stat">
+              <div class="n" data-count="12884" aria-label="12,884 frames developed">12,884</div>
+              <div class="l" aria-hidden="true">Frames developed</div>
+            </div>
+
+            <div class="stat">
+              <div class="n" data-count="6" aria-label="6 dates remaining in 2026"><em>6</em></div>
+              <div class="l" aria-hidden="true">Dates left &middot; 2026</div>
+            </div>
+
+          </div><!-- /.stats -->
+
+        </div><!-- /.content -->
+      </div><!-- /.sticky -->
+    </section><!-- /#frame -->
 
     <section id="cta" aria-label="Inquire">
       <!-- KNOCH-014: Contact / qualified inquiry form -->
