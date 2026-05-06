@@ -1,7 +1,7 @@
 # Knoch Media — Ticket Summary
 
 > **Living document.** Updated whenever tickets are created, modified, split, or closed.  
-> Last updated: 2026-05-06 | Total tickets: 30 | Open: 11 | In progress: 1 | In review: 0 | Done: 15 | Deferred: 3
+> Last updated: 2026-05-06 | Total tickets: 30 | Open: 11 | In progress: 0 | In review: 1 | Done: 15 | Deferred: 3
 
 ---
 
@@ -71,7 +71,7 @@ Build in this order: About → Portfolio page → Project detail → Contact →
 
 | ID | Title | Status | Branch | Notes |
 |----|-------|--------|--------|-------|
-| [KNOCH-013](tickets/KNOCH-013.md) | About / Story Section (about.html) | `🔵` | `feature/KNOCH-013-about-story-section` | Sticky split layout |
+| [KNOCH-013](tickets/KNOCH-013.md) | About / Story Section (about.html) | `🔵` | `feature/KNOCH-013-about-story-section` | PR #19 dev → test (in review) |
 | [KNOCH-011](tickets/KNOCH-011.md) | Portfolio Filter System (portfolio.html) | `⬜` | — | Category tabs, URL hash state |
 | [KNOCH-012](tickets/KNOCH-012.md) | Project Detail View + Video Lightbox | `⬜` | — | Expanding tile transition |
 | [KNOCH-014](tickets/KNOCH-014.md) | Contact — Multi-Step Qualified Inquiry Form | `⬜` | — | 3-step form + Calendly sidebar |
@@ -173,6 +173,30 @@ CMS layer (cuts across phases — wire each section after it is built):
 ## Changelog
 
 All modifications to this document and ticket files are logged here. Tester agent and code review feedback should be recorded as entries.
+
+---
+
+### 2026-05-06 — KNOCH-013 PR opened — IN REVIEW
+
+**Action:** PR #19 opened dev → test
+**Tickets affected:** KNOCH-013
+**Reason:** Builder completed About / Story page implementation; PR open for tester / code review
+**Changes:**
+- KNOCH-013: Status changed 🔵 In progress → 🔵 In review
+- PR #19 opened: dev → test at https://github.com/eayanwale/knochmedia/pull/19
+- Files delivered:
+  - `src/about.html` — full page (hero, intro, split layout w/ 4 chapters + 5 images, by-the-numbers, process, CTA)
+  - `src/css/about.css` — page styles (sticky split, chapter dim/active, aspect-ratio image frames, mobile collapse, reduced-motion)
+  - `src/css/studio-teaser.css` — homepage teaser block styles
+  - `src/js/about.js` — hero entrance timeline, IntersectionObserver chapter sync, ScrollTrigger counter tweens
+  - `src/js/about-main.js` — slim entry point for the About page (no homepage modules loaded)
+  - `src/public/assets/about/about-01..05.jpg` — 5 narrative images (copied from reference homepage cache)
+  - `src/index.html` — homepage studio teaser block inserted between #frame and #testimonial; studio-teaser.css linked
+  - `src/js/chrome.js` — `.mark` click handler now distinguishes same-page (smooth scroll) from cross-page (browser navigation), fixing back-to-home from /about.html
+  - `vite.config.js` — about.html added as second `rollupOptions.input`
+- Build: 60 modules, dist/about.html 12.99 kB / 4.06 kB gz, dist/index.html 26.51 kB / 7.77 kB gz, 178 ms
+- Header counts updated: In progress 1→0, In review 0→1
+**Requested by:** Builder agent
 
 ---
 
