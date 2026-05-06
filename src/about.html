@@ -26,6 +26,8 @@
     <link rel="stylesheet" href="/css/chrome.css" />
     <link rel="stylesheet" href="/css/cursor.css" />
     <link rel="stylesheet" href="/css/about.css" />
+    <!-- Shared footer — sitemap variant (KNOCH-015) -->
+    <link rel="stylesheet" href="/css/footer.css" />
 
     <!--
       LCP preload — about-01.jpg is the first image in the scrolling
@@ -209,7 +211,7 @@
     </section>
 
     <!-- Process — 3 numbered steps. Plain text, no animation needed. -->
-    <section class="about-process" aria-label="How we work">
+    <section id="process" class="about-process" aria-label="How we work">
       <div class="about-process-inner">
         <p class="about-process-meta">— HOW WE WORK</p>
         <div class="about-process-grid">
@@ -256,6 +258,9 @@
         <a class="about-cta-link" href="/contact.html">Start an inquiry &rarr;</a>
       </div>
     </section>
+
+    <!-- Shared footer host (KNOCH-015) — populated by initFooter('expanded') -->
+    <footer id="site-footer"></footer>
 
     <!--
       About-specific entry point — see src/js/about-main.js for the

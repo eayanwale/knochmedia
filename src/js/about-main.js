@@ -21,6 +21,7 @@ import { initCursor }   from './cursor.js';
 import { initCharHover, initCharMagnify } from './char-hover.js';
 import { initLenis }    from './lenis.js';
 import { initAbout }    from './about.js';
+import { initFooter }   from './footer.js';
 
 initLazyLoad();
 initChrome();
@@ -31,6 +32,7 @@ initCharHover();
    safe to call together — they query disjoint class selectors. */
 initCharMagnify();
 initAbout();
+initFooter('expanded');
 
 /* Boot Lenis after window.load so any image / font dimensions are
    final before ScrollTrigger registers its proxy. The About page has

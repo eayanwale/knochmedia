@@ -21,6 +21,7 @@ import { initCharHover }      from './char-hover.js';
 import { initLenis }          from './lenis.js';
 import { initVideoLightbox }  from './video-lightbox.js';
 import { initPortfolioPage }  from './portfolio-page.js';
+import { initFooter }         from './footer.js';
 
 initLazyLoad();
 initChrome();
@@ -28,6 +29,7 @@ initCursor();
 initCharHover();
 initVideoLightbox();
 initPortfolioPage();
+initFooter('expanded');
 
 window.addEventListener('load', () => {
   initLenis();

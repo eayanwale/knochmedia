@@ -64,6 +64,8 @@
     <link rel="stylesheet" href="/css/lazy-load.css" />
     <!-- Qualified inquiry form (KNOCH-030) -->
     <link rel="stylesheet" href="/css/inquiry.css" />
+    <!-- Shared footer — credits bar / sitemap (KNOCH-015) -->
+    <link rel="stylesheet" href="/css/footer.css" />
 
     <!--
       LCP image preload — hero-01.jpg is the largest contentful paint element.
@@ -490,6 +492,15 @@
 <section id="cta" class="grain" aria-label="Inquire">
       <!-- KNOCH-030: Qualified inquiry form with aperture iris transitions -->
     </section>
+
+    <!--
+      Footer host element (KNOCH-015) — populated by footer.js via
+      initFooter('minimal') on the homepage. Kept empty in markup so
+      the constants block in footer.js stays the single source of
+      truth for studio info / contact / roll number / version /
+      social links across every page.
+    -->
+    <footer id="site-footer"></footer>
 
     <!--
       Main JS entry — Vite resolves this as an ES module. GSAP ScrollTrigger
