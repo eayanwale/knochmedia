@@ -272,27 +272,28 @@ export function initPortfolioPage() {
   }
 
   /* ── Page entry animation ──────────────────────────────
-     Hero meta + headline + tab list + grid stagger up on load so the
-     page has a beat of motion before the visitor starts interacting.
-     Skipped on prefers-reduced-motion — the elements snap to their
-     final state via the gsap.from-not-running path. */
+     Hero meta + headline + tab list stagger up on load so the page
+     has a beat of motion before the visitor starts interacting.
+
+     NOTE: cards are intentionally NOT animated in here. An earlier
+     pass tried gsap.from(visibleCards, { opacity:0, y:30 }) but it
+     fought with the existing card float tween (yoyo on yPercent,
+     set up earlier in this function). The from-state set opacity to
+     0 cleanly, but the float-tween's per-frame transform writes
+     ended up clobbering the recovery and the cards stayed invisible
+     while still clickable in the DOM. Letting cards paint at their
+     natural CSS state from the first frame avoids the conflict
+     entirely; the float still gives them ambient motion, and the
+     filter swap (KNOCH-011) animates them in/out on tab clicks
+     anyway. Skipped on prefers-reduced-motion. */
   if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
     const heroMeta     = document.querySelector('.portfolio-hero-meta');
     const heroHeadline = document.querySelector('.portfolio-hero-headline');
     const tabsList     = document.querySelector('.portfolio-tabs');
-    const visibleCards = cards.filter(c => !c.classList.contains('is-hidden'));
 
     const tl = gsap.timeline({ defaults: { ease: 'expo.out' } });
     if (heroMeta)     tl.from(heroMeta,     { opacity: 0, y: 16, duration: 0.7 }, 0);
     if (heroHeadline) tl.from(heroHeadline, { opacity: 0, y: 32, duration: 1.0 }, 0.15);
     if (tabsList)     tl.from(tabsList,     { opacity: 0, y: 18, duration: 0.7 }, 0.4);
-    if (visibleCards.length) {
-      tl.from(visibleCards, {
-        opacity: 0,
-        y: 30,
-        duration: 0.8,
-        stagger: 0.05,
-      }, 0.55);
-    }
   }
 }
