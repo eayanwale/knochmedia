@@ -57,6 +57,31 @@ export function initHero() {
     return;
   }
 
+  // ── Hero BG cursor parallax (fine-pointer / desktop only) ─────────────
+  // x/y pixels compose with the scroll-exit yPercent without conflict —
+  // GSAP tracks each transform component independently.
+  if (heroBg && !window.matchMedia('(pointer: coarse)').matches) {
+    const heroEl = document.getElementById('hero');
+    if (heroEl) {
+      heroEl.addEventListener('mousemove', (e) => {
+        const rect = heroEl.getBoundingClientRect();
+        const xRel = (e.clientX - rect.left) / rect.width  - 0.5;
+        const yRel = (e.clientY - rect.top)  / rect.height - 0.5;
+        gsap.to(heroBg, {
+          x: xRel * 20,
+          y: yRel * 12,
+          duration: 1.8,
+          ease: 'power2.out',
+          overwrite: 'auto',
+        });
+      }, { passive: true });
+
+      heroEl.addEventListener('mouseleave', () => {
+        gsap.to(heroBg, { x: 0, y: 0, duration: 2.2, ease: 'power2.out', overwrite: 'auto' });
+      }, { passive: true });
+    }
+  }
+
   // ── 3. Run loader on window.load ───────────────────────────────────────
 
   window.addEventListener('load', () => {

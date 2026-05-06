@@ -68,10 +68,19 @@ export function initFrame() {
       scrub: 0.8,
       invalidateOnRefresh: true,
       onUpdate(self) {
-        /* When 55 % through the pin, release stats to play at full speed */
         if (self.progress >= 0.55 && !statsPlayed) {
           statsPlayed = true;
           playStats();
+        } else if (self.progress < 0.35 && statsPlayed) {
+          /* Scrolled back above trigger — reset so stats count again on re-entry */
+          statsPlayed = false;
+          gsap.killTweensOf([...statEls, ...statNums, ...statLbls]);
+          gsap.set(statEls, { opacity: 0, y: 40 });
+          statNums.forEach(el => {
+            const hasEm = !!el.querySelector('em');
+            el.innerHTML = hasEm ? '<em>0</em>' : '0';
+          });
+          gsap.set(statLbls, { opacity: 0 });
         }
       },
     },
@@ -84,16 +93,29 @@ export function initFrame() {
     0
   );
 
-  /* ── Magnetic cursor parallax on bg ────────────────────────────────────
-     x / y (pixels) compose with the scrub's scale + yPercent without
-     conflict — GSAP tracks each transform component independently.
-     Attaches to .sticky (the 100vh visible panel) not the outer 200vh section. */
+  /* ── Cursor interactions on .sticky ─────────────────────────────────────
+     Two effects share the same mousemove listener:
+     1. Magnetic parallax — dark base bg (bg) drifts toward cursor (x/y pixels,
+        composing with scrub's scale + yPercent independently).
+     2. Spotlight reveal — a second natural-filter image (bgReveal) is masked
+        by a radial-gradient that follows the cursor, revealing the actual photo
+        in a soft feathered circle while the dark base shows everywhere else. */
   const sticky = section.querySelector('.sticky');
   if (sticky) {
+    const bgReveal = document.createElement('div');
+    bgReveal.className = 'bg-reveal';
+    bgReveal.setAttribute('aria-hidden', 'true');
+    const overlay = sticky.querySelector('.overlay');
+    if (overlay) sticky.insertBefore(bgReveal, overlay);
+    else sticky.appendChild(bgReveal);
+
+    const revealPos = { x: 0, y: 0 };
+
     sticky.addEventListener('mousemove', (e) => {
       const rect = sticky.getBoundingClientRect();
       const xRel = (e.clientX - rect.left) / rect.width  - 0.5;
       const yRel = (e.clientY - rect.top)  / rect.height - 0.5;
+
       gsap.to(bg, {
         x: xRel * 22,
         y: yRel * 14,
@@ -101,10 +123,26 @@ export function initFrame() {
         ease: 'power2.out',
         overwrite: 'auto',
       });
+
+      gsap.to(revealPos, {
+        x: e.clientX - rect.left,
+        y: e.clientY - rect.top,
+        duration: 0.3,
+        ease: 'power2.out',
+        overwrite: 'auto',
+        onUpdate() {
+          const m = `radial-gradient(circle 200px at ${revealPos.x}px ${revealPos.y}px, black 0%, transparent 82%)`;
+          bgReveal.style.maskImage = m;
+          bgReveal.style.webkitMaskImage = m;
+        },
+      });
+
+      gsap.to(bgReveal, { opacity: 1, duration: 0.5, ease: 'power2.out', overwrite: 'auto' });
     }, { passive: true });
 
     sticky.addEventListener('mouseleave', () => {
       gsap.to(bg, { x: 0, y: 0, duration: 1.6, ease: 'power2.out', overwrite: 'auto' });
+      gsap.to(bgReveal, { opacity: 0, duration: 0.6, ease: 'power2.out', overwrite: 'auto' });
     }, { passive: true });
   }
 

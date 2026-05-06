@@ -74,7 +74,7 @@ export function initPortfolioGrid() {
     scrollTrigger: {
       trigger: header,
       start: 'top 85%',
-      toggleActions: 'play none none none',
+      toggleActions: 'restart none none reverse',
     },
   });
 
@@ -88,7 +88,7 @@ export function initPortfolioGrid() {
     scrollTrigger: {
       trigger: grid,
       start: 'top 88%',
-      toggleActions: 'play none none none',
+      toggleActions: 'restart none none reverse',
     },
   });
 

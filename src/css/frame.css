@@ -19,8 +19,7 @@
 
 /* Background image — inset: -10% bleeds past container edges so
    the parallax yPercent movement never reveals white edges.
-   Default: heavy desaturation so the section reads as texture.
-   On .sticky hover: slow ease reveals the actual image. */
+   Heavy desaturation keeps it as moody texture at rest. */
 .pinned-frame .bg {
   position: absolute;
   inset: -10%;
@@ -28,12 +27,21 @@
   background-size: cover;
   background-position: center;
   filter: brightness(0.3) grayscale(0.8) contrast(1.0);
-  transition: filter 1.4s ease;
   will-change: transform;
 }
 
-.pinned-frame .sticky:hover .bg {
-  filter: brightness(0.62) grayscale(0.1) contrast(1.05);
+/* Natural-filter reveal layer — same image, unmasked by JS cursor spotlight.
+   Sits above the dark base but below the overlay vignette + grain. */
+.pinned-frame .bg-reveal {
+  position: absolute;
+  inset: -10%;
+  background-image: url('/assets/studio/banner.jpg');
+  background-size: cover;
+  background-position: center;
+  filter: brightness(0.75) grayscale(0.05) contrast(1.05);
+  opacity: 0;
+  pointer-events: none;
+  will-change: opacity;
 }
 
 /* Vignette gradient + SVG film-grain layered on a single pseudo-element */

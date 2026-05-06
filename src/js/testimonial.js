@@ -239,7 +239,7 @@ export async function initTestimonial() {
         gsap.to(bgEl, { opacity: 0, duration: 0.2, ease: 'power2.in', overwrite: 'auto',
           onComplete: () => {
             bgEl.style.backgroundImage = newBg;
-            if (sectionHovered) gsap.to(bgEl, { opacity: 0.45, duration: 0.4, ease: 'power2.out' });
+            if (sectionHovered) gsap.to(bgEl, { opacity: 0.58, duration: 0.4, ease: 'power2.out' });
           }
         });
       } else {
@@ -367,7 +367,7 @@ export async function initTestimonial() {
       const m = `radial-gradient(circle 220px at ${spotPos.x}px ${spotPos.y}px, black 0%, transparent 80%)`;
       bgEl.style.maskImage = m;
       bgEl.style.webkitMaskImage = m;
-      gsap.to(bgEl, { opacity: 0.45, duration: 0.5, ease: 'power2.out', overwrite: 'auto' });
+      gsap.to(bgEl, { opacity: 0.58, duration: 0.5, ease: 'power2.out', overwrite: 'auto' });
     });
     section.addEventListener('mouseleave', () => {
       sectionHovered = false;

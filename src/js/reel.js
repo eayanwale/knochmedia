@@ -138,7 +138,7 @@ function animateReelIntro(section) {
     scrollTrigger: {
       trigger: section,
       start: 'top 80%',
-      toggleActions: 'play none none none',
+      toggleActions: 'restart none none reverse',
     },
     defaults: { ease: 'expo.out' },
   });
