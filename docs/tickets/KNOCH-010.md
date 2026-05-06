@@ -1,6 +1,6 @@
 # KNOCH-010 — Portfolio Grid (The Archive)
 
-## Status: TODO
+## Status: IN REVIEW
 ## Priority: P1 (high)
 ## Epic: EPIC-002 — Homepage
 
