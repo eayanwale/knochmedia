@@ -213,6 +213,17 @@ export function initProjectPage() {
     }
   }
 
+  /* ── CTA pre-fill for contact form ──────────────── */
+
+  /* Contact form (KNOCH-014) reads ?type=<category> to preselect the
+     service-type tile on load. Stamp it onto the project-page CTA so
+     a visitor coming from a wedding project lands on the contact page
+     with the wedding tile already lit. */
+  const ctaLink = document.querySelector('.project-cta-link');
+  if (ctaLink && project.category) {
+    ctaLink.href = `/contact.html?type=${encodeURIComponent(project.category)}`;
+  }
+
   /* ── Back link ─────────────────────────────────── */
 
   const backLink = document.querySelector('.project-back');
