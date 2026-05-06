@@ -1,7 +1,7 @@
 # Knoch Media — Ticket Summary
 
 > **Living document.** Updated whenever tickets are created, modified, split, or closed.  
-> Last updated: 2026-05-06 | Total tickets: 30 | Open: 9 | In progress: 0 | In review: 1 | Done: 17 | Deferred: 3
+> Last updated: 2026-05-06 | Total tickets: 30 | Open: 7 | In progress: 0 | In review: 1 | Done: 18 | Deferred: 4
 
 ---
 
@@ -73,8 +73,8 @@ Build in this order: About → Portfolio page → Project detail → Contact →
 |----|-------|--------|--------|-------|
 | [KNOCH-013](tickets/KNOCH-013.md) | About / Story Section (about.html) | `✅` | `feature/KNOCH-013-about-story-section` | QA PASSED — merged to test |
 | [KNOCH-011](tickets/KNOCH-011.md) | Portfolio Filter System (portfolio.html) | `✅` | `feature/KNOCH-011-portfolio-filter` | QA PASSED — merged to test |
-| [KNOCH-012](tickets/KNOCH-012.md) | Project Detail View + Video Lightbox | `🔵` | `feature/KNOCH-012-project-detail-lightbox` | PR #21 dev → test (in review) |
-| [KNOCH-014](tickets/KNOCH-014.md) | Contact — Multi-Step Qualified Inquiry Form | `⬜` | — | 3-step form + Calendly sidebar |
+| [KNOCH-012](tickets/KNOCH-012.md) | Project Detail View + Video Lightbox | `✅` | `feature/KNOCH-012-project-detail-lightbox` | PR #21 merged + KNOCH-036 polish bundled |
+| [KNOCH-014](tickets/KNOCH-014.md) | Contact — Multi-Step Qualified Inquiry Form | `🔵` | `feature/KNOCH-014-contact-form` | PR #22 dev → test (in review) |
 | [KNOCH-015](tickets/KNOCH-015.md) | Footer — Credits Bar + Sitemap Variant | `⬜` | — | Two variants: minimal + expanded |
 
 ---
@@ -84,7 +84,7 @@ Build in this order: About → Portfolio page → Project detail → Contact →
 | ID | Title | Status | Branch | Notes |
 |----|-------|--------|--------|-------|
 | [KNOCH-017](tickets/KNOCH-017.md) | YouTube Integration — Lightbox + Showreel | `⬜` | — | Lazy iframe inject on click |
-| [KNOCH-018](tickets/KNOCH-018.md) | Instagram Feed Integration | `⬜` | — | Behold.so or static fallback |
+| [KNOCH-018](tickets/KNOCH-018.md) | Instagram Feed Integration | `⏸` | — | Deferred — footer icon link covers it |
 
 ---
 
@@ -173,6 +173,68 @@ CMS layer (cuts across phases — wire each section after it is built):
 ## Changelog
 
 All modifications to this document and ticket files are logged here. Tester agent and code review feedback should be recorded as entries.
+
+---
+
+### 2026-05-06 — KNOCH-018 deferred — Instagram embed dropped from scope
+
+**Action:** KNOCH-018 status changed ⬜ Open → ⏸ Deferred
+**Tickets affected:** KNOCH-018
+**Reason:** Enoch reviewed the Phase 4 ticket list and decided a live Instagram feed adds complexity (paid embed service like Behold.so, or Meta Graph API setup, or manual screenshot updates) without meaningful UX gain on a portfolio site. The plain footer icon link to @knochmedia_ — already in KNOCH-015's scope — is the cleaner solution. Ticket file annotated with the rationale + revisit path (Behold.so) if a feed surfaces in a future iteration.
+**Changes:**
+- KNOCH-018: Status ⬜ Open → ⏸ Deferred. Header reason added to ticket file.
+- TICKET-SUMMARY table row swapped to ⏸ + "Deferred — footer icon link covers it" note.
+- Header counts updated: Open 8→7, Deferred 3→4.
+**Requested by:** Enoch
+
+---
+
+### 2026-05-06 — KNOCH-014 PR opened — IN REVIEW
+
+**Action:** PR #22 opened dev → test
+**Tickets affected:** KNOCH-014
+**Reason:** Builder completed Contact / Inquiry form page — /contact.html with 3-step qualified inquiry, Calendly sidebar, ?type= URL pre-fill, and cross-page Inquire link routing.
+**Changes:**
+- KNOCH-014: Status changed 🔵 In progress → 🔵 In review
+- PR #22 opened: dev → test at https://github.com/eayanwale/knochmedia/pull/22
+- Files delivered:
+  - `src/contact.html` — full page (banner + hero + 2-col body w/ form + sidebar)
+  - `src/css/contact-page.css` — page styles (scarcity banner, hero, form fields, tile selectors, step panels w/ slide states, sidebar blocks, mobile collapse)
+  - `src/js/contact-page.js` — tile selector + ?type= pre-fill + conditional partner + GSAP step transitions + per-step validation + submit handler (placeholder action)
+  - `src/js/contact-main.js` — slim entry
+  - `src/index.html` + `src/about.html` + `src/portfolio.html` + `src/project.html` — chrome Inquire links + page CTAs all repointed to /contact.html
+  - `src/js/project-page.js` — project CTA href stamped at runtime with ?type=<category>
+  - `vite.config.js` — contact.html added as 5th `rollupOptions.input`
+- Build: 5 HTML entries → all emit; contact bundle 8.29 kB CSS / 1.91 kB gz, 4.22 kB JS / 1.81 kB gz; 158 ms
+- Header counts updated: In progress 1→0, In review 0→1
+**Requested by:** Builder agent
+
+---
+
+### 2026-05-06 — KNOCH-014 implementation started — IN PROGRESS
+
+**Action:** Feature branch created; implementation in progress
+**Tickets affected:** KNOCH-014
+**Reason:** Builder agent starting Contact / Inquiry Flow — dedicated /contact.html with 3-step qualified inquiry form, Calendly sidebar, scarcity banner, ?type= URL param pre-fill, and slide-out/in step transitions.
+**Changes:**
+- KNOCH-014: Status changed ⬜ Open → 🔵 In progress
+- Branch `feature/KNOCH-014-contact-form` created from dev
+- Header counts updated: Open 9→8, In progress 0→1, In review 1→0, Done 17→18 (KNOCH-012 status reflected as ✅ now that PR #21 is merged; KNOCH-036 polish landed in same merge)
+**Requested by:** Builder agent
+
+---
+
+### 2026-05-06 — KNOCH-012 + KNOCH-036 merged to test (PR #21 closed)
+
+**Action:** PR #21 merged dev → test by Enoch (no tester pass — Enoch reviewed live on the test preview).
+**Tickets affected:** KNOCH-012, KNOCH-036
+**Reason:** Project Detail View + Video Lightbox (KNOCH-012) and the cross-ticket Phase 3 polish (KNOCH-036) shipped together as the third Phase 3 increment.
+**Changes:**
+- KNOCH-012: Status 🔵 In review → ✅ Done.
+- KNOCH-036: Status 🔵 In review → ✅ Done (bundled in PR #21's merge).
+- Test branch advanced to 1ac75fb. dev re-aligned to the same commit per the post-merge ritual so the next branch cuts cleanly.
+- main untouched at a629573 — Phase 3 still in progress, no shipping to production this cycle.
+**Completed by:** Enoch (manual merge in GitHub)
 
 ---
 

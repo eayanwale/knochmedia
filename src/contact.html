@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Inquire — Knoch Media</title>
+
+    <meta name="description" content="A short qualified inquiry — three steps, two minutes. Every inquiry gets a personal reply within 24 hours." />
+    <meta name="theme-color" content="#0a0a0a" />
+
+    <meta name="sanity-project-id" content="2779g58e" />
+    <meta name="sanity-dataset" content="production" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;1,9..144,400&family=Inter+Tight:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap"
+    />
+
+    <link rel="stylesheet" href="/css/global.css" />
+    <link rel="stylesheet" href="/css/chrome.css" />
+    <link rel="stylesheet" href="/css/cursor.css" />
+    <link rel="stylesheet" href="/css/contact-page.css" />
+  </head>
+  <body>
+
+    <div class="cursor" id="cursor" aria-hidden="true"></div>
+
+    <!--
+      Chrome navigation overlay. Inquire is the current page so it
+      gets aria-current="page" + the active-state styling from
+      chrome.css's KNOCH-036 rule.
+    -->
+    <div class="chrome" id="chrome">
+      <div class="chrome-grid">
+
+        <a class="mark" href="/" aria-label="Knoch — back to home">Knoch<span class="dot" aria-hidden="true">.</span></a>
+
+        <nav class="nav-center" aria-label="Main navigation">
+          <a href="/portfolio.html">Work</a>
+          <a href="/about.html">Studio</a>
+          <a href="/contact.html" aria-current="page">Inquire</a>
+        </nav>
+
+        <div class="nav-right" aria-hidden="true">
+          <span class="rec-dot"></span>
+          <span>REC · <span id="tc">00:00:00</span></span>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="timecode-bar" aria-hidden="true">
+      <span>K/M · 2026 · MARYLAND</span>
+      <div class="scroll-progress"
+           id="scroll-progress"
+           role="progressbar"
+           aria-valuenow="0"
+           aria-valuemin="0"
+           aria-valuemax="100"
+           aria-label="Page scroll progress"></div>
+      <span id="frame-display">FRAME 01 / 36</span>
+    </div>
+
+    <!-- Scarcity banner — pulls from the same headline message used
+         on the homepage's #frame stat row ("Dates left · 2026"). For
+         now hard-coded; future ticket can plumb a shared DATES_LEFT
+         constant that updates from a single source. -->
+    <div class="contact-banner" role="note">
+      Six dates left · 2026
+    </div>
+
+    <!-- Hero header for the contact page -->
+    <section class="contact-hero" aria-label="Inquire">
+      <p class="contact-hero-meta">— INQUIRE</p>
+      <h1 class="contact-hero-title headline-hover">Let&rsquo;s make a <em>roll.</em></h1>
+      <p class="contact-hero-sub">Three steps · Two minutes · Personal reply within 24 hours</p>
+    </section>
+
+    <!--
+      Body — two-column grid. Form on the left, sidebar on the right
+      with the Calendly bypass / "What happens next" / direct contact
+      info. Mobile collapses to a single column with the sidebar
+      stacked below the form.
+    -->
+    <section class="contact-body" aria-label="Inquiry form and direct contact options">
+      <div class="contact-body-inner">
+
+        <!--
+          Form column. The <form> action is left as a placeholder URL —
+          deployment-time configuration drops in a Formspree endpoint
+          (https://formspree.io/f/<ID>) or a Netlify Forms attribute
+          set without changes to JS. The submit handler in
+          contact-page.js currently preventDefaults and shows the
+          confirmation step without sending.
+        -->
+        <div class="contact-form-col">
+          <form class="contact-form"
+                action="/__contact-pending"
+                method="POST"
+                novalidate
+                aria-label="Qualified inquiry form">
+
+            <div class="contact-progress" aria-hidden="true">
+              <span class="contact-progress-label">
+                Step <span class="contact-step-current">1</span> of 3 · 2 minutes
+              </span>
+              <div class="contact-progress-dots">
+                <span class="contact-dot is-active"></span>
+                <span class="contact-dot"></span>
+                <span class="contact-dot"></span>
+              </div>
+            </div>
+
+            <!-- ── Step 1 — Event Details ──────────────────────── -->
+            <div class="contact-step is-active" data-step="1" aria-label="Step 1 of 3">
+
+              <h2 class="contact-step-title headline-hover">Tell me about your <em>day.</em></h2>
+              <p class="contact-step-sub">
+                Every inquiry gets a personal reply within 24 hours &mdash; usually
+                faster. No bots, no auto-responders.
+              </p>
+
+              <div class="contact-field">
+                <label class="contact-label" id="contact-service-label">What are we capturing?</label>
+                <div class="contact-tiles" role="radiogroup" aria-labelledby="contact-service-label">
+                  <button type="button" class="contact-tile" data-field="serviceType" data-value="wedding"  role="radio" aria-checked="false" tabindex="0">Wedding</button>
+                  <button type="button" class="contact-tile" data-field="serviceType" data-value="brand"    role="radio" aria-checked="false" tabindex="0">Brand / Commercial</button>
+                  <button type="button" class="contact-tile" data-field="serviceType" data-value="sport"    role="radio" aria-checked="false" tabindex="0">Sports / Event</button>
+                  <button type="button" class="contact-tile" data-field="serviceType" data-value="portrait" role="radio" aria-checked="false" tabindex="0">Portrait / Family</button>
+                </div>
+                <input type="hidden" name="serviceType" value="" required>
+              </div>
+
+              <div class="contact-field-row">
+                <div class="contact-field">
+                  <label class="contact-label" for="contact-date">Approximate date</label>
+                  <input class="contact-input" type="date" id="contact-date" name="date">
+                </div>
+                <div class="contact-field">
+                  <label class="contact-label" for="contact-location">Location</label>
+                  <input class="contact-input" type="text" id="contact-location" name="location" placeholder="Annapolis, MD">
+                </div>
+              </div>
+
+              <div class="contact-field">
+                <label class="contact-label" id="contact-budget-label">What&rsquo;s the investment?</label>
+                <div class="contact-tiles contact-tiles--budget" role="radiogroup" aria-labelledby="contact-budget-label">
+                  <button type="button" class="contact-tile contact-tile--budget" data-field="budget" data-value="3-5k"  role="radio" aria-checked="false" tabindex="0">$3&ndash;5k</button>
+                  <button type="button" class="contact-tile contact-tile--budget" data-field="budget" data-value="5-8k"  role="radio" aria-checked="false" tabindex="0">$5&ndash;8k</button>
+                  <button type="button" class="contact-tile contact-tile--budget" data-field="budget" data-value="8-12k" role="radio" aria-checked="false" tabindex="0">$8&ndash;12k</button>
+                  <button type="button" class="contact-tile contact-tile--budget" data-field="budget" data-value="12k+"  role="radio" aria-checked="false" tabindex="0">$12k+</button>
+                </div>
+                <input type="hidden" name="budget" value="">
+              </div>
+
+              <div class="contact-field">
+                <label class="contact-label" for="contact-note">A short note &mdash; what&rsquo;s the feeling you&rsquo;re after?</label>
+                <textarea class="contact-input contact-textarea" id="contact-note" name="note" rows="4" placeholder="Outdoor ceremony, candid moments, want it to feel like a film not a slideshow…"></textarea>
+              </div>
+
+              <div class="contact-actions">
+                <button type="button" class="contact-btn contact-btn--primary" data-action="next" disabled>
+                  Continue &rarr;
+                </button>
+              </div>
+
+            </div><!-- /.contact-step (1) -->
+
+            <!-- ── Step 2 — Contact Info ──────────────────────── -->
+            <div class="contact-step" data-step="2" aria-label="Step 2 of 3">
+
+              <h2 class="contact-step-title headline-hover">Let&rsquo;s <em>connect.</em></h2>
+              <p class="contact-step-sub">
+                A real human reads every inquiry. The more you share, the more
+                thoughtful the reply.
+              </p>
+
+              <div class="contact-field-row">
+                <div class="contact-field">
+                  <label class="contact-label" for="contact-name">Your name</label>
+                  <input class="contact-input" type="text" id="contact-name" name="name" required>
+                </div>
+                <!-- Partner field shown only when wedding is selected in step 1 -->
+                <div class="contact-field" data-show-when-wedding>
+                  <label class="contact-label" for="contact-partner">Partner&rsquo;s name</label>
+                  <input class="contact-input" type="text" id="contact-partner" name="partner">
+                </div>
+              </div>
+
+              <div class="contact-field">
+                <label class="contact-label" for="contact-email">Email</label>
+                <input class="contact-input" type="email" id="contact-email" name="email" required>
+              </div>
+
+              <div class="contact-field">
+                <label class="contact-label" for="contact-phone">Phone (optional)</label>
+                <input class="contact-input" type="tel" id="contact-phone" name="phone">
+              </div>
+
+              <div class="contact-field">
+                <label class="contact-label">How did you find me?</label>
+                <div class="contact-tiles contact-tiles--source">
+                  <label class="contact-tile-radio">
+                    <input type="radio" name="source" value="instagram"> Instagram
+                  </label>
+                  <label class="contact-tile-radio">
+                    <input type="radio" name="source" value="google"> Google
+                  </label>
+                  <label class="contact-tile-radio">
+                    <input type="radio" name="source" value="referral"> Referral
+                  </label>
+                  <label class="contact-tile-radio">
+                    <input type="radio" name="source" value="other"> Other
+                  </label>
+                </div>
+              </div>
+
+              <div class="contact-actions">
+                <button type="button" class="contact-btn contact-btn--ghost" data-action="back">&larr; Back</button>
+                <button type="submit" class="contact-btn contact-btn--primary">Send inquiry &rarr;</button>
+              </div>
+
+            </div><!-- /.contact-step (2) -->
+
+            <!-- ── Step 3 — Confirmation ──────────────────────── -->
+            <div class="contact-step" data-step="3" aria-label="Step 3 of 3 — confirmation">
+
+              <h2 class="contact-step-title headline-hover">Your inquiry is on its <em>way.</em></h2>
+              <p class="contact-step-sub">
+                A personal reply within 24 hours &mdash; usually same day. Check
+                your inbox (and spam folder, just in case).
+              </p>
+
+              <!-- Populated by contact-page.js on submit -->
+              <dl class="contact-summary"></dl>
+
+              <div class="contact-actions">
+                <a class="contact-btn contact-btn--ghost" href="/portfolio.html">
+                  While you wait, explore the work &rarr;
+                </a>
+              </div>
+
+            </div><!-- /.contact-step (3) -->
+
+          </form>
+        </div><!-- /.contact-form-col -->
+
+        <!--
+          Sidebar — three blocks: Calendly bypass, "What happens next"
+          numbered steps, direct contact info. On mobile this stacks
+          below the form (the @media block drops position: sticky).
+        -->
+        <aside class="contact-sidebar" aria-label="Direct contact and next-steps info">
+
+          <div class="contact-sidebar-block">
+            <p class="contact-sidebar-meta">— Or skip the form</p>
+            <h3 class="contact-sidebar-title">Book a 15-min call.</h3>
+            <p class="contact-sidebar-body">
+              If you&rsquo;d rather just talk through it, drop a quick call on
+              the calendar. No prep needed &mdash; bring your questions.
+            </p>
+            <a class="contact-sidebar-link" href="https://calendly.com/knochmedia/15min" target="_blank" rel="noopener noreferrer">
+              Pick a time on my calendar &rarr;
+            </a>
+          </div>
+
+          <div class="contact-sidebar-block">
+            <p class="contact-sidebar-meta">— What happens next</p>
+            <ol class="contact-sidebar-steps">
+              <li>
+                <span class="contact-sidebar-step-num">01</span>
+                <span>Personal reply within 24 hours.</span>
+              </li>
+              <li>
+                <span class="contact-sidebar-step-num">02</span>
+                <span>15-minute call to talk through the day.</span>
+              </li>
+              <li>
+                <span class="contact-sidebar-step-num">03</span>
+                <span>Custom proposal in your inbox within 48 hours.</span>
+              </li>
+            </ol>
+          </div>
+
+          <div class="contact-sidebar-block">
+            <p class="contact-sidebar-meta">— Direct contact</p>
+            <p class="contact-sidebar-direct">
+              <a href="tel:2407146933">240.714.6933</a><br>
+              <a href="mailto:enoch@knochmedia.com">enoch@knochmedia.com</a>
+            </p>
+          </div>
+
+        </aside>
+
+      </div><!-- /.contact-body-inner -->
+    </section><!-- /.contact-body -->
+
+    <script type="module" src="/js/contact-main.js"></script>
+  </body>
+</html>

@@ -131,7 +131,7 @@
       <div class="l">Total tickets</div>
     </div>
     <div class="stat">
-      <div class="n" id="stat-open">9</div>
+      <div class="n" id="stat-open">7</div>
       <div class="l">Open</div>
     </div>
     <div class="stat">
@@ -143,7 +143,7 @@
       <div class="l">In review</div>
     </div>
     <div class="stat">
-      <div class="n green" id="stat-done">17</div>
+      <div class="n green" id="stat-done">18</div>
       <div class="l">Done</div>
     </div>
   </div>
@@ -380,15 +380,15 @@
         <tr>
           <td class="tid">KNOCH-012</td>
           <td class="ttitle"><a href="docs/tickets/KNOCH-012.md">Project Detail View + Video Lightbox</a></td>
-          <td><span class="badge badge-review"><span class="dot dot-review"></span>In Review</span></td>
+          <td><span class="badge badge-done"><span class="dot dot-done"></span>QA Passed</span></td>
           <td class="tbranch">feature/KNOCH-012-project-detail-lightbox</td>
           <td class="tpri p2">P2</td>
         </tr>
         <tr>
           <td class="tid">KNOCH-014</td>
           <td class="ttitle"><a href="docs/tickets/KNOCH-014.md">Contact — Multi-Step Qualified Inquiry Form</a></td>
-          <td><span class="badge badge-todo"><span class="dot dot-todo"></span>Todo</span></td>
-          <td class="tbranch">—</td>
+          <td><span class="badge badge-review"><span class="dot dot-review"></span>In Review</span></td>
+          <td class="tbranch">feature/KNOCH-014-contact-form</td>
           <td class="tpri p1">P1</td>
         </tr>
         <tr>
@@ -424,7 +424,7 @@
         <tr>
           <td class="tid">KNOCH-018</td>
           <td class="ttitle"><a href="docs/tickets/KNOCH-018.md">Instagram Feed Integration</a></td>
-          <td><span class="badge badge-todo"><span class="dot dot-todo"></span>Todo</span></td>
+          <td><span class="badge badge-todo" style="background:rgba(237,230,216,0.04);color:rgba(237,230,216,0.3)"><span class="dot" style="background:rgba(237,230,216,0.25)"></span>Deferred</span></td>
           <td class="tbranch">—</td>
           <td class="tpri p3">P3</td>
         </tr>
@@ -484,9 +484,9 @@
       </thead>
       <tbody>
         <tr>
-          <td><a href="https://github.com/eayanwale/knochmedia/pull/21">#21</a></td>
-          <td>feat(KNOCH-012): Project Detail View + Video Lightbox</td>
-          <td>KNOCH-012</td>
+          <td><a href="https://github.com/eayanwale/knochmedia/pull/22">#22</a></td>
+          <td>feat(KNOCH-014): Contact / Inquiry — 3-step form + Calendly sidebar</td>
+          <td>KNOCH-014</td>
           <td>dev → test</td>
           <td><span class="badge badge-review"><span class="dot dot-review"></span>In Review</span></td>
         </tr>
@@ -507,7 +507,7 @@
   document.getElementById('date-display').textContent = new Date().toLocaleDateString('en-US', { weekday:'short', year:'numeric', month:'short', day:'numeric' });
 
   // Progress bar — "done" = merged to test (15 of 30)
-  const total = 30, done = 17;
+  const total = 30, done = 18;
   document.getElementById('progress-fill').style.width = (done / total * 100).toFixed(1) + '%';
   document.getElementById('pct-label').textContent = done + ' / ' + total + ' tickets done';
 </script>
