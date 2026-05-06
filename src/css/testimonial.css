@@ -57,6 +57,11 @@
   max-width: 680px;
   text-align: center;
   padding: 4rem 0;
+  /* Initial hidden state — GSAP animates TO visible via gsap.to, not gsap.from.
+     gsap.from with immediateRender:true hides elements immediately on fetch resolve
+     (~200ms) but Lenis doesn't init until ~2s later, leaving items stuck at opacity:0. */
+  opacity: 0;
+  transform: translateY(40px);
 }
 
 /*

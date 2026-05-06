@@ -117,16 +117,21 @@ export async function initTestimonial() {
        list enters the viewport rather than the section top (which may be
        many rems above the first item due to section padding). */
     if (!prefersReduced) {
-      gsap.from('.testimonial-item', {
-        y: 40,
-        opacity: 0,
+      /* gsap.to rather than gsap.from: CSS sets the initial hidden state
+         (opacity:0, translateY(40px)), GSAP only drives the reveal forward.
+         gsap.from with immediateRender:true was hiding elements at fetch-resolve
+         time (~200ms) before Lenis initialised (~2s), leaving them permanently
+         at opacity:0 when the ScrollTrigger fired with the wrong proxy state. */
+      gsap.to('.testimonial-item', {
+        opacity: 1,
+        y: 0,
         duration: 1.2,
         stagger: 0.15,
         ease: 'expo.out',
         scrollTrigger: {
           trigger: '.testimonial-list',
           start: 'top 75%',
-          once: true,   /* single deliberate reveal — matches KNOCH-009 behaviour */
+          once: true,
         },
       });
     }
