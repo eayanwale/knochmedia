@@ -5,6 +5,7 @@ import { initInterlude } from './interlude.js';
 import { initReel } from './reel.js';
 import { initFrame } from './frame.js';
 import { initTestimonial } from './testimonial.js';
+import { initPortfolioGrid } from './portfolio-grid.js';
 import { getFeaturedCollections, imageUrl } from './sanity.js';
 
 // NOTE: initLenis() is intentionally NOT called here.
@@ -35,6 +36,9 @@ initFrame();
 // Content renders when the promise resolves; ScrollTrigger.refresh() is called
 // inside initTestimonial() after DOM is updated.
 initTestimonial();
+
+// Portfolio archive grid — asymmetric 12-col contact-sheet (KNOCH-010)
+initPortfolioGrid();
 
 // Horizontal reel — fetch featured collections from Sanity then init (KNOCH-007 + KNOCH-025)
 getFeaturedCollections().then(collections => {

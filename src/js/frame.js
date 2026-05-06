@@ -1,71 +1,157 @@
+/*
+  frame.js — Scroll-driven studio section (KNOCH-008)
+  ====================================================
+  The section is 200vh tall with a CSS sticky panel. A single GSAP
+  timeline is pinned to the full 200vh scroll range (scrub: 0.8), so
+  every stage below maps directly to scroll position:
+
+    0 %–100 %  BG scales 1.25 → 1.0 and drifts up  (full range)
+    0 %– 20 %  Meta label fades in
+    5 %– 55 %  Headline words stagger in, left → right
+   50 %– 80 %  Stat 1 counts up (scrubbed) + label fades
+   60 %– 90 %  Stat 2 counts up + label fades
+   70 %–100 %  Stat 3 counts up + label fades
+
+  prefers-reduced-motion: final values shown instantly, no animation.
+*/
+
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 gsap.registerPlugin(ScrollTrigger);
 
-// Update these constants when bookings fill or projects are added
-const DATES_LEFT = 6;
-const TOTAL_PROJECTS = 47;
-const TOTAL_FRAMES = 12884;
+/* ── Helpers ──────────────────────────────────────────────── */
+
+/* Split an element's childNodes into individual word <span>s.
+   Inline elements (em, strong) are treated as one word unit so
+   italic amber styling is preserved. Returns the word spans array. */
+function splitWords(el) {
+  const fragments = [];
+
+  el.childNodes.forEach(node => {
+    if (node.nodeType === Node.TEXT_NODE) {
+      node.textContent.split(/(\s+)/).forEach(part => {
+        if (/\S/.test(part)) {
+          const span = document.createElement('span');
+          span.className = 'frame-word';
+          span.textContent = part;
+          fragments.push({ el: span, space: false });
+        } else if (part) {
+          fragments.push({ el: document.createTextNode(part), space: true });
+        }
+      });
+    } else {
+      const span = document.createElement('span');
+      span.className = 'frame-word';
+      span.appendChild(node.cloneNode(true));
+      fragments.push({ el: span, space: false });
+    }
+  });
+
+  el.innerHTML = '';
+  fragments.forEach(f => el.appendChild(f.el));
+  return fragments.filter(f => !f.space).map(f => f.el);
+}
+
+/* ── Main init ────────────────────────────────────────────── */
 
 export function initFrame() {
-  const section = document.querySelector('.pinned-frame');
+  const section  = document.querySelector('.pinned-frame');
   if (!section) return;
 
   const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  // Parallax: bg drifts up -15% as the section scrolls through the viewport.
-  // scrub:1 adds slight lag so the motion reads as weighty, not mechanical.
-  if (!prefersReduced) {
-    gsap.to('.pinned-frame .bg', {
-      yPercent: -15,
-      scale: 1.05,
-      ease: 'none',
-      scrollTrigger: {
-        trigger: '.pinned-frame',
-        start: 'top bottom',
-        end: 'bottom top',
-        scrub: 1,
-      },
-    });
-  }
+  const bg       = section.querySelector('.bg');
+  const metaTag  = section.querySelector('.meta-tag');
+  const bigEl    = section.querySelector('.big');
+  const statNums = gsap.utils.toArray('.pinned-frame .stat .n');
+  const statLbls = gsap.utils.toArray('.pinned-frame .stat .l');
 
-  // Headline slides up from off-position as it enters the viewport
-  gsap.from('.pinned-frame .big', {
-    y: 60,
-    opacity: 0,
-    duration: 1.4,
-    ease: 'expo.out',
+  /* Ensure counters always read their final value as the baseline.
+     On the animated path these get reset to 0 below; on the reduced-
+     motion path this is the only write that happens. */
+  statNums.forEach(el => {
+    const target = parseInt(el.dataset.count, 10);
+    if (!target) return;
+    const hasEm = !!el.querySelector('em');
+    el.innerHTML = hasEm ? `<em>${target.toLocaleString()}</em>` : target.toLocaleString();
+  });
+
+  if (prefersReduced) return;
+
+  /* Word-split the headline for per-word scrubbed reveal */
+  const words = bigEl ? splitWords(bigEl) : [];
+
+  /* Set all animated elements to their initial (hidden) state */
+  gsap.set(metaTag, { opacity: 0, y: 14 });
+  gsap.set(words,   { opacity: 0, y: 22 });
+  statNums.forEach(el => {
+    const hasEm = !!el.querySelector('em');
+    el.innerHTML = hasEm ? '<em>0</em>' : '0';
+  });
+  gsap.set(statLbls, { opacity: 0 });
+
+  /* ── Main scroll-driven timeline ──────────────────────── */
+
+  const tl = gsap.timeline({
     scrollTrigger: {
-      trigger: '.pinned-frame .big',
-      start: 'top 80%',
+      trigger: section,
+      start: 'top top',
+      end: 'bottom top',   /* full 200vh travel */
+      scrub: 0.8,
+      invalidateOnRefresh: true,
     },
   });
 
-  // Animated counters — count from 0 → data-count when scrolled into view.
-  // once: true prevents re-triggering on scroll-back (the count-up is the payoff).
-  gsap.utils.toArray('.pinned-frame .stat .n').forEach(el => {
+  /* BG: dramatic scale-in + gentle upward drift — entire scroll range */
+  tl.fromTo(bg,
+    { scale: 1.25, yPercent: 0 },
+    { scale: 1.0,  yPercent: -10, ease: 'none', duration: 1 },
+    0
+  );
+
+  /* Meta label: 0 %→ 20 % */
+  tl.to(metaTag, { opacity: 1, y: 0, ease: 'expo.out', duration: 0.2 }, 0);
+
+  /* Headline words: 5 %→~55 % (stagger 0.05 × word count + 0.15 each) */
+  if (words.length) {
+    tl.to(words, {
+      opacity: 1, y: 0,
+      ease: 'expo.out',
+      stagger: 0.05,
+      duration: 0.15,
+    }, 0.05);
+  }
+
+  /* Stat counters: scroll-scrubbed, staggered across 50 %→100 % */
+  statNums.forEach((el, i) => {
     const target = parseInt(el.dataset.count, 10);
     if (!target) return;
 
     const hasEm = !!el.querySelector('em');
-    const obj = { v: 0 };
+    const proxy = { v: 0 };
+    const start = 0.5 + i * 0.1;   /* 0.5, 0.6, 0.7 */
 
-    ScrollTrigger.create({
-      trigger: el,
-      start: 'top 85%',
-      once: true,
-      onEnter() {
-        gsap.to(obj, {
-          v: target,
-          duration: 2.2,
-          ease: 'power3.out',
-          onUpdate() {
-            const formatted = Math.round(obj.v).toLocaleString();
-            el.innerHTML = hasEm ? `<em>${formatted}</em>` : formatted;
-          },
-        });
+    tl.fromTo(proxy,
+      { v: 0 },
+      {
+        v: target,
+        ease: 'none',
+        duration: 0.3,
+        onUpdate() {
+          const n = Math.round(proxy.v).toLocaleString();
+          el.innerHTML = hasEm ? `<em>${n}</em>` : n;
+        },
       },
-    });
+      start
+    );
+
+    if (statLbls[i]) {
+      tl.fromTo(statLbls[i],
+        { opacity: 0 },
+        { opacity: 1, ease: 'none', duration: 0.1 },
+        start
+      );
+    }
   });
 }

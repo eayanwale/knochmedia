@@ -123,10 +123,8 @@ export function initReel(cards = CARDS) {
   });
 
   // Inner parallax — card image pans counter to horizontal scroll.
-  // containerAnimation must reference the ScrollTrigger instance
-  // attached to the parent tween (not a standalone ST instance).
-  const reelST = reelTween.scrollTrigger;
-
+  // containerAnimation takes the parent TWEEN (not the ST instance) so
+  // ScrollTrigger can derive card positions relative to horizontal scroll.
   track.querySelectorAll('.reel-card').forEach(card => {
     const img = card.querySelector('.reel-card-img');
     if (!img) return;
@@ -139,7 +137,7 @@ export function initReel(cards = CARDS) {
         ease: 'none',
         scrollTrigger: {
           trigger: card,
-          containerAnimation: reelST,
+          containerAnimation: reelTween,
           start: 'left right',
           end: 'right left',
           scrub: true,

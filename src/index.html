@@ -56,6 +56,8 @@
     <link rel="stylesheet" href="/css/frame.css" />
     <!-- Testimonial editorial pull-quote section (KNOCH-009) -->
     <link rel="stylesheet" href="/css/testimonial.css" />
+    <!-- Portfolio archive grid (KNOCH-010) -->
+    <link rel="stylesheet" href="/css/portfolio-grid.css" />
 
     <!--
       LCP image preload — hero-01.jpg is the largest contentful paint element.
@@ -292,6 +294,108 @@
     <section id="testimonial" class="testimonial" aria-label="Client testimonials">
       <!-- populated by testimonial.js (KNOCH-024) -->
     </section><!-- /#testimonial -->
+
+    <!--
+      Portfolio archive grid — contact-sheet layout (KNOCH-010).
+      7 tiles at asymmetric spans across a 12-col grid. Each tile has
+      a full-bleed image with grayscale-to-colour hover reveal and a
+      slide-up label. Scroll reveal + inner image parallax via JS.
+      Tile 7 will link to the YouTube lightbox in KNOCH-017.
+    -->
+    <section id="archive" class="archive" aria-label="Portfolio archive">
+
+      <div class="archive-header">
+        <h2 class="archive-headline">The <em>archive.</em></h2>
+        <p class="archive-meta">047 PROJECTS&nbsp;· INDEXED&nbsp;/ BY DATE<br>— REQUEST FULL CATALOG</p>
+      </div>
+
+      <div class="archive-grid" role="list">
+
+        <!-- t1: large feature — Alex and Morgan, Wedding -->
+        <article class="tile t1" role="listitem" tabindex="0"
+          data-link-type="external-gallery"
+          data-url="https://knoch.pic-time.com/-alexmorgan/gallery"
+          aria-label="Alex and Morgan — Wedding gallery">
+          <div class="tile-img" style="background-image: url('/assets/portfolio/cover-alex-morgan.jpg')" role="img" aria-hidden="true"></div>
+          <span class="tile-notch tile-notch--tl" aria-hidden="true"></span>
+          <span class="tile-notch tile-notch--tr" aria-hidden="true"></span>
+          <span class="tile-notch tile-notch--bl" aria-hidden="true"></span>
+          <span class="tile-notch tile-notch--br" aria-hidden="true"></span>
+          <div class="tile-label">
+            <span class="tile-num">№ 005 · Wedding</span>
+            <h3 class="tile-title">Alex and Morgan</h3>
+            <p class="tile-sub">Eastern Shore</p>
+          </div>
+        </article>
+
+        <!-- t2: Fayo and Femi, Wedding -->
+        <article class="tile t2" role="listitem" tabindex="0"
+          data-link-type="external-gallery"
+          data-url="https://knoch.pic-time.com/-fayofemi/gallery"
+          aria-label="Fayo and Femi — Wedding gallery">
+          <div class="tile-img" style="background-image: url('/assets/portfolio/cover-fayo-femi.jpg')" role="img" aria-hidden="true"></div>
+          <div class="tile-label">
+            <span class="tile-num">№ 001 · Wedding</span>
+            <h3 class="tile-title">Fayo and Femi</h3>
+            <p class="tile-sub">Introduction</p>
+          </div>
+        </article>
+
+        <!-- t3: Shawn and Bekki, Wedding -->
+        <article class="tile t3" role="listitem" tabindex="0"
+          data-link-type="external-gallery"
+          data-url="https://knoch.pic-time.com/-shawnbekki/gallery"
+          aria-label="Shawn and Bekki — Wedding gallery">
+          <div class="tile-img" style="background-image: url('/assets/portfolio/cover-shawn-bekki.jpg')" role="img" aria-hidden="true"></div>
+          <div class="tile-label">
+            <span class="tile-num">№ 004 · Wedding</span>
+            <h3 class="tile-title">Shawn and Bekki</h3>
+            <p class="tile-sub">Maryland</p>
+          </div>
+        </article>
+
+        <!-- t4: Woodsmen, Sports & Events — wide banner -->
+        <article class="tile t4" role="listitem" tabindex="0"
+          data-link-type="internal-page"
+          data-url="/gallery/woodsmen/"
+          aria-label="Woodsmen — Sports &amp; Events gallery">
+          <div class="tile-img" style="background-image: url('/assets/portfolio/cover-woodsmen.jpg')" role="img" aria-hidden="true"></div>
+          <div class="tile-label">
+            <span class="tile-num">№ 009 · Sports &amp; Events</span>
+            <h3 class="tile-title">Woodsmen</h3>
+            <p class="tile-sub">Maryland</p>
+          </div>
+        </article>
+
+        <!-- t6: What Mighty Praise, Worship -->
+        <article class="tile t6" role="listitem" tabindex="0"
+          data-link-type="youtube"
+          data-url="https://youtu.be/KPerYKXlpX0?si=O5owuRrHWqUCCr68"
+          aria-label="What Mighty Praise — Worship film">
+          <div class="tile-img" style="background-image: url('/assets/portfolio/cover-what-mighty-praise.png')" role="img" aria-hidden="true"></div>
+          <div class="tile-label">
+            <span class="tile-num">№ 002 · Worship</span>
+            <h3 class="tile-title">What Mighty Praise</h3>
+            <p class="tile-sub">Film</p>
+          </div>
+        </article>
+
+        <!-- t7: Rapha Records, Brand & Commercial — YouTube video tile -->
+        <article class="tile t7" role="listitem" tabindex="0"
+          data-link-type="youtube"
+          data-url="https://www.youtube.com/watch?v=Hs25JK7WcZQ&t=75s"
+          aria-label="Rapha Records — Brand film">
+          <div class="tile-img" style="background-image: url('/assets/portfolio/cover-rapha-records.jpg')" role="img" aria-hidden="true"></div>
+          <span class="tile-badge" aria-hidden="true">▶ Film</span>
+          <div class="tile-label">
+            <span class="tile-num">№ 007 · Brand &amp; Commercial</span>
+            <h3 class="tile-title">Rapha Records</h3>
+            <p class="tile-sub">Brand film</p>
+          </div>
+        </article>
+
+      </div><!-- /.archive-grid -->
+    </section><!-- /#archive -->
 
     <section id="cta" aria-label="Inquire">
       <!-- KNOCH-014: Contact / qualified inquiry form -->

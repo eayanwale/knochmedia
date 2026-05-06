@@ -1,7 +1,7 @@
 # Knoch Media — Ticket Summary
 
 > **Living document.** Updated whenever tickets are created, modified, split, or closed.  
-> Last updated: 2026-05-05 | Total tickets: 30 | Open: 13 | In progress: 0 | In review: 0 | Done: 14 | Deferred: 3
+> Last updated: 2026-05-05 | Total tickets: 30 | Open: 12 | In progress: 0 | In review: 1 | Done: 14 | Deferred: 3
 
 ---
 
@@ -61,7 +61,7 @@ Build top-to-bottom in scroll order. Wire each section to Sanity immediately aft
 | [KNOCH-007](tickets/KNOCH-007.md) | Horizontal Reel — Pinned Scroll Carousel | `✅` | `feature/KNOCH-007-horizontal-reel` | Sanity-driven (3 featured collections); cinematic full-greyscale filter; inner parallax; KNOCH-025 included |
 | [KNOCH-008](tickets/KNOCH-008.md) | Pinned Frame — Parallax + Animated Counters | `✅` | `feature/KNOCH-008-pinned-frame` | QA PASSED — merged to test |
 | [KNOCH-009](tickets/KNOCH-009.md) | Testimonial Pull-Quote Section | `✅` | `feature/KNOCH-009-testimonial-section` | QA PASSED — merged to test |
-| [KNOCH-010](tickets/KNOCH-010.md) | Portfolio Grid — Asymmetric 12-Col Archive | `⬜` | — | 7 tiles, contact-sheet layout |
+| [KNOCH-010](tickets/KNOCH-010.md) | Portfolio Grid — Asymmetric 12-Col Archive | `🔵` | `feature/KNOCH-010-portfolio-grid` | PR #14 open dev→test |
 
 ---
 
@@ -173,6 +173,26 @@ CMS layer (cuts across phases — wire each section after it is built):
 ## Changelog
 
 All modifications to this document and ticket files are logged here. Tester agent and code review feedback should be recorded as entries.
+
+---
+
+### 2026-05-05 — KNOCH-010 PR opened — IN REVIEW
+
+**Action:** PR #14 opened dev → test
+**Tickets affected:** KNOCH-010
+**Reason:** Builder completed the portfolio archive grid; all 7 tiles built, animations wired, PR open for QA
+**Changes:**
+- KNOCH-010: Status changed ⬜ Open → 🔵 In Review
+- Branch `feature/KNOCH-010-portfolio-grid` created, implemented, merged into `dev`
+- PR #14 opened: dev → test at https://github.com/eayanwale/knochmedia/pull/14
+- Files delivered:
+  - `src/css/portfolio-grid.css` — 12-col grid, 7 tile spans, hover colour reveal, slide-up label, film notches on t1, badge on t7, mobile collapse, reduced-motion
+  - `src/js/portfolio-grid.js` — header reveal, tile stagger reveal, per-tile inner parallax
+  - `src/index.html` — archive section with 7 tile articles; CSS linked in head
+  - `src/js/main.js` — initPortfolioGrid() import + call
+- Build: 36 modules, 18.25 kB CSS / 4.30 kB gz, 147.64 kB JS / 54.21 kB gz, 102ms
+- Header counts updated: Open 13→12, In review 0→1
+**Requested by:** Builder
 
 ---
 
