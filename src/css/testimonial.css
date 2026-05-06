@@ -2,43 +2,40 @@
   testimonial.css — Editorial pull-quote section (KNOCH-009)
   =============================================================
   Positioned between the pinned frame (#frame) and the CTA (#cta).
-  A single high-impact testimonial breaks the visual rhythm after the
-  studio-credentials section and adds social proof before the full archive.
+  Five client quotes from Sanity, each truncated to ~120 chars so
+  none overstays its welcome. Word-by-word GSAP reveal fires per item
+  via IntersectionObserver (no Lenis timing dependency).
 
   Design decisions:
-  - 14rem vertical padding gives the quote maximum breathing room on
-    all viewport sizes; 8vw horizontal keeps it from running edge-to-edge.
-  - 22ch max-width forces tight, newspaper-style line breaks that feel
-    intentional rather than reflowed from a container width.
-  - The 8rem quote mark is pure decoration — aria-hidden, user-select:none,
-    line-height:0.5 so it doesn't add excess vertical space below it.
-  - Border-top uses rgba(--paper, 0.08) — just enough to punctuate the
-    section boundary without drawing attention away from the quote itself.
+  - Section padding reduced from 14rem → 10rem: the section is now
+    denser (5 items) so less negative space is needed between sections.
+  - Quote mark shrunk from 8rem → 3rem and muted to 0.5 opacity:
+    at 8rem it dominated the item visually; now it functions as a
+    subtle typographic accent before the quote text.
+  - Font-size dropped from clamp(28px,4vw,56px) to clamp(18px,1.8vw,28px):
+    full testimonial quotes read as prose, not display headlines.
+    Smaller text lets all 5 quotes fit without the page feeling like
+    a wall of serif type.
+  - max-width widened from 22ch → 40ch: 22ch forced tight 4-5 word
+    lines at display size. At the new prose size, 40ch gives a
+    comfortable ~70-75 chars per line (optimal reading measure).
+  - Attribution margin-top reduced 3rem → 1.5rem: tighter coupling
+    between quote and attribution reads as a single unit.
+  - .testimonial-word spans are inline-block so GSAP can translateY
+    each word independently without breaking text flow.
 */
 
 /* ── Section shell ──────────────────────────────────────── */
 
 .testimonial {
-  padding: 14rem 8vw;
+  padding: 10rem 8vw;
   text-align: center;
   border-top: 1px solid rgba(237, 230, 216, 0.08);
-
-  /*
-    Overflow hidden on the section rather than on each child prevents
-    the stagger reveal (y: 40px translate) from creating a brief
-    horizontal scrollbar on narrow viewports.
-  */
   overflow: hidden;
 }
 
-/* ── Dynamic list wrapper (KNOCH-024) ───────────────────── */
+/* ── Dynamic list wrapper ───────────────────────────────── */
 
-/*
-  .testimonial-list is the JS-rendered container that holds all
-  .testimonial-item elements fetched from Sanity. flex column centres
-  each item horizontally without affecting the text-align:center
-  already set on .testimonial.
-*/
 .testimonial-list {
   display: flex;
   flex-direction: column;
@@ -46,46 +43,27 @@
   width: 100%;
 }
 
-/*
-  Each item gets its own inner vertical padding so the divider line
-  (via + selector below) creates breathing room between quotes.
-  max-width: 680px is wider than the 22ch quote max-width, allowing
-  the attribution text to breathe more on wide viewports.
-*/
 .testimonial-item {
   width: 100%;
-  max-width: 680px;
+  max-width: 760px;
   text-align: center;
-  padding: 4rem 0;
-  /* Initial state is visible — JS sets opacity:0 + translateY(40px) inline when
-     the animation is registered, so items are never permanently hidden if JS fails. */
+  padding: 3rem 0;
 }
 
-/*
-  Divider between consecutive items only — the ::before pseudo-element
-  approach is avoided here because border-top on the adjacent sibling
-  is simpler and equally reliable. The rgba value matches the section's
-  own border-top so the visual weight is consistent.
-  Last item gets no bottom border — the section padding handles that spacing.
-*/
 .testimonial-item + .testimonial-item {
-  border-top: 1px solid rgba(237, 230, 216, 0.08);
+  border-top: 1px solid rgba(237, 230, 216, 0.06);
 }
 
 /* ── Decorative opening quotation mark ──────────────────── */
 
 .testimonial-mark {
   font-family: var(--font-serif);
-  font-size: 8rem;
-  line-height: 0.5;     /* pulls the mark up; prevents excess gap below */
+  font-size: 3rem;
+  line-height: 0.5;
   color: var(--amber);
-  margin-bottom: 2rem;
+  opacity: 0.6;
+  margin-bottom: 1.5rem;
   display: block;
-
-  /*
-    user-select: none prevents accidental text selection when a visitor
-    clicks near the quote. The mark is purely decorative.
-  */
   user-select: none;
 }
 
@@ -94,20 +72,20 @@
 .testimonial-quote {
   font-family: var(--font-serif);
   font-weight: 300;
-  font-size: clamp(28px, 4vw, 56px);
-  line-height: 1.25;
-  letter-spacing: -0.015em;
-  max-width: 22ch;
+  font-size: clamp(18px, 1.8vw, 28px);
+  line-height: 1.5;
+  letter-spacing: -0.01em;
+  max-width: 40ch;
   margin: 0 auto;
   color: var(--paper);
 }
 
-/*
-  <em> inside the quote renders in italic amber — signals the emotionally
-  loaded phrase "better than we had imagined." without losing readability.
-  Fraunces italic optical axis is different from the regular face, giving
-  it a slightly more calligraphic quality at display sizes.
-*/
+/* Each word is wrapped in an inline-block span by buildItem()
+   so GSAP can stagger translateY per word without breaking flow. */
+.testimonial-word {
+  display: inline-block;
+}
+
 .testimonial-quote em {
   font-style: italic;
   color: var(--amber);
@@ -119,25 +97,17 @@
   font-family: var(--font-mono);
   font-size: 10px;
   letter-spacing: 0.3em;
-  color: rgba(237, 230, 216, 0.5);   /* muted paper — intentionally quiet */
+  color: rgba(237, 230, 216, 0.45);
   text-transform: uppercase;
-  margin-top: 3rem;
+  margin-top: 1.5rem;
   display: block;
 }
 
 /* ── Reduced-motion override ────────────────────────────── */
 
-/*
-  When the user has requested reduced motion, skip the GSAP stagger
-  reveal entirely by making all children immediately visible at their
-  final state. testimonial.js checks this flag before registering the
-  ScrollTrigger, but the CSS guard ensures correctness even if JS is slow.
-*/
 @media (prefers-reduced-motion: reduce) {
-  /* JS skips the animation entirely for reduced-motion users — items are never
-     set to opacity:0. This guard handles the rare case where JS applies inline
-     styles before the preference is detected. */
-  .testimonial-item {
+  .testimonial-item,
+  .testimonial-word {
     opacity: 1 !important;
     transform: none !important;
   }
@@ -147,10 +117,10 @@
 
 @media (max-width: 800px) {
   .testimonial {
-    padding: 8rem 6vw;
+    padding: 6rem 6vw;
   }
 
   .testimonial-mark {
-    font-size: 6rem;
+    font-size: 2.5rem;
   }
 }
