@@ -131,7 +131,7 @@
       <div class="l">Total tickets</div>
     </div>
     <div class="stat">
-      <div class="n" id="stat-open">13</div>
+      <div class="n" id="stat-open">12</div>
       <div class="l">Open</div>
     </div>
     <div class="stat">
@@ -143,7 +143,7 @@
       <div class="l">In review</div>
     </div>
     <div class="stat">
-      <div class="n green" id="stat-done">14</div>
+      <div class="n green" id="stat-done">15</div>
       <div class="l">Done</div>
     </div>
   </div>
@@ -343,8 +343,8 @@
         <tr>
           <td class="tid">KNOCH-010</td>
           <td class="ttitle"><a href="docs/tickets/KNOCH-010.md">Portfolio Grid — Asymmetric 12-Col Archive</a></td>
-          <td><span class="badge badge-todo"><span class="dot dot-todo"></span>Todo</span></td>
-          <td class="tbranch">—</td>
+          <td><span class="badge badge-pass"><span class="dot dot-pass"></span>QA Passed</span></td>
+          <td class="tbranch">feature/KNOCH-010-portfolio-grid</td>
           <td class="tpri p1">P1</td>
         </tr>
       </tbody>
@@ -487,8 +487,8 @@
   // Live date
   document.getElementById('date-display').textContent = new Date().toLocaleDateString('en-US', { weekday:'short', year:'numeric', month:'short', day:'numeric' });
 
-  // Progress bar — "done" = merged to test (14 of 30)
-  const total = 30, done = 14;
+  // Progress bar — "done" = merged to test (15 of 30)
+  const total = 30, done = 15;
   document.getElementById('progress-fill').style.width = (done / total * 100).toFixed(1) + '%';
   document.getElementById('pct-label').textContent = done + ' / ' + total + ' tickets done';
 </script>

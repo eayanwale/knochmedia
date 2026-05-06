@@ -1,7 +1,7 @@
 # Knoch Media — Ticket Summary
 
 > **Living document.** Updated whenever tickets are created, modified, split, or closed.  
-> Last updated: 2026-05-05 | Total tickets: 30 | Open: 12 | In progress: 0 | In review: 1 | Done: 14 | Deferred: 3
+> Last updated: 2026-05-05 | Total tickets: 30 | Open: 12 | In progress: 0 | In review: 0 | Done: 15 | Deferred: 3
 
 ---
 
@@ -61,7 +61,7 @@ Build top-to-bottom in scroll order. Wire each section to Sanity immediately aft
 | [KNOCH-007](tickets/KNOCH-007.md) | Horizontal Reel — Pinned Scroll Carousel | `✅` | `feature/KNOCH-007-horizontal-reel` | Sanity-driven (3 featured collections); cinematic full-greyscale filter; inner parallax; KNOCH-025 included |
 | [KNOCH-008](tickets/KNOCH-008.md) | Pinned Frame — Parallax + Animated Counters | `✅` | `feature/KNOCH-008-pinned-frame` | QA PASSED — merged to test |
 | [KNOCH-009](tickets/KNOCH-009.md) | Testimonial Pull-Quote Section | `✅` | `feature/KNOCH-009-testimonial-section` | QA PASSED — merged to test |
-| [KNOCH-010](tickets/KNOCH-010.md) | Portfolio Grid — Asymmetric 12-Col Archive | `🔵` | `feature/KNOCH-010-portfolio-grid` | PR #14 open dev→test |
+| [KNOCH-010](tickets/KNOCH-010.md) | Portfolio Grid — Asymmetric 12-Col Archive | `✅` | `feature/KNOCH-010-portfolio-grid` | QA PASSED — merged to test |
 
 ---
 
@@ -173,6 +173,21 @@ CMS layer (cuts across phases — wire each section after it is built):
 ## Changelog
 
 All modifications to this document and ticket files are logged here. Tester agent and code review feedback should be recorded as entries.
+
+---
+
+### 2026-05-05 — KNOCH-010 QA PASSED — merged to test
+
+**Action:** PR #14 merged (dev → test) — KNOCH-010 QA PASSED
+**Tickets affected:** KNOCH-010
+**Reason:** Tester agent verified all 34 acceptance criteria; build clean at 97ms, 35 modules. Asymmetric 12-column archive grid fully implemented: 6 tiles, hover colour-reveal, slide-up labels, film notches on t1, video badge on t7, scroll stagger reveal, per-tile inner parallax, mobile collapse, reduced-motion guards.
+**Changes:**
+- KNOCH-010: Status changed 🔵 In Review → ✅ QA PASSED
+- PR #14 merged with full merge commit; branch `feature/KNOCH-010-portfolio-grid` merged into test
+- All test plan checkboxes ticked in PR body
+- Test report written: `docs/test-reports/KNOCH-010-test-report.md`
+- Header counts updated: In review 1→0, Done 14→15
+**Completed by:** Tester Agent
 
 ---
 
