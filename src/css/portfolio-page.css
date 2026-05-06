@@ -1,0 +1,355 @@
+/*
+  portfolio-page.css — Standalone portfolio.html (KNOCH-011)
+  ===========================================================
+  Layout overview:
+
+  ┌─ .portfolio-hero ─────────────────────────────────────────┐
+  │  "The work." headline + filter tabs row                   │
+  │  Tabs: All · Weddings · Brand · Sports · Portraits        │
+  └───────────────────────────────────────────────────────────┘
+  ┌─ .portfolio-grid ─────────────────────────────────────────┐
+  │  Uniform 3-col grid (mobile 1 / tablet 2 / desktop 3)     │
+  │  Each .portfolio-card has data-category for filter logic  │
+  └───────────────────────────────────────────────────────────┘
+  ┌─ .portfolio-meta ─────────────────────────────────────────┐
+  │  "Showing X of Y projects" + "Load more →" button         │
+  └───────────────────────────────────────────────────────────┘
+
+  Desktop layout puts the headline left and the filter tabs right
+  on the same row; mobile (≤800px) stacks them and turns the tabs
+  into a horizontally-scrollable row so the labels never wrap.
+
+  Filter animation lives in portfolio-page.js — non-matching cards
+  tween out (opacity + y, duration 0.3) while matching cards tween
+  in (opacity + y, stagger 0.05, duration 0.5). After exit, the
+  non-matching tiles get `display: none` so they don't reserve grid
+  space; entering tiles get `display: ''` reverted so they re-enter
+  the grid track flow.
+*/
+
+
+/* ── Page hero ─────────────────────────────────────────── */
+
+.portfolio-hero {
+  padding: 14rem 8vw 4rem;
+  border-bottom: 1px solid rgba(237, 230, 216, 0.08);
+}
+
+.portfolio-hero-inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 4rem;
+  max-width: 1600px;
+  margin: 0 auto;
+}
+
+.portfolio-hero-text {
+  flex-shrink: 0;
+}
+
+.portfolio-hero-meta {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--amber);
+  margin-bottom: 1rem;
+}
+
+.portfolio-hero-headline {
+  font-family: var(--font-serif);
+  font-weight: 300;
+  font-size: clamp(48px, 7vw, 100px);
+  line-height: 0.95;
+  letter-spacing: -0.04em;
+  color: var(--paper);
+  margin: 0;
+}
+
+.portfolio-hero-headline em {
+  font-style: italic;
+  color: var(--amber);
+}
+
+
+/* ── Filter tabs ─────────────────────────────────────── */
+
+/* Tabs row sits in line with the headline on desktop and wraps under
+   it on mobile via the .portfolio-hero-inner stack reset below. */
+.portfolio-tabs {
+  display: flex;
+  align-items: center;
+  gap: 1.6rem;
+  flex-wrap: nowrap;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+/* Each tab is a real <button> for keyboard accessibility (KNOCH-021).
+   No background, no border — just amber-on-hover and an animated
+   underline that snaps to width: 100% on the active tab. */
+.portfolio-tab {
+  background: none;
+  border: none;
+  padding: 0.4rem 0;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: rgba(237, 230, 216, 0.45);
+  cursor: pointer;
+  position: relative;
+  transition: color 0.35s var(--ease-cinematic);
+}
+
+.portfolio-tab::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background: var(--amber);
+  transition: width 0.4s var(--ease-cinematic);
+}
+
+.portfolio-tab:hover,
+.portfolio-tab:focus-visible {
+  color: var(--paper);
+  outline: none;
+}
+
+.portfolio-tab.is-active {
+  color: var(--amber);
+}
+
+.portfolio-tab.is-active::after {
+  width: 100%;
+}
+
+
+/* ── Card grid ──────────────────────────────────────── */
+
+.portfolio-grid-wrap {
+  padding: 5rem 8vw 4rem;
+}
+
+.portfolio-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.4rem;
+  max-width: 1600px;
+  margin: 0 auto;
+}
+
+
+/* Individual card — full-bleed bg image with metadata overlay on hover */
+.portfolio-card {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  background: #1a1a1a;
+  cursor: pointer;
+  /* Cards entering and leaving via filter ride this transition for free
+     when JS isn't actively tweening — minor cleanup if any inline styles
+     stick around after a tween. */
+  transition: opacity 0.4s var(--ease-cinematic);
+}
+
+.portfolio-card-img {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  filter: grayscale(0.5) brightness(0.7);
+  transition: filter 0.7s var(--ease-cinematic),
+              transform 1.2s var(--ease-cinematic);
+  will-change: transform;
+}
+
+.portfolio-card:hover .portfolio-card-img,
+.portfolio-card:focus-visible .portfolio-card-img {
+  filter: grayscale(0) brightness(1);
+  transform: scale(1.03);
+}
+
+.portfolio-card-label {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 1.6rem 1.4rem 1.2rem;
+  background: linear-gradient(to top, rgba(10, 10, 10, 0.92) 60%, transparent);
+  transform: translateY(16px);
+  opacity: 0;
+  transition: opacity 0.5s var(--ease-cinematic),
+              transform 0.5s var(--ease-cinematic);
+  z-index: 2;
+}
+
+.portfolio-card:hover .portfolio-card-label,
+.portfolio-card:focus-visible .portfolio-card-label {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.portfolio-card-cat {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--amber);
+  margin-bottom: 0.4rem;
+}
+
+.portfolio-card-title {
+  font-family: var(--font-serif);
+  font-weight: 300;
+  font-size: 20px;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  color: var(--paper);
+  margin-bottom: 0.3rem;
+}
+
+.portfolio-card-sub {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(237, 230, 216, 0.55);
+}
+
+
+/* Hidden state (initially-hidden cards, plus filter-out non-matches).
+   Using `display: none` rather than just opacity:0 so hidden tiles
+   don't reserve grid space — the grid reflows around the visible
+   subset. JS toggles this class. */
+.portfolio-card.is-hidden {
+  display: none;
+}
+
+
+/* ── Meta row (count + load more) ───────────────────── */
+
+.portfolio-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+  max-width: 1600px;
+  margin: 4rem auto 12rem;
+  padding: 1.5rem 0 0;
+  border-top: 1px solid rgba(237, 230, 216, 0.08);
+}
+
+.portfolio-count {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: rgba(237, 230, 216, 0.55);
+}
+
+.portfolio-count strong {
+  color: var(--paper);
+  font-weight: 500;
+}
+
+.portfolio-load-more {
+  background: none;
+  border: none;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid var(--amber);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--amber);
+  cursor: pointer;
+  transition: opacity 0.3s var(--ease-cinematic);
+}
+
+.portfolio-load-more:hover,
+.portfolio-load-more:focus-visible {
+  opacity: 0.7;
+  outline: none;
+}
+
+/* When everything is shown, JS hides the button — display: none keeps the
+   meta row's flex layout left-aligned on the count without a vacant slot. */
+.portfolio-load-more.is-hidden {
+  display: none;
+}
+
+
+/* ── Reduced motion ────────────────────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  .portfolio-card,
+  .portfolio-card-img,
+  .portfolio-card-label,
+  .portfolio-tab,
+  .portfolio-tab::after,
+  .portfolio-load-more {
+    transition: none !important;
+  }
+}
+
+
+/* ── Mobile / tablet ───────────────────────────────── */
+
+@media (max-width: 800px) {
+  .portfolio-hero {
+    padding: 10rem 6vw 3rem;
+  }
+
+  /* Stack the headline and the tabs row */
+  .portfolio-hero-inner {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 2rem;
+  }
+
+  /* Horizontal scroll for tabs so the labels never wrap onto multiple
+     rows — matches the AC's requirement. -webkit-overflow-scrolling adds
+     iOS momentum on the rare iOS Safari version that still needs it. */
+  .portfolio-tabs {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    /* Negative inline padding pull lets each tab still align to the edge */
+    padding-bottom: 0.5rem;
+    scrollbar-width: thin;
+  }
+
+  .portfolio-tab {
+    flex-shrink: 0;
+  }
+
+  .portfolio-grid-wrap {
+    padding: 3rem 6vw 2rem;
+  }
+
+  .portfolio-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+
+  .portfolio-meta {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1.5rem;
+    margin: 3rem auto 6rem;
+    padding-left: 6vw;
+    padding-right: 6vw;
+  }
+}
+
+@media (max-width: 480px) {
+  .portfolio-grid {
+    grid-template-columns: 1fr;
+  }
+}
