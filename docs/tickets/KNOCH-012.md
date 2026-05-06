@@ -1,8 +1,9 @@
 # KNOCH-012 — Project Detail View
 
-## Status: TODO
+## Status: IN PROGRESS
 ## Priority: P2 (medium)
 ## Epic: EPIC-003 — Secondary Pages
+## Branch: feature/KNOCH-012-project-detail-lightbox
 
 ## Title
 Project Detail: Full-Screen Lightbox / Dedicated Project Page

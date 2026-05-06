@@ -1,7 +1,7 @@
 # Knoch Media — Ticket Summary
 
 > **Living document.** Updated whenever tickets are created, modified, split, or closed.  
-> Last updated: 2026-05-06 | Total tickets: 30 | Open: 10 | In progress: 0 | In review: 0 | Done: 17 | Deferred: 3
+> Last updated: 2026-05-06 | Total tickets: 30 | Open: 9 | In progress: 1 | In review: 0 | Done: 17 | Deferred: 3
 
 ---
 
@@ -73,7 +73,7 @@ Build in this order: About → Portfolio page → Project detail → Contact →
 |----|-------|--------|--------|-------|
 | [KNOCH-013](tickets/KNOCH-013.md) | About / Story Section (about.html) | `✅` | `feature/KNOCH-013-about-story-section` | QA PASSED — merged to test |
 | [KNOCH-011](tickets/KNOCH-011.md) | Portfolio Filter System (portfolio.html) | `✅` | `feature/KNOCH-011-portfolio-filter` | QA PASSED — merged to test |
-| [KNOCH-012](tickets/KNOCH-012.md) | Project Detail View + Video Lightbox | `⬜` | — | Expanding tile transition |
+| [KNOCH-012](tickets/KNOCH-012.md) | Project Detail View + Video Lightbox | `🔵` | `feature/KNOCH-012-project-detail-lightbox` | Expanding tile transition |
 | [KNOCH-014](tickets/KNOCH-014.md) | Contact — Multi-Step Qualified Inquiry Form | `⬜` | — | 3-step form + Calendly sidebar |
 | [KNOCH-015](tickets/KNOCH-015.md) | Footer — Credits Bar + Sitemap Variant | `⬜` | — | Two variants: minimal + expanded |
 
@@ -173,6 +173,19 @@ CMS layer (cuts across phases — wire each section after it is built):
 ## Changelog
 
 All modifications to this document and ticket files are logged here. Tester agent and code review feedback should be recorded as entries.
+
+---
+
+### 2026-05-06 — KNOCH-012 implementation started — IN PROGRESS
+
+**Action:** Feature branch created; implementation in progress
+**Tickets affected:** KNOCH-012
+**Reason:** Builder agent starting Project Detail View + Video Lightbox — projects.js data module, video-lightbox component, project.html standalone page with expanding-tile transition, click-handler routing across portfolio.html and homepage archive
+**Changes:**
+- KNOCH-012: Status changed ⬜ Open → 🔵 In progress
+- Branch `feature/KNOCH-012-project-detail-lightbox` created from dev
+- Header counts updated: Open 10→9, In progress 0→1
+**Requested by:** Builder agent
 
 ---
 
