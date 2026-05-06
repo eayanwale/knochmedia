@@ -107,24 +107,33 @@
 }
 
 
-/* ── Story chapters (KNOCH-036 redesign) ────────────────
-   Replaced the previous sticky-text + scrolling-images split with
-   four full-bleed chapter sections, each with a photo bg and overlaid
-   text. Reads as a scroll narrative — the visitor moves chapter to
-   chapter, image to image, instead of staring at a static text column
-   while scrolling past a strip of pictures. */
+/* ── Story chapters (KNOCH-036 — pinned overlay narrative) ───
+   Four chapters stacked absolutely inside .about-story; the section
+   itself is pinned by GSAP ScrollTrigger for ~4 viewport heights of
+   scroll. As the visitor scrolls, the active chapter fades out and
+   the next fades in over it. Within each chapter, the label / title /
+   body text cascades in once the chapter becomes the active layer. */
 
 .about-story {
-  /* No padding here — each .about-chapter is full-bleed and handles
-     its own internal padding. */
+  position: relative;
+  height: 100vh;
+  overflow: hidden;
 }
 
 .about-chapter {
-  position: relative;
-  min-height: 100vh;
+  position: absolute;
+  inset: 0;
   display: flex;
   align-items: center;
   overflow: hidden;
+  /* JS sets opacity per-chapter — chapter 0 starts visible, the rest
+     start hidden. CSS keeps them all stacked so the GSAP fade tweens
+     have something to scrub through. */
+  opacity: 0;
+}
+
+.about-chapter:first-child {
+  opacity: 1;
 }
 
 /* Full-bleed bg — slight grayscale + brightness ramp keeps the photo

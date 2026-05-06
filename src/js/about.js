@@ -60,7 +60,27 @@ export function initAbout() {
     if (heroSub)      tl.to(heroSub,      { opacity: 1, y: 0, duration: 0.7 }, 0.5);
   }
 
-  /* ── 2. Chapter scroll-in reveals ──────────────────────────── */
+  /* ── 1b. Intro paragraph parallax ──────────────────────────── */
+
+  /* The studio statement under the hero floats slightly counter to the
+     scroll direction so it reads as a separate plane from the rest of
+     the page. Subtle — the y range is small but enough to feel like
+     parallax depth as the visitor scrolls past. */
+  const introBody = document.querySelector('.about-intro-body');
+  if (introBody && !prefersReduced) {
+    gsap.to(introBody, {
+      y: -60,
+      ease: 'none',
+      scrollTrigger: {
+        trigger: '.about-intro',
+        start: 'top bottom',
+        end: 'bottom top',
+        scrub: 1,
+      },
+    });
+  }
+
+  /* ── 2. Pinned chapter overlay narrative ───────────────────── */
 
   /* Wrap each chapter body's words in <span class="about-word"> spans so
      the stagger reveal can target individual words. Skipped on reduced
@@ -85,48 +105,126 @@ export function initAbout() {
     return words;
   }
 
-  const chapters = document.querySelectorAll('.about-chapter');
-  chapters.forEach(chapter => {
-    const bg     = chapter.querySelector('.about-chapter-bg');
-    const label  = chapter.querySelector('.about-chapter-label');
-    const title  = chapter.querySelector('.about-chapter-title');
-    const body   = chapter.querySelector('.about-chapter-body');
+  const story    = document.querySelector('.about-story');
+  const chapters = Array.from(document.querySelectorAll('.about-chapter'));
+  const total    = chapters.length;
 
-    if (prefersReduced) {
-      /* Snap to final state and skip animation */
-      return;
-    }
-
-    /* Bg image starts oversized and scales down to settle as you scroll
-       into the chapter — feels like the photograph "lands" rather than
-       just appearing. */
-    if (bg) gsap.set(bg, { scale: 1.12 });
-
-    gsap.set(label, { opacity: 0, y: 16 });
-    gsap.set(title, { opacity: 0, y: 30 });
-
-    /* Body words split for word-by-word stagger reveal */
-    const words = splitWords(body);
-    if (words.length) gsap.set(words, { opacity: 0, y: 12 });
-
-    const tl = gsap.timeline({
-      scrollTrigger: {
-        trigger: chapter,
-        start: 'top 70%',
-        toggleActions: 'play none none reverse',
-      },
-      defaults: { ease: 'expo.out' },
+  if (story && total && !prefersReduced) {
+    /* Pin the story container for total × 100vh of scroll. The fade
+       tweens below scrub against this same scroll range. */
+    ScrollTrigger.create({
+      trigger: story,
+      start: 'top top',
+      end: () => `+=${total * window.innerHeight}px`,
+      pin: true,
+      pinSpacing: true,
+      anticipatePin: 1,
+      invalidateOnRefresh: true,
     });
 
-    if (bg)    tl.to(bg,    { scale: 1, duration: 1.8, ease: 'power3.out' }, 0);
-    if (label) tl.to(label, { opacity: 1, y: 0, duration: 0.7 }, 0.1);
-    if (title) tl.to(title, { opacity: 1, y: 0, duration: 1.0 }, 0.2);
-    if (words.length) {
-      /* Stagger amount caps total cascade at ~0.6s regardless of body length
-         so longer paragraphs don't drag — staggers compress with more words. */
-      tl.to(words, { opacity: 1, y: 0, stagger: { amount: 0.6 }, duration: 0.6 }, 0.4);
+    chapters.forEach((chapter, i) => {
+      const bg    = chapter.querySelector('.about-chapter-bg');
+      const label = chapter.querySelector('.about-chapter-label');
+      const title = chapter.querySelector('.about-chapter-title');
+      const body  = chapter.querySelector('.about-chapter-body');
+
+      /* Set initial states — chapter 0 starts visible, rest hidden */
+      gsap.set(chapter, { opacity: i === 0 ? 1 : 0 });
+      if (bg) gsap.set(bg, { scale: 1.12 });
+      gsap.set(label, { opacity: 0, y: 16 });
+      gsap.set(title, { opacity: 0, y: 30 });
+      const words = splitWords(body);
+      if (words.length) gsap.set(words, { opacity: 0, y: 12 });
+
+      /* Build a paused reveal timeline for each chapter — text + bg
+         settle when this chapter becomes the active layer. */
+      const reveal = gsap.timeline({ paused: true, defaults: { ease: 'expo.out' } });
+      if (bg)    reveal.to(bg,    { scale: 1, duration: 1.6, ease: 'power3.out' }, 0);
+      if (label) reveal.to(label, { opacity: 1, y: 0, duration: 0.7 }, 0.1);
+      if (title) reveal.to(title, { opacity: 1, y: 0, duration: 1.0 }, 0.2);
+      if (words.length) {
+        reveal.to(words, { opacity: 1, y: 0, duration: 0.6, stagger: { amount: 0.6 } }, 0.4);
+      }
+
+      /* Each chapter "owns" a 100vh slice of the pinned scroll range.
+         Fade-in scrubs across the trailing 30% of the previous slice
+         (so the new chapter is fully visible by the time its slice
+         starts) and fade-out scrubs across the trailing 30% of its
+         own slice (so the next chapter overlays cleanly). */
+
+      const SEG_PX = () => window.innerHeight;
+
+      /* Fade-IN — except the first chapter, which is visible on load */
+      if (i > 0) {
+        gsap.to(chapter, {
+          opacity: 1,
+          ease: 'none',
+          scrollTrigger: {
+            trigger: story,
+            start: () => `top+=${(i * SEG_PX()) - SEG_PX() * 0.4}px top`,
+            end:   () => `top+=${i * SEG_PX()}px top`,
+            scrub: 1,
+            invalidateOnRefresh: true,
+          },
+        });
+      }
+
+      /* Fade-OUT — except the last chapter, which sticks around at the end */
+      if (i < total - 1) {
+        gsap.to(chapter, {
+          opacity: 0,
+          ease: 'none',
+          scrollTrigger: {
+            trigger: story,
+            start: () => `top+=${((i + 1) * SEG_PX()) - SEG_PX() * 0.4}px top`,
+            end:   () => `top+=${(i + 1) * SEG_PX()}px top`,
+            scrub: 1,
+            invalidateOnRefresh: true,
+          },
+        });
+      }
+
+      /* Text reveal trigger — fires once when the chapter's slice
+         comes within fade-in range. The reveal timeline plays
+         independently of scroll (paused/play model) so the text
+         doesn't scrub jitter with cursor scroll position. Reverse
+         on leave-back so re-entering chapters re-runs the cascade. */
+      ScrollTrigger.create({
+        trigger: story,
+        start: () => `top+=${(i * SEG_PX()) - SEG_PX() * 0.5}px top`,
+        end:   () => `top+=${i * SEG_PX()}px top`,
+        onEnter:     () => reveal.play(),
+        onEnterBack: () => reveal.play(),
+        invalidateOnRefresh: true,
+      });
+    });
+
+    /* Chapter 0's text isn't behind a scroll trigger because the chapter
+       starts visible — fire its reveal on init so the page doesn't open
+       with the first chapter blank. */
+    const firstReveal = chapters[0]?.dataset?.revealFired;
+    if (!firstReveal) {
+      const ch0 = chapters[0];
+      const bg    = ch0.querySelector('.about-chapter-bg');
+      const label = ch0.querySelector('.about-chapter-label');
+      const title = ch0.querySelector('.about-chapter-title');
+      const words = ch0.querySelectorAll('.about-word');
+      const tl0 = gsap.timeline({ defaults: { ease: 'expo.out' } });
+      if (bg)    tl0.to(bg,    { scale: 1, duration: 1.6, ease: 'power3.out' }, 0);
+      if (label) tl0.to(label, { opacity: 1, y: 0, duration: 0.7 }, 0.1);
+      if (title) tl0.to(title, { opacity: 1, y: 0, duration: 1.0 }, 0.2);
+      if (words.length) {
+        tl0.to(words, { opacity: 1, y: 0, duration: 0.6, stagger: { amount: 0.6 } }, 0.4);
+      }
+      ch0.dataset.revealFired = '1';
     }
-  });
+  } else if (prefersReduced) {
+    /* Reduced-motion: snap chapters to fully visible state, all stacked.
+       Without the pin, they'd just show as overlapping content — accept
+       that the section won't tell its story scroll-wise, but at least
+       remains readable. */
+    chapters.forEach(c => gsap.set(c, { opacity: 1 }));
+  }
 
   /* ── 2b. Process step reveals ──────────────────────────────── */
 
