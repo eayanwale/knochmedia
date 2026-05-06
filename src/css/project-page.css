@@ -240,21 +240,45 @@
 
 
 /* ── Other works reel (KNOCH-036) ─────────────────────
-   Horizontal-scroll row of project cards for browsing without
-   bouncing back to /portfolio.html. Visual vocabulary matches the
-   homepage's Selected Work reel (KNOCH-007) — same card aspect, same
-   amber category label, same hover lift — but rendered with native
-   CSS overflow-scroll instead of GSAP-pinned horizontal scroll, since
-   this isn't a hero moment. */
+   Pinned horizontal-scroll reel — mirrors the homepage Selected Work
+   pattern (KNOCH-007). The section pins for the duration of the
+   horizontal track; the track (.project-gallery) translates leftward
+   as the visitor scrolls, then the pin releases at the end and the
+   page resumes vertical scroll into the CTA section.
+
+   Mobile (≤800px) falls back to native overflow-x: auto so the
+   GSAP pin doesn't lock vertical scroll on touch devices, where
+   horizontal-with-pin can fight the browser's scroll-snap heuristics. */
 
 .project-others {
-  padding: 8rem 0 10rem;
+  position: relative;
+  height: 100vh;
+  overflow: hidden;
+  background: var(--ink);
 }
 
-.project-others-header {
-  padding: 0 8vw 3rem;
-  max-width: 1600px;
-  margin: 0 auto;
+/* The horizontal track — flex row; GSAP translates this element on x
+   as scroll progresses through the pinned section. Native horizontal
+   scroll on mobile via overflow-x:auto + the @media block below. */
+.project-gallery {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  padding-left: 8vw;
+  gap: 3vw;
+  will-change: transform;
+}
+
+/* Intro panel — first item of the track, scrolls horizontally with the
+   cards just like .reel-intro on the homepage. Fixed width so the
+   headline + meta have room to breathe before the cards start. */
+.project-others-intro {
+  flex: 0 0 50vw;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 1.5rem;
+  padding-right: 6vw;
 }
 
 .project-others-meta {
@@ -263,13 +287,12 @@
   letter-spacing: 0.3em;
   text-transform: uppercase;
   color: var(--amber);
-  margin-bottom: 1rem;
 }
 
 .project-others-headline {
   font-family: var(--font-serif);
   font-weight: 300;
-  font-size: clamp(36px, 6vw, 80px);
+  font-size: clamp(48px, 7vw, 100px);
   line-height: 1;
   letter-spacing: -0.04em;
   color: var(--paper);
@@ -281,34 +304,29 @@
   color: var(--amber);
 }
 
-/* Reel track — JS dumps cards into .project-gallery (kept that class
-   name for back-compat with the existing query). Display flex so cards
-   sit in a row; overflow-x: auto + scroll-snap so the visitor can
-   swipe / drag through them on touch and trackpads. Padding-left
-   matches the section header's gutter so the first card aligns. */
-.project-gallery {
-  display: flex;
-  gap: 1.4rem;
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-  padding: 0 8vw 1rem;
-  scroll-snap-type: x mandatory;
-  scrollbar-width: thin;
+.project-others-desc {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(237, 230, 216, 0.5);
+  line-height: 1.8;
+  max-width: 32ch;
+  margin: 0;
 }
 
+/* Cards — fixed-flex sized for the horizontal track. Same hover lift +
+   filter ramp as the previous overflow-scroll version. */
 .project-other {
-  flex: 0 0 28vw;
-  min-width: 280px;
-  max-width: 380px;
+  flex: 0 0 32vw;
+  min-width: 320px;
+  max-width: 420px;
   position: relative;
   aspect-ratio: 4 / 5;
   overflow: hidden;
   background: #1a1a1a;
   text-decoration: none;
   color: inherit;
-  scroll-snap-align: start;
-  /* Cards lift slightly on hover so the affordance reads as clickable
-     even before the cursor reaches the meta band. */
   transition: transform 0.5s var(--ease-cinematic);
 }
 
@@ -316,6 +334,13 @@
 .project-other:focus-visible {
   transform: translateY(-6px);
   outline: none;
+}
+
+/* Trailing spacer — gives breathing room past the last card so the
+   pin's `end` position lands cleanly. Width matches reel.css's
+   .reel-spacer pattern. */
+.project-others-spacer {
+  flex: 0 0 12vw;
 }
 
 .project-other-img {
@@ -437,22 +462,31 @@
     padding: 4rem 6vw;
   }
 
+  /* Mobile fallback — drop the GSAP pin (handled by skipping the JS
+     setup at ≤800px), let the track scroll natively horizontally. */
   .project-others {
+    height: auto;
     padding: 4rem 0 6rem;
   }
 
-  .project-others-header {
-    padding: 0 6vw 2rem;
+  .project-gallery {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    padding: 0 6vw 1rem;
+    height: auto;
+    align-items: stretch;
+    gap: 4vw;
+    scroll-snap-type: x mandatory;
   }
 
-  /* Cards slightly bigger on mobile so they don't feel like thumbnails */
+  .project-others-intro {
+    flex: 0 0 80vw;
+  }
+
   .project-other {
     flex: 0 0 70vw;
     min-width: 240px;
-  }
-
-  .project-gallery {
-    padding: 0 6vw 1rem;
+    scroll-snap-align: start;
   }
 
   .project-cta {

@@ -23,7 +23,10 @@
 */
 
 import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { getProject, listProjects } from './projects.js';
+
+gsap.registerPlugin(ScrollTrigger);
 
 export function initProjectPage() {
   const veil = document.querySelector('.project-veil');
@@ -117,21 +120,29 @@ export function initProjectPage() {
   }
 
   /* ── Populate "Other works" reel ─────────────────── */
-  /* The element kept the class name `.project-gallery` for backwards
-     CSS compatibility, but the content shape changed in KNOCH-036:
-     instead of rendering this project's own images, it now shows a
-     horizontal reel of the other projects so the visitor can keep
-     browsing without backing out to /portfolio.html. The CSS for
-     `.project-gallery` was retuned to a flex row + scroll-snap. */
+  /* Pinned horizontal-scroll reel matching the homepage Selected Work
+     pattern (KNOCH-007). The .project-gallery element is the
+     horizontal track and already contains a .project-others-intro
+     panel as its first child; we append project cards + a trailing
+     spacer after it, then pin the parent .project-others section so
+     vertical scroll translates the track horizontally.
+
+     Mobile / reduced-motion: the GSAP pin is skipped, and the CSS
+     @media block falls the track back to overflow-x: auto so the
+     visitor can scroll the cards natively without fighting a pin. */
 
   const gallery = document.querySelector('.project-gallery');
+  const otherSection = document.querySelector('.project-others');
   if (gallery) {
     const others = listProjects()
       .filter(p => p.id !== project.id)
       .slice(0, 8); /* cap the reel — 8 keeps page weight reasonable */
 
     if (others.length) {
-      gallery.innerHTML = others.map(p => `
+      /* Append cards after the existing intro panel. innerHTML +=
+         preserves the .project-others-intro element that's already
+         present in the HTML. */
+      gallery.insertAdjacentHTML('beforeend', others.map(p => `
         <a class="project-other" href="/project.html?id=${encodeURIComponent(p.id)}"
            aria-label="${p.title} — ${p.category}">
           <div class="project-other-img" style="background-image: url('${p.cover}')" role="img" aria-hidden="true"></div>
@@ -140,12 +151,42 @@ export function initProjectPage() {
             <h4 class="project-other-title">${p.title}</h4>
           </div>
         </a>
-      `).join('');
+      `).join(''));
+
+      /* Trailing spacer — gives the pin's `end` position breathing
+         room past the last card. */
+      const spacer = document.createElement('div');
+      spacer.className = 'project-others-spacer';
+      spacer.setAttribute('aria-hidden', 'true');
+      gallery.appendChild(spacer);
     } else {
-      gallery.innerHTML =
-        '<p style="font-family:var(--font-mono);font-size:11px;letter-spacing:0.2em;color:rgba(237,230,216,0.5);">' +
+      gallery.insertAdjacentHTML('beforeend',
+        '<p style="font-family:var(--font-mono);font-size:11px;letter-spacing:0.2em;color:rgba(237,230,216,0.5);padding:0 4vw;">' +
         'More work coming soon.' +
-        '</p>';
+        '</p>'
+      );
+    }
+
+    /* Pin + horizontal translate — same pattern as src/js/reel.js's
+       reelTween. Skip on mobile (CSS overflow-scroll handles it) and
+       on reduced motion (the visitor opted out of scroll-tied
+       animation entirely). */
+    const isMobile = window.matchMedia('(max-width: 800px)').matches;
+    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (otherSection && !isMobile && !prefersReduced) {
+      gsap.to(gallery, {
+        x: () => -(gallery.scrollWidth - window.innerWidth),
+        ease: 'none',
+        scrollTrigger: {
+          trigger: otherSection,
+          start: 'top top',
+          end: () => '+=' + (gallery.scrollWidth - window.innerWidth),
+          pin: true,
+          scrub: 0.8,
+          anticipatePin: 1,
+          invalidateOnRefresh: true,
+        },
+      });
     }
   }
 

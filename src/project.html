@@ -123,20 +123,26 @@
     </section>
 
     <!--
-      Other works reel (KNOCH-036) — horizontal scroll of every other
-      project, matching the visual vocabulary of the homepage Selected
-      Work reel. Populated by project-page.js (querying
-      listProjects() and excluding the current project). The .project-
-      gallery class name is kept so the existing JS query still finds
-      this element; it's effectively a renamed responsibility now.
+      Other works reel (KNOCH-036) — pinned horizontal-scroll reel
+      matching the homepage Selected Work pattern (KNOCH-007). The
+      section pins for the duration of the horizontal track; the track
+      (.project-gallery) translates leftward as the visitor scrolls,
+      then the pin releases at the end and vertical scroll resumes.
+
+      Layout: the intro panel ("Keep looking.") is the first item of
+      the same horizontal track, mirroring how .reel-intro sits as
+      the first panel of .reel-track on the homepage. project-page.js
+      appends the project cards + a trailing spacer after the intro
+      panel and wires the GSAP pin.
     -->
     <section class="project-others" aria-label="Other works">
-      <div class="project-others-header">
-        <p class="project-others-meta">— OTHER WORK</p>
-        <h2 class="project-others-headline headline-hover">Keep <em>looking.</em></h2>
-      </div>
       <div class="project-gallery" aria-label="Other Knoch Media projects">
-        <!-- populated by project-page.js -->
+        <div class="project-others-intro">
+          <p class="project-others-meta">— OTHER WORK</p>
+          <h2 class="project-others-headline headline-hover">Keep <em>looking.</em></h2>
+          <p class="project-others-desc">More from the studio &mdash;<br>scroll to keep browsing.</p>
+        </div>
+        <!-- card panels appended by project-page.js -->
       </div>
     </section>
 
