@@ -41,13 +41,6 @@ function handleTileClick(tile) {
   }
 }
 
-function wrapInClip(el) {
-  if (!el) return;
-  const wrap = document.createElement('div');
-  wrap.className = 'archive-clip';
-  el.parentNode.insertBefore(wrap, el);
-  wrap.appendChild(el);
-}
 
 export function initPortfolioGrid() {
   const section = document.querySelector('.archive');
@@ -69,14 +62,14 @@ export function initPortfolioGrid() {
   const headline = section.querySelector('.archive-headline');
   const meta     = section.querySelector('.archive-meta');
 
-  /* Wrap header elements in clip containers for slide-up reveal */
-  wrapInClip(headline);
-  wrapInClip(meta);
-
+  /* Per-element clip wipe-up — clipPath avoids any DOM restructure that would
+     break the flex layout of .archive-header. Animates from fully clipped
+     (bottom 100% hidden) to fully revealed. Subtle y rise layered on top. */
   gsap.from([headline, meta].filter(Boolean), {
-    y: '110%',
-    stagger: 0.13,
-    duration: 1.1,
+    clipPath: 'inset(0 0 100% 0)',
+    y: 24,
+    stagger: 0.14,
+    duration: 1.2,
     ease: 'expo.out',
     scrollTrigger: {
       trigger: header,

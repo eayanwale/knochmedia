@@ -26,13 +26,15 @@ export function initInterlude() {
   const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   if (prefersReduced) {
-    lines.forEach(l => (l.style.transform = 'translateY(0)'));
+    lines.forEach(l => { l.style.transform = 'translateY(0)'; l.style.filter = 'none'; });
     if (accentLine) accentLine.style.transform = 'scaleX(1)';
     section.classList.add('is-visible');
     return;
   }
 
-  gsap.set(lines, { y: '115%' });
+  /* Lines start below clip AND out-of-focus — blur clears as they rise,
+     like a lens pulling focus on text emerging from negative space. */
+  gsap.set(lines, { y: '115%', filter: 'blur(14px)' });
   if (accentLine) gsap.set(accentLine, { scaleX: 0 });
 
   const tl = gsap.timeline({
@@ -46,6 +48,7 @@ export function initInterlude() {
 
   tl.to(lines, {
     y: '0%',
+    filter: 'blur(0px)',
     stagger: 0.13,
     duration: 0.95,
     ease: 'expo.out',

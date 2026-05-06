@@ -4,7 +4,7 @@
 
 .pinned-frame {
   position: relative;
-  height: 200vh;
+  height: 150vh;
 }
 
 /* CSS sticky panel — the extra 100vh in .pinned-frame gives the panel
@@ -106,44 +106,16 @@
   margin-top: 0.5rem;
 }
 
-/* Each headline word wrapped in an inline-block span for per-word GSAP reveal */
-.frame-word {
-  display: inline-block;
+/* Clip containers for line-by-line blur-focus reveal of the brand statement */
+.frame-line-wrap {
+  display: block;
+  overflow: hidden;
+  padding-bottom: 0.06em;
 }
 
-/* ── Ghost contact-sheet film strip ──────────────────────────────── */
-
-/* Full-width bar anchored to the lower third of the sticky panel.
-   Edge masks create a natural fade-in / fade-out so images don't
-   hard-clip against the container walls. */
-.frame-strip {
-  position: absolute;
-  bottom: 18%;
-  left: 0;
-  right: 0;
-  z-index: 1;
-  pointer-events: none;
-  opacity: 0.09;
-  -webkit-mask-image: linear-gradient(to right, transparent 0%, black 7%, black 93%, transparent 100%);
-  mask-image: linear-gradient(to right, transparent 0%, black 7%, black 93%, transparent 100%);
-}
-
-.frame-strip-track {
-  display: flex;
-  gap: 12px;
-  padding: 0 12px;
-  will-change: transform;
-}
-
-/* Individual contact-sheet negative frames */
-.frame-strip-img {
-  width: 200px;
-  height: 130px;
-  flex-shrink: 0;
-  background-size: cover;
-  background-position: center;
-  filter: grayscale(1) brightness(0.85);
-  outline: 1px solid rgba(237, 230, 216, 0.25);
+.frame-line {
+  display: block;
+  will-change: transform, filter;
 }
 
 /* ── Responsive ───────────────────────────────────────────────────── */

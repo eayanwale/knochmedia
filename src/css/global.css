@@ -83,3 +83,37 @@ ol {
    is wired up (post-Phase-5). ── */
 @media (prefers-color-scheme: light) {
 }
+
+/* ── Headline hover — hollow-text effect ───────────────────────────────────
+   Applied to major editorial headings (.archive-headline, .frame .big).
+   On hover the fill drops to transparent and a 1px stroke traces the
+   letterforms — an outline-only effect common in high-end editorial design.
+   The em (amber) within the heading gets its own stroke color so it stays
+   visually distinct even in the hollow state.
+   Paired with .cursor.grow--text in cursor.css for the expanded ring.
+   ─────────────────────────────────────────────────────────────────────── */
+
+.headline-hover {
+  -webkit-text-stroke: 1px transparent;
+  transition:
+    color 0.45s var(--ease-cinematic),
+    -webkit-text-stroke-color 0.45s var(--ease-cinematic);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .headline-hover:hover {
+    color: transparent;
+    -webkit-text-stroke-color: var(--paper);
+  }
+
+  .headline-hover:hover em {
+    color: transparent;
+    -webkit-text-stroke-color: var(--amber);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .headline-hover {
+    transition: none;
+  }
+}

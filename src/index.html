@@ -194,6 +194,29 @@
     -->
     <section id="interlude" class="interlude grain" aria-label="Studio manifesto">
 
+      <!-- Vintage film-strip background — two identical sets for seamless CSS marquee loop -->
+      <div class="interlude-strip" aria-hidden="true">
+        <div class="interlude-strip-track">
+          <div class="interlude-strip-img" style="background-image: url('/assets/portfolio/cover-alex-morgan.jpg')"></div>
+          <div class="interlude-strip-img" style="background-image: url('/assets/portfolio/cover-fayo-femi.jpg')"></div>
+          <div class="interlude-strip-img" style="background-image: url('/assets/portfolio/cover-woodsmen.jpg')"></div>
+          <div class="interlude-strip-img" style="background-image: url('/assets/portfolio/cover-jojos-graduation.jpg')"></div>
+          <div class="interlude-strip-img" style="background-image: url('/assets/portfolio/cover-what-mighty-praise.png')"></div>
+          <div class="interlude-strip-img" style="background-image: url('/assets/portfolio/cover-rapha-records.jpg')"></div>
+          <div class="interlude-strip-img" style="background-image: url('/assets/portfolio/cover-shawn-bekki.jpg')"></div>
+          <div class="interlude-strip-img" style="background-image: url('/assets/portfolio/cover-alex-morgan.jpg')"></div>
+          <!-- Second copy — makes -50% translateX a perfect seamless loop -->
+          <div class="interlude-strip-img" style="background-image: url('/assets/portfolio/cover-fayo-femi.jpg')"></div>
+          <div class="interlude-strip-img" style="background-image: url('/assets/portfolio/cover-woodsmen.jpg')"></div>
+          <div class="interlude-strip-img" style="background-image: url('/assets/portfolio/cover-jojos-graduation.jpg')"></div>
+          <div class="interlude-strip-img" style="background-image: url('/assets/portfolio/cover-what-mighty-praise.png')"></div>
+          <div class="interlude-strip-img" style="background-image: url('/assets/portfolio/cover-rapha-records.jpg')"></div>
+          <div class="interlude-strip-img" style="background-image: url('/assets/portfolio/cover-shawn-bekki.jpg')"></div>
+          <div class="interlude-strip-img" style="background-image: url('/assets/portfolio/cover-alex-morgan.jpg')"></div>
+          <div class="interlude-strip-img" style="background-image: url('/assets/portfolio/cover-fayo-femi.jpg')"></div>
+        </div>
+      </div>
+
       <!-- Amber mono label — top-left; faded in by JS via .is-visible class -->
       <p class="interlude-label">— A note before we begin</p>
 
@@ -249,29 +272,16 @@
         <div class="bg" id="parallax-bg" role="img" aria-label="Studio photograph by Knoch Media"></div>
         <div class="overlay" aria-hidden="true"></div>
 
-        <!-- Ghost contact-sheet strip — portfolio negatives drift counter-scroll at low opacity -->
-        <div class="frame-strip" aria-hidden="true">
-          <div class="frame-strip-track">
-            <div class="frame-strip-img" style="background-image: url('/assets/portfolio/cover-alex-morgan.jpg')"></div>
-            <div class="frame-strip-img" style="background-image: url('/assets/portfolio/cover-fayo-femi.jpg')"></div>
-            <div class="frame-strip-img" style="background-image: url('/assets/portfolio/cover-woodsmen.jpg')"></div>
-            <div class="frame-strip-img" style="background-image: url('/assets/portfolio/cover-jojos-graduation.jpg')"></div>
-            <div class="frame-strip-img" style="background-image: url('/assets/portfolio/cover-what-mighty-praise.png')"></div>
-            <div class="frame-strip-img" style="background-image: url('/assets/portfolio/cover-rapha-records.jpg')"></div>
-            <div class="frame-strip-img" style="background-image: url('/assets/portfolio/cover-alex-morgan.jpg')"></div>
-            <div class="frame-strip-img" style="background-image: url('/assets/portfolio/cover-shawn-bekki.jpg')"></div>
-            <div class="frame-strip-img" style="background-image: url('/assets/portfolio/cover-fayo-femi.jpg')"></div>
-            <div class="frame-strip-img" style="background-image: url('/assets/portfolio/cover-woodsmen.jpg')"></div>
-            <div class="frame-strip-img" style="background-image: url('/assets/portfolio/cover-jojos-graduation.jpg')"></div>
-          </div>
-        </div>
-
         <div class="content">
 
           <!-- Left: brand statement -->
           <div class="frame-left">
             <p class="meta-tag">— THE STUDIO &middot; BY THE NUMBERS</p>
-            <h2 class="big">Eight years. <em>Twelve&nbsp;thousand</em> frames. One pair of hands.</h2>
+            <h2 class="big headline-hover">
+              <span class="frame-line-wrap"><span class="frame-line">Eight years.</span></span>
+              <span class="frame-line-wrap"><span class="frame-line"><em>Twelve&nbsp;thousand</em> frames.</span></span>
+              <span class="frame-line-wrap"><span class="frame-line">One pair of hands.</span></span>
+            </h2>
           </div>
 
           <!-- Right: animated stat counters -->
@@ -324,7 +334,7 @@
     <section id="archive" class="archive" aria-label="Portfolio archive">
 
       <div class="archive-header">
-        <h2 class="archive-headline">The <em>archive.</em></h2>
+        <h2 class="archive-headline headline-hover">The <em>archive.</em></h2>
         <p class="archive-meta">047 PROJECTS&nbsp;· INDEXED&nbsp;/ BY DATE<br>— REQUEST FULL CATALOG</p>
       </div>
 
