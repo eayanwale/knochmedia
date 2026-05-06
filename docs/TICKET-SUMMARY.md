@@ -1,7 +1,7 @@
 # Knoch Media — Ticket Summary
 
 > **Living document.** Updated whenever tickets are created, modified, split, or closed.  
-> Last updated: 2026-05-06 | Total tickets: 30 | Open: 8 | In progress: 1 | In review: 0 | Done: 18 | Deferred: 3
+> Last updated: 2026-05-06 | Total tickets: 30 | Open: 8 | In progress: 0 | In review: 1 | Done: 18 | Deferred: 3
 
 ---
 
@@ -74,7 +74,7 @@ Build in this order: About → Portfolio page → Project detail → Contact →
 | [KNOCH-013](tickets/KNOCH-013.md) | About / Story Section (about.html) | `✅` | `feature/KNOCH-013-about-story-section` | QA PASSED — merged to test |
 | [KNOCH-011](tickets/KNOCH-011.md) | Portfolio Filter System (portfolio.html) | `✅` | `feature/KNOCH-011-portfolio-filter` | QA PASSED — merged to test |
 | [KNOCH-012](tickets/KNOCH-012.md) | Project Detail View + Video Lightbox | `✅` | `feature/KNOCH-012-project-detail-lightbox` | PR #21 merged + KNOCH-036 polish bundled |
-| [KNOCH-014](tickets/KNOCH-014.md) | Contact — Multi-Step Qualified Inquiry Form | `🔵` | `feature/KNOCH-014-contact-form` | 3-step form + Calendly sidebar |
+| [KNOCH-014](tickets/KNOCH-014.md) | Contact — Multi-Step Qualified Inquiry Form | `🔵` | `feature/KNOCH-014-contact-form` | PR #22 dev → test (in review) |
 | [KNOCH-015](tickets/KNOCH-015.md) | Footer — Credits Bar + Sitemap Variant | `⬜` | — | Two variants: minimal + expanded |
 
 ---
@@ -173,6 +173,28 @@ CMS layer (cuts across phases — wire each section after it is built):
 ## Changelog
 
 All modifications to this document and ticket files are logged here. Tester agent and code review feedback should be recorded as entries.
+
+---
+
+### 2026-05-06 — KNOCH-014 PR opened — IN REVIEW
+
+**Action:** PR #22 opened dev → test
+**Tickets affected:** KNOCH-014
+**Reason:** Builder completed Contact / Inquiry form page — /contact.html with 3-step qualified inquiry, Calendly sidebar, ?type= URL pre-fill, and cross-page Inquire link routing.
+**Changes:**
+- KNOCH-014: Status changed 🔵 In progress → 🔵 In review
+- PR #22 opened: dev → test at https://github.com/eayanwale/knochmedia/pull/22
+- Files delivered:
+  - `src/contact.html` — full page (banner + hero + 2-col body w/ form + sidebar)
+  - `src/css/contact-page.css` — page styles (scarcity banner, hero, form fields, tile selectors, step panels w/ slide states, sidebar blocks, mobile collapse)
+  - `src/js/contact-page.js` — tile selector + ?type= pre-fill + conditional partner + GSAP step transitions + per-step validation + submit handler (placeholder action)
+  - `src/js/contact-main.js` — slim entry
+  - `src/index.html` + `src/about.html` + `src/portfolio.html` + `src/project.html` — chrome Inquire links + page CTAs all repointed to /contact.html
+  - `src/js/project-page.js` — project CTA href stamped at runtime with ?type=<category>
+  - `vite.config.js` — contact.html added as 5th `rollupOptions.input`
+- Build: 5 HTML entries → all emit; contact bundle 8.29 kB CSS / 1.91 kB gz, 4.22 kB JS / 1.81 kB gz; 158 ms
+- Header counts updated: In progress 1→0, In review 0→1
+**Requested by:** Builder agent
 
 ---
 
