@@ -123,6 +123,15 @@ ol {
   /* No CSS transitions — GSAP proxy tweening owns all easing */
 }
 
+/* Magnify variant — smoke-free per-character zoom on hover (KNOCH-036).
+   Used by .headline-magnify on the About page. Same scale-only effect
+   the char-hover JS proxy applies, but without any colour / stroke /
+   blur so the letters just gently pop under the cursor. */
+.char-magnify {
+  display: inline-block;
+  transform-origin: center 80%;
+}
+
 /* Word wrapper — keeps all chars of a word together so the browser
    can only line-break between words, never mid-word */
 .char-word {

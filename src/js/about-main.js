@@ -18,7 +18,7 @@
 import { initLazyLoad } from './lazy-load.js';
 import { initChrome }   from './chrome.js';
 import { initCursor }   from './cursor.js';
-import { initCharHover } from './char-hover.js';
+import { initCharHover, initCharMagnify } from './char-hover.js';
 import { initLenis }    from './lenis.js';
 import { initAbout }    from './about.js';
 
@@ -26,6 +26,10 @@ initLazyLoad();
 initChrome();
 initCursor();
 initCharHover();
+/* About-page headers wear .headline-magnify (smoke-free per-character
+   zoom on hover) instead of .headline-hover. Both initialisers are
+   safe to call together — they query disjoint class selectors. */
+initCharMagnify();
 initAbout();
 
 /* Boot Lenis after window.load so any image / font dimensions are
