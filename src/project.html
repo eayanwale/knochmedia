@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Title is overwritten by project-page.js once the project is resolved -->
+    <title>Project — Knoch Media</title>
+
+    <meta name="description" content="A Knoch Media project — full gallery, metadata, and inquiry path." />
+    <meta name="theme-color" content="#0a0a0a" />
+
+    <meta name="sanity-project-id" content="2779g58e" />
+    <meta name="sanity-dataset" content="production" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;1,9..144,400&family=Inter+Tight:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap"
+    />
+
+    <link rel="stylesheet" href="/css/global.css" />
+    <link rel="stylesheet" href="/css/chrome.css" />
+    <link rel="stylesheet" href="/css/cursor.css" />
+    <link rel="stylesheet" href="/css/video-lightbox.css" />
+    <link rel="stylesheet" href="/css/project-page.css" />
+  </head>
+  <body>
+
+    <!--
+      Black veil — fades from opaque to transparent on page load to
+      bridge the expanding-tile transition from the previous page.
+      Inline style sets initial state so the veil is visible before
+      JS boots and tweens it out.
+    -->
+    <div class="project-veil" style="opacity:1" aria-hidden="true"></div>
+
+    <!-- Custom cursor (KNOCH-004) -->
+    <div class="cursor" id="cursor" aria-hidden="true"></div>
+
+    <!--
+      Chrome navigation overlay — same component as other pages.
+      Plain hrefs everywhere on this page so all links are real
+      cross-page navigations.
+    -->
+    <div class="chrome" id="chrome">
+      <div class="chrome-grid">
+
+        <a class="mark" href="/" aria-label="Knoch — back to home">Knoch<span class="dot" aria-hidden="true">.</span></a>
+
+        <nav class="nav-center" aria-label="Main navigation">
+          <a href="/#reel">Work</a>
+          <a href="/about.html">Studio</a>
+          <a href="/#cta">Inquire</a>
+        </nav>
+
+        <div class="nav-right" aria-hidden="true">
+          <span class="rec-dot"></span>
+          <span>REC · <span id="tc">00:00:00</span></span>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Bottom timecode bar -->
+    <div class="timecode-bar" aria-hidden="true">
+      <span>K/M · 2026 · MARYLAND</span>
+      <div class="scroll-progress"
+           id="scroll-progress"
+           role="progressbar"
+           aria-valuenow="0"
+           aria-valuemin="0"
+           aria-valuemax="100"
+           aria-label="Page scroll progress"></div>
+      <span id="frame-display">FRAME 01 / 36</span>
+    </div>
+
+    <!--
+      Hero — full-bleed image + title overlay. project-page.js sets
+      the bg-image style on .project-hero-img and rewrites the meta /
+      title / sub strings from the project data lookup.
+    -->
+    <section class="project-hero" aria-label="Project hero">
+
+      <!-- Back link sits on top of the hero, top-left -->
+      <div class="project-back-wrap">
+        <a class="project-back" href="/portfolio.html">&larr; Back to work</a>
+      </div>
+
+      <div class="project-hero-img" role="img" aria-hidden="true"></div>
+
+      <div class="project-hero-content">
+        <p class="project-hero-meta">— PROJECT</p>
+        <h1 class="project-hero-title">Loading&hellip;</h1>
+        <p class="project-hero-sub"></p>
+      </div>
+
+    </section>
+
+    <!--
+      Body — gallery (left, scrolls) + metadata (right, sticky on
+      desktop). Both columns are populated by project-page.js from
+      the project data; placeholders here only exist so the markup
+      shape is queryable.
+    -->
+    <section class="project-body" aria-label="Project gallery and details">
+      <div class="project-body-inner">
+
+        <div class="project-gallery" aria-label="Project image gallery">
+          <!-- populated by project-page.js -->
+        </div>
+
+        <aside class="project-meta">
+          <span class="project-meta-cat">PROJECT</span>
+          <h2 class="project-meta-title">Loading&hellip;</h2>
+          <p class="project-meta-sub"></p>
+          <dl class="project-meta-spec">
+            <!-- populated by project-page.js -->
+          </dl>
+          <p class="project-meta-desc"></p>
+          <a class="project-meta-link" href="#">View full gallery &rarr;</a>
+        </aside>
+
+      </div>
+    </section>
+
+    <!--
+      Closing CTA — links to the homepage's #cta section so the
+      inquiry form (KNOCH-014, currently a placeholder) handles the
+      conversion. KNOCH-014 will eventually accept a ?type= URL param
+      pre-fill — the AC for that already exists.
+    -->
+    <section class="project-cta" aria-label="Inquire about a similar project">
+      <h2 class="project-cta-headline">Book a similar project.</h2>
+      <a class="project-cta-link" href="/#cta">Start an inquiry &rarr;</a>
+    </section>
+
+    <script type="module" src="/js/project-main.js"></script>
+  </body>
+</html>
