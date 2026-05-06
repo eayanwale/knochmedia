@@ -41,6 +41,12 @@ initTestimonial();
 initPortfolioGrid();
 
 // Horizontal reel — fetch featured collections from Sanity then init (KNOCH-007 + KNOCH-025)
+// Per-card background-position overrides — keyed by Sanity title.
+// Adjust these values if the focal point needs reframing.
+const REEL_BG_POSITIONS = {
+  'BCF Gala Night': '50% 25%',
+};
+
 getFeaturedCollections().then(collections => {
   const cards = collections.map((col, i) => ({
     index: String(i + 1).padStart(2, '0'),
@@ -50,6 +56,7 @@ getFeaturedCollections().then(collections => {
     img: col.coverImage ? imageUrl(col.coverImage, 1200) : '',
     url: col.url ?? '#',
     linkType: col.linkType ?? 'external-gallery',
+    bgPosition: REEL_BG_POSITIONS[col.title] ?? 'center',
   }));
   initReel(cards.length ? cards : undefined);
 });

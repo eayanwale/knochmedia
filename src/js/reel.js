@@ -46,8 +46,9 @@ function buildCard(card) {
   el.setAttribute('role', 'button');
   el.setAttribute('aria-label', `${card.title.replace(/&amp;/g, '&')} — ${card.scene}`);
 
+  const bgPos = card.bgPosition ?? 'center';
   el.innerHTML = `
-    <div class="reel-card-img" style="background-image: url('${card.img}')"></div>
+    <div class="reel-card-img" style="background-image: url('${card.img}'); background-position: ${bgPos}"></div>
     <div class="reel-card-notches" aria-hidden="true">
       <span class="notch notch--tl"></span>
       <span class="notch notch--tr"></span>
