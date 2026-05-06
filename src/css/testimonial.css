@@ -1,40 +1,32 @@
 /*
-  testimonial.css — Editorial pull-quote section (KNOCH-009)
-  =============================================================
-  Positioned between the pinned frame (#frame) and the CTA (#cta).
-  Five client quotes from Sanity, each truncated to ~120 chars so
-  none overstays its welcome. Word-by-word GSAP reveal fires per item
-  via IntersectionObserver (no Lenis timing dependency).
+  testimonial.css — Single-quote carousel (KNOCH-009 / KNOCH-024)
+  ================================================================
+  One testimonial visible at a time. Auto-advances every 7 s.
+  Dots below let the visitor jump to any quote.
 
   Design decisions:
-  - Section padding reduced from 14rem → 10rem: the section is now
-    denser (5 items) so less negative space is needed between sections.
-  - Quote mark shrunk from 8rem → 3rem and muted to 0.5 opacity:
-    at 8rem it dominated the item visually; now it functions as a
-    subtle typographic accent before the quote text.
-  - Font-size dropped from clamp(28px,4vw,56px) to clamp(18px,1.8vw,28px):
-    full testimonial quotes read as prose, not display headlines.
-    Smaller text lets all 5 quotes fit without the page feeling like
-    a wall of serif type.
-  - max-width widened from 22ch → 40ch: 22ch forced tight 4-5 word
-    lines at display size. At the new prose size, 40ch gives a
-    comfortable ~70-75 chars per line (optimal reading measure).
-  - Attribution margin-top reduced 3rem → 1.5rem: tighter coupling
-    between quote and attribution reads as a single unit.
+  - No stacking: the list is replaced by a single .testimonial-slider
+    that holds one .testimonial-item at a time. Height stays constant
+    as quotes swap in/out via GSAP crossfade.
+  - Dot navigation: inactive dots are 20 px × 2 px muted lines.
+    The active dot widens to 36 px in amber — pill shape makes the
+    current position unambiguous without numbers or arrows.
+  - Section padding reduced to 8rem: with one item the section is
+    already compact; less padding prevents excess dead space.
   - .testimonial-word spans are inline-block so GSAP can translateY
-    each word independently without breaking text flow.
+    each word without breaking text flow (word-by-word stagger reveal).
 */
 
 /* ── Section shell ──────────────────────────────────────── */
 
 .testimonial {
-  padding: 10rem 8vw;
+  padding: 8rem 8vw;
   text-align: center;
   border-top: 1px solid rgba(237, 230, 216, 0.08);
   overflow: hidden;
 }
 
-/* ── Dynamic list wrapper ───────────────────────────────── */
+/* ── Carousel wrapper ───────────────────────────────────── */
 
 .testimonial-list {
   display: flex;
@@ -43,18 +35,21 @@
   width: 100%;
 }
 
-.testimonial-item {
+/* Single-item display area — one .testimonial-item lives here */
+.testimonial-slider {
   width: 100%;
   max-width: 760px;
+}
+
+/* ── Single item ────────────────────────────────────────── */
+
+.testimonial-item {
+  width: 100%;
   text-align: center;
-  padding: 3rem 0;
+  padding: 1rem 0 2rem;
 }
 
-.testimonial-item + .testimonial-item {
-  border-top: 1px solid rgba(237, 230, 216, 0.06);
-}
-
-/* ── Decorative opening quotation mark ──────────────────── */
+/* ── Quote mark ─────────────────────────────────────────── */
 
 .testimonial-mark {
   font-family: var(--font-serif);
@@ -73,15 +68,14 @@
   font-family: var(--font-serif);
   font-weight: 300;
   font-size: clamp(18px, 1.8vw, 28px);
-  line-height: 1.5;
+  line-height: 1.55;
   letter-spacing: -0.01em;
   max-width: 40ch;
   margin: 0 auto;
   color: var(--paper);
 }
 
-/* Each word is wrapped in an inline-block span by buildItem()
-   so GSAP can stagger translateY per word without breaking flow. */
+/* Each word wrapped in an inline-block span for per-word GSAP reveal */
 .testimonial-word {
   display: inline-block;
 }
@@ -91,7 +85,7 @@
   color: var(--amber);
 }
 
-/* ── Attribution line ───────────────────────────────────── */
+/* ── Attribution ────────────────────────────────────────── */
 
 .testimonial-attr {
   font-family: var(--font-mono);
@@ -103,13 +97,53 @@
   display: block;
 }
 
+/* ── Dot navigation ─────────────────────────────────────── */
+
+.testimonial-nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 2.5rem;
+}
+
+.testimonial-dot {
+  height: 2px;
+  width: 20px;
+  border: none;
+  border-radius: 1px;
+  background: rgba(237, 230, 216, 0.2);
+  cursor: pointer;
+  padding: 0;
+  /* Expand hit area vertically without affecting layout */
+  position: relative;
+  transition: background 0.35s ease, width 0.35s ease;
+}
+
+/* Invisible padding above/below for easier tapping */
+.testimonial-dot::before {
+  content: '';
+  position: absolute;
+  inset: -12px 0;
+}
+
+.testimonial-dot.active {
+  background: var(--amber);
+  width: 36px;
+}
+
 /* ── Reduced-motion override ────────────────────────────── */
 
 @media (prefers-reduced-motion: reduce) {
   .testimonial-item,
-  .testimonial-word {
+  .testimonial-word,
+  .testimonial-slider {
     opacity: 1 !important;
     transform: none !important;
+    transition: none !important;
+  }
+  .testimonial-dot {
+    transition: none !important;
   }
 }
 
@@ -117,7 +151,7 @@
 
 @media (max-width: 800px) {
   .testimonial {
-    padding: 6rem 6vw;
+    padding: 5rem 6vw;
   }
 
   .testimonial-mark {
