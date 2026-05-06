@@ -104,7 +104,7 @@ const PROJECTS = [
     galleryUrl: 'https://knoch.pic-time.com/-shawnbekki/gallery',
   },
 
-  /* ── Brand / Worship video projects (lightbox) ─────────── */
+  /* ── Brand / Music video projects (lightbox) ──────────── */
 
   {
     id: 'rapha-records',
@@ -125,7 +125,7 @@ const PROJECTS = [
   {
     id: 'what-mighty-praise',
     type: 'video',
-    category: 'brand',
+    category: 'music',
     title: 'What Mighty Praise',
     location: 'Maryland',
     date: '2024',
@@ -141,7 +141,7 @@ const PROJECTS = [
   {
     id: 'yahweh-we-you',
     type: 'video',
-    category: 'brand',
+    category: 'music',
     title: 'Yahweh We ♥ You',
     location: 'Maryland',
     date: '2024',
@@ -156,7 +156,7 @@ const PROJECTS = [
   {
     id: 'bcf-gala',
     type: 'video',
-    category: 'sport',
+    category: 'brand',
     title: 'BCF Gala Night',
     location: 'Maryland',
     date: '2024',
@@ -167,18 +167,19 @@ const PROJECTS = [
     youtubeId: 'Wg1LFjr6DZE',
   },
 
-  /* ── Photo projects (placeholders — minimal metadata) ──── */
+  /* ── Brand / event documentary photo projects ─────────── */
 
   {
     id: 'woodsmen',
     type: 'photo',
-    category: 'sport',
+    category: 'brand',
     title: 'Mont Alto Woodsmen',
     location: 'Pennsylvania',
     date: '2023',
     frames: 198,
     description:
-      'Lumberjack sports competition — chopping, sawing, log rolling. Documentary coverage of a multi-day event.',
+      'Event documentary coverage of a multi-day lumberjack sports competition — chopping, sawing, ' +
+      'log rolling. Shot for the team\'s brand documentation.',
     cover: '/assets/portfolio/cover-woodsmen.jpg',
     images: [
       '/assets/portfolio/cover-woodsmen.jpg',
@@ -204,44 +205,6 @@ const PROJECTS = [
       '/assets/about/about-01.jpg',
       '/assets/about/about-03.jpg',
     ],
-  },
-
-  /* Generic portrait stubs — same image varied with new metadata. */
-  {
-    id: 'senior-portrait',
-    type: 'photo',
-    category: 'portrait',
-    title: 'Senior portrait',
-    location: 'Maryland',
-    date: '2025',
-    frames: 64,
-    description: 'Senior portrait session — natural light, mixed locations.',
-    cover: '/assets/about/about-01.jpg',
-    images: ['/assets/about/about-01.jpg', '/assets/about/about-05.jpg'],
-  },
-  {
-    id: 'studio-session',
-    type: 'photo',
-    category: 'portrait',
-    title: 'Studio session',
-    location: 'Maryland',
-    date: '2024',
-    frames: 52,
-    description: 'Studio portrait sitting — controlled light, gel work, classic black-and-white finishes.',
-    cover: '/assets/about/about-03.jpg',
-    images: ['/assets/about/about-03.jpg', '/assets/about/about-04.jpg'],
-  },
-  {
-    id: 'family-session',
-    type: 'photo',
-    category: 'portrait',
-    title: 'Family session',
-    location: 'Maryland',
-    date: '2024',
-    frames: 76,
-    description: 'Family session — outdoor, multi-generational. Late-afternoon light.',
-    cover: '/assets/about/about-05.jpg',
-    images: ['/assets/about/about-05.jpg', '/assets/about/about-02.jpg'],
   },
 
 ];

@@ -56,8 +56,7 @@ const PAGE_SIZE = 8;
 const HASH_TO_CATEGORY = {
   '#weddings':  'wedding',
   '#brand':     'brand',
-  '#sports':    'sport',
-  '#portraits': 'portrait',
+  '#music':    'music',
 };
 
 const CATEGORY_TO_HASH = Object.fromEntries(
