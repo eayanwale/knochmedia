@@ -49,8 +49,8 @@ const WHEEL_WAIT  = 850;
 /* Spotlight reveal — KNOCH-035.
    - SPOT_RADIUS px : the radial mask's outer radius (where alpha hits 0).
    - BG_OPACITY     : peak opacity of the background image while hovered. */
-const SPOT_RADIUS = 900;
-const BG_OPACITY  = 0.72;
+const SPOT_RADIUS = 250;
+const BG_OPACITY  = 0.80;
 
 /* Long-tail feather — earlier curves still left a perceptible edge. This
    curve extends the gradient out to 900px so the same "perceived" reveal
@@ -66,12 +66,15 @@ const BG_OPACITY  = 0.72;
 function buildSpotMask(x, y) {
   return (
     `radial-gradient(circle ${SPOT_RADIUS}px at ${x}px ${y}px,` +
-    ` black 0%,` +
+    ` black 10%,` +
     ` rgba(0,0,0,0.88) 18%,` +
-    ` rgba(0,0,0,0.60) 36%,` +
+    ` rgba(0,0,0,0.88) 20%,` +
+    ` rgba(0,0,0,0.88) 22%,` +
+    ` rgba(0,0,0,0.60) 25%,` +
+    ` rgba(0,0,0,0.88) 32%,` +
     ` rgba(0,0,0,0.32) 58%,` +
-    ` rgba(0,0,0,0.14) 76%,` +
-    ` rgba(0,0,0,0.04) 90%,` +
+    ` rgba(0,0,0,0.14) 66%,` +
+    ` rgba(0,0,0,0.04) 85%,` +
     ` transparent 100%)`
   );
 }
