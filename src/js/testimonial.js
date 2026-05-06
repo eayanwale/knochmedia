@@ -46,6 +46,21 @@ function getTestimonialImage(idx) {
    fade-out 0.18s + fade-in 0.25s + last word start (~0.66s) ≈ 0.85s total. */
 const WHEEL_WAIT  = 850;
 
+/* Spotlight reveal — KNOCH-035 widened the mask + lifted the opacity so
+   the bg image reads as an atmospheric reveal rather than a small
+   peephole (the original 220px / 0.58 / 80% felt voyeuristic).
+   - SPOT_RADIUS   px : the opaque-mask circle radius around the cursor.
+   - SPOT_FALLOFF  %  : where the radial mask starts fading to transparent;
+                        bigger number = harder edge, smaller = softer halo.
+   - BG_OPACITY        : peak opacity of the background image when hovered. */
+const SPOT_RADIUS  = 460;
+const SPOT_FALLOFF = '90%';
+const BG_OPACITY   = 0.75;
+
+function buildSpotMask(x, y) {
+  return `radial-gradient(circle ${SPOT_RADIUS}px at ${x}px ${y}px, black 0%, transparent ${SPOT_FALLOFF})`;
+}
+
 /* ── Helpers ────────────────────────────────────────────────────── */
 
 /* Truncate at a natural break, in priority order:
@@ -292,7 +307,7 @@ export async function initTestimonial() {
         gsap.to(bgEl, { opacity: 0, duration: 0.2, ease: 'power2.in', overwrite: 'auto',
           onComplete: () => {
             bgEl.style.backgroundImage = newBg;
-            if (sectionHovered) gsap.to(bgEl, { opacity: 0.58, duration: 0.4, ease: 'power2.out' });
+            if (sectionHovered) gsap.to(bgEl, { opacity: BG_OPACITY, duration: 0.4, ease: 'power2.out' });
           }
         });
       } else {
@@ -465,7 +480,7 @@ export async function initTestimonial() {
         ease: 'power2.out',
         overwrite: 'auto',
         onUpdate() {
-          const m = `radial-gradient(circle 220px at ${spotPos.x}px ${spotPos.y}px, black 0%, transparent 80%)`;
+          const m = buildSpotMask(spotPos.x, spotPos.y);
           bgEl.style.maskImage = m;
           bgEl.style.webkitMaskImage = m;
         },
@@ -482,10 +497,10 @@ export async function initTestimonial() {
       const rect = section.getBoundingClientRect();
       spotPos.x = e.clientX - rect.left;
       spotPos.y = e.clientY - rect.top;
-      const m = `radial-gradient(circle 220px at ${spotPos.x}px ${spotPos.y}px, black 0%, transparent 80%)`;
+      const m = buildSpotMask(spotPos.x, spotPos.y);
       bgEl.style.maskImage = m;
       bgEl.style.webkitMaskImage = m;
-      gsap.to(bgEl, { opacity: 0.58, duration: 0.5, ease: 'power2.out', overwrite: 'auto' });
+      gsap.to(bgEl, { opacity: BG_OPACITY, duration: 0.5, ease: 'power2.out', overwrite: 'auto' });
     });
     section.addEventListener('mouseleave', () => {
       sectionHovered = false;
