@@ -32,7 +32,7 @@
   z-index: 0;
   pointer-events: none;
   overflow: hidden;
-  opacity: 0.13;
+  opacity: 0.18;
   /* Top fade so strip doesn't crowd the quote, left/right edge fade */
   -webkit-mask-image:
     linear-gradient(to right, transparent 0%, black 5%, black 95%, transparent 100%),
@@ -62,7 +62,7 @@
   background-size: cover;
   background-position: center;
   /* Warm-toned black-and-white: desaturate then push slightly amber */
-  filter: grayscale(1) sepia(0.25) brightness(0.8) contrast(1.1);
+  filter: grayscale(1) sepia(0.55) brightness(0.65) contrast(1.2);
   outline: 1px solid rgba(196, 168, 124, 0.2);
 }
 

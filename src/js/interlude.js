@@ -34,7 +34,7 @@ export function initInterlude() {
 
   /* Lines start below clip AND out-of-focus — blur clears as they rise,
      like a lens pulling focus on text emerging from negative space. */
-  gsap.set(lines, { y: '115%', filter: 'blur(14px)' });
+  gsap.set(lines, { y: '115%', filter: 'blur(14px)', letterSpacing: '0.12em' });
   if (accentLine) gsap.set(accentLine, { scaleX: 0 });
 
   const tl = gsap.timeline({
@@ -49,8 +49,9 @@ export function initInterlude() {
   tl.to(lines, {
     y: '0%',
     filter: 'blur(0px)',
-    stagger: 0.13,
-    duration: 0.95,
+    letterSpacing: '-0.015em',
+    stagger: 0.16,
+    duration: 1.1,
     ease: 'expo.out',
   }, 0);
 

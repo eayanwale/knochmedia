@@ -96,6 +96,31 @@ export function initPortfolioGrid() {
     const img = tile.querySelector('.tile-img');
     if (!img) return;
 
+    /* Magnetic cursor zoom — image pans and scales toward cursor position.
+       xPercent / yPercent compose with the yPercent parallax tween safely
+       because GSAP tracks each axis independently in its transform matrix. */
+    tile.addEventListener('mouseenter', () => {
+      gsap.to(img, { scale: 1.05, duration: 0.5, ease: 'power2.out', overwrite: 'auto' });
+    });
+    tile.addEventListener('mousemove', (e) => {
+      const r = tile.getBoundingClientRect();
+      const xRel = (e.clientX - r.left) / r.width - 0.5;
+      const yRel = (e.clientY - r.top) / r.height - 0.5;
+      gsap.to(img, {
+        xPercent: xRel * 8,
+        yPercent: yRel * 8,
+        duration: 0.5,
+        ease: 'power2.out',
+        overwrite: 'auto',
+      });
+    });
+    tile.addEventListener('mouseleave', () => {
+      gsap.to(img, {
+        scale: 1, xPercent: 0, yPercent: 0,
+        duration: 0.7, ease: 'power2.out', overwrite: 'auto',
+      });
+    });
+
     /* Darkroom develop — overexposed B&W resolves to normal resting state */
     gsap.fromTo(img,
       { filter: 'grayscale(1) brightness(1.6)' },

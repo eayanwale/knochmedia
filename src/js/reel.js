@@ -1,14 +1,8 @@
 import gsap from 'gsap';
 import ScrollTrigger from 'gsap/ScrollTrigger';
-// stopLenis/startLenis intentionally not used — the ScrollTrigger proxy
-// in lenis.js keeps Lenis synced with ScrollTrigger during the pin.
-// Stopping Lenis breaks the scroll chain that drives the horizontal tween.
 
 gsap.registerPlugin(ScrollTrigger);
 
-// Static fallback — mirrors the 3 featured Sanity galleryCollection documents.
-// Images point directly to Sanity CDN so fallback and live mode are pixel-identical.
-// Only used when the Sanity API fetch returns empty (network failure, etc.).
 const CARDS = [
   {
     index: '01',
@@ -83,17 +77,91 @@ function handleCardClick(card) {
   }
 }
 
+/* Magnetic cursor zoom on reel cards — image pans toward cursor within
+   the oversized card-img bounds. GSAP x/y composes with the horizontal
+   parallax x tween because they target different transform components. */
+function addMagneticZoom(card) {
+  const img = card.querySelector('.reel-card-img');
+  if (!img) return;
+
+  card.addEventListener('mouseenter', () => {
+    gsap.to(img, { scale: 1.06, duration: 0.5, ease: 'power2.out', overwrite: 'auto' });
+  });
+
+  card.addEventListener('mousemove', (e) => {
+    const rect = card.getBoundingClientRect();
+    const xRel = (e.clientX - rect.left) / rect.width - 0.5;
+    const yRel = (e.clientY - rect.top) / rect.height - 0.5;
+    gsap.to(img, {
+      xPercent: xRel * 6,
+      yPercent: yRel * 6,
+      duration: 0.6,
+      ease: 'power2.out',
+      overwrite: 'auto',
+    });
+  });
+
+  card.addEventListener('mouseleave', () => {
+    gsap.to(img, {
+      scale: 1, xPercent: 0, yPercent: 0,
+      duration: 0.8, ease: 'power2.out', overwrite: 'auto',
+    });
+  });
+}
+
+/* Reel intro text reveals — label floats up, headline clip-wipes,
+   desc lines clip-wipe with stagger, hint fades last. */
+function animateReelIntro(section) {
+  const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (prefersReduced) return;
+
+  const label    = section.querySelector('.reel-intro-label');
+  const headline = section.querySelector('.reel-intro-headline');
+  const desc     = section.querySelector('.reel-intro-desc');
+  const hint     = section.querySelector('.reel-scroll-hint');
+
+  /* Split desc around <br> into two clip-reveal lines */
+  if (desc) {
+    const raw = desc.innerHTML.split(/<br\s*\/?>/i);
+    desc.innerHTML = raw.map(l =>
+      `<span class="reel-desc-line" style="display:block;overflow:hidden;"><span style="display:block;">${l.trim()}</span></span>`
+    ).join('');
+  }
+
+  const descInners = desc ? desc.querySelectorAll('span > span') : [];
+
+  gsap.set([label, hint], { opacity: 0, y: 16 });
+  gsap.set(headline, { clipPath: 'inset(0 0 100% 0)', y: 20 });
+  gsap.set(descInners, { y: '110%' });
+
+  const tl = gsap.timeline({
+    scrollTrigger: {
+      trigger: section,
+      start: 'top 80%',
+      toggleActions: 'play none none none',
+    },
+    defaults: { ease: 'expo.out' },
+  });
+
+  tl.to(label, { opacity: 1, y: 0, duration: 0.7 }, 0)
+    .to(headline, { clipPath: 'inset(0 0 0% 0)', y: 0, duration: 1.0 }, 0.1)
+    .to(descInners, { y: '0%', stagger: 0.1, duration: 0.8 }, 0.35)
+    .to(hint, { opacity: 1, y: 0, duration: 0.6 }, 0.65);
+}
+
 export function initReel(cards = CARDS) {
   const section = document.querySelector('#reel');
   const track = section?.querySelector('.reel-track');
 
   if (!section || !track) return;
 
+  /* Intro reveals run on all devices */
+  animateReelIntro(section);
+
   // Render cards into track
   const fragment = document.createDocumentFragment();
   cards.forEach(card => fragment.appendChild(buildCard(card)));
 
-  // Trailing spacer
   const spacer = document.createElement('div');
   spacer.className = 'reel-spacer';
   spacer.setAttribute('aria-hidden', 'true');
@@ -107,8 +175,6 @@ export function initReel(cards = CARDS) {
   // Skip scroll-driven animation for reduced motion
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
-  // Main horizontal tween — ScrollTrigger config inline so
-  // reelTween.scrollTrigger is available for containerAnimation below
   const reelTween = gsap.to(track, {
     x: () => -(track.scrollWidth - window.innerWidth),
     ease: 'none',
@@ -123,15 +189,12 @@ export function initReel(cards = CARDS) {
     },
   });
 
-  // Inner parallax — card image pans counter to horizontal scroll.
-  // containerAnimation takes the parent TWEEN (not the ST instance) so
-  // ScrollTrigger can derive card positions relative to horizontal scroll.
   track.querySelectorAll('.reel-card').forEach(card => {
     const img = card.querySelector('.reel-card-img');
     if (!img) return;
 
-    gsap.fromTo(
-      img,
+    /* Horizontal parallax counter-scroll */
+    gsap.fromTo(img,
       { x: 40 },
       {
         x: -40,
@@ -145,9 +208,11 @@ export function initReel(cards = CARDS) {
         },
       }
     );
+
+    /* Magnetic cursor zoom — xPercent/yPercent compose with x parallax */
+    addMagneticZoom(card);
   });
 
-  // Debounced resize — recalculates track width after layout shifts
   let resizeTimer;
   window.addEventListener('resize', () => {
     clearTimeout(resizeTimer);

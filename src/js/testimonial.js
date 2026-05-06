@@ -33,6 +33,25 @@ gsap.registerPlugin(ScrollTrigger);
 
 const ADVANCE_MS  = 7000;
 const QUOTE_MAX   = 180;
+
+/* Client-name → portfolio image lookup for the hover bg reveal.
+   Keys are partial matches (case-insensitive). Add entries as
+   testimonials are added to Sanity. */
+const TESTIMONIAL_IMAGES = {
+  'rapha':   '/assets/portfolio/cover-rapha-records.jpg',
+  'alex':    '/assets/portfolio/cover-alex-morgan.jpg',
+  'fayo':    '/assets/portfolio/cover-fayo-femi.jpg',
+  'shawn':   '/assets/portfolio/cover-shawn-bekki.jpg',
+  'bekki':   '/assets/portfolio/cover-shawn-bekki.jpg',
+  'morgan':  '/assets/portfolio/cover-alex-morgan.jpg',
+};
+
+function getTestimonialImage(clientName) {
+  if (!clientName) return '/assets/portfolio/cover-alex-morgan.jpg';
+  const name = clientName.toLowerCase();
+  const key = Object.keys(TESTIMONIAL_IMAGES).find(k => name.includes(k));
+  return TESTIMONIAL_IMAGES[key] ?? '/assets/portfolio/cover-alex-morgan.jpg';
+}
 /* Cooldown tuned to match the word-stagger reveal duration so the user
    can advance again as soon as the text has visually settled.
    fade-out 0.18s + fade-in 0.25s + last word start (~0.66s) ≈ 0.85s total. */
@@ -131,6 +150,13 @@ export async function initTestimonial() {
 
     const total = testimonials.length;
 
+    /* ── Hover background image ──────────────────────────── */
+
+    const bgEl = document.createElement('div');
+    bgEl.className = 'testimonial-bg';
+    bgEl.setAttribute('aria-hidden', 'true');
+    section.appendChild(bgEl);
+
     /* ── Ambient index ───────────────────────────────────── */
 
     const ambientIdx = document.createElement('div');
@@ -203,6 +229,8 @@ export async function initTestimonial() {
       busy = true;
       setDots(idx);
       updateAmbientIdx(idx);
+      bgEl.style.backgroundImage = `url('${getTestimonialImage(testimonials[idx]?.clientName)}')`;
+
 
       const mount = () => {
         current = idx;
@@ -290,10 +318,16 @@ export async function initTestimonial() {
       window.removeEventListener('wheel', onWheel);
     }
 
-    /* ── Hover — pause auto-advance ──────────────────────── */
+    /* ── Hover — pause auto-advance + reveal bg image ───── */
 
-    list.addEventListener('mouseenter', stopTimer);
-    list.addEventListener('mouseleave', () => { if (inView) startTimer(); });
+    list.addEventListener('mouseenter', () => {
+      stopTimer();
+      gsap.to(bgEl, { opacity: 0.1, duration: 0.8, ease: 'power2.out' });
+    });
+    list.addEventListener('mouseleave', () => {
+      if (inView) startTimer();
+      gsap.to(bgEl, { opacity: 0, duration: 0.6, ease: 'power2.out' });
+    });
 
     /* ── IntersectionObserver ────────────────────────────── */
 

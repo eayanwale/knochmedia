@@ -19,6 +19,21 @@
 
 /* ── Section shell ──────────────────────────────────────── */
 
+/* Hover image — a project photo that ghosts in very subtly when the
+   visitor's cursor enters the testimonial section. Separate from the
+   ambient index so z-ordering stays clean: bg → ambient → content. */
+.testimonial-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background-size: cover;
+  background-position: center;
+  opacity: 0;
+  filter: grayscale(0.7) brightness(0.5) blur(4px);
+  pointer-events: none;
+  will-change: opacity;
+}
+
 .testimonial {
   height: 100vh;
   display: flex;
@@ -46,7 +61,7 @@
   user-select: none;
   bottom: -0.18em;
   right: 4vw;
-  z-index: 0;
+  z-index: 1;
 }
 
 /* ── Carousel wrapper ───────────────────────────────────── */

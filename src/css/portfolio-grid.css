@@ -101,7 +101,7 @@
 .tile:hover .tile-img,
 .tile:focus-visible .tile-img {
   filter: grayscale(0) brightness(1);
-  transform: scale(1.04);
+  /* scale handled by GSAP magnetic zoom — no CSS transform here */
 }
 
 /* Label overlay — slides up on hover */

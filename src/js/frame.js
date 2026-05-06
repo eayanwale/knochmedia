@@ -1,18 +1,19 @@
 /*
   frame.js — Scroll-driven studio section (KNOCH-008)
   ====================================================
-  The section is 150vh tall with a CSS sticky panel. A single GSAP
-  timeline is scrubbed across the 50vh of pin travel (start: top top,
-  end: bottom top), mapping scroll to animation progress:
+  150vh section, CSS sticky panel. Two animation layers:
 
+  Layer 1 — scrubbed timeline (scroll-driven):
     0–100 %   BG scales 1.6 → 1.0 (dramatic pull-back) + drifts up
     0– 20 %   Meta label fades in
     5– 50 %   Headline lines clip up from below + blur clears (focus reveal)
-   55– 75 %   Stat 1 counts up (scrubbed) + label fades in
-   65– 85 %   Stat 2 counts up + label fades in
-   75– 95 %   Stat 3 counts up + label fades in
 
-  prefers-reduced-motion: final values shown instantly, no animation.
+  Layer 2 — triggered (plays at full speed, non-scrubbed):
+    When scroll progress crosses 0.55, each stat block floats up
+    (y 40 → 0) and counts from 0 → target over 1.4 s with expo.out.
+    Staggered 0.12 s apart so they arrive in sequence, not all at once.
+
+  prefers-reduced-motion: final values shown instantly.
 */
 
 import { gsap } from 'gsap';
@@ -29,9 +30,11 @@ export function initFrame() {
   const bg       = section.querySelector('.bg');
   const metaTag  = section.querySelector('.meta-tag');
   const bigEl    = section.querySelector('.big');
+  const statEls  = gsap.utils.toArray('.pinned-frame .stat');
   const statNums = gsap.utils.toArray('.pinned-frame .stat .n');
   const statLbls = gsap.utils.toArray('.pinned-frame .stat .l');
 
+  /* Always write final values as baseline (readable without JS / reduced motion) */
   statNums.forEach(el => {
     const target = parseInt(el.dataset.count, 10);
     if (!target) return;
@@ -43,13 +46,19 @@ export function initFrame() {
 
   const lines = bigEl ? Array.from(bigEl.querySelectorAll('.frame-line')) : [];
 
+  /* Initial hidden states */
   gsap.set(metaTag, { opacity: 0, y: 10 });
   gsap.set(lines,   { y: '115%', filter: 'blur(12px)' });
+  gsap.set(statEls, { opacity: 0, y: 40 });
   statNums.forEach(el => {
     const hasEm = !!el.querySelector('em');
     el.innerHTML = hasEm ? '<em>0</em>' : '0';
   });
   gsap.set(statLbls, { opacity: 0 });
+
+  /* ── Layer 1: scrubbed timeline ─────────────────────────────── */
+
+  let statsPlayed = false;
 
   const tl = gsap.timeline({
     scrollTrigger: {
@@ -58,10 +67,17 @@ export function initFrame() {
       end: 'bottom top',
       scrub: 0.8,
       invalidateOnRefresh: true,
+      onUpdate(self) {
+        /* When 55 % through the pin, release stats to play at full speed */
+        if (self.progress >= 0.55 && !statsPlayed) {
+          statsPlayed = true;
+          playStats();
+        }
+      },
     },
   });
 
-  /* BG: dramatic scale pull-back — entire scroll range */
+  /* BG pull-back */
   tl.fromTo(bg,
     { scale: 1.6, yPercent: 0 },
     { scale: 1.0, yPercent: -10, ease: 'none', duration: 1 },
@@ -71,7 +87,7 @@ export function initFrame() {
   /* Meta label */
   tl.to(metaTag, { opacity: 1, y: 0, ease: 'expo.out', duration: 0.2 }, 0);
 
-  /* Headline: clip-slide-up + blur-to-sharp (depth-of-field focus reveal) */
+  /* Headline: clip-slide-up + blur focus reveal */
   if (lines.length) {
     tl.to(lines, {
       y: '0%',
@@ -82,35 +98,48 @@ export function initFrame() {
     }, 0.05);
   }
 
-  /* Stat counters: scrubbed count-up, tighter range than before */
-  statNums.forEach((el, i) => {
-    const target = parseInt(el.dataset.count, 10);
-    if (!target) return;
+  /* ── Layer 2: stats — non-scrubbed, full-speed ──────────────── */
 
-    const hasEm = !!el.querySelector('em');
-    const proxy = { v: 0 };
-    const start = 0.55 + i * 0.1;   /* 0.55, 0.65, 0.75 */
+  function playStats() {
+    /* Float each stat block up with stagger */
+    gsap.to(statEls, {
+      opacity: 1,
+      y: 0,
+      stagger: 0.12,
+      duration: 0.9,
+      ease: 'expo.out',
+    });
 
-    tl.fromTo(proxy,
-      { v: 0 },
-      {
+    /* Count each number up independently */
+    statNums.forEach((el, i) => {
+      const target = parseInt(el.dataset.count, 10);
+      if (!target) return;
+      const hasEm = !!el.querySelector('em');
+      const proxy = { v: 0 };
+
+      gsap.to(proxy, {
         v: target,
-        ease: 'none',
-        duration: 0.2,
+        delay: i * 0.12,
+        duration: 1.4,
+        ease: 'expo.out',
         onUpdate() {
           const n = Math.round(proxy.v).toLocaleString();
           el.innerHTML = hasEm ? `<em>${n}</em>` : n;
         },
-      },
-      start
-    );
+        onComplete() {
+          /* Write exact final value to avoid rounding artifacts */
+          el.innerHTML = hasEm ? `<em>${target.toLocaleString()}</em>` : target.toLocaleString();
+        },
+      });
 
-    if (statLbls[i]) {
-      tl.fromTo(statLbls[i],
-        { opacity: 0 },
-        { opacity: 1, ease: 'none', duration: 0.08 },
-        start
-      );
-    }
-  });
+      if (statLbls[i]) {
+        gsap.to(statLbls[i], {
+          opacity: 1,
+          delay: i * 0.12 + 0.2,
+          duration: 0.5,
+          ease: 'expo.out',
+        });
+      }
+    });
+  }
 }
