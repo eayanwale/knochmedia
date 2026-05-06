@@ -1,7 +1,7 @@
 # Knoch Media — Ticket Summary
 
 > **Living document.** Updated whenever tickets are created, modified, split, or closed.  
-> Last updated: 2026-05-06 | Total tickets: 30 | Open: 10 | In progress: 0 | In review: 1 | Done: 16 | Deferred: 3
+> Last updated: 2026-05-06 | Total tickets: 30 | Open: 10 | In progress: 0 | In review: 0 | Done: 17 | Deferred: 3
 
 ---
 
@@ -72,7 +72,7 @@ Build in this order: About → Portfolio page → Project detail → Contact →
 | ID | Title | Status | Branch | Notes |
 |----|-------|--------|--------|-------|
 | [KNOCH-013](tickets/KNOCH-013.md) | About / Story Section (about.html) | `✅` | `feature/KNOCH-013-about-story-section` | QA PASSED — merged to test |
-| [KNOCH-011](tickets/KNOCH-011.md) | Portfolio Filter System (portfolio.html) | `🔵` | `feature/KNOCH-011-portfolio-filter` | PR #20 dev → test (in review) |
+| [KNOCH-011](tickets/KNOCH-011.md) | Portfolio Filter System (portfolio.html) | `✅` | `feature/KNOCH-011-portfolio-filter` | QA PASSED — merged to test |
 | [KNOCH-012](tickets/KNOCH-012.md) | Project Detail View + Video Lightbox | `⬜` | — | Expanding tile transition |
 | [KNOCH-014](tickets/KNOCH-014.md) | Contact — Multi-Step Qualified Inquiry Form | `⬜` | — | 3-step form + Calendly sidebar |
 | [KNOCH-015](tickets/KNOCH-015.md) | Footer — Credits Bar + Sitemap Variant | `⬜` | — | Two variants: minimal + expanded |
@@ -173,6 +173,21 @@ CMS layer (cuts across phases — wire each section after it is built):
 ## Changelog
 
 All modifications to this document and ticket files are logged here. Tester agent and code review feedback should be recorded as entries.
+
+---
+
+### 2026-05-06 — KNOCH-011 QA PASSED — merged to test
+
+**Action:** PR #20 merged (dev → test) — KNOCH-011 QA PASSED
+**Tickets affected:** KNOCH-011
+**Reason:** Tester agent verified all 11 acceptance criteria; build clean at 140 ms / 65 modules. Filter state machine traced for `wedding`, `all`, `Load more`, and `portrait` scenarios — exit / entry overlap, `display: none` after exit, count + button toggle all confirmed correct. Hash sync via `replaceState` + `hashchange` with feedback-loop guard works. Three LOW findings, none blocking: (1) `data-category="film"` not implemented — folded into `brand` since there's no Film tab in the AC anyway; (2) count label uses dynamic total instead of hardcoded "47" — more honest given DOM has 12 cards; (3) cards have `tabindex="0"` + inline `onclick` but no keydown handler — outside AC scope (filter tabs are properly keyboard-accessible), flagged for KNOCH-021.
+**Changes:**
+- KNOCH-011: Status changed IN REVIEW → ✅ QA PASSED
+- PR #20 merged with full merge commit (no squash, per workflow)
+- All 13 Test plan checkboxes ticked in PR body
+- Test report written: `docs/test-reports/KNOCH-011-test-report.md`
+- Header counts updated: In review 1→0, Done 16→17
+**Completed by:** Tester Agent
 
 ---
 
