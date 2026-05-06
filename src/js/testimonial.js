@@ -46,37 +46,22 @@ function getTestimonialImage(idx) {
    fade-out 0.18s + fade-in 0.25s + last word start (~0.66s) ≈ 0.85s total. */
 const WHEEL_WAIT  = 850;
 
-/* Spotlight reveal — KNOCH-035.
+/* Spotlight reveal — KNOCH-036 (matched to the #frame section's bg-reveal
+   in src/js/frame.js so both atmospheric reveals on the homepage feel
+   consistent — same gradient shape, same radius default).
    - SPOT_RADIUS px : the radial mask's outer radius (where alpha hits 0).
    - BG_OPACITY     : peak opacity of the background image while hovered. */
-const SPOT_RADIUS = 250;
-const BG_OPACITY  = 0.80;
+const SPOT_RADIUS = 200;
+const BG_OPACITY  = 1.0;
 
-/* Long-tail feather — earlier curves still left a perceptible edge. This
-   curve extends the gradient out to 900px so the same "perceived" reveal
-   size (~360px around the cursor) is just the visible tip of a much
-   longer alpha tail. Most of the radius (520→900px) is in low-alpha
-   territory that dissolves imperceptibly into the section's dark
-   surround — there's no ring because there's no place where alpha drops
-   suddenly enough for the eye to latch onto.
-   The seven stops trace an ease-out curve: high alpha at the center,
-   most of the falloff happening between 18% and 58%, then a long faint
-   tail from 58% to 100%. Stops are alpha-on-black so the mask layers
-   without tinting the bg image. */
+/* Simple two-stop falloff — same gradient as #frame's spotlight: black at
+   the centre fading to transparent at 82% of the radius. The defined
+   edge reads cleanly against the section's dark surround. To keep the
+   reveal from feeling like a hard cut-out, .testimonial-bg's filter
+   stays slightly grayscale-d so the revealed image blends with the
+   section colour palette rather than punching through saturated. */
 function buildSpotMask(x, y) {
-  return (
-    `radial-gradient(circle ${SPOT_RADIUS}px at ${x}px ${y}px,` +
-    ` black 10%,` +
-    ` rgba(0,0,0,0.88) 18%,` +
-    ` rgba(0,0,0,0.88) 20%,` +
-    ` rgba(0,0,0,0.88) 22%,` +
-    ` rgba(0,0,0,0.60) 25%,` +
-    ` rgba(0,0,0,0.88) 32%,` +
-    ` rgba(0,0,0,0.32) 58%,` +
-    ` rgba(0,0,0,0.14) 66%,` +
-    ` rgba(0,0,0,0.04) 85%,` +
-    ` transparent 100%)`
-  );
+  return `radial-gradient(circle ${SPOT_RADIUS}px at ${x}px ${y}px, black 0%, transparent 82%)`;
 }
 
 /* ── Helpers ────────────────────────────────────────────────────── */
