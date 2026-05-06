@@ -163,7 +163,9 @@
   display: block;
 }
 
-/* Direct span child of each .line — block so each word stays on its own row. */
+/* Direct span child of each .line — GSAP animates this from y:110% to y:0
+   on loader complete. Using > (direct child) so .char-hover spans inside
+   are NOT matched and do not receive the initial hidden state. */
 .hero-headline .line > span {
   display: block;
 }

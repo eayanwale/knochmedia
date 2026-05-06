@@ -51,7 +51,7 @@
   padding: 0 14px;
   height: 100%;
   width: max-content;
-  animation: strip-drift 40s linear infinite;
+  /* transform driven by GSAP ScrollTrigger scrub — no CSS animation */
   will-change: transform;
 }
 
@@ -64,11 +64,6 @@
   /* Warm-toned black-and-white: desaturate then push slightly amber */
   filter: grayscale(1) sepia(0.55) brightness(0.65) contrast(1.2);
   outline: 1px solid rgba(196, 168, 124, 0.2);
-}
-
-@keyframes strip-drift {
-  from { transform: translateX(0); }
-  to   { transform: translateX(-50%); }
 }
 
 /* ── Amber category label (top-left) ── */

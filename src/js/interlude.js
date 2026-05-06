@@ -22,8 +22,32 @@ export function initInterlude() {
 
   const lines      = section.querySelectorAll('.interlude-line');
   const accentLine = section.querySelector('.interlude-accent-line');
+  const stripTrack = section.querySelector('.interlude-strip-track');
 
   const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ── Strip scroll-reactive ──────────────────────────────────────────────
+     Scroll down → strip drifts right (x: -600 → 0).
+     Scroll up  → strip drifts left  (x: 0 → -600).
+     scrub: 1.2 gives a smooth lag that reads as physical weight.
+     fromTo so GSAP owns the initial position — no CSS starting offset needed. */
+  if (stripTrack && !prefersReduced) {
+    gsap.fromTo(stripTrack,
+      { x: -600 },
+      {
+        x: 0,
+        ease: 'none',
+        scrollTrigger: {
+          trigger: section,
+          start: 'top bottom',
+          end: 'bottom top',
+          scrub: 1.2,
+        },
+      }
+    );
+  } else if (stripTrack) {
+    gsap.set(stripTrack, { x: -300 }); /* reduced-motion: static midpoint */
+  }
 
   if (prefersReduced) {
     lines.forEach(l => { l.style.transform = 'translateY(0)'; l.style.filter = 'none'; });

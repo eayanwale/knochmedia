@@ -133,9 +133,14 @@ function _onLoaderComplete() {
   const heroMeta     = document.querySelector('.hero-meta');
   const heroSub      = document.getElementById('hero-sub');
 
+  /* Use > span (direct child) so .char-hover spans added by char-hover.js
+     inside the wrapper span are not matched — they have no initial offset
+     and should not participate in the line reveal. */
+  const lineSpans = document.querySelectorAll('.hero-headline .line > span');
+
   const tl = gsap.timeline();
 
-  // Bg scale-down — from the initial scale(1.1) set in CSS
+  // Bg scale-down
   if (heroBg) {
     tl.to(heroBg, {
       scale: 1,
@@ -153,13 +158,23 @@ function _onLoaderComplete() {
     }, 0);
   }
 
+  // Headline clip-reveal — fromTo so GSAP owns the initial hidden state;
+  // no CSS translateY(110%) needed, which avoids affecting .char-hover children.
+  if (lineSpans.length) {
+    tl.fromTo(lineSpans,
+      { y: '110%' },
+      { y: 0, duration: 1.2, ease: 'expo.out', stagger: 0.12 },
+      0.2
+    );
+  }
+
   // Sub text fade in
   if (heroSub) {
     tl.to(heroSub, {
       opacity: 1,
       duration: 0.8,
       ease: 'power2.out',
-    }, 0.4);
+    }, 1.0);
   }
 
   // Set up scroll-exit triggers once the reveal completes

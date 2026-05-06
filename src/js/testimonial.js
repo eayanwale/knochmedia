@@ -206,12 +206,13 @@ export async function initTestimonial() {
 
     /* ── State ───────────────────────────────────────────── */
 
-    let current      = -1;
-    let busy         = false;
-    let timer        = null;
-    let inView       = false;
-    let intercepting = false;
-    let wheelReady   = true;   /* cooldown flag */
+    let current        = -1;
+    let busy           = false;
+    let timer          = null;
+    let inView         = false;
+    let intercepting   = false;
+    let wheelReady     = true;   /* cooldown flag */
+    let sectionHovered = false;  /* spotlight active flag */
 
     /* ── Navigation ──────────────────────────────────────── */
 
@@ -229,8 +230,21 @@ export async function initTestimonial() {
       busy = true;
       setDots(idx);
       updateAmbientIdx(idx);
-      bgEl.style.backgroundImage = `url('${getTestimonialImage(testimonials[idx]?.clientName)}')`;
 
+      /* Cross-fade the background image so slide changes don't snap abruptly.
+         If spotlight is active: fade out → swap image → fade back in.
+         If not hovered: just swap silently. */
+      const newBg = `url('${getTestimonialImage(testimonials[idx]?.clientName)}')`;
+      if (sectionHovered) {
+        gsap.to(bgEl, { opacity: 0, duration: 0.2, ease: 'power2.in', overwrite: 'auto',
+          onComplete: () => {
+            bgEl.style.backgroundImage = newBg;
+            if (sectionHovered) gsap.to(bgEl, { opacity: 0.5, duration: 0.4, ease: 'power2.out' });
+          }
+        });
+      } else {
+        bgEl.style.backgroundImage = newBg;
+      }
 
       const mount = () => {
         current = idx;
@@ -333,7 +347,7 @@ export async function initTestimonial() {
         ease: 'power2.out',
         overwrite: 'auto',
         onUpdate() {
-          const m = `radial-gradient(circle 220px at ${spotPos.x}px ${spotPos.y}px, black 0%, transparent 80%)`;
+          const m = `radial-gradient(circle 240px at ${spotPos.x}px ${spotPos.y}px, black 0%, transparent 80%)`;
           bgEl.style.maskImage = m;
           bgEl.style.webkitMaskImage = m;
         },
@@ -342,11 +356,21 @@ export async function initTestimonial() {
 
     /* ── Section hover — timer + bg opacity ────────────────────────────── */
 
-    section.addEventListener('mouseenter', () => {
+    section.addEventListener('mouseenter', (e) => {
       stopTimer();
+      sectionHovered = true;
+      /* Set initial spotlight at entry point before fading in — prevents
+         full-image flash while the first mousemove hasn't fired yet. */
+      const rect = section.getBoundingClientRect();
+      spotPos.x = e.clientX - rect.left;
+      spotPos.y = e.clientY - rect.top;
+      const m = `radial-gradient(circle 240px at ${spotPos.x}px ${spotPos.y}px, black 0%, transparent 80%)`;
+      bgEl.style.maskImage = m;
+      bgEl.style.webkitMaskImage = m;
       gsap.to(bgEl, { opacity: 0.5, duration: 0.5, ease: 'power2.out', overwrite: 'auto' });
     });
     section.addEventListener('mouseleave', () => {
+      sectionHovered = false;
       gsap.to(bgEl, { opacity: 0, duration: 0.4, ease: 'power2.out', overwrite: 'auto' });
       if (inView) startTimer();
     });

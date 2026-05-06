@@ -93,16 +93,21 @@ ol {
    ─────────────────────────────────────────────────────────────────────── */
 
 .char-hover {
+  /* inline-block required for transform scale to apply */
+  display: inline-block;
   -webkit-text-stroke: 1px transparent;
+  transform-origin: center 80%; /* scale from near-baseline so text doesn't float up */
   transition:
     color 0.35s ease,
-    -webkit-text-stroke-color 0.35s ease;
+    -webkit-text-stroke-color 0.35s ease,
+    transform 0.35s ease;
 }
 
 @media (hover: hover) and (pointer: fine) {
   .char-hover.is-hollow {
     color: transparent;
     -webkit-text-stroke-color: var(--paper);
+    transform: scale(1.18);
   }
 
   em .char-hover.is-hollow {
