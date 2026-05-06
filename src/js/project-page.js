@@ -25,6 +25,7 @@
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { getProject, listProjects } from './projects.js';
+import { openVideoLightbox } from './video-lightbox.js';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -108,12 +109,34 @@ export function initProjectPage() {
 
   if (mDesc) mDesc.textContent = project.description ?? '';
 
-  /* Optional "View full gallery" link — only render when galleryUrl is set */
+  /* CTA link — three modes depending on the project shape:
+       - galleryUrl present  → "View full gallery →" opens the
+         external client gallery in a new tab.
+       - youtubeId present   → "Watch the film →" opens the video
+         lightbox modal in-place (same lightbox used elsewhere via
+         the tile-router). The href is set to the youtu.be URL as
+         a fallback so the link still works if JS fails.
+       - neither             → hide the link.
+     The same DOM element drives all three modes — text + href +
+     handler get rewritten per project. */
   if (mLink) {
     if (project.galleryUrl) {
+      mLink.textContent = 'View full gallery →';
       mLink.href = project.galleryUrl;
       mLink.target = '_blank';
       mLink.rel = 'noopener noreferrer';
+    } else if (project.youtubeId) {
+      mLink.textContent = 'Watch the film →';
+      mLink.href = `https://youtu.be/${project.youtubeId}`;
+      mLink.target = '_blank';
+      mLink.rel = 'noopener noreferrer';
+      /* Intercept click — open the in-page lightbox instead of
+         leaving the page. Default-action fallback covers users with
+         JS disabled or older browsers. */
+      mLink.addEventListener('click', (e) => {
+        e.preventDefault();
+        openVideoLightbox(project.youtubeId, mLink);
+      });
     } else {
       mLink.style.display = 'none';
     }
