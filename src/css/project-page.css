@@ -40,10 +40,15 @@
 
 /* Back link — sits below the chrome bar in the top-left corner.
    Position: absolute over the hero so it sits on top of the image. */
+/* Top offset clears the chrome overlay (which sits at top:28px and is
+   ~22px tall, ending around 50px from the viewport top). 7rem keeps a
+   clean ~60px gap so the back link doesn't visually crash into the
+   "Knoch." wordmark. left: 8vw matches the gutter the rest of the
+   page sections use, so the back link aligns with the body content. */
 .project-back-wrap {
   position: absolute;
-  top: 4rem;
-  left: 4vw;
+  top: 7rem;
+  left: 8vw;
   z-index: 10;
 }
 
@@ -445,7 +450,7 @@
 
 @media (max-width: 800px) {
   .project-back-wrap {
-    top: 5rem;
+    top: 6rem;
     left: 6vw;
   }
 
