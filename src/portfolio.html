@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>The Work — Knoch Media</title>
+
+    <!-- Primary meta -->
+    <meta name="description" content="The full Knoch Media portfolio — weddings, brand films, sports, portraits. Filter by category to explore the work." />
+    <meta name="theme-color" content="#0a0a0a" />
+
+    <!-- Sanity CMS config (KNOCH-023) — kept consistent across pages -->
+    <meta name="sanity-project-id" content="2779g58e" />
+    <meta name="sanity-dataset" content="production" />
+
+    <!-- Same Google Fonts as the homepage / about page -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;1,9..144,400&family=Inter+Tight:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap"
+    />
+
+    <!-- Global tokens + shared chrome / cursor + page-specific styles -->
+    <link rel="stylesheet" href="/css/global.css" />
+    <link rel="stylesheet" href="/css/chrome.css" />
+    <link rel="stylesheet" href="/css/cursor.css" />
+    <link rel="stylesheet" href="/css/portfolio-page.css" />
+
+    <!--
+      LCP preload — first card image. Cards 2–8 download as part of the
+      initial visible batch but only this first one gets fetchpriority high.
+    -->
+    <link rel="preload" as="image" href="/assets/portfolio/cover-alex-morgan.jpg" fetchpriority="high" />
+  </head>
+  <body>
+
+    <!-- Custom cursor — desktop ring (KNOCH-004) -->
+    <div class="cursor" id="cursor" aria-hidden="true"></div>
+
+    <!--
+      Chrome navigation overlay — same component as the rest of the site.
+      All anchor links here are real cross-page hrefs, so chrome.js's
+      .mark same-page guard correctly lets the browser navigate when the
+      user clicks the wordmark.
+    -->
+    <div class="chrome" id="chrome">
+      <div class="chrome-grid">
+
+        <a class="mark" href="/" aria-label="Knoch — back to home">Knoch<span class="dot" aria-hidden="true">.</span></a>
+
+        <nav class="nav-center" aria-label="Main navigation">
+          <a href="/#reel">Work</a>
+          <a href="/about.html">Studio</a>
+          <a href="/#cta">Inquire</a>
+        </nav>
+
+        <div class="nav-right" aria-hidden="true">
+          <span class="rec-dot"></span>
+          <span>REC · <span id="tc">00:00:00</span></span>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Bottom timecode bar — cosmetic chrome -->
+    <div class="timecode-bar" aria-hidden="true">
+      <span>K/M · 2026 · MARYLAND</span>
+      <div class="scroll-progress"
+           id="scroll-progress"
+           role="progressbar"
+           aria-valuenow="0"
+           aria-valuemin="0"
+           aria-valuemax="100"
+           aria-label="Page scroll progress"></div>
+      <span id="frame-display">FRAME 01 / 36</span>
+    </div>
+
+    <!--
+      Page hero — left column has the meta label + headline,
+      right column has the filter tabs. Stacks on mobile and
+      the tabs row becomes horizontally scrollable.
+    -->
+    <section class="portfolio-hero" aria-label="Portfolio">
+      <div class="portfolio-hero-inner">
+
+        <div class="portfolio-hero-text">
+          <p class="portfolio-hero-meta">— THE WORK</p>
+          <h1 class="portfolio-hero-headline headline-hover">The <em>work.</em></h1>
+        </div>
+
+        <!--
+          Filter tabs — real <button>s for keyboard access. data-filter
+          values match the data-category values on each card, except
+          "all" which is the always-true match. aria-pressed tracks the
+          active tab for AT users.
+        -->
+        <ul class="portfolio-tabs" role="tablist" aria-label="Filter portfolio by category">
+          <li role="presentation"><button class="portfolio-tab is-active" data-filter="all"      aria-pressed="true">All</button></li>
+          <li role="presentation"><button class="portfolio-tab"           data-filter="wedding"  aria-pressed="false">Weddings</button></li>
+          <li role="presentation"><button class="portfolio-tab"           data-filter="brand"    aria-pressed="false">Brand</button></li>
+          <li role="presentation"><button class="portfolio-tab"           data-filter="sport"    aria-pressed="false">Sports</button></li>
+          <li role="presentation"><button class="portfolio-tab"           data-filter="portrait" aria-pressed="false">Portraits</button></li>
+        </ul>
+
+      </div>
+    </section>
+
+    <!--
+      Grid of cards — 12 total, mix of real Knoch projects and a few
+      additional portrait sittings. Initial 8 visible (.is-hidden absent
+      on cards 1–8); cards 9–12 start hidden and reveal via "Load more"
+      or filter selection.
+
+      Each card has data-category for the filter, a runtime-string
+      data-bg-style equivalent (we use inline style for the bg-image
+      since lazy-load isn't applied here — all 12 cards live in the
+      DOM at page load).
+
+      Anchor href links to the project's external gallery / video for
+      now; KNOCH-012 will replace these with internal project-detail
+      page links when the detail view is built.
+    -->
+    <section class="portfolio-grid-wrap" aria-label="Portfolio grid">
+      <div class="portfolio-grid">
+
+        <!-- 1 — Wedding -->
+        <article class="portfolio-card" data-category="wedding" tabindex="0"
+          aria-label="Alex and Morgan — Eastern Shore wedding"
+          onclick="window.open('https://knoch.pic-time.com/-alexmorgan/gallery','_blank','noopener')">
+          <div class="portfolio-card-img" style="background-image: url('/assets/portfolio/cover-alex-morgan.jpg')" role="img" aria-hidden="true"></div>
+          <div class="portfolio-card-label">
+            <span class="portfolio-card-cat">№ 005 · Wedding</span>
+            <h3 class="portfolio-card-title">Alex and Morgan</h3>
+            <p class="portfolio-card-sub">Eastern Shore</p>
+          </div>
+        </article>
+
+        <!-- 2 — Wedding -->
+        <article class="portfolio-card" data-category="wedding" tabindex="0"
+          aria-label="Fayo and Femi — Maryland introduction"
+          onclick="window.open('https://knoch.pic-time.com/-fayofemi/gallery','_blank','noopener')">
+          <div class="portfolio-card-img" style="background-image: url('/assets/portfolio/cover-fayo-femi.jpg'); background-position: 50% 65%" role="img" aria-hidden="true"></div>
+          <div class="portfolio-card-label">
+            <span class="portfolio-card-cat">№ 001 · Wedding</span>
+            <h3 class="portfolio-card-title">Fayo and Femi</h3>
+            <p class="portfolio-card-sub">Introduction · Maryland</p>
+          </div>
+        </article>
+
+        <!-- 3 — Wedding -->
+        <article class="portfolio-card" data-category="wedding" tabindex="0"
+          aria-label="Shawn and Bekki — Pennsylvania wedding"
+          onclick="window.open('https://knoch.pic-time.com/-shawnbekki/gallery','_blank','noopener')">
+          <div class="portfolio-card-img" style="background-image: url('/assets/portfolio/cover-shawn-bekki.jpg')" role="img" aria-hidden="true"></div>
+          <div class="portfolio-card-label">
+            <span class="portfolio-card-cat">№ 004 · Wedding</span>
+            <h3 class="portfolio-card-title">Shawn and Bekki</h3>
+            <p class="portfolio-card-sub">Pennsylvania</p>
+          </div>
+        </article>
+
+        <!-- 4 — Brand -->
+        <article class="portfolio-card" data-category="brand" tabindex="0"
+          aria-label="Rapha Records — brand film"
+          onclick="window.open('https://www.youtube.com/watch?v=Hs25JK7WcZQ','_blank','noopener')">
+          <div class="portfolio-card-img" style="background-image: url('/assets/portfolio/cover-rapha-records.jpg')" role="img" aria-hidden="true"></div>
+          <div class="portfolio-card-label">
+            <span class="portfolio-card-cat">№ 007 · Brand</span>
+            <h3 class="portfolio-card-title">Rapha Records</h3>
+            <p class="portfolio-card-sub">Brand film</p>
+          </div>
+        </article>
+
+        <!-- 5 — Brand / Worship -->
+        <article class="portfolio-card" data-category="brand" tabindex="0"
+          aria-label="What Mighty Praise — worship film"
+          onclick="window.open('https://youtu.be/KPerYKXlpX0','_blank','noopener')">
+          <div class="portfolio-card-img" style="background-image: url('/assets/portfolio/cover-what-mighty-praise.png')" role="img" aria-hidden="true"></div>
+          <div class="portfolio-card-label">
+            <span class="portfolio-card-cat">№ 002 · Worship</span>
+            <h3 class="portfolio-card-title">What Mighty Praise</h3>
+            <p class="portfolio-card-sub">Music film</p>
+          </div>
+        </article>
+
+        <!-- 6 — Brand / Worship -->
+        <article class="portfolio-card" data-category="brand" tabindex="0"
+          aria-label="Yahweh We You — worship cover"
+          onclick="window.open('https://youtu.be/umcEatTpzBk','_blank','noopener')">
+          <div class="portfolio-card-img" style="background-image: url('/assets/portfolio/cover-yahweh-we-you.png')" role="img" aria-hidden="true"></div>
+          <div class="portfolio-card-label">
+            <span class="portfolio-card-cat">№ 010 · Worship</span>
+            <h3 class="portfolio-card-title">Yahweh We &hearts; You</h3>
+            <p class="portfolio-card-sub">Cover · Music film</p>
+          </div>
+        </article>
+
+        <!-- 7 — Sport -->
+        <article class="portfolio-card" data-category="sport" tabindex="0"
+          aria-label="Mont Alto Woodsmen — sports event">
+          <div class="portfolio-card-img" style="background-image: url('/assets/portfolio/cover-woodsmen.jpg')" role="img" aria-hidden="true"></div>
+          <div class="portfolio-card-label">
+            <span class="portfolio-card-cat">№ 009 · Sports</span>
+            <h3 class="portfolio-card-title">Mont Alto Woodsmen</h3>
+            <p class="portfolio-card-sub">Competition · Pennsylvania</p>
+          </div>
+        </article>
+
+        <!-- 8 — Sport -->
+        <article class="portfolio-card" data-category="sport" tabindex="0"
+          aria-label="BCF Gala Night — sports event"
+          onclick="window.open('https://youtu.be/Wg1LFjr6DZE','_blank','noopener')">
+          <div class="portfolio-card-img" style="background-image: url('/assets/reel/reel-04.jpg')" role="img" aria-hidden="true"></div>
+          <div class="portfolio-card-label">
+            <span class="portfolio-card-cat">№ 011 · Sports</span>
+            <h3 class="portfolio-card-title">BCF Gala Night</h3>
+            <p class="portfolio-card-sub">Charity event · Maryland</p>
+          </div>
+        </article>
+
+        <!--
+          Cards 9–12 start hidden — they reveal when the user clicks
+          "Load more" (or selects a filter that includes them within
+          the page-size cap).
+        -->
+
+        <!-- 9 — Portrait -->
+        <article class="portfolio-card is-hidden" data-category="portrait" tabindex="0"
+          aria-label="Jojo's Graduation — portrait session">
+          <div class="portfolio-card-img" style="background-image: url('/assets/portfolio/cover-jojos-graduation.jpg')" role="img" aria-hidden="true"></div>
+          <div class="portfolio-card-label">
+            <span class="portfolio-card-cat">№ 008 · Portrait</span>
+            <h3 class="portfolio-card-title">Jojo&rsquo;s Graduation</h3>
+            <p class="portfolio-card-sub">College Park</p>
+          </div>
+        </article>
+
+        <!-- 10 — Portrait -->
+        <article class="portfolio-card is-hidden" data-category="portrait" tabindex="0"
+          aria-label="Senior portrait session">
+          <div class="portfolio-card-img" style="background-image: url('/assets/about/about-01.jpg')" role="img" aria-hidden="true"></div>
+          <div class="portfolio-card-label">
+            <span class="portfolio-card-cat">№ 012 · Portrait</span>
+            <h3 class="portfolio-card-title">Senior portrait</h3>
+            <p class="portfolio-card-sub">Maryland · 2025</p>
+          </div>
+        </article>
+
+        <!-- 11 — Portrait -->
+        <article class="portfolio-card is-hidden" data-category="portrait" tabindex="0"
+          aria-label="Studio session — Maryland">
+          <div class="portfolio-card-img" style="background-image: url('/assets/about/about-03.jpg')" role="img" aria-hidden="true"></div>
+          <div class="portfolio-card-label">
+            <span class="portfolio-card-cat">№ 013 · Portrait</span>
+            <h3 class="portfolio-card-title">Studio session</h3>
+            <p class="portfolio-card-sub">Maryland · 2024</p>
+          </div>
+        </article>
+
+        <!-- 12 — Portrait -->
+        <article class="portfolio-card is-hidden" data-category="portrait" tabindex="0"
+          aria-label="Family session — Maryland">
+          <div class="portfolio-card-img" style="background-image: url('/assets/about/about-05.jpg')" role="img" aria-hidden="true"></div>
+          <div class="portfolio-card-label">
+            <span class="portfolio-card-cat">№ 014 · Portrait</span>
+            <h3 class="portfolio-card-title">Family session</h3>
+            <p class="portfolio-card-sub">Maryland · 2024</p>
+          </div>
+        </article>
+
+      </div><!-- /.portfolio-grid -->
+
+      <!--
+        Meta row — count label + Load more button. JS owns both:
+        the count rewrites on filter / load-more change, and the
+        button hides itself when shown >= matched.
+      -->
+      <div class="portfolio-meta">
+        <p class="portfolio-count" role="status" aria-live="polite">
+          <!-- Initial value matches the default state: 8 of 12 visible. JS overwrites this on init. -->
+          Showing <strong>8</strong> of 12 projects
+        </p>
+        <button class="portfolio-load-more" type="button">Load more &rarr;</button>
+      </div>
+
+    </section>
+
+    <script type="module" src="/js/portfolio-main.js"></script>
+  </body>
+</html>
