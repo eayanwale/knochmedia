@@ -13,8 +13,8 @@
     naturally to the CTA section below.
   - At the first testimonial scrolling up: Lenis resumes → page scrolls
     back to the frame section above.
-  - A 700 ms cooldown prevents a fast trackpad swipe from skipping
-    multiple quotes in one gesture.
+  - An 850 ms cooldown (matches word-stagger duration) prevents a fast
+    trackpad swipe from skipping multiple quotes in one gesture.
 
   Animation per item:
   - Slide in: slider opacity 0→1, y 12→0 (0.4 s expo.out)
@@ -32,7 +32,7 @@ import { stopLenis, startLenis, getLenis } from './lenis.js';
 gsap.registerPlugin(ScrollTrigger);
 
 const ADVANCE_MS  = 7000;
-const QUOTE_MAX   = 120;
+const QUOTE_MAX   = 180;
 /* Cooldown tuned to match the word-stagger reveal duration so the user
    can advance again as soon as the text has visually settled.
    fade-out 0.18s + fade-in 0.25s + last word start (~0.66s) ≈ 0.85s total. */
@@ -40,10 +40,24 @@ const WHEEL_WAIT  = 850;
 
 /* ── Helpers ────────────────────────────────────────────────────── */
 
+/* Truncate at a natural break, in priority order:
+   1. Full quote if it fits within max.
+   2. Last sentence end (. ! ?) found at or before max, at least 60 chars in.
+   3. Last clause break (, ;) in the same window — append ellipsis.
+   4. Last word boundary — append ellipsis. */
 function clampQuote(text, max = QUOTE_MAX) {
   if (!text || text.length <= max) return text ?? '';
+
+  const MIN = 60;
+
+  for (let i = Math.min(max, text.length - 1); i >= MIN; i--) {
+    if ('.!?'.includes(text[i])) return text.slice(0, i + 1);
+  }
+  for (let i = Math.min(max, text.length - 1); i >= MIN; i--) {
+    if (',;'.includes(text[i])) return text.slice(0, i + 1) + '…';
+  }
   const cut = text.lastIndexOf(' ', max);
-  return (cut > 0 ? text.slice(0, cut) : text.slice(0, max)) + '…';
+  return (cut > MIN ? text.slice(0, cut) : text.slice(0, max)) + '…';
 }
 
 function buildItem(t) {
