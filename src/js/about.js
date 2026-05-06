@@ -71,9 +71,9 @@ export function initAbout() {
   if (introBody && !prefersReduced) {
     gsap.from(introBody, {
       opacity: 0,
-      y: 40,
-      duration: 1.2,
-      ease: 'expo.out',
+      y: 60,
+      duration: 2.2,
+      ease: 'power2.out',
       scrollTrigger: {
         trigger: '.about-intro',
         start: 'top 80%',
@@ -211,16 +211,18 @@ export function initAbout() {
   /* ── 2b. Process step reveals ──────────────────────────────── */
 
   /* Three step blocks fade up in stagger when the process section
-     enters view. Cheap visual lift that mirrors the homepage section
-     reveal vocabulary without adding bespoke timeline complexity. */
+     enters view. Lazier pacing than the homepage section reveals so
+     the editorial tone of the About page reads as deliberate rather
+     than reactive — duration 1.6s with a 0.3s stagger and a wider
+     y offset so each step has its own beat. */
   const processSteps = document.querySelectorAll('.about-process-step');
   if (processSteps.length && !prefersReduced) {
     gsap.from(processSteps, {
       opacity: 0,
-      y: 30,
-      duration: 0.9,
-      ease: 'expo.out',
-      stagger: 0.12,
+      y: 50,
+      duration: 1.6,
+      ease: 'power2.out',
+      stagger: 0.3,
       scrollTrigger: {
         trigger: processSteps[0].parentElement,
         start: 'top 80%',
