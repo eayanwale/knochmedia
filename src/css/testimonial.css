@@ -31,6 +31,45 @@
   overflow: hidden;
 }
 
+/* ── Dynamic list wrapper (KNOCH-024) ───────────────────── */
+
+/*
+  .testimonial-list is the JS-rendered container that holds all
+  .testimonial-item elements fetched from Sanity. flex column centres
+  each item horizontally without affecting the text-align:center
+  already set on .testimonial.
+*/
+.testimonial-list {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+/*
+  Each item gets its own inner vertical padding so the divider line
+  (via + selector below) creates breathing room between quotes.
+  max-width: 680px is wider than the 22ch quote max-width, allowing
+  the attribution text to breathe more on wide viewports.
+*/
+.testimonial-item {
+  width: 100%;
+  max-width: 680px;
+  text-align: center;
+  padding: 4rem 0;
+}
+
+/*
+  Divider between consecutive items only — the ::before pseudo-element
+  approach is avoided here because border-top on the adjacent sibling
+  is simpler and equally reliable. The rgba value matches the section's
+  own border-top so the visual weight is consistent.
+  Last item gets no bottom border — the section padding handles that spacing.
+*/
+.testimonial-item + .testimonial-item {
+  border-top: 1px solid rgba(237, 230, 216, 0.08);
+}
+
 /* ── Decorative opening quotation mark ──────────────────── */
 
 .testimonial-mark {
@@ -93,7 +132,9 @@
   ScrollTrigger, but the CSS guard ensures correctness even if JS is slow.
 */
 @media (prefers-reduced-motion: reduce) {
-  .testimonial > * {
+  /* Covers both the old static children and the new dynamically-rendered items */
+  .testimonial > *,
+  .testimonial-item {
     opacity: 1 !important;
     transform: none !important;
   }

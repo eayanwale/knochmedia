@@ -1,7 +1,7 @@
 # Knoch Media — Ticket Summary
 
 > **Living document.** Updated whenever tickets are created, modified, split, or closed.  
-> Last updated: 2026-05-05 | Total tickets: 30 | Open: 14 | In progress: 0 | In review: 0 | Done: 13 | Deferred: 3
+> Last updated: 2026-05-05 | Total tickets: 30 | Open: 13 | In progress: 1 | In review: 0 | Done: 13 | Deferred: 3
 
 ---
 
@@ -40,7 +40,7 @@ KNOCH-022 and KNOCH-023 are infrastructure — implement these first. The wiring
 |----|-------|--------|--------|-------|
 | [KNOCH-022](tickets/KNOCH-022.md) | Sanity Project Init + Schema Definitions | `✅` | `feature/KNOCH-022-023-sanity-cms-setup` | Studio scaffolded; testimonial, galleryCollection, service schemas deployed; all 5 testimonials + 7 collections entered |
 | [KNOCH-023](tickets/KNOCH-023.md) | JS Content-Fetch Layer | `✅` | `feature/KNOCH-022-023-sanity-cms-setup` | `src/js/sanity.js` built with hardened fetch, logging, and `imageUrl()` helper; meta tags in index.html |
-| [KNOCH-024](tickets/KNOCH-024.md) | Wire Testimonials to Sanity | `⬜` | — | After KNOCH-009 is built |
+| [KNOCH-024](tickets/KNOCH-024.md) | Wire Testimonials to Sanity | `🔵` | `feature/KNOCH-024-wire-testimonials-sanity` | In progress |
 | [KNOCH-025](tickets/KNOCH-025.md) | Wire Gallery Reel to Sanity | `✅` | `feature/KNOCH-007-horizontal-reel` | `main.js` fetches `getFeaturedCollections()` → `initReel()`; 3 featured collections with Sanity CDN images; `subtitle` field added to schema |
 | [KNOCH-026](tickets/KNOCH-026.md) | Migrate Hero Images to Sanity CDN | `⏸` | — | Deferred — hero is LCP-critical and design-tied; static files are the correct approach |
 | [KNOCH-027](tickets/KNOCH-027.md) | Wire About Page to Sanity | `⬜` | — | After KNOCH-013 (about page) is built |
@@ -173,6 +173,19 @@ CMS layer (cuts across phases — wire each section after it is built):
 ## Changelog
 
 All modifications to this document and ticket files are logged here. Tester agent and code review feedback should be recorded as entries.
+
+---
+
+### 2026-05-05 — KNOCH-024 implementation started — IN PROGRESS
+
+**Action:** Feature branch created; implementation in progress
+**Tickets affected:** KNOCH-024
+**Reason:** Builder agent wiring testimonial section to Sanity CMS; replaces hardcoded single quote with dynamic fetch of all 5 testimonials
+**Changes:**
+- KNOCH-024: Status changed ⬜ Open → 🔵 In progress
+- Branch `feature/KNOCH-024-wire-testimonials-sanity` created from dev
+- Header counts updated: Open 14→13, In progress 0→1
+**Requested by:** Builder agent
 
 ---
 

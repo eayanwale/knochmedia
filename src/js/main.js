@@ -30,7 +30,10 @@ initInterlude();
 // Pinned frame — parallax bg + animated studio stats (KNOCH-008)
 initFrame();
 
-// Testimonial pull-quote — scroll-stagger reveal (KNOCH-009)
+// Testimonial pull-quote — Sanity-driven stacked list (KNOCH-009 / KNOCH-024)
+// async — fetches from Sanity independently, does not block other inits.
+// Content renders when the promise resolves; ScrollTrigger.refresh() is called
+// inside initTestimonial() after DOM is updated.
 initTestimonial();
 
 // Horizontal reel — fetch featured collections from Sanity then init (KNOCH-007 + KNOCH-025)
