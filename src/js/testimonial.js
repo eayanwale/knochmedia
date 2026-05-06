@@ -80,9 +80,9 @@ function revealItem(item, onDone) {
   if (attr)         { attr.style.opacity = '0'; attr.style.transform = 'translateY(8px)'; }
 
   const tl = gsap.timeline({ onComplete: onDone });
-  if (mark)          tl.to(mark,  { opacity: 1, scale: 1, duration: 0.3, ease: 'back.out(2.5)' }, 0);
-  if (words.length)  tl.to(words, { opacity: 1, y: 0, stagger: 0.02, duration: 0.35, ease: 'expo.out', clearProps: 'all' }, 0.08);
-  if (attr)          tl.to(attr,  { opacity: 1, y: 0, duration: 0.25, ease: 'expo.out', clearProps: 'all' }, '-=0.1');
+  if (mark)          tl.to(mark,  { opacity: 1, scale: 1, duration: 0.35, ease: 'back.out(2.5)' }, 0);
+  if (words.length)  tl.to(words, { opacity: 1, y: 0, stagger: 0.04, duration: 0.5, ease: 'expo.out', clearProps: 'all' }, 0.1);
+  if (attr)          tl.to(attr,  { opacity: 1, y: 0, duration: 0.35, ease: 'expo.out', clearProps: 'all' }, '-=0.15');
 }
 
 /* ── Main init ──────────────────────────────────────────────────── */
@@ -238,8 +238,15 @@ export async function initTestimonial() {
     function stopIntercepting() {
       if (!intercepting) return;
       intercepting = false;
-      /* Resume Lenis so the page can scroll to the next section */
-      startLenis();
+      /* Reset Lenis's scroll target to the current position before resuming.
+         While Lenis was stopped it still received wheel events and queued up
+         scroll delta. Without this reset, startLenis() releases all that
+         queued momentum at once, causing the page to jump past the section. */
+      const lenis = getLenis();
+      if (lenis) {
+        lenis.scrollTo(window.scrollY, { immediate: true });
+        startLenis();
+      }
       window.removeEventListener('wheel', onWheel);
     }
 
@@ -262,7 +269,12 @@ export async function initTestimonial() {
           stopIntercepting();
         }
       },
-      { threshold: 0.6 }
+      /* 0.95: section must be almost fully in the viewport before we freeze
+         scroll. At 0.6 the dots were still below the fold when stopLenis()
+         fired — the section looked cut off. At 0.95 only ~25px of bottom
+         padding is off-screen, all content (mark, quote, attr, dots) is
+         visible before interception begins. */
+      { threshold: 0.95 }
     );
     sectionIO.observe(section);
 
