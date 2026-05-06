@@ -24,11 +24,18 @@
 
 /* ── Scarcity banner ──────────────────────────────────── */
 
+/* The chrome overlay (position: fixed; top: 0) covers the top ~60px
+   of the viewport. Banner content needs to start below that, so the
+   top padding is sized to clear chrome. The amber tint background
+   fills the whole banner element (0 → padding-bottom edge); the
+   chrome's mix-blend-mode: difference layers correctly over the
+   ~92%-transparent tint so the wordmark + nav still read against
+   it. Bottom border separates the banner from the hero below. */
 .contact-banner {
   position: relative;
   z-index: 1;
   text-align: center;
-  padding: 1.2rem 6vw 1rem;
+  padding: 5rem 6vw 1.2rem;
   background: rgba(232, 162, 58, 0.08);
   border-bottom: 1px solid rgba(232, 162, 58, 0.25);
   font-family: var(--font-mono);
