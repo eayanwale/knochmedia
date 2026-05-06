@@ -1,5 +1,7 @@
 # KNOCH-024 — Sanity CMS: Wire Testimonials Section
 
+## Status: IN PROGRESS
+
 ## Description
 Replace the hardcoded testimonials in KNOCH-009's section with live data fetched from Sanity. The section renders dynamically on page load using the content-fetch layer from KNOCH-023.
 
