@@ -1,7 +1,7 @@
 # Knoch Media — Ticket Summary
 
 > **Living document.** Updated whenever tickets are created, modified, split, or closed.  
-> Last updated: 2026-05-06 | Total tickets: 30 | Open: 7 | In progress: 0 | In review: 1 | Done: 18 | Deferred: 4
+> Last updated: 2026-05-06 | Total tickets: 30 | Open: 6 | In progress: 1 | In review: 0 | Done: 19 | Deferred: 4
 
 ---
 
@@ -74,8 +74,8 @@ Build in this order: About → Portfolio page → Project detail → Contact →
 | [KNOCH-013](tickets/KNOCH-013.md) | About / Story Section (about.html) | `✅` | `feature/KNOCH-013-about-story-section` | QA PASSED — merged to test |
 | [KNOCH-011](tickets/KNOCH-011.md) | Portfolio Filter System (portfolio.html) | `✅` | `feature/KNOCH-011-portfolio-filter` | QA PASSED — merged to test |
 | [KNOCH-012](tickets/KNOCH-012.md) | Project Detail View + Video Lightbox | `✅` | `feature/KNOCH-012-project-detail-lightbox` | PR #21 merged + KNOCH-036 polish bundled |
-| [KNOCH-014](tickets/KNOCH-014.md) | Contact — Multi-Step Qualified Inquiry Form | `🔵` | `feature/KNOCH-014-contact-form` | PR #22 dev → test (in review) |
-| [KNOCH-015](tickets/KNOCH-015.md) | Footer — Credits Bar + Sitemap Variant | `⬜` | — | Two variants: minimal + expanded |
+| [KNOCH-014](tickets/KNOCH-014.md) | Contact — Multi-Step Qualified Inquiry Form | `✅` | `feature/KNOCH-014-contact-form` | PR #22 merged to test |
+| [KNOCH-015](tickets/KNOCH-015.md) | Footer — Credits Bar + Sitemap Variant | `🔵` | `feature/KNOCH-015-footer` | Two variants: minimal + expanded |
 
 ---
 
@@ -173,6 +173,33 @@ CMS layer (cuts across phases — wire each section after it is built):
 ## Changelog
 
 All modifications to this document and ticket files are logged here. Tester agent and code review feedback should be recorded as entries.
+
+---
+
+### 2026-05-06 — KNOCH-015 implementation started — IN PROGRESS
+
+**Action:** Feature branch created; implementation in progress
+**Tickets affected:** KNOCH-015
+**Reason:** Last open Phase 3 ticket. Footer is shared chrome that lands on every page and unblocks the Phase 3 → main milestone squash.
+**Changes:**
+- Branch `feature/KNOCH-015-footer` cut from dev (1c581f6).
+- KNOCH-015: Status TODO → IN PROGRESS, Branch line added to ticket file.
+- TICKET-SUMMARY row swapped to 🔵 with branch column filled.
+- Header counts updated: Open 7→6, In progress 0→1.
+**Requested by:** /implement-ticket auto-detect (Enoch)
+
+---
+
+### 2026-05-06 — KNOCH-014 QA PASSED — merged to test
+
+**Action:** PR #22 merged dev → test (regular merge, no squash)
+**Tickets affected:** KNOCH-014
+**Reason:** Contact form page passed live review on dev — banner clears chrome (5rem padding), 3-step transitions smooth, ?type= URL pre-fill works from project CTAs, partner field shows only for wedding inquiries. Banner drop-in animation lands cleanly on load.
+**Changes:**
+- KNOCH-014: Status 🔵 In review → ✅ Done.
+- PR #22 merged; dev and test now aligned at 1c581f6.
+- Header counts updated: In review 1→0, Done 18→19.
+**Requested by:** Enoch
 
 ---
 
