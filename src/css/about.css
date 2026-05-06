@@ -1,0 +1,440 @@
+/*
+  about.css — About / Story page (KNOCH-013)
+  ===========================================
+  Layout overview:
+
+  ┌─ .about-hero ─────────────────────────────────────────┐
+  │  Centered headline + meta + sub                       │
+  └───────────────────────────────────────────────────────┘
+  ┌─ .about-intro ────────────────────────────────────────┐
+  │  Centered Fraunces brand statement                    │
+  └───────────────────────────────────────────────────────┘
+  ┌─ .about-split ────────────────────────────────────────┐
+  │  ┌─ .about-text (sticky) ─┐ ┌─ .about-images ────────┐│
+  │  │  4 chapters; one is   │ │  5 stacked figures w/   ││
+  │  │  .active (amber); rest│ │  aspect-ratio 3/4;      ││
+  │  │  fade to 0.45 opacity │ │  IntersectionObserver   ││
+  │  └───────────────────────┘ │  toggles chapter active ││
+  │                            └─────────────────────────┘│
+  └───────────────────────────────────────────────────────┘
+  ┌─ .about-stats ────────────────────────────────────────┐
+  │  3 inline counters in Fraunces, animated on scroll-in │
+  └───────────────────────────────────────────────────────┘
+  ┌─ .about-process ──────────────────────────────────────┐
+  │  3-col numbered steps (01 / 02 / 03)                  │
+  └───────────────────────────────────────────────────────┘
+  ┌─ .about-cta ──────────────────────────────────────────┐
+  │  Final headline + amber underline link                │
+  └───────────────────────────────────────────────────────┘
+
+  Mobile (≤800px) collapses .about-split to a single column and
+  drops position: sticky so the chapters scroll naturally with the
+  images. The active-chapter highlight still works on mobile because
+  the IntersectionObserver runs unconditionally — it just feels like
+  a colour state on the current section instead of a sync indicator.
+*/
+
+
+/* ── About hero ────────────────────────────────────────── */
+
+.about-hero {
+  min-height: 70vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 14rem 8vw 8rem;
+  border-bottom: 1px solid rgba(237, 230, 216, 0.08);
+  position: relative;
+}
+
+.about-hero-inner {
+  text-align: center;
+  max-width: 1080px;
+}
+
+.about-hero-meta {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--amber);
+  margin-bottom: 24px;
+}
+
+.about-hero-headline {
+  font-family: var(--font-serif);
+  font-weight: 300;
+  font-size: clamp(48px, 9vw, 140px);
+  line-height: 0.95;
+  letter-spacing: -0.04em;
+  color: var(--paper);
+  margin: 0;
+}
+
+.about-hero-headline em {
+  font-style: italic;
+  color: var(--amber);
+}
+
+.about-hero-sub {
+  margin-top: 28px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: rgba(237, 230, 216, 0.6);
+}
+
+
+/* ── Studio statement ──────────────────────────────────── */
+
+.about-intro {
+  padding: 8rem 8vw;
+  display: flex;
+  justify-content: center;
+}
+
+.about-intro-body {
+  font-family: var(--font-serif);
+  font-weight: 300;
+  font-style: italic;
+  font-size: clamp(20px, 2.4vw, 30px);
+  line-height: 1.55;
+  letter-spacing: -0.01em;
+  color: rgba(237, 230, 216, 0.85);
+  max-width: 32em;
+  text-align: center;
+}
+
+
+/* ── Split layout: sticky chapters + scrolling images ──── */
+
+.about-split {
+  padding: 4rem 8vw 12rem;
+}
+
+.about-split-inner {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6vw;
+  max-width: 1600px;
+  margin: 0 auto;
+  align-items: start;
+}
+
+/* Left text column wrapper — must be tall enough for sticky to engage,
+   which happens automatically because the right column (.about-images)
+   stretches the grid track to its full height. */
+.about-text {
+  position: relative;
+}
+
+/* The sticky element itself — sized to spec (top: 10vh; height: 80vh).
+   Content may extend past the 80vh box on short viewports because we
+   intentionally do NOT set overflow: hidden — clipping the 4th chapter
+   would defeat the narrative. The 80vh height still bounds the sticky
+   box for the active-chapter highlight and gives 20vh of breathing
+   room between sticky and the bottom of the viewport. */
+.about-text-sticky {
+  position: sticky;
+  top: 10vh;
+  height: 80vh;
+}
+
+.chapter {
+  padding: 1.6rem 0;
+  border-bottom: 1px solid rgba(237, 230, 216, 0.06);
+  opacity: 0.45;
+  transition: opacity 0.5s var(--ease-cinematic);
+}
+
+.chapter:last-child {
+  border-bottom: none;
+}
+
+.chapter.active {
+  opacity: 1;
+}
+
+.chapter-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: rgba(237, 230, 216, 0.45);
+  margin-bottom: 12px;
+  transition: color 0.4s var(--ease-cinematic);
+}
+
+.chapter.active .chapter-label {
+  color: var(--amber);
+}
+
+.chapter-title {
+  font-family: var(--font-serif);
+  font-weight: 300;
+  font-size: clamp(22px, 2.6vw, 32px);
+  line-height: 1.2;
+  letter-spacing: -0.015em;
+  color: var(--paper);
+  margin-bottom: 14px;
+}
+
+.chapter-body {
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 1.7;
+  color: rgba(237, 230, 216, 0.7);
+  max-width: 32em;
+}
+
+/* Right image column — scrolls naturally past the sticky text */
+.about-images {
+  display: flex;
+  flex-direction: column;
+  gap: 6vw;
+}
+
+.about-image {
+  margin: 0;
+}
+
+/* aspect-ratio 3/4 frames — the bg image is sized to cover so any
+   landscape photo gets centred-cropped, portraits fill naturally.
+   grayscale + slight contrast lift keeps the column feeling like
+   a contact sheet rather than a hero strip. */
+.about-image-frame {
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  background-size: cover;
+  background-position: center;
+  filter: grayscale(0.35) contrast(1.05) brightness(0.92);
+}
+
+.about-image figcaption {
+  margin-top: 14px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: rgba(237, 230, 216, 0.45);
+}
+
+
+/* ── By the numbers ────────────────────────────────────── */
+
+.about-stats {
+  padding: 10rem 8vw;
+  border-top: 1px solid rgba(237, 230, 216, 0.08);
+  border-bottom: 1px solid rgba(237, 230, 216, 0.08);
+}
+
+.about-stats-inner {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.about-stats-meta {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--amber);
+  margin-bottom: 4rem;
+}
+
+.about-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 4vw;
+}
+
+.about-stat-n {
+  font-family: var(--font-serif);
+  font-weight: 300;
+  font-size: clamp(56px, 8vw, 120px);
+  line-height: 1;
+  letter-spacing: -0.04em;
+  color: var(--paper);
+}
+
+.about-stat-n em {
+  font-style: italic;
+  color: var(--amber);
+}
+
+.about-stat-l {
+  margin-top: 16px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: rgba(237, 230, 216, 0.5);
+}
+
+
+/* ── Process ───────────────────────────────────────────── */
+
+.about-process {
+  padding: 10rem 8vw;
+}
+
+.about-process-inner {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.about-process-meta {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--amber);
+  margin-bottom: 4rem;
+}
+
+.about-process-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 4vw;
+}
+
+.about-process-step {
+  position: relative;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(237, 230, 216, 0.18);
+}
+
+.about-process-num {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.3em;
+  color: var(--amber);
+  margin-bottom: 1.5rem;
+}
+
+.about-process-title {
+  font-family: var(--font-serif);
+  font-weight: 300;
+  font-size: clamp(22px, 2.6vw, 32px);
+  line-height: 1.2;
+  letter-spacing: -0.015em;
+  color: var(--paper);
+  margin-bottom: 1rem;
+}
+
+.about-process-body {
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 1.7;
+  color: rgba(237, 230, 216, 0.7);
+}
+
+
+/* ── CTA ──────────────────────────────────────────────── */
+
+.about-cta {
+  padding: 12rem 8vw;
+  text-align: center;
+  border-top: 1px solid rgba(237, 230, 216, 0.08);
+}
+
+.about-cta-inner {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.about-cta-headline {
+  font-family: var(--font-serif);
+  font-weight: 300;
+  font-size: clamp(40px, 6vw, 80px);
+  line-height: 1;
+  letter-spacing: -0.04em;
+  color: var(--paper);
+  margin-bottom: 2.5rem;
+}
+
+.about-cta-link {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--amber);
+  text-decoration: none;
+  padding: 1rem 0;
+  border-bottom: 1px solid var(--amber);
+  transition: opacity 0.3s var(--ease-cinematic);
+}
+
+.about-cta-link:hover,
+.about-cta-link:focus-visible {
+  opacity: 0.7;
+}
+
+
+/* ── Reduced motion ────────────────────────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  .chapter,
+  .chapter-label {
+    transition: none !important;
+  }
+  /* All chapters fully visible — the active highlight still toggles via JS
+     but the fade-between is instant rather than easing. */
+  .chapter {
+    opacity: 1;
+  }
+}
+
+
+/* ── Mobile ≤ 800px ────────────────────────────────────── */
+
+@media (max-width: 800px) {
+  .about-hero {
+    min-height: auto;
+    padding: 10rem 6vw 6rem;
+  }
+
+  .about-intro {
+    padding: 5rem 6vw;
+  }
+
+  .about-split {
+    padding: 4rem 6vw 8rem;
+  }
+
+  .about-split-inner {
+    grid-template-columns: 1fr;
+    gap: 4rem;
+  }
+
+  /* Drop sticky on mobile — no second column to scroll past, so the
+     pinned text would just fight the natural document flow. */
+  .about-text-sticky {
+    position: static;
+  }
+
+  /* All chapters readable on mobile rather than dimmed; active state
+     still highlights the label in amber via the JS toggle, but body
+     opacity is full so the narrative reads like a normal article. */
+  .chapter {
+    opacity: 1;
+  }
+
+  .about-stats,
+  .about-process {
+    padding: 6rem 6vw;
+  }
+
+  .about-stats-grid,
+  .about-process-grid {
+    grid-template-columns: 1fr;
+    gap: 3rem;
+  }
+
+  .about-cta {
+    padding: 8rem 6vw;
+  }
+}

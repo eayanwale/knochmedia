@@ -131,7 +131,7 @@
       <div class="l">Total tickets</div>
     </div>
     <div class="stat">
-      <div class="n" id="stat-open">12</div>
+      <div class="n" id="stat-open">11</div>
       <div class="l">Open</div>
     </div>
     <div class="stat">
@@ -143,7 +143,7 @@
       <div class="l">In review</div>
     </div>
     <div class="stat">
-      <div class="n green" id="stat-done">15</div>
+      <div class="n green" id="stat-done">16</div>
       <div class="l">Done</div>
     </div>
   </div>
@@ -366,8 +366,8 @@
         <tr>
           <td class="tid">KNOCH-013</td>
           <td class="ttitle"><a href="docs/tickets/KNOCH-013.md">About / Story Section</a></td>
-          <td><span class="badge badge-todo"><span class="dot dot-todo"></span>Todo</span></td>
-          <td class="tbranch">—</td>
+          <td><span class="badge badge-done"><span class="dot dot-done"></span>QA Passed</span></td>
+          <td class="tbranch">feature/KNOCH-013-about-story-section</td>
           <td class="tpri p2">P2</td>
         </tr>
         <tr>
@@ -488,7 +488,7 @@
   document.getElementById('date-display').textContent = new Date().toLocaleDateString('en-US', { weekday:'short', year:'numeric', month:'short', day:'numeric' });
 
   // Progress bar — "done" = merged to test (15 of 30)
-  const total = 30, done = 15;
+  const total = 30, done = 16;
   document.getElementById('progress-fill').style.width = (done / total * 100).toFixed(1) + '%';
   document.getElementById('pct-label').textContent = done + ' / ' + total + ' tickets done';
 </script>
