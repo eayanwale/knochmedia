@@ -19,13 +19,17 @@
   - Attribution format: "— Name · Role · Year" when role present,
     "— Name · Year" for company-only clients (Rapha Records, Mont Alto
     Woodsmen) where role is null.
-  - ScrollTrigger.refresh() is called after content renders to recalculate
-    scroll positions — required because the section height changes substantially
-    when 5 items replace the skeleton.
-  - once: true on the ScrollTrigger keeps the stagger reveal as a single
-    deliberate moment, matching the KNOCH-009 behaviour.
-  - prefers-reduced-motion: no GSAP animations registered, but content still
-    renders (CSS keeps items at final visible state).
+  - The stagger reveal uses IntersectionObserver (not GSAP ScrollTrigger).
+    ScrollTrigger depends on the Lenis proxy being live when it registers;
+    the Sanity fetch resolves at ~200ms, before Lenis inits at ~2s (hero.js
+    onComplete). IO has no proxy dependency — it fires on real DOM intersection.
+    GSAP still runs the animation once IO fires; ScrollTrigger is only used
+    for the post-render refresh() call.
+  - Initial hidden state (opacity:0, translateY(40px)) is applied via JS inline
+    styles so items are always visible without JS and can never be permanently
+    stuck invisible if the reveal mechanism fails for any reason.
+  - prefers-reduced-motion: JS skips inline hidden-state + IO entirely; items
+    render at their natural visible state immediately.
   - If the fetch fails, list.remove() silently collapses the section — the
     .testimonial shell has padding, so it won't cause layout breaks.
 */
@@ -112,33 +116,46 @@ export async function initTestimonial() {
     /* Render each testimonial in the order returned by Sanity (order asc) */
     testimonials.forEach(t => list.appendChild(buildItem(t)));
 
-    /* Register GSAP scroll-stagger reveal after DOM nodes exist.
-       Uses .testimonial-list as trigger so the animation fires when the
-       list enters the viewport rather than the section top (which may be
-       many rems above the first item due to section padding). */
+    const items = [...list.querySelectorAll('.testimonial-item')];
+
     if (!prefersReduced) {
-      /* gsap.to rather than gsap.from: CSS sets the initial hidden state
-         (opacity:0, translateY(40px)), GSAP only drives the reveal forward.
-         gsap.from with immediateRender:true was hiding elements at fetch-resolve
-         time (~200ms) before Lenis initialised (~2s), leaving them permanently
-         at opacity:0 when the ScrollTrigger fired with the wrong proxy state. */
-      gsap.to('.testimonial-item', {
-        opacity: 1,
-        y: 0,
-        duration: 1.2,
-        stagger: 0.15,
-        ease: 'expo.out',
-        scrollTrigger: {
-          trigger: '.testimonial-list',
-          start: 'top 75%',
-          once: true,
-        },
+      /* Set initial hidden state via JS inline styles — NOT via CSS.
+         This ensures items are visible without JS and are never permanently
+         stuck at opacity:0 if the reveal mechanism fails.
+
+         IntersectionObserver is used instead of GSAP ScrollTrigger because
+         ScrollTrigger depends on the Lenis proxy being live, but the Sanity
+         fetch resolves (~200ms) long before Lenis initialises (~2s inside
+         hero.js onComplete). IO has no proxy dependency and fires reliably
+         the moment the list enters the viewport. */
+      items.forEach(el => {
+        el.style.opacity = '0';
+        el.style.transform = 'translateY(40px)';
       });
+
+      const io = new IntersectionObserver(
+        ([entry]) => {
+          if (!entry.isIntersecting) return;
+          io.disconnect();
+          gsap.to(items, {
+            opacity: 1,
+            y: 0,
+            duration: 1.2,
+            stagger: 0.15,
+            ease: 'expo.out',
+            clearProps: 'opacity,transform',
+          });
+        },
+        /* rootMargin shifts the trigger line 25% up from the bottom of the
+           viewport — equivalent to ScrollTrigger's "top 75%" start. */
+        { rootMargin: '0px 0px -25% 0px', threshold: 0 }
+      );
+      io.observe(list);
     }
 
-    /* Recalculate scroll positions now that section height has changed.
-       Required because the skeleton → 5-item swap substantially alters
-       document height and all downstream ScrollTrigger start/end positions. */
+    /* Recalculate all ScrollTrigger positions now that the section height has
+       changed (skeleton → 5 real items). Frame, interlude, and reel triggers
+       all sit above this section and need accurate offsets. */
     ScrollTrigger.refresh();
 
   } catch (err) {

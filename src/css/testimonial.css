@@ -57,11 +57,8 @@
   max-width: 680px;
   text-align: center;
   padding: 4rem 0;
-  /* Initial hidden state — GSAP animates TO visible via gsap.to, not gsap.from.
-     gsap.from with immediateRender:true hides elements immediately on fetch resolve
-     (~200ms) but Lenis doesn't init until ~2s later, leaving items stuck at opacity:0. */
-  opacity: 0;
-  transform: translateY(40px);
+  /* Initial state is visible — JS sets opacity:0 + translateY(40px) inline when
+     the animation is registered, so items are never permanently hidden if JS fails. */
 }
 
 /*
@@ -137,8 +134,9 @@
   ScrollTrigger, but the CSS guard ensures correctness even if JS is slow.
 */
 @media (prefers-reduced-motion: reduce) {
-  /* Covers both the old static children and the new dynamically-rendered items */
-  .testimonial > *,
+  /* JS skips the animation entirely for reduced-motion users — items are never
+     set to opacity:0. This guard handles the rare case where JS applies inline
+     styles before the preference is detected. */
   .testimonial-item {
     opacity: 1 !important;
     transform: none !important;
