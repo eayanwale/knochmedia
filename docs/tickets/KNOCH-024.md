@@ -1,18 +1,18 @@
 # KNOCH-024 — Sanity CMS: Wire Testimonials Section
 
-## Status: IN REVIEW
+## Status: QA PASSED
 
 ## Description
 Replace the hardcoded testimonials in KNOCH-009's section with live data fetched from Sanity. The section renders dynamically on page load using the content-fetch layer from KNOCH-023.
 
 ## Acceptance Criteria
-- [ ] Testimonials section fetches from Sanity on page load via `getTestimonials()`
-- [ ] All 5 real testimonials render correctly (Denise Bard, Rapha Records, Zach Albright, Mont Alto Woodsmen, Joseph Williams)
-- [ ] Display order matches the `order` field set in Sanity Studio
-- [ ] Section renders a loading state (skeleton or opacity fade) while fetch is in flight
-- [ ] If fetch fails, section falls back to displaying nothing gracefully (no broken layout)
-- [ ] GSAP scroll animations (from KNOCH-009) still trigger correctly on dynamically rendered cards
-- [ ] Adding or reordering a testimonial in Sanity Studio reflects on site after page refresh — no code change needed
+- [x] Testimonials section fetches from Sanity on page load via `getTestimonials()`
+- [x] All 5 real testimonials render correctly (Denise Bard, Rapha Records, Zach Albright, Mont Alto Woodsmen, Joseph Williams)
+- [x] Display order matches the `order` field set in Sanity Studio
+- [x] Section renders a loading state (skeleton or opacity fade) while fetch is in flight
+- [x] If fetch fails, section falls back to displaying nothing gracefully (no broken layout)
+- [x] GSAP scroll animations (from KNOCH-009) still trigger correctly on dynamically rendered cards
+- [x] Adding or reordering a testimonial in Sanity Studio reflects on site after page refresh — no code change needed
 
 ## Implementation Notes
 - Call `getTestimonials()` before initializing GSAP ScrollTrigger on that section — animations must be registered after DOM nodes exist

@@ -1,7 +1,7 @@
 # Knoch Media — Ticket Summary
 
 > **Living document.** Updated whenever tickets are created, modified, split, or closed.  
-> Last updated: 2026-05-05 | Total tickets: 30 | Open: 13 | In progress: 0 | In review: 1 | Done: 13 | Deferred: 3
+> Last updated: 2026-05-05 | Total tickets: 30 | Open: 13 | In progress: 0 | In review: 0 | Done: 14 | Deferred: 3
 
 ---
 
@@ -40,7 +40,7 @@ KNOCH-022 and KNOCH-023 are infrastructure — implement these first. The wiring
 |----|-------|--------|--------|-------|
 | [KNOCH-022](tickets/KNOCH-022.md) | Sanity Project Init + Schema Definitions | `✅` | `feature/KNOCH-022-023-sanity-cms-setup` | Studio scaffolded; testimonial, galleryCollection, service schemas deployed; all 5 testimonials + 7 collections entered |
 | [KNOCH-023](tickets/KNOCH-023.md) | JS Content-Fetch Layer | `✅` | `feature/KNOCH-022-023-sanity-cms-setup` | `src/js/sanity.js` built with hardened fetch, logging, and `imageUrl()` helper; meta tags in index.html |
-| [KNOCH-024](tickets/KNOCH-024.md) | Wire Testimonials to Sanity | `🔵` | `feature/KNOCH-024-wire-testimonials-sanity` | In review — PR #13 |
+| [KNOCH-024](tickets/KNOCH-024.md) | Wire Testimonials to Sanity | `✅` | `feature/KNOCH-024-wire-testimonials-sanity` | QA PASSED — merged to test |
 | [KNOCH-025](tickets/KNOCH-025.md) | Wire Gallery Reel to Sanity | `✅` | `feature/KNOCH-007-horizontal-reel` | `main.js` fetches `getFeaturedCollections()` → `initReel()`; 3 featured collections with Sanity CDN images; `subtitle` field added to schema |
 | [KNOCH-026](tickets/KNOCH-026.md) | Migrate Hero Images to Sanity CDN | `⏸` | — | Deferred — hero is LCP-critical and design-tied; static files are the correct approach |
 | [KNOCH-027](tickets/KNOCH-027.md) | Wire About Page to Sanity | `⬜` | — | After KNOCH-013 (about page) is built |
@@ -173,6 +173,21 @@ CMS layer (cuts across phases — wire each section after it is built):
 ## Changelog
 
 All modifications to this document and ticket files are logged here. Tester agent and code review feedback should be recorded as entries.
+
+---
+
+### 2026-05-05 — KNOCH-024 QA PASSED — merged to test
+
+**Action:** PR #13 merged (dev → test) — KNOCH-024 QA PASSED
+**Tickets affected:** KNOCH-024
+**Reason:** Tester agent verified all 8 acceptance criteria and all 16 additional checks; build clean at 87ms, 27 modules. All blockers clear: `getTestimonials()` confirmed exported, GROQ uses `order(order asc)`, skeleton appended before `await`, `list.remove()` called in catch, `gsap.from` inside try after forEach.
+**Changes:**
+- KNOCH-024: Status changed IN REVIEW → QA PASSED
+- PR #13 merged with full merge commit; branch `feature/KNOCH-024-wire-testimonials-sanity` deleted
+- All test plan and AC checkboxes ticked in PR body
+- Test report written: `docs/test-reports/KNOCH-024-test-report.md`
+- Header counts updated: In review 1→0, Done 13→14
+**Completed by:** Tester Agent
 
 ---
 

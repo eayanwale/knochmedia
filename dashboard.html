@@ -139,11 +139,11 @@
       <div class="l">In progress</div>
     </div>
     <div class="stat">
-      <div class="n yellow" id="stat-review">1</div>
+      <div class="n yellow" id="stat-review">0</div>
       <div class="l">In review</div>
     </div>
     <div class="stat">
-      <div class="n green" id="stat-done">13</div>
+      <div class="n green" id="stat-done">14</div>
       <div class="l">Done</div>
     </div>
   </div>
@@ -152,10 +152,10 @@
   <div class="progress-wrap">
     <div class="progress-label">
       <span>Overall progress</span>
-      <span id="pct-label">11 / 30 tickets done</span>
+      <span id="pct-label">14 / 30 tickets done</span>
     </div>
     <div class="progress-track">
-      <div class="progress-fill" id="progress-fill" style="width:36.7%"></div>
+      <div class="progress-fill" id="progress-fill" style="width:46.7%"></div>
     </div>
   </div>
 
@@ -250,7 +250,7 @@
         <tr>
           <td class="tid">KNOCH-024</td>
           <td class="ttitle"><a href="docs/tickets/KNOCH-024.md">Wire Testimonials to Sanity</a></td>
-          <td><span class="badge badge-review"><span class="dot dot-review"></span>In Review</span></td>
+          <td><span class="badge badge-pass"><span class="dot dot-pass"></span>QA Passed</span></td>
           <td class="tbranch">feature/KNOCH-024-wire-testimonials-sanity</td>
           <td class="tpri p1">P1</td>
         </tr>
@@ -487,8 +487,8 @@
   // Live date
   document.getElementById('date-display').textContent = new Date().toLocaleDateString('en-US', { weekday:'short', year:'numeric', month:'short', day:'numeric' });
 
-  // Progress bar — "done" = merged to test (13 of 30)
-  const total = 30, done = 13;
+  // Progress bar — "done" = merged to test (14 of 30)
+  const total = 30, done = 14;
   document.getElementById('progress-fill').style.width = (done / total * 100).toFixed(1) + '%';
   document.getElementById('pct-label').textContent = done + ' / ' + total + ' tickets done';
 </script>
