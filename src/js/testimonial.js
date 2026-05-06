@@ -33,7 +33,7 @@ gsap.registerPlugin(ScrollTrigger);
 
 const ADVANCE_MS  = 7000;
 const QUOTE_MAX   = 120;
-const WHEEL_WAIT  = 700;   /* ms cooldown between scroll-driven advances */
+const WHEEL_WAIT  = 350;   /* ms cooldown between scroll-driven advances */
 
 /* ── Helpers ────────────────────────────────────────────────────── */
 
@@ -80,9 +80,9 @@ function revealItem(item, onDone) {
   if (attr)         { attr.style.opacity = '0'; attr.style.transform = 'translateY(8px)'; }
 
   const tl = gsap.timeline({ onComplete: onDone });
-  if (mark)          tl.to(mark,  { opacity: 1, scale: 1, duration: 0.45, ease: 'back.out(2.5)' }, 0);
-  if (words.length)  tl.to(words, { opacity: 1, y: 0, stagger: 0.03, duration: 0.55, ease: 'expo.out', clearProps: 'all' }, 0.12);
-  if (attr)          tl.to(attr,  { opacity: 1, y: 0, duration: 0.4, ease: 'expo.out', clearProps: 'all' }, '-=0.15');
+  if (mark)          tl.to(mark,  { opacity: 1, scale: 1, duration: 0.3, ease: 'back.out(2.5)' }, 0);
+  if (words.length)  tl.to(words, { opacity: 1, y: 0, stagger: 0.02, duration: 0.35, ease: 'expo.out', clearProps: 'all' }, 0.08);
+  if (attr)          tl.to(attr,  { opacity: 1, y: 0, duration: 0.25, ease: 'expo.out', clearProps: 'all' }, '-=0.1');
 }
 
 /* ── Main init ──────────────────────────────────────────────────── */
@@ -172,8 +172,8 @@ export async function initTestimonial() {
 
         if (prefersReduced) { busy = false; return; }
 
-        gsap.set(slider, { opacity: 0, y: 12 });
-        gsap.to(slider, { opacity: 1, y: 0, duration: 0.4, ease: 'expo.out' });
+        gsap.set(slider, { opacity: 0, y: 8 });
+        gsap.to(slider, { opacity: 1, y: 0, duration: 0.25, ease: 'expo.out' });
         revealItem(item, () => { busy = false; });
       };
 
@@ -181,7 +181,7 @@ export async function initTestimonial() {
         mount();
       } else {
         gsap.to(slider, {
-          opacity: 0, y: -10, duration: 0.28, ease: 'expo.in',
+          opacity: 0, y: -8, duration: 0.18, ease: 'expo.in',
           onComplete: mount,
         });
       }
