@@ -9,6 +9,10 @@
     <meta name="description" content="Knoch Media — cinematic photography and visual storytelling studio." />
     <meta name="theme-color" content="#0a0a0a" />
 
+    <!-- Sanity CMS config (KNOCH-023) -->
+    <meta name="sanity-project-id" content="2779g58e" />
+    <meta name="sanity-dataset" content="production" />
+
     <!--
       Google Fonts — preconnect both origins before the stylesheet request
       so DNS + TLS handshakes are done by the time the browser parses the
@@ -44,6 +48,20 @@
     <link rel="stylesheet" href="/css/cursor.css" />
     <!-- Hero section + film-counter loader (KNOCH-005) -->
     <link rel="stylesheet" href="/css/hero.css" />
+    <!-- Interlude / manifesto word-reveal section (KNOCH-006) -->
+    <link rel="stylesheet" href="/css/interlude.css" />
+    <!-- Horizontal reel carousel (KNOCH-007) -->
+    <link rel="stylesheet" href="/css/reel.css" />
+    <!-- Pinned frame parallax + studio stats (KNOCH-008) -->
+    <link rel="stylesheet" href="/css/frame.css" />
+    <!-- Testimonial editorial pull-quote section (KNOCH-009) -->
+    <link rel="stylesheet" href="/css/testimonial.css" />
+    <!-- Portfolio archive grid (KNOCH-010) -->
+    <link rel="stylesheet" href="/css/portfolio-grid.css" />
+    <!-- Crosshatch lazy-load placeholder (KNOCH-030) -->
+    <link rel="stylesheet" href="/css/lazy-load.css" />
+    <!-- Qualified inquiry form (KNOCH-030) -->
+    <link rel="stylesheet" href="/css/inquiry.css" />
 
     <!--
       LCP image preload — hero-01.jpg is the largest contentful paint element.
@@ -126,6 +144,43 @@
     </div>
 
     <!--
+      SVG filter & clip-path definitions (KNOCH-030).
+      • #grain-dissolve: feTurbulence + feDisplacementMap for hero char reveals.
+      • #torn-edge-1/2/3: organic edge clip-paths for portfolio grid tiles.
+      Positioned offscreen (width/height 0) so they don't affect layout.
+    -->
+    <svg aria-hidden="true" style="position:absolute;width:0;height:0;overflow:hidden">
+      <defs>
+        <!-- Film-grain displacement filter — hero character dissolve reveal -->
+        <filter id="grain-dissolve" x="-20%" y="-20%" width="140%" height="140%">
+          <feTurbulence id="grain-turbulence"
+            type="fractalNoise"
+            baseFrequency="0.065"
+            numOctaves="3"
+            seed="42"
+            result="noise" />
+          <feDisplacementMap id="grain-displace"
+            in="SourceGraphic"
+            in2="noise"
+            scale="0"
+            xChannelSelector="R"
+            yChannelSelector="G" />
+        </filter>
+
+        <!-- Torn-edge clip paths — organic paper-tear masks for grid tiles -->
+        <clipPath id="torn-edge-1" clipPathUnits="objectBoundingBox">
+          <path d="M0,0.02 L0.03,0 L0.08,0.015 L0.15,0 L0.22,0.01 L0.3,0 L0.38,0.02 L0.45,0 L0.52,0.01 L0.6,0 L0.68,0.015 L0.75,0 L0.82,0.02 L0.9,0 L0.95,0.01 L1,0 L1,0.98 L0.97,1 L0.92,0.985 L0.85,1 L0.78,0.99 L0.7,1 L0.62,0.98 L0.55,1 L0.48,0.99 L0.4,1 L0.32,0.985 L0.25,1 L0.18,0.98 L0.1,1 L0.05,0.99 L0,1 Z"/>
+        </clipPath>
+        <clipPath id="torn-edge-2" clipPathUnits="objectBoundingBox">
+          <path d="M0,0 L0.05,0.02 L0.12,0 L0.2,0.015 L0.28,0 L0.35,0.02 L0.42,0 L0.5,0.01 L0.58,0 L0.65,0.02 L0.72,0 L0.8,0.015 L0.88,0 L0.95,0.02 L1,0 L1,1 L0.95,0.98 L0.88,1 L0.8,0.985 L0.72,1 L0.65,0.98 L0.58,1 L0.5,0.99 L0.42,1 L0.35,0.98 L0.28,1 L0.2,0.985 L0.12,1 L0.05,0.98 L0,1 Z"/>
+        </clipPath>
+        <clipPath id="torn-edge-3" clipPathUnits="objectBoundingBox">
+          <path d="M0.01,0 L0.06,0.018 L0.14,0.003 L0.21,0.02 L0.29,0 L0.36,0.015 L0.44,0.003 L0.51,0.02 L0.59,0 L0.66,0.018 L0.74,0 L0.81,0.015 L0.89,0.003 L0.96,0.02 L1,0.005 L1,0.995 L0.96,0.98 L0.89,0.997 L0.81,0.985 L0.74,1 L0.66,0.982 L0.59,1 L0.51,0.98 L0.44,0.997 L0.36,0.985 L0.29,1 L0.21,0.98 L0.14,0.997 L0.06,0.982 L0,1 L0,0.005 Z"/>
+        </clipPath>
+      </defs>
+    </svg>
+
+    <!--
       Hero section — first viewport, 100vh × 100vw.
       .grain activates the SVG feTurbulence film-grain ::after overlay (KNOCH-004).
       .hero-bg is a separate child div (not on the section itself) so that the
@@ -152,7 +207,7 @@
           and slides up into view. GSAP stagger 0.12s creates the cascade.
           "staged." and "remembered." wrapped in <em> for italic amber treatment.
         -->
-        <h1 class="hero-headline" aria-label="Nothing staged. Everything remembered.">
+        <h1 class="hero-headline headline-hover" aria-label="Nothing staged. Everything remembered.">
           <div class="line"><span>Nothing</span></div>
           <div class="line"><span><em>staged.</em></span></div>
           <div class="line"><span>Everything</span></div>
@@ -168,16 +223,268 @@
 
     </section><!-- /#hero -->
 
-    <section id="reel" aria-label="Work">
-      <!-- KNOCH-007: Horizontal reel carousel -->
+    <!-- ── INTERLUDE / MANIFESTO ─────────────────────────────── -->
+    <!--
+      Transitional breathing-room section between hero and reel.
+      .grain applies the SVG feTurbulence film-grain ::after overlay
+      (defined in cursor.css — not re-implemented here).
+      aria-label gives screen readers a meaningful region name.
+      The blockquote <p> text is left intact so AT reads the full
+      sentence; JS wraps words in <span class="word"> (inline elements)
+      which screen readers traverse transparently.
+    -->
+    <section id="interlude" class="interlude grain" aria-label="Studio manifesto">
+
+      <!-- Vintage film-strip background — two identical sets for seamless CSS marquee loop -->
+      <div class="interlude-strip" aria-hidden="true">
+        <div class="interlude-strip-track">
+          <div class="interlude-strip-img" style="background-image: url('/assets/portfolio/cover-alex-morgan.jpg')"></div>
+          <div class="interlude-strip-img" style="background-image: url('/assets/portfolio/cover-fayo-femi.jpg')"></div>
+          <div class="interlude-strip-img" style="background-image: url('/assets/portfolio/cover-woodsmen.jpg')"></div>
+          <div class="interlude-strip-img" style="background-image: url('/assets/portfolio/cover-jojos-graduation.jpg')"></div>
+          <div class="interlude-strip-img" style="background-image: url('/assets/portfolio/cover-what-mighty-praise.png')"></div>
+          <div class="interlude-strip-img" style="background-image: url('/assets/portfolio/cover-rapha-records.jpg')"></div>
+          <div class="interlude-strip-img" style="background-image: url('/assets/portfolio/cover-shawn-bekki.jpg')"></div>
+          <div class="interlude-strip-img" style="background-image: url('/assets/portfolio/cover-alex-morgan.jpg')"></div>
+          <!-- Second copy — makes -50% translateX a perfect seamless loop -->
+          <div class="interlude-strip-img" style="background-image: url('/assets/portfolio/cover-fayo-femi.jpg')"></div>
+          <div class="interlude-strip-img" style="background-image: url('/assets/portfolio/cover-woodsmen.jpg')"></div>
+          <div class="interlude-strip-img" style="background-image: url('/assets/portfolio/cover-jojos-graduation.jpg')"></div>
+          <div class="interlude-strip-img" style="background-image: url('/assets/portfolio/cover-what-mighty-praise.png')"></div>
+          <div class="interlude-strip-img" style="background-image: url('/assets/portfolio/cover-rapha-records.jpg')"></div>
+          <div class="interlude-strip-img" style="background-image: url('/assets/portfolio/cover-shawn-bekki.jpg')"></div>
+          <div class="interlude-strip-img" style="background-image: url('/assets/portfolio/cover-alex-morgan.jpg')"></div>
+          <div class="interlude-strip-img" style="background-image: url('/assets/portfolio/cover-fayo-femi.jpg')"></div>
+        </div>
+      </div>
+
+      <!-- Amber mono label — top-left; faded in by JS via .is-visible class -->
+      <p class="interlude-label">— A note before we begin</p>
+
+      <!--
+        Editorial blockquote — Fraunces 300 at clamp(28px,5vw,64px).
+        JS (interlude.js) splits the inner <p>'s childNodes into .word spans
+        at init time, preserving the <em> element for italic amber styling.
+        The <em> wraps "quietly" — the sole emphasis word in the manifesto.
+      -->
+      <blockquote class="interlude-quote headline-hover">
+        <div class="interlude-line-wrap"><span class="interlude-line">I don&rsquo;t photograph weddings.</span></div>
+        <div class="interlude-line-wrap"><span class="interlude-line">I attend them &mdash; <em>quietly</em> &mdash;</span></div>
+        <div class="interlude-line-wrap"><span class="interlude-line">and bring back what was <span class="interlude-accent">beautiful.<span class="interlude-accent-line" aria-hidden="true"></span></span></span></div>
+      </blockquote>
+
+      <!-- Cosmetic signature — aria-hidden so AT skips it -->
+      <p class="interlude-sig" aria-hidden="true">— Enoch Knoch &middot; Founder</p>
+
+    </section><!-- /#interlude -->
+
+    <!--
+      Horizontal reel — pinned scroll carousel (KNOCH-007).
+      .reel-track holds a static .reel-intro panel; reel.js appends
+      the six .reel-card elements and the trailing .reel-spacer at
+      init time. KNOCH-025 will replace the static CARDS array with
+      Sanity data without changing this markup.
+    -->
+    <section id="reel" aria-label="Selected work">
+      <div class="reel-track">
+
+        <div class="reel-intro">
+          <p class="reel-intro-label">Selected Work</p>
+          <h2 class="reel-intro-headline headline-hover">Selected <em>work.</em></h2>
+          <p class="reel-intro-desc">Cinematic photography and videography<br>crafted for lasting impression.</p>
+          <p class="reel-scroll-hint" aria-hidden="true">&#x2192;&nbsp;&#x2192;&nbsp;&#x2192;&nbsp; Scroll to explore</p>
+        </div>
+
+        <!-- Cards injected by reel.js (KNOCH-007) -->
+
+      </div>
     </section>
 
-    <section id="frame" class="pinned-frame grain" aria-label="Studio">
-      <!-- KNOCH-008: Pinned frame parallax + counters -->
-    </section>
+    <!--
+      Pinned frame — full-bleed parallax + animated studio stats (KNOCH-008).
+      height: 200vh on .pinned-frame gives the sticky panel room to travel.
+      .bg inset: -10% prevents white edges during the yPercent parallax move.
+      Counters start at their final value as plain text so they're readable if
+      JS fails or if the user has prefers-reduced-motion: reduce.
+    -->
+    <section id="frame" class="pinned-frame grain" aria-label="Studio — by the numbers">
+      <div class="sticky">
 
-    <section id="cta" aria-label="Inquire">
-      <!-- KNOCH-014: Contact / qualified inquiry form -->
+        <div class="bg" id="parallax-bg" role="img" aria-label="Studio photograph by Knoch Media"></div>
+        <div class="overlay" aria-hidden="true"></div>
+
+        <div class="content">
+
+          <!-- Left: brand statement -->
+          <div class="frame-left">
+            <p class="meta-tag">— THE STUDIO &middot; BY THE NUMBERS</p>
+            <h2 class="big headline-hover">
+              <span class="frame-line-wrap"><span class="frame-line">Eight years.</span></span>
+              <span class="frame-line-wrap"><span class="frame-line"><em>Twelve&nbsp;thousand</em>&nbsp;frames.</span></span>
+              <span class="frame-line-wrap"><span class="frame-line">One pair of hands.</span></span>
+            </h2>
+          </div>
+
+          <!-- Right: animated stat counters -->
+          <div class="stats" aria-label="Studio statistics">
+
+            <div class="stat">
+              <!--
+                data-count drives the GSAP tween target.
+                Initial inner HTML is the plain number so AT reads it correctly
+                before JS runs. hasEm in frame.js wraps the output in <em> for
+                the amber italic treatment on the first and third stats.
+              -->
+              <div class="n" data-count="47" aria-label="47 projects from 2018 to 2026"><em>47</em></div>
+              <div class="l" aria-hidden="true">Projects &middot; 2018&ndash;2026</div>
+            </div>
+
+            <div class="stat">
+              <div class="n" data-count="12884" aria-label="12,884 frames developed">12,884</div>
+              <div class="l" aria-hidden="true">Frames developed</div>
+            </div>
+
+            <div class="stat">
+              <div class="n" data-count="6" aria-label="6 dates remaining in 2026"><em>6</em></div>
+              <div class="l" aria-hidden="true">Dates left &middot; 2026</div>
+            </div>
+
+          </div><!-- /.stats -->
+
+        </div><!-- /.content -->
+      </div><!-- /.sticky -->
+    </section><!-- /#frame -->
+
+    <!--
+      Testimonial — editorial pull-quote section (KNOCH-009 / KNOCH-024).
+      All 5 testimonials are fetched from Sanity CMS and rendered dynamically
+      by testimonial.js. The .testimonial-list wrapper and .testimonial-item
+      elements are created in JS — nothing is hardcoded here.
+    -->
+    <section id="testimonial" class="testimonial grain" aria-label="Client testimonials">
+      <!-- populated by testimonial.js (KNOCH-024) -->
+    </section><!-- /#testimonial -->
+
+    <!--
+      Portfolio archive grid — contact-sheet layout (KNOCH-010).
+      7 tiles at asymmetric spans across a 12-col grid. Each tile has
+      a full-bleed image with grayscale-to-colour hover reveal and a
+      slide-up label. Scroll reveal + inner image parallax via JS.
+      Tile 7 will link to the YouTube lightbox in KNOCH-017.
+    -->
+    <section id="archive" class="archive grain" aria-label="Portfolio archive">
+
+      <div class="archive-header">
+        <h2 class="archive-headline headline-hover">The <em>archive.</em></h2>
+        <p class="archive-meta">047 PROJECTS&nbsp;· INDEXED&nbsp;/ BY DATE<br>— REQUEST FULL CATALOG</p>
+      </div>
+
+      <div class="archive-grid" role="list">
+
+        <!-- t1: large feature — Alex and Morgan, Wedding -->
+        <article class="tile t1" role="listitem" tabindex="0"
+          data-link-type="external-gallery"
+          data-url="https://knoch.pic-time.com/-alexmorgan/gallery"
+          data-depth="3"
+          aria-label="Alex and Morgan — Wedding gallery">
+          <div class="tile-img" data-bg="/assets/portfolio/cover-alex-morgan.jpg" role="img" aria-hidden="true"></div>
+          <span class="tile-notch tile-notch--tl" aria-hidden="true"></span>
+          <span class="tile-notch tile-notch--tr" aria-hidden="true"></span>
+          <span class="tile-notch tile-notch--bl" aria-hidden="true"></span>
+          <span class="tile-notch tile-notch--br" aria-hidden="true"></span>
+          <div class="tile-label">
+            <span class="tile-num">№ 005 · Wedding</span>
+            <h3 class="tile-title">Alex and Morgan</h3>
+            <p class="tile-sub">Eastern Shore</p>
+          </div>
+        </article>
+
+        <!-- t2: Fayo and Femi, Wedding -->
+        <article class="tile t2" role="listitem" tabindex="0"
+          data-link-type="external-gallery"
+          data-url="https://knoch.pic-time.com/-fayofemi/gallery"
+          data-depth="1" data-torn="1"
+          aria-label="Fayo and Femi — Wedding gallery">
+          <div class="tile-img" data-bg="/assets/portfolio/cover-fayo-femi.jpg" style="background-position: 50% 65%" role="img" aria-hidden="true"></div>
+          <div class="tile-label">
+            <span class="tile-num">№ 001 · Wedding</span>
+            <h3 class="tile-title">Fayo and Femi</h3>
+            <p class="tile-sub">Introduction</p>
+          </div>
+        </article>
+
+        <!-- t3: Shawn and Bekki, Wedding — colour image from Sanity CDN -->
+        <article class="tile t3" role="listitem" tabindex="0"
+          data-link-type="external-gallery"
+          data-url="https://knoch.pic-time.com/-shawnbekki/gallery"
+          data-depth="2"
+          aria-label="Shawn and Bekki — Wedding gallery">
+          <div class="tile-img" data-bg="https://cdn.sanity.io/images/2779g58e/production/471e43f5f31b05082fd6d39fb928704a6b47417a-1600x1067.jpg?w=1200&auto=format" role="img" aria-hidden="true"></div>
+          <div class="tile-label">
+            <span class="tile-num">№ 004 · Wedding</span>
+            <h3 class="tile-title">Shawn and Bekki</h3>
+            <p class="tile-sub">Maryland</p>
+          </div>
+        </article>
+
+        <!-- t4: Woodsmen, Sports & Events — wide banner, not linkable -->
+        <article class="tile t4" role="listitem" tabindex="0"
+          data-depth="1"
+          aria-label="Woodsmen — Sports &amp; Events">
+          <div class="tile-img" data-bg="/assets/portfolio/cover-woodsmen.jpg" role="img" aria-hidden="true"></div>
+          <div class="tile-label">
+            <span class="tile-num">№ 009 · Sports &amp; Events</span>
+            <h3 class="tile-title">Woodsmen</h3>
+            <p class="tile-sub">Maryland</p>
+          </div>
+        </article>
+
+        <!-- t5: Jojo's Graduation, Portrait — not linkable -->
+        <article class="tile t5" role="listitem" tabindex="0"
+          data-depth="3" data-torn="2"
+          aria-label="Jojo's Graduation — Portrait">
+          <div class="tile-img" data-bg="/assets/portfolio/cover-jojos-graduation.jpg" role="img" aria-hidden="true"></div>
+          <div class="tile-label">
+            <span class="tile-num">№ 008 · Portrait</span>
+            <h3 class="tile-title">Jojo&rsquo;s Graduation</h3>
+            <p class="tile-sub">College Park</p>
+          </div>
+        </article>
+
+        <!-- t6: What Mighty Praise, Worship — YouTube maxres thumbnail -->
+        <article class="tile t6" role="listitem" tabindex="0"
+          data-link-type="youtube"
+          data-url="https://youtu.be/KPerYKXlpX0?si=O5owuRrHWqUCCr68"
+          data-depth="2"
+          aria-label="What Mighty Praise — Worship film">
+          <div class="tile-img" data-bg="/assets/portfolio/cover-what-mighty-praise.png" role="img" aria-hidden="true"></div>
+          <div class="tile-label">
+            <span class="tile-num">№ 002 · Worship</span>
+            <h3 class="tile-title">What Mighty Praise</h3>
+            <p class="tile-sub">Film</p>
+          </div>
+        </article>
+
+        <!-- t7: Rapha Records, Brand & Commercial — YouTube maxres thumbnail -->
+        <article class="tile t7" role="listitem" tabindex="0"
+          data-link-type="youtube"
+          data-url="https://www.youtube.com/watch?v=Hs25JK7WcZQ&t=75s"
+          data-depth="2" data-torn="3"
+          aria-label="Rapha Records — Brand film">
+          <div class="tile-img" data-bg="/assets/portfolio/cover-rapha-records.jpg" role="img" aria-hidden="true"></div>
+          <span class="tile-badge" aria-hidden="true">▶ Film</span>
+          <div class="tile-label">
+            <span class="tile-num">№ 007 · Brand &amp; Commercial</span>
+            <h3 class="tile-title">Rapha Records</h3>
+            <p class="tile-sub">Brand film</p>
+          </div>
+        </article>
+
+      </div><!-- /.archive-grid -->
+    </section><!-- /#archive -->
+
+<section id="cta" class="grain" aria-label="Inquire">
+      <!-- KNOCH-030: Qualified inquiry form with aperture iris transitions -->
     </section>
 
     <!--

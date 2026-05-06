@@ -1,0 +1,180 @@
+/* ============================================================
+   KNOCH-006 — Interlude / Manifesto Section
+   Transitional 100vh breathing-room between hero and reel.
+   Three editorial lines revealed via overflow-clip slide-up
+   (GSAP, all device sizes). An amber underline sweeps across
+   "beautiful." once all lines are in view.
+   ============================================================ */
+
+/* ── Section shell ── */
+.interlude {
+  position: relative;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 8vw;
+  background: var(--ink);
+}
+
+/* ── Vintage film-strip background ── */
+
+/* Covers the bottom 55% of the section and fades out toward the top,
+   creating a light-table effect where images ghost behind the quote.
+   Two copies of the image set in .interlude-strip-track allow a seamless
+   CSS marquee loop via translateX(-50%). */
+.interlude-strip {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 55%;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+  opacity: 0.18;
+  /* Top fade so strip doesn't crowd the quote, left/right edge fade */
+  -webkit-mask-image:
+    linear-gradient(to right, transparent 0%, black 5%, black 95%, transparent 100%),
+    linear-gradient(to bottom, transparent 0%, black 35%, black 100%);
+  -webkit-mask-composite: source-in;
+  mask-image:
+    linear-gradient(to right, transparent 0%, black 5%, black 95%, transparent 100%),
+    linear-gradient(to bottom, transparent 0%, black 35%, black 100%);
+  mask-composite: intersect;
+}
+
+.interlude-strip-track {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 0 14px;
+  height: 100%;
+  width: max-content;
+  /* transform driven by GSAP ScrollTrigger scrub — no CSS animation */
+  will-change: transform;
+}
+
+.interlude-strip-img {
+  width: 240px;
+  height: 160px;
+  flex-shrink: 0;
+  background-size: cover;
+  background-position: center;
+  /* Warm-toned black-and-white: desaturate then push slightly amber */
+  filter: grayscale(1) sepia(0.55) brightness(0.65) contrast(1.2);
+  outline: 1px solid rgba(196, 168, 124, 0.2);
+}
+
+/* ── Amber category label (top-left) ── */
+.interlude-label {
+  position: absolute;
+  top: 18vh;
+  left: 8vw;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--amber);
+  opacity: 0;
+  transition: opacity 0.6s var(--ease-cinematic);
+}
+
+.interlude.is-visible .interlude-label {
+  opacity: 1;
+}
+
+/* ── Editorial blockquote ── */
+.interlude-quote {
+  font-family: var(--font-serif);
+  font-weight: 300;
+  font-size: clamp(28px, 5vw, 64px);
+  line-height: 1.15;
+  max-width: 22ch;
+  color: var(--paper);
+  margin: 0;
+  padding: 0;
+  border: none;
+  position: relative;
+  z-index: 1;
+}
+
+/* ── Line clip containers — overflow:hidden so translateY hides the line below */
+.interlude-line-wrap {
+  display: block;
+  overflow: hidden;
+  /* Extra padding so descenders (g, y, p) aren't shaved */
+  padding-bottom: 0.08em;
+}
+
+/* The text line itself — GSAP animates y: 115% → 0% */
+.interlude-line {
+  display: block;
+  will-change: transform;
+}
+
+/* ── <em> — italic amber emphasis ── */
+.interlude-quote em {
+  color: var(--amber);
+  font-style: italic;
+}
+
+/* ── Amber underline sweep on "beautiful." ── */
+.interlude-accent {
+  position: relative;
+  display: inline-block;
+}
+
+/* The sweep bar — GSAP scales scaleX: 0 → 1 from the left */
+.interlude-accent-line {
+  display: block;
+  position: absolute;
+  bottom: 0.05em;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--amber);
+  transform: scaleX(0);
+  transform-origin: left;
+  will-change: transform;
+}
+
+/* ── Signature (bottom-right) ── */
+.interlude-sig {
+  position: absolute;
+  bottom: 10vh;
+  right: 8vw;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--paper);
+  opacity: 0.4;
+}
+
+/* ── Mobile (≤800px) ── */
+@media (max-width: 800px) {
+  .interlude {
+    height: auto;
+    min-height: 100vh;
+  }
+}
+
+/* ── Reduced motion ── */
+@media (prefers-reduced-motion: reduce) {
+  .interlude-label {
+    opacity: 1;
+    transition: none;
+  }
+
+  .interlude-line {
+    transform: none !important;
+    filter: none !important;
+  }
+
+  .interlude-accent-line {
+    transform: scaleX(1) !important;
+  }
+
+  .interlude-strip-track {
+    animation-play-state: paused;
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "name": "knoch-media-studio",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "sanity dev",
+    "build": "sanity build",
+    "deploy": "sanity deploy"
+  },
+  "dependencies": {
+    "@sanity/vision": "^5.24.0",
+    "sanity": "^5.24.0",
+    "styled-components": "^6.0.0"
+  }
+}

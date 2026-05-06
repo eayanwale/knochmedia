@@ -163,13 +163,11 @@
   display: block;
 }
 
-/* The actual text node that slides up from translateY(110%).
-   display: block inside overflow:hidden parent — this is the
-   standard "mask reveal" technique. GSAP will tween to translateY(0). */
-.hero-headline .line span {
+/* Direct span child of each .line — GSAP animates this from y:110% to y:0
+   on loader complete. Using > (direct child) so .char-hover spans inside
+   are NOT matched and do not receive the initial hidden state. */
+.hero-headline .line > span {
   display: block;
-  transform: translateY(110%);
-  will-change: transform;
 }
 
 /* Italic amber highlight for "staged." and "remembered." */
@@ -189,6 +187,28 @@
   color: rgba(237, 230, 216, 0.6);
   opacity: 0; /* revealed by GSAP timeline */
 }
+
+
+/* ── Film-grain dissolve for per-character reveals (KNOCH-030) ──
+   Each .char-hover span inside the hero headline starts with the
+   SVG displacement filter active and opacity 0. GSAP animates the
+   SVG filter attributes (scale 55→0, frequency 0.065→0) globally
+   while staggering each char's opacity 0→1.
+
+   Once the reveal completes, .grain-revealed is added — this removes
+   the filter reference so char-hover.js can apply its own blur on
+   mouse proximity without conflict. */
+
+.hero-headline .char-hover {
+  filter: url(#grain-dissolve);
+  opacity: 0;
+}
+
+.hero-headline .char-hover.grain-revealed {
+  filter: none;
+  opacity: 1;
+}
+
 
 
 /* ── Mobile / reduced-motion overrides ───────────────────── */
@@ -213,8 +233,8 @@
     transform: scale(1); /* skip the scale-down reveal */
   }
 
-  .hero-headline .line span {
-    transform: translateY(0); /* skip the line reveal */
+  .hero-headline .line > span {
+    transform: none;
   }
 
   .hero-meta,

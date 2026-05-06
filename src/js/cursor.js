@@ -19,17 +19,24 @@ export function initCursor() {
   }, { passive: true });
 
   // Grow state: all interactive targets that the cursor should react to.
-  // Selector covers links, reel cards, tiles, and CTA button (KNOCH-007–010).
   const GROW_SELECTOR = 'a, button, .reel-card, .tile, .cta .button';
+  // Large editorial ring on headline hover — text goes hollow, cursor opens wide
+  const TEXT_SELECTOR = '.headline-hover';
 
   document.addEventListener('mouseover', (e) => {
-    if (e.target.closest(GROW_SELECTOR)) {
+    if (e.target.closest(TEXT_SELECTOR)) {
+      cursor.classList.remove('grow');
+      cursor.classList.add('grow--text');
+    } else if (e.target.closest(GROW_SELECTOR)) {
+      cursor.classList.remove('grow--text');
       cursor.classList.add('grow');
     }
   }, { passive: true });
 
   document.addEventListener('mouseout', (e) => {
-    if (e.target.closest(GROW_SELECTOR)) {
+    if (e.target.closest(TEXT_SELECTOR)) {
+      cursor.classList.remove('grow--text');
+    } else if (e.target.closest(GROW_SELECTOR)) {
       cursor.classList.remove('grow');
     }
   }, { passive: true });

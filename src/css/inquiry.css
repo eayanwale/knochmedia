@@ -1,0 +1,507 @@
+/* ============================================================
+   Qualified Inquiry Form — Aperture Iris Wizard (KNOCH-030)
+   ============================================================
+   4-step form filling the #cta section. Each step transition uses
+   clip-path: circle() to simulate a camera aperture opening/closing.
+   Film counter progress indicator matches the hero loader aesthetic.
+
+   Steps:
+     01 — Event Type (radio cards)
+     02 — Date & Vision (date input + textarea)
+     03 — Budget Range (radio cards)
+     04 — Contact Details (text inputs)
+   ============================================================ */
+
+/* ── Section shell ── */
+
+#cta {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6rem 8vw;
+  position: relative;
+  overflow: hidden;
+  border-top: 1px solid var(--color-border);
+  background:
+    radial-gradient(ellipse at 30% 50%, rgba(196, 168, 124, 0.03) 0%, transparent 60%),
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='300' height='300'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/></filter><rect width='300' height='300' filter='url(%23n)' opacity='0.035'/></svg>");
+}
+
+/* ── Two-column wrapper (form + sidebar) ── */
+
+.inquiry-wrapper {
+  width: 100%;
+  max-width: 1060px;
+  display: grid;
+  grid-template-columns: 5fr 4fr;
+  gap: 0;
+  position: relative;
+}
+
+/* ── Form container ── */
+
+.inquiry {
+  width: 100%;
+  position: relative;
+  padding-right: 3rem;
+  border-right: 1px solid var(--color-border);
+}
+
+/* ── Intro (title + assurance) ── */
+
+.inquiry-intro {
+  margin-bottom: 2rem;
+}
+
+.inquiry-title {
+  font-family: var(--font-serif);
+  font-weight: 300;
+  font-size: clamp(32px, 4vw, 52px);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  color: var(--paper);
+  margin: 0 0 0.75rem;
+}
+
+.inquiry-title em {
+  font-style: italic;
+  color: var(--amber);
+}
+
+.inquiry-assurance {
+  font-size: 13px;
+  color: rgba(237, 230, 216, 0.55);
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* ── Film counter progress ── */
+
+.inquiry-progress {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 3rem;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--amber);
+}
+
+.inquiry-step-label {
+  flex-shrink: 0;
+  color: var(--amber);
+}
+
+.inquiry-counter {
+  flex-shrink: 0;
+  color: var(--muted);
+}
+
+.inquiry-progress-bar {
+  flex: 1;
+  height: 1px;
+  background: var(--color-border);
+  position: relative;
+}
+
+.inquiry-progress-fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  background: var(--amber);
+  transition: width 0.6s var(--ease-cinematic);
+}
+
+.inquiry-label-right {
+  flex-shrink: 0;
+  color: var(--muted);
+}
+
+/* ── Steps wrapper ── */
+
+.inquiry-steps {
+  position: relative;
+  min-height: 320px;
+}
+
+/* ── Step panel ── */
+
+.inquiry-step {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  clip-path: circle(0% at 50% 50%);
+  pointer-events: none;
+  opacity: 0;
+}
+
+.inquiry-step.active {
+  position: relative;
+  clip-path: circle(75% at 50% 50%);
+  pointer-events: auto;
+  opacity: 1;
+}
+
+/* ── Step heading ── */
+
+.inquiry-heading {
+  font-family: var(--font-serif);
+  font-weight: 300;
+  font-size: clamp(28px, 4vw, 48px);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  color: var(--paper);
+  margin-bottom: 2.5rem;
+}
+
+.inquiry-heading em {
+  font-style: italic;
+  color: var(--amber);
+}
+
+/* ── Radio option cards (Steps 1 + 3) ── */
+
+.inquiry-options {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.inquiry-option {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem 1rem;
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  cursor: pointer;
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  color: var(--paper);
+  text-align: center;
+  transition:
+    border-color 0.35s var(--ease-cinematic),
+    background 0.35s var(--ease-cinematic);
+}
+
+.inquiry-option:hover {
+  border-color: var(--amber);
+}
+
+.inquiry-option input[type="radio"] {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.inquiry-option:has(input:checked) {
+  border-color: var(--amber);
+  background: rgba(196, 168, 124, 0.08);
+}
+
+/* Focus-visible ring for keyboard navigation */
+.inquiry-option:has(input:focus-visible) {
+  outline: 2px solid var(--amber);
+  outline-offset: 2px;
+}
+
+/* ── Form fields (Steps 2 + 4) ── */
+
+.inquiry-field-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.inquiry-field-row .inquiry-field {
+  margin-bottom: 0;
+}
+
+.inquiry-field {
+  margin-bottom: 1.5rem;
+}
+
+.inquiry-field-label {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 0.5rem;
+}
+
+.inquiry-input,
+.inquiry-textarea {
+  width: 100%;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--color-border);
+  padding: 0.75rem 0;
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  color: var(--paper);
+  outline: none;
+  transition: border-color 0.3s var(--ease-cinematic);
+}
+
+.inquiry-input:focus,
+.inquiry-textarea:focus {
+  border-color: var(--amber);
+}
+
+.inquiry-input::placeholder,
+.inquiry-textarea::placeholder {
+  color: var(--color-text-faint);
+}
+
+.inquiry-textarea {
+  resize: vertical;
+  min-height: 100px;
+  border: 1px solid var(--color-border);
+  padding: 0.75rem;
+  margin-top: 0.25rem;
+}
+
+.inquiry-textarea:focus {
+  border-color: var(--amber);
+}
+
+/* Date input styling */
+.inquiry-input[type="date"] {
+  -webkit-appearance: none;
+}
+.inquiry-input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(0.8) sepia(0.5) hue-rotate(10deg);
+  cursor: pointer;
+}
+
+/* ── Navigation buttons ── */
+
+.inquiry-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 3rem;
+}
+
+.inquiry-btn {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--paper);
+  background: transparent;
+  border: 1px solid var(--color-border);
+  padding: 12px 24px;
+  cursor: pointer;
+  transition:
+    border-color 0.3s var(--ease-cinematic),
+    background 0.3s var(--ease-cinematic),
+    opacity 0.3s var(--ease-cinematic);
+}
+
+.inquiry-btn:hover {
+  border-color: var(--amber);
+}
+
+.inquiry-btn:focus-visible {
+  outline: 2px solid var(--amber);
+  outline-offset: 2px;
+}
+
+.inquiry-btn--primary {
+  background: var(--amber);
+  border-color: var(--amber);
+  color: var(--ink);
+}
+
+.inquiry-btn--primary:hover {
+  background: #d4b88c;
+  border-color: #d4b88c;
+}
+
+.inquiry-btn:disabled {
+  opacity: 0.25;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* ── Confirmation state ── */
+
+.inquiry-confirm {
+  text-align: center;
+  padding: 3rem 0;
+}
+
+.inquiry-confirm p {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  color: var(--muted);
+  text-transform: uppercase;
+  margin-top: 1.5rem;
+}
+
+/* ── Sidebar ── */
+
+.inquiry-sidebar {
+  padding-left: 3rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  align-self: center;
+}
+
+.inquiry-sidebar-block {
+  padding-bottom: 2rem;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.inquiry-sidebar-block:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.inquiry-sidebar-tag {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--amber);
+  margin-bottom: 0.75rem;
+}
+
+.inquiry-sidebar-heading {
+  font-family: var(--font-serif);
+  font-weight: 300;
+  font-size: 20px;
+  color: var(--paper);
+  line-height: 1.25;
+  margin: 0 0 0.5rem;
+}
+
+.inquiry-sidebar-desc {
+  font-size: 12px;
+  color: rgba(237, 230, 216, 0.55);
+  line-height: 1.5;
+  margin: 0 0 0.75rem;
+}
+
+.inquiry-sidebar-link {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  color: var(--paper);
+  border: 1px solid rgba(237, 230, 216, 0.25);
+  padding: 9px 14px;
+  text-decoration: none;
+  transition: border-color 0.3s var(--ease-cinematic);
+}
+
+.inquiry-sidebar-link:hover {
+  border-color: var(--amber);
+}
+
+.inquiry-next-steps {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.inquiry-next-steps li {
+  display: flex;
+  gap: 0.75rem;
+  font-size: 12px;
+  color: rgba(237, 230, 216, 0.75);
+  line-height: 1.4;
+}
+
+.inquiry-next-num {
+  flex-shrink: 0;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--amber);
+}
+
+.inquiry-sidebar-contact p {
+  font-size: 12px;
+  color: rgba(237, 230, 216, 0.6);
+  line-height: 1.8;
+  margin: 0;
+}
+
+.inquiry-sidebar-contact strong {
+  color: var(--paper);
+  font-weight: 400;
+}
+
+/* ── Mobile ── */
+
+@media (max-width: 800px) {
+  #cta {
+    padding: 4rem 6vw;
+  }
+
+  .inquiry-wrapper {
+    grid-template-columns: 1fr;
+  }
+
+  .inquiry {
+    padding-right: 0;
+    border-right: none;
+    padding-bottom: 3rem;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .inquiry-sidebar {
+    padding-left: 0;
+    padding-top: 2.5rem;
+  }
+
+  .inquiry-options {
+    grid-template-columns: 1fr;
+  }
+
+  .inquiry-field-row {
+    grid-template-columns: 1fr;
+  }
+
+  .inquiry-steps {
+    min-height: 280px;
+  }
+}
+
+/* ── Reduced motion — instant step swap, no iris ── */
+
+@media (prefers-reduced-motion: reduce) {
+  .inquiry-step {
+    clip-path: none !important;
+    opacity: 1;
+    pointer-events: auto;
+    position: relative;
+    display: none;
+  }
+
+  .inquiry-step.active {
+    display: flex;
+  }
+
+  .inquiry-progress-fill {
+    transition: none;
+  }
+}

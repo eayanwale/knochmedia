@@ -1,0 +1,156 @@
+/* =====================================================================
+   FRAME — Pinned full-bleed parallax + animated studio stats (KNOCH-008)
+   ===================================================================== */
+
+.pinned-frame {
+  position: relative;
+  height: 150vh;
+}
+
+/* CSS sticky panel — the extra 100vh in .pinned-frame gives the panel
+   room to travel while the container scrolls. No GSAP pinning needed
+   for the panel itself; only the bg image gets a GSAP parallax tween. */
+.pinned-frame .sticky {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* Background image — inset: -10% bleeds past container edges so
+   the parallax yPercent movement never reveals white edges.
+   Heavy desaturation keeps it as moody texture at rest. */
+.pinned-frame .bg {
+  position: absolute;
+  inset: -10%;
+  background-image: url('/assets/studio/banner.jpg');
+  background-size: cover;
+  background-position: center;
+  filter: brightness(0.3) grayscale(0.8) contrast(1.0);
+  will-change: transform;
+}
+
+/* Natural-filter reveal layer — same image, unmasked by JS cursor spotlight.
+   Sits above the dark base but below the overlay vignette + grain. */
+.pinned-frame .bg-reveal {
+  position: absolute;
+  inset: -10%;
+  background-image: url('/assets/studio/banner.jpg');
+  background-size: cover;
+  background-position: center;
+  filter: brightness(1.0) grayscale(0) contrast(1.05);
+  opacity: 0;
+  pointer-events: none;
+  will-change: opacity;
+}
+
+/* Vignette gradient + SVG film-grain layered on a single pseudo-element */
+.pinned-frame .overlay {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(180deg, rgba(10, 10, 10, 0.4), rgba(10, 10, 10, 0.7)),
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/></filter><rect width='200' height='200' filter='url(%23n)' opacity='0.17'/></svg>");
+}
+
+/* Two-column content grid — left brand statement, right stats */
+.pinned-frame .content {
+  position: relative;
+  height: 100vh;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  padding: 0 8vw;
+  z-index: 2;
+}
+
+/* ── Left column ──────────────────────────────────────────────────── */
+
+.pinned-frame .meta-tag {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.3em;
+  color: var(--amber);
+  text-transform: uppercase;
+  margin-bottom: 1.5rem;
+}
+
+.pinned-frame .big {
+  font-family: var(--font-serif);
+  font-weight: 300;
+  font-size: clamp(40px, 6.5vw, 96px);
+  line-height: 0.95;
+  letter-spacing: -0.03em;
+  color: var(--paper);
+}
+
+.pinned-frame .big em {
+  font-style: italic;
+  color: var(--amber);
+}
+
+/* ── Right column — stat blocks ───────────────────────────────────── */
+
+.pinned-frame .stats {
+  display: grid;
+  gap: 2rem;
+  justify-self: end;
+  text-align: right;
+}
+
+.pinned-frame .stat .n {
+  font-family: var(--font-serif);
+  font-weight: 300;
+  font-size: clamp(40px, 5vw, 72px);
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: var(--paper);
+}
+
+.pinned-frame .stat .n em {
+  color: var(--amber);
+  font-style: italic;
+}
+
+.pinned-frame .stat .l {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.25em;
+  color: rgba(237, 230, 216, 0.5);
+  text-transform: uppercase;
+  margin-top: 0.5rem;
+}
+
+/* Clip containers for line-by-line blur-focus reveal of the brand statement */
+.frame-line-wrap {
+  display: block;
+  overflow: hidden;
+  padding-bottom: 0.06em;
+}
+
+.frame-line {
+  display: block;
+  will-change: transform, filter;
+}
+
+/* ── Responsive ───────────────────────────────────────────────────── */
+
+@media (max-width: 800px) {
+  .pinned-frame .content {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    align-content: center;
+  }
+
+  .pinned-frame .stats {
+    justify-self: start;
+    text-align: left;
+  }
+}
+
+/* Reduced motion — disable parallax travel (JS guards the tween too) */
+@media (prefers-reduced-motion: reduce) {
+  .pinned-frame .bg {
+    will-change: auto;
+  }
+}

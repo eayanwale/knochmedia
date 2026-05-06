@@ -27,6 +27,11 @@ gsap.registerPlugin(ScrollTrigger);
 export function initHero() {
   // ── 1. Pre-loader DOM state ────────────────────────────────────────────
 
+  // Clip hero headline lines immediately — fromTo at t=0.2 in _onLoaderComplete
+  // doesn't apply the from-state until the playhead reaches that offset, so
+  // without this set() the text is briefly visible during the loader.
+  gsap.set(document.querySelectorAll('.hero-headline .line > span'), { y: '110%' });
+
   // Hide chrome until loader completes — prevents nav flashing in before the
   // intro sequence has run. Faded back in inside loader onComplete.
   const chrome = document.querySelector('#chrome');
@@ -43,7 +48,6 @@ export function initHero() {
 
   const heroBg        = document.querySelector('.hero-bg');
   const heroMeta      = document.querySelector('.hero-meta');
-  const heroLineSans  = document.querySelectorAll('.hero-headline .line span');
   const heroSub       = document.getElementById('hero-sub');
 
   // Guard: if critical loader elements are missing, skip gracefully
@@ -51,6 +55,31 @@ export function initHero() {
     console.warn('[KNOCH-005] Loader elements missing — skipping loader animation');
     _onLoaderComplete();
     return;
+  }
+
+  // ── Hero BG cursor parallax (fine-pointer / desktop only) ─────────────
+  // x/y pixels compose with the scroll-exit yPercent without conflict —
+  // GSAP tracks each transform component independently.
+  if (heroBg && !window.matchMedia('(pointer: coarse)').matches) {
+    const heroEl = document.getElementById('hero');
+    if (heroEl) {
+      heroEl.addEventListener('mousemove', (e) => {
+        const rect = heroEl.getBoundingClientRect();
+        const xRel = (e.clientX - rect.left) / rect.width  - 0.5;
+        const yRel = (e.clientY - rect.top)  / rect.height - 0.5;
+        gsap.to(heroBg, {
+          x: xRel * 20,
+          y: yRel * 12,
+          duration: 1.8,
+          ease: 'power2.out',
+          overwrite: 'auto',
+        });
+      }, { passive: true });
+
+      heroEl.addEventListener('mouseleave', () => {
+        gsap.to(heroBg, { x: 0, y: 0, duration: 2.2, ease: 'power2.out', overwrite: 'auto' });
+      }, { passive: true });
+    }
   }
 
   // ── 3. Run loader on window.load ───────────────────────────────────────
@@ -132,12 +161,16 @@ export function initHero() {
 function _onLoaderComplete() {
   const heroBg       = document.querySelector('.hero-bg');
   const heroMeta     = document.querySelector('.hero-meta');
-  const lineSpans    = document.querySelectorAll('.hero-headline .line span');
   const heroSub      = document.getElementById('hero-sub');
+
+  /* Use > span (direct child) so .char-hover spans added by char-hover.js
+     inside the wrapper span are not matched — they have no initial offset
+     and should not participate in the line reveal. */
+  const lineSpans = document.querySelectorAll('.hero-headline .line > span');
 
   const tl = gsap.timeline();
 
-  // Bg scale-down — from the initial scale(1.1) set in CSS
+  // Bg scale-down
   if (heroBg) {
     tl.to(heroBg, {
       scale: 1,
@@ -146,7 +179,7 @@ function _onLoaderComplete() {
     }, 0);
   }
 
-  // Meta label fade in — runs concurrently with bg scale
+  // Meta label fade in
   if (heroMeta) {
     tl.to(heroMeta, {
       opacity: 1,
@@ -155,19 +188,73 @@ function _onLoaderComplete() {
     }, 0);
   }
 
-  // Headline clip-reveal — each line span slides up from translateY(110%)
-  // expo.out gives the snappy-then-settle feel of high-end editorial sites.
-  // Stagger 0.12s = subtle cascade without feeling slow.
+  // Headline clip-reveal — initial y:'110%' is pre-set by gsap.set() in initHero()
+  // so we only need a to() here. fromTo at a non-zero timeline offset doesn't
+  // apply the from-state until the playhead reaches it, causing a brief flash.
   if (lineSpans.length) {
-    tl.to(lineSpans, {
-      y: 0,
-      duration: 1.2,
-      ease: 'expo.out',
-      stagger: 0.12,
-    }, 0.2);
+    tl.to(lineSpans,
+      { y: 0, duration: 1.2, ease: 'expo.out', stagger: 0.12 },
+      0.2
+    );
   }
 
-  // Sub text fade in — appears after most of the headline has revealed
+  // ── Film-grain dissolve on per-character spans (KNOCH-030) ──────────────
+  // char-hover.js has already split the headline into .char-hover spans.
+  // We animate the shared SVG filter (feTurbulence displacement) from high
+  // distortion to zero while staggering each char's opacity from 0 → 1.
+  // This creates the effect of characters being "developed" through grain.
+  const grainChars  = document.querySelectorAll('.hero-headline .char-hover');
+  const turbulence  = document.getElementById('grain-turbulence');
+  const displace    = document.getElementById('grain-displace');
+
+  if (grainChars.length && turbulence && displace) {
+    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    if (prefersReduced) {
+      // Instant reveal — skip grain animation
+      grainChars.forEach(ch => {
+        ch.style.opacity = '1';
+        ch.classList.add('grain-revealed');
+      });
+    } else {
+      // Set initial displacement intensity high
+      displace.setAttribute('scale', '55');
+      turbulence.setAttribute('baseFrequency', '0.065');
+
+      // Animate SVG filter dissolution — shared across all chars
+      tl.to({}, {
+        duration: 1.8,
+        ease: 'power2.out',
+        onUpdate: function () {
+          const p = this.progress();
+          const scale = 55 * (1 - p);
+          const freq  = 0.065 * (1 - p * 0.8);
+          displace.setAttribute('scale', scale.toFixed(1));
+          turbulence.setAttribute('baseFrequency', freq.toFixed(4));
+        },
+        onComplete: () => {
+          displace.setAttribute('scale', '0');
+        },
+      }, 0.3);
+
+      // Stagger char opacity — each char fades in as grain dissolves
+      tl.to(grainChars, {
+        opacity: 1,
+        duration: 0.9,
+        ease: 'power2.out',
+        stagger: { from: 'start', amount: 0.8 },
+        onComplete: () => {
+          // Hand filter control back to char-hover.js
+          grainChars.forEach(ch => {
+            ch.classList.add('grain-revealed');
+            ch.style.filter = '';
+          });
+        },
+      }, 0.3);
+    }
+  }
+
+  // Sub text fade in
   if (heroSub) {
     tl.to(heroSub, {
       opacity: 1,

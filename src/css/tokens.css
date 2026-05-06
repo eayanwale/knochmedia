@@ -10,7 +10,7 @@
   /* ── Color — Core palette ── */
   --ink:   #0a0a0a;                       /* near-black primary background */
   --paper: #ede6d8;                       /* warm off-white — all text on dark */
-  --amber: #e8a23a;                       /* gold accent — active states, highlights */
+  --amber: #c4a87c;                       /* ceremony sand — warm natural accent, sampled from studio photography */
   --rust:  #7a2418;                       /* deep red — error states only, used sparingly */
   --muted: rgba(237, 230, 216, 0.45);     /* dimmed paper for secondary text */
 

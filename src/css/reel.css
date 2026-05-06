@@ -1,0 +1,276 @@
+/* =====================================================================
+   REEL — Horizontal pinned scroll carousel (KNOCH-007)
+   ===================================================================== */
+
+#reel {
+  position: relative;
+  height: 100vh;
+  overflow: hidden;
+  background: var(--ink);
+}
+
+/* Flex row — GSAP translates this element horizontally */
+.reel-track {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  padding-left: 8vw;
+  gap: 3vw;
+  will-change: transform;
+}
+
+/* ── Intro panel ─────────────────────────────────────────────────── */
+
+.reel-intro {
+  flex: 0 0 55vw;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: var(--space-4);
+  padding-right: 6vw;
+}
+
+.reel-intro-label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--amber);
+}
+
+.reel-intro-headline {
+  font-family: var(--font-serif);
+  font-size: clamp(3.5rem, 7vw, 6rem);
+  font-weight: 300;
+  line-height: 1.0;
+  color: var(--paper);
+  margin: 0;
+}
+
+.reel-intro-headline em {
+  font-style: italic;
+  color: var(--amber);
+}
+
+.reel-intro-desc {
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  color: rgba(237, 230, 216, 0.55);
+  line-height: 1.75;
+  max-width: 32ch;
+  margin: 0;
+}
+
+.reel-scroll-hint {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  color: var(--amber);
+  opacity: 0.6;
+  margin: 0;
+}
+
+/* ── Cards ───────────────────────────────────────────────────────── */
+
+.reel-card {
+  position: relative;
+  flex: 0 0 38vw;
+  height: 70vh;
+  overflow: hidden;
+  cursor: pointer;
+  outline: none;
+}
+
+.reel-card:focus-visible {
+  box-shadow: 0 0 0 2px var(--amber);
+}
+
+/* Background image — 80px wider than card to accommodate x: 40→-40 parallax */
+.reel-card-img {
+  position: absolute;
+  top: 0;
+  left: -40px;
+  width: calc(100% + 80px);
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  filter: grayscale(1) contrast(1.08) brightness(0.82);
+  transition: filter 0.7s var(--ease-cinematic);
+  will-change: transform;
+}
+
+.reel-card:hover .reel-card-img,
+.reel-card:focus-visible .reel-card-img {
+  filter: grayscale(0) contrast(1.05) brightness(0.95);
+}
+
+/* ── Film-notch L-bracket corners ───────────────────────────────── */
+
+.reel-card-notches {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.notch {
+  position: absolute;
+  width: 18px;
+  height: 18px;
+}
+
+.notch--tl {
+  top: 14px;
+  left: 14px;
+  border-top: 1px solid var(--paper);
+  border-left: 1px solid var(--paper);
+}
+
+.notch--tr {
+  top: 14px;
+  right: 14px;
+  border-top: 1px solid var(--paper);
+  border-right: 1px solid var(--paper);
+}
+
+.notch--bl {
+  bottom: 14px;
+  left: 14px;
+  border-bottom: 1px solid var(--paper);
+  border-left: 1px solid var(--paper);
+}
+
+.notch--br {
+  bottom: 14px;
+  right: 14px;
+  border-bottom: 1px solid var(--paper);
+  border-right: 1px solid var(--paper);
+}
+
+/* ── FRAME label ─────────────────────────────────────────────────── */
+
+.reel-frame-label {
+  position: absolute;
+  top: 20px;
+  left: 22px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--paper);
+  opacity: 0.8;
+  z-index: 3;
+  pointer-events: none;
+}
+
+/* ── Bottom overlay + meta ───────────────────────────────────────── */
+
+.reel-card-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 55%;
+  background: linear-gradient(to top, rgba(10, 10, 10, 0.92) 0%, transparent 100%);
+  z-index: 2;
+  pointer-events: none;
+}
+
+.reel-card-meta {
+  position: absolute;
+  bottom: 24px;
+  left: 24px;
+  right: 24px;
+  z-index: 3;
+  transform: translateY(20px);
+  opacity: 0;
+  transition:
+    transform 0.45s var(--ease-cinematic),
+    opacity 0.45s var(--ease-cinematic);
+}
+
+.reel-card:hover .reel-card-meta,
+.reel-card:focus-visible .reel-card-meta {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.reel-card-scene {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--amber);
+  margin-bottom: 6px;
+}
+
+.reel-card-title {
+  font-family: var(--font-serif);
+  font-size: clamp(1.2rem, 1.8vw, 1.65rem);
+  font-weight: 300;
+  color: var(--paper);
+  margin: 0 0 4px;
+  line-height: 1.1;
+}
+
+.reel-card-subtitle {
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  color: rgba(237, 230, 216, 0.55);
+  margin: 0;
+}
+
+/* Trailing spacer prevents abrupt end of track */
+.reel-spacer {
+  flex: 0 0 8vw;
+}
+
+/* ── Mobile — CSS snap, no GSAP pin ─────────────────────────────── */
+
+@media (max-width: 800px) {
+  #reel {
+    height: auto;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .reel-track {
+    padding-left: 6vw;
+    will-change: auto;
+  }
+
+  .reel-intro {
+    flex: 0 0 80vw;
+  }
+
+  .reel-card {
+    flex: 0 0 80vw;
+    height: 60vh;
+    scroll-snap-align: start;
+  }
+
+  /* Always show meta on mobile — no hover */
+  .reel-card-meta {
+    transform: translateY(0);
+    opacity: 1;
+    transition: none;
+  }
+}
+
+/* ── Reduced motion ──────────────────────────────────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  .reel-card-img {
+    transition: filter 0.2s ease;
+    will-change: auto;
+  }
+
+  .reel-card-meta {
+    transform: translateY(0);
+    opacity: 1;
+    transition: none;
+  }
+}

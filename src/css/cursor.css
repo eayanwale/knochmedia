@@ -53,6 +53,20 @@
   opacity: 0;
 }
 
+/* Large editorial ring on headline hover — no fill, just a slow-expanding outline.
+   mix-blend-mode: difference inverts it over any background automatically. */
+.cursor.grow--text {
+  width: 120px;
+  height: 120px;
+  background: transparent;
+  border-color: rgba(232, 162, 58, 0.35);
+  border-width: 1px;
+}
+
+.cursor.grow--text::before {
+  opacity: 0;
+}
+
 /* Hide cursor during the film-counter loader (KNOCH-005).
    hero.js adds 'loader-active' to <body> before the loader starts and removes
    it in the loader's onComplete callback. Using a class (rather than direct
@@ -84,14 +98,9 @@ body.loader-active .cursor {
    Applied to .grain pseudo-element on hero and pinned-frame overlays.
    ─────────────────────────────────────────────────────────────────────── */
 
+/* .grain::after — DEPRECATED: film grain is now applied globally via body::before
+   in global.css. Per-section overlays removed to avoid double grain stacking.
+   Class kept as no-op so HTML doesn't need updating. */
 .grain::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='grain'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23grain)' opacity='0.17'/%3E%3C/svg%3E");
-  background-repeat: repeat;
-  background-size: 200px 200px;
-  opacity: 0.17;
-  z-index: 1;
+  display: none;
 }
