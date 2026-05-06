@@ -58,10 +58,14 @@
     <link rel="stylesheet" href="/css/testimonial.css" />
     <!-- Portfolio archive grid (KNOCH-010) -->
     <link rel="stylesheet" href="/css/portfolio-grid.css" />
+    <!-- Video lightbox modal (KNOCH-012) — used when video tiles are clicked -->
+    <link rel="stylesheet" href="/css/video-lightbox.css" />
     <!-- Crosshatch lazy-load placeholder (KNOCH-030) -->
     <link rel="stylesheet" href="/css/lazy-load.css" />
     <!-- Qualified inquiry form (KNOCH-030) -->
     <link rel="stylesheet" href="/css/inquiry.css" />
+    <!-- Shared footer — credits bar / sitemap (KNOCH-015) -->
+    <link rel="stylesheet" href="/css/footer.css" />
 
     <!--
       LCP image preload — hero-01.jpg is the largest contentful paint element.
@@ -98,7 +102,7 @@
         <nav class="nav-center" aria-label="Main navigation">
           <a href="#reel"  data-scroll-to="#reel">Work</a>
           <a href="#frame" data-scroll-to="#frame">Studio</a>
-          <a href="#cta"   data-scroll-to="#cta">Inquire</a>
+          <a href="/contact.html">Inquire</a>
         </nav>
 
         <!-- REC timecode indicator — cosmetic, aria-hidden -->
@@ -216,7 +220,8 @@
 
         <!-- Scroll prompt — all-caps mono, muted; fades in last -->
         <p id="hero-sub" aria-label="Cinematic photography and film — scroll to explore">
-          CINEMATIC PHOTOGRAPHY &amp; FILM &middot; SCROLL &#8595;
+          CINEMATIC PHOTOGRAPHY &amp; FILM<br>
+          SCROLL &#8595;
         </p>
 
       </div><!-- /.hero-content -->
@@ -274,7 +279,7 @@
       </blockquote>
 
       <!-- Cosmetic signature — aria-hidden so AT skips it -->
-      <p class="interlude-sig" aria-hidden="true">— Enoch Knoch &middot; Founder</p>
+      <p class="interlude-sig" aria-hidden="true">— Enoch &middot; Founder</p>
 
     </section><!-- /#interlude -->
 
@@ -292,6 +297,7 @@
           <p class="reel-intro-label">Selected Work</p>
           <h2 class="reel-intro-headline headline-hover">Selected <em>work.</em></h2>
           <p class="reel-intro-desc">Cinematic photography and videography<br>crafted for lasting impression.</p>
+          <a class="reel-intro-portfolio-link" href="/portfolio.html">View the full portfolio &rarr;</a>
           <p class="reel-scroll-hint" aria-hidden="true">&#x2192;&nbsp;&#x2192;&nbsp;&#x2192;&nbsp; Scroll to explore</p>
         </div>
 
@@ -323,6 +329,7 @@
               <span class="frame-line-wrap"><span class="frame-line"><em>Twelve&nbsp;thousand</em>&nbsp;frames.</span></span>
               <span class="frame-line-wrap"><span class="frame-line">One pair of hands.</span></span>
             </h2>
+            <a class="frame-story-link" href="/about.html">Read the story &rarr;</a>
           </div>
 
           <!-- Right: animated stat counters -->
@@ -355,6 +362,8 @@
       </div><!-- /.sticky -->
     </section><!-- /#frame -->
 
+
+
     <!--
       Testimonial — editorial pull-quote section (KNOCH-009 / KNOCH-024).
       All 5 testimonials are fetched from Sanity CMS and rendered dynamically
@@ -383,8 +392,7 @@
 
         <!-- t1: large feature — Alex and Morgan, Wedding -->
         <article class="tile t1" role="listitem" tabindex="0"
-          data-link-type="external-gallery"
-          data-url="https://knoch.pic-time.com/-alexmorgan/gallery"
+          data-project-id="alex-morgan"
           data-depth="3"
           aria-label="Alex and Morgan — Wedding gallery">
           <div class="tile-img" data-bg="/assets/portfolio/cover-alex-morgan.jpg" role="img" aria-hidden="true"></div>
@@ -401,8 +409,7 @@
 
         <!-- t2: Fayo and Femi, Wedding -->
         <article class="tile t2" role="listitem" tabindex="0"
-          data-link-type="external-gallery"
-          data-url="https://knoch.pic-time.com/-fayofemi/gallery"
+          data-project-id="fayo-femi"
           data-depth="1" data-torn="1"
           aria-label="Fayo and Femi — Wedding gallery">
           <div class="tile-img" data-bg="/assets/portfolio/cover-fayo-femi.jpg" style="background-position: 50% 65%" role="img" aria-hidden="true"></div>
@@ -415,8 +422,7 @@
 
         <!-- t3: Shawn and Bekki, Wedding — colour image from Sanity CDN -->
         <article class="tile t3" role="listitem" tabindex="0"
-          data-link-type="external-gallery"
-          data-url="https://knoch.pic-time.com/-shawnbekki/gallery"
+          data-project-id="shawn-bekki"
           data-depth="2"
           aria-label="Shawn and Bekki — Wedding gallery">
           <div class="tile-img" data-bg="https://cdn.sanity.io/images/2779g58e/production/471e43f5f31b05082fd6d39fb928704a6b47417a-1600x1067.jpg?w=1200&auto=format" role="img" aria-hidden="true"></div>
@@ -427,8 +433,9 @@
           </div>
         </article>
 
-        <!-- t4: Woodsmen, Sports & Events — wide banner, not linkable -->
+        <!-- t4: Woodsmen, Sports & Events — wide banner -->
         <article class="tile t4" role="listitem" tabindex="0"
+          data-project-id="woodsmen"
           data-depth="1"
           aria-label="Woodsmen — Sports &amp; Events">
           <div class="tile-img" data-bg="/assets/portfolio/cover-woodsmen.jpg" role="img" aria-hidden="true"></div>
@@ -439,8 +446,9 @@
           </div>
         </article>
 
-        <!-- t5: Jojo's Graduation, Portrait — not linkable -->
+        <!-- t5: Jojo's Graduation, Portrait -->
         <article class="tile t5" role="listitem" tabindex="0"
+          data-project-id="jojos-graduation"
           data-depth="3" data-torn="2"
           aria-label="Jojo's Graduation — Portrait">
           <div class="tile-img" data-bg="/assets/portfolio/cover-jojos-graduation.jpg" role="img" aria-hidden="true"></div>
@@ -453,8 +461,7 @@
 
         <!-- t6: What Mighty Praise, Worship — YouTube maxres thumbnail -->
         <article class="tile t6" role="listitem" tabindex="0"
-          data-link-type="youtube"
-          data-url="https://youtu.be/KPerYKXlpX0?si=O5owuRrHWqUCCr68"
+          data-project-id="what-mighty-praise"
           data-depth="2"
           aria-label="What Mighty Praise — Worship film">
           <div class="tile-img" data-bg="/assets/portfolio/cover-what-mighty-praise.png" role="img" aria-hidden="true"></div>
@@ -467,8 +474,7 @@
 
         <!-- t7: Rapha Records, Brand & Commercial — YouTube maxres thumbnail -->
         <article class="tile t7" role="listitem" tabindex="0"
-          data-link-type="youtube"
-          data-url="https://www.youtube.com/watch?v=Hs25JK7WcZQ&t=75s"
+          data-project-id="rapha-records"
           data-depth="2" data-torn="3"
           aria-label="Rapha Records — Brand film">
           <div class="tile-img" data-bg="/assets/portfolio/cover-rapha-records.jpg" role="img" aria-hidden="true"></div>
@@ -486,6 +492,15 @@
 <section id="cta" class="grain" aria-label="Inquire">
       <!-- KNOCH-030: Qualified inquiry form with aperture iris transitions -->
     </section>
+
+    <!--
+      Footer host element (KNOCH-015) — populated by footer.js via
+      initFooter('minimal') on the homepage. Kept empty in markup so
+      the constants block in footer.js stays the single source of
+      truth for studio info / contact / roll number / version /
+      social links across every page.
+    -->
+    <footer id="site-footer"></footer>
 
     <!--
       Main JS entry — Vite resolves this as an ES module. GSAP ScrollTrigger

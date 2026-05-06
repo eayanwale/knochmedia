@@ -29,7 +29,12 @@
   background-size: cover;
   background-position: center;
   opacity: 0;
-  filter: grayscale(0.6) brightness(0.45) blur(2px);
+  /* Filter aligned to #frame's `.pinned-frame .bg-reveal` (KNOCH-036) so
+     the cursor-revealed image reads with the same natural-warm-with-
+     light-grayscale character as the homepage's "Eight years…" section.
+     The slight grayscale + brightness lift below 1.0 keeps the
+     testimonial text legible when overlaid on the spotlight. */
+  filter: grayscale(0.15) brightness(0.92) contrast(1.05);
   pointer-events: none;
   will-change: opacity;
 }

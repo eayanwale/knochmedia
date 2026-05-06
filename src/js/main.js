@@ -9,6 +9,8 @@ import { initFrame } from './frame.js';
 import { initTestimonial } from './testimonial.js';
 import { initPortfolioGrid } from './portfolio-grid.js';
 import { initInquiry } from './inquiry.js';
+import { initVideoLightbox } from './video-lightbox.js';
+import { initFooter } from './footer.js';
 import { getFeaturedCollections, imageUrl } from './sanity.js';
 
 // NOTE: initLenis() is intentionally NOT called here.
@@ -53,6 +55,14 @@ initPortfolioGrid();
 
 // Qualified inquiry form — 4-step aperture iris wizard (KNOCH-030)
 initInquiry();
+
+// Video lightbox modal (KNOCH-012) — used by archive tiles + reel cards
+// for video-typed projects. Builds the modal DOM lazily on first open.
+initVideoLightbox();
+
+// Footer — minimal credits bar variant on the homepage (KNOCH-015).
+// Mounts into <footer id="site-footer"> at the bottom of index.html.
+initFooter('minimal');
 
 // Horizontal reel — fetch featured collections from Sanity then init (KNOCH-007 + KNOCH-025)
 // Per-card background-position overrides — keyed by Sanity title.

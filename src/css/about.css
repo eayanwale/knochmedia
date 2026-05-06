@@ -1,0 +1,396 @@
+/*
+  about.css — About / Story page (KNOCH-013)
+  ===========================================
+  Layout overview:
+
+  ┌─ .about-hero ─────────────────────────────────────────┐
+  │  Centered headline + meta + sub                       │
+  └───────────────────────────────────────────────────────┘
+  ┌─ .about-intro ────────────────────────────────────────┐
+  │  Centered Fraunces brand statement                    │
+  └───────────────────────────────────────────────────────┘
+  ┌─ .about-split ────────────────────────────────────────┐
+  │  ┌─ .about-text (sticky) ─┐ ┌─ .about-images ────────┐│
+  │  │  4 chapters; one is   │ │  5 stacked figures w/   ││
+  │  │  .active (amber); rest│ │  aspect-ratio 3/4;      ││
+  │  │  fade to 0.45 opacity │ │  IntersectionObserver   ││
+  │  └───────────────────────┘ │  toggles chapter active ││
+  │                            └─────────────────────────┘│
+  └───────────────────────────────────────────────────────┘
+  ┌─ .about-stats ────────────────────────────────────────┐
+  │  3 inline counters in Fraunces, animated on scroll-in │
+  └───────────────────────────────────────────────────────┘
+  ┌─ .about-process ──────────────────────────────────────┐
+  │  3-col numbered steps (01 / 02 / 03)                  │
+  └───────────────────────────────────────────────────────┘
+  ┌─ .about-cta ──────────────────────────────────────────┐
+  │  Final headline + amber underline link                │
+  └───────────────────────────────────────────────────────┘
+
+  Mobile (≤800px) collapses .about-split to a single column and
+  drops position: sticky so the chapters scroll naturally with the
+  images. The active-chapter highlight still works on mobile because
+  the IntersectionObserver runs unconditionally — it just feels like
+  a colour state on the current section instead of a sync indicator.
+*/
+
+
+/* ── About hero ────────────────────────────────────────── */
+
+.about-hero {
+  min-height: 70vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 14rem 8vw 8rem;
+  border-bottom: 1px solid rgba(237, 230, 216, 0.08);
+  position: relative;
+}
+
+.about-hero-inner {
+  text-align: center;
+  max-width: 1080px;
+}
+
+.about-hero-meta {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--amber);
+  margin-bottom: 24px;
+}
+
+.about-hero-headline {
+  font-family: var(--font-serif);
+  font-weight: 300;
+  font-size: clamp(48px, 9vw, 140px);
+  line-height: 0.95;
+  letter-spacing: -0.04em;
+  color: var(--paper);
+  margin: 0;
+}
+
+.about-hero-headline em {
+  font-style: italic;
+  color: var(--amber);
+}
+
+.about-hero-sub {
+  margin-top: 28px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: rgba(237, 230, 216, 0.6);
+}
+
+
+/* ── Studio statement ──────────────────────────────────── */
+
+.about-intro {
+  padding: 8rem 8vw;
+  display: flex;
+  justify-content: center;
+}
+
+.about-intro-body {
+  font-family: var(--font-serif);
+  font-weight: 300;
+  font-style: italic;
+  font-size: clamp(20px, 2.4vw, 30px);
+  line-height: 1.55;
+  letter-spacing: -0.01em;
+  color: rgba(237, 230, 216, 0.85);
+  max-width: 32em;
+  text-align: center;
+}
+
+
+/* ── Story chapters (KNOCH-036 — pinned overlay narrative) ───
+   Four chapters stacked absolutely inside .about-story; the section
+   itself is pinned by GSAP ScrollTrigger for ~4 viewport heights of
+   scroll. As the visitor scrolls, the active chapter fades out and
+   the next fades in over it. Within each chapter, the label / title /
+   body text cascades in once the chapter becomes the active layer. */
+
+.about-story {
+  position: relative;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.about-chapter {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  /* JS sets opacity per-chapter — chapter 0 starts visible, the rest
+     start hidden. CSS keeps them all stacked so the GSAP fade tweens
+     have something to scrub through. */
+  opacity: 0;
+}
+
+.about-chapter:first-child {
+  opacity: 1;
+}
+
+/* Full-bleed bg — slight grayscale + brightness ramp keeps the photo
+   atmospheric and gives the overlaid text enough contrast for legibility.
+   The radial vignette + linear bottom-fade pseudo-element below
+   reinforces both. */
+.about-chapter-bg {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  filter: grayscale(0.35) brightness(0.55) contrast(1.05);
+  will-change: transform;
+}
+
+/* Vignette overlay — radial darkens the edges and a bottom linear
+   gradient keeps the readable area at the lower-left corner. */
+.about-chapter::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(120deg, rgba(10,10,10,0.78) 0%, rgba(10,10,10,0.45) 45%, transparent 70%),
+    radial-gradient(ellipse at center, transparent 30%, rgba(10,10,10,0.6) 95%);
+  pointer-events: none;
+}
+
+.about-chapter-content {
+  position: relative;
+  z-index: 2;
+  padding: 0 8vw;
+  max-width: 720px;
+}
+
+.about-chapter-label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--amber);
+  margin-bottom: 1.5rem;
+}
+
+.about-chapter-title {
+  font-family: var(--font-serif);
+  font-weight: 300;
+  font-size: clamp(36px, 5.5vw, 76px);
+  line-height: 1.05;
+  letter-spacing: -0.025em;
+  color: var(--paper);
+  margin-bottom: 1.8rem;
+}
+
+.about-chapter-body {
+  font-family: var(--font-sans);
+  font-size: clamp(15px, 1.4vw, 18px);
+  line-height: 1.7;
+  color: rgba(237, 230, 216, 0.85);
+  max-width: 38em;
+}
+
+
+/* ── By the numbers ────────────────────────────────────── */
+
+.about-stats {
+  padding: 10rem 8vw;
+  border-top: 1px solid rgba(237, 230, 216, 0.08);
+  border-bottom: 1px solid rgba(237, 230, 216, 0.08);
+}
+
+.about-stats-inner {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.about-stats-meta {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--amber);
+  margin-bottom: 4rem;
+}
+
+.about-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 4vw;
+}
+
+.about-stat-n {
+  font-family: var(--font-serif);
+  font-weight: 300;
+  font-size: clamp(56px, 8vw, 120px);
+  line-height: 1;
+  letter-spacing: -0.04em;
+  color: var(--paper);
+}
+
+.about-stat-n em {
+  font-style: italic;
+  color: var(--amber);
+}
+
+.about-stat-l {
+  margin-top: 16px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: rgba(237, 230, 216, 0.5);
+}
+
+
+/* ── Process ───────────────────────────────────────────── */
+
+.about-process {
+  padding: 10rem 8vw;
+}
+
+.about-process-inner {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.about-process-meta {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--amber);
+  margin-bottom: 4rem;
+}
+
+.about-process-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 4vw;
+}
+
+.about-process-step {
+  position: relative;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(237, 230, 216, 0.18);
+}
+
+.about-process-num {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.3em;
+  color: var(--amber);
+  margin-bottom: 1.5rem;
+}
+
+.about-process-title {
+  font-family: var(--font-serif);
+  font-weight: 300;
+  font-size: clamp(22px, 2.6vw, 32px);
+  line-height: 1.2;
+  letter-spacing: -0.015em;
+  color: var(--paper);
+  margin-bottom: 1rem;
+}
+
+.about-process-body {
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 1.7;
+  color: rgba(237, 230, 216, 0.7);
+}
+
+
+/* ── CTA ──────────────────────────────────────────────── */
+
+.about-cta {
+  padding: 12rem 8vw;
+  text-align: center;
+  border-top: 1px solid rgba(237, 230, 216, 0.08);
+}
+
+.about-cta-inner {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.about-cta-headline {
+  font-family: var(--font-serif);
+  font-weight: 300;
+  font-size: clamp(40px, 6vw, 80px);
+  line-height: 1;
+  letter-spacing: -0.04em;
+  color: var(--paper);
+  margin-bottom: 2.5rem;
+}
+
+.about-cta-link {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--amber);
+  text-decoration: none;
+  padding: 1rem 0;
+  border-bottom: 1px solid var(--amber);
+  transition: opacity 0.3s var(--ease-cinematic);
+}
+
+.about-cta-link:hover,
+.about-cta-link:focus-visible {
+  opacity: 0.7;
+}
+
+
+/* ── Reduced motion ────────────────────────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  .about-chapter-bg {
+    transition: none !important;
+    transform: none !important;
+  }
+}
+
+
+/* ── Mobile ≤ 800px ────────────────────────────────────── */
+
+@media (max-width: 800px) {
+  .about-hero {
+    min-height: auto;
+    padding: 10rem 6vw 6rem;
+  }
+
+  .about-intro {
+    padding: 5rem 6vw;
+  }
+
+  .about-chapter {
+    min-height: 90vh;
+  }
+
+  .about-chapter-content {
+    padding: 0 6vw;
+  }
+
+  .about-stats,
+  .about-process {
+    padding: 6rem 6vw;
+  }
+
+  .about-stats-grid,
+  .about-process-grid {
+    grid-template-columns: 1fr;
+    gap: 3rem;
+  }
+
+  .about-cta {
+    padding: 8rem 6vw;
+  }
+}

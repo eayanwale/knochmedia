@@ -11,6 +11,8 @@
     stroke       → 0.5px rgba(paper, t*0.75) — soft, semi-opaque outline
     transform    → scale(1 + 0.18 * t)       — gentle pop
     filter       → blur(0.5 * t px)          — dreamy softening of the outline
+    text-shadow  → upward smoke wisps        — three stacked blurred copies
+                   that drift up and dissipate as intensity rises (KNOCH-034)
 
   GSAP tweens a per-char proxy object (not the DOM directly) so intensity
   eases in/out at its own rate regardless of how fast the cursor moves.
@@ -28,6 +30,7 @@ function applyIntensity(span, t, isEm) {
     span.style.setProperty('-webkit-text-stroke', '');
     span.style.transform = '';
     span.style.filter = '';
+    span.style.textShadow = '';
     return;
   }
   const [r, g, b] = isEm ? AMBER : PAPER;
@@ -39,6 +42,19 @@ function applyIntensity(span, t, isEm) {
   span.style.transform = `scale(${(1 + 0.18 * t).toFixed(4)})`;
   /* Blur softens the hard stroke edge */
   span.style.filter = `blur(${(0.5 * t).toFixed(3)}px)`;
+  /* Smoke wisps — three stacked text-shadow copies that climb upward with
+     increasing offset, blur, and decreasing opacity so they read as
+     dissipating vapor. Each layer's offsets and opacity scale with t so the
+     wisps grow with cursor proximity rather than appearing as a fixed glow.
+     Slightly desaturated toward warm grey (×0.92) to read as smoke against
+     the paper/amber chars rather than a colour-matched glow. */
+  const sr = Math.round(r * 0.92);
+  const sg = Math.round(g * 0.92);
+  const sb = Math.round(b * 0.92);
+  span.style.textShadow =
+    `0 ${(-2 * t).toFixed(2)}px ${(5 * t).toFixed(2)}px rgba(${sr},${sg},${sb},${(0.32 * t).toFixed(3)}),` +
+    `0 ${(-5 * t).toFixed(2)}px ${(11 * t).toFixed(2)}px rgba(${sr},${sg},${sb},${(0.18 * t).toFixed(3)}),` +
+    `0 ${(-9 * t).toFixed(2)}px ${(18 * t).toFixed(2)}px rgba(${sr},${sg},${sb},${(0.09 * t).toFixed(3)})`;
 }
 
 function splitAndBind(root) {
@@ -132,4 +148,109 @@ export function bindCharHover(el) {
   if (window.matchMedia('(pointer: coarse)').matches) return;
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   if (el) splitAndBind(el);
+}
+
+
+/* ─────────────────────────────────────────────────────────────────────
+   Magnify variant — same proximity mechanism as the headline-hover
+   above, but the only effect is a per-character scale-up (no fade,
+   no stroke, no blur, no smoke shadow). Used by .headline-magnify
+   elements on the About page to give the chapter headings a calmer,
+   editorial-zoom feel that fits the narrative rhythm rather than the
+   homepage's filmic grain vocabulary.
+   ───────────────────────────────────────────────────────────────────── */
+
+const MAGNIFY_RADIUS = 110;
+
+function applyMagnify(span, t) {
+  if (t < 0.004) {
+    span.style.transform = '';
+    return;
+  }
+  /* Cap at 1.45× scale because the bg image + dim filter on the about
+     chapters means the type isn't carrying a heavy hover effect — a
+     gentle pop is enough. Single-axis transform → composited cheaply. */
+  span.style.transform = `scale(${(1 + 0.45 * t).toFixed(4)})`;
+}
+
+function splitAndBindMagnify(root) {
+  const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+  const textNodes = [];
+  let node;
+  while ((node = walker.nextNode())) {
+    if (node.textContent.trim()) textNodes.push(node);
+  }
+
+  textNodes.forEach(textNode => {
+    const parent = textNode.parentNode;
+    const frag   = document.createDocumentFragment();
+    const text   = textNode.textContent;
+    let i = 0;
+
+    while (i < text.length) {
+      if (/\s/.test(text[i])) {
+        const sp = document.createElement('span');
+        sp.className = 'char-space';
+        sp.innerHTML = '&nbsp;';
+        frag.appendChild(sp);
+        i++;
+      } else {
+        const word = document.createElement('span');
+        word.className = 'char-word';
+        while (i < text.length && !/\s/.test(text[i])) {
+          const span = document.createElement('span');
+          span.className = 'char-magnify';
+          span.textContent = text[i];
+          word.appendChild(span);
+          i++;
+        }
+        frag.appendChild(word);
+      }
+    }
+
+    parent.replaceChild(frag, textNode);
+  });
+
+  const chars = Array.from(root.querySelectorAll('.char-magnify'));
+  if (!chars.length) return;
+
+  const proxies = chars.map(() => ({ t: 0 }));
+
+  root.addEventListener('mousemove', (e) => {
+    const cx = e.clientX;
+    const cy = e.clientY;
+    chars.forEach((span, i) => {
+      const rect = span.getBoundingClientRect();
+      const dist = Math.hypot(
+        cx - (rect.left + rect.width  * 0.5),
+        cy - (rect.top  + rect.height * 0.5)
+      );
+      const target = Math.max(0, 1 - dist / MAGNIFY_RADIUS);
+      gsap.to(proxies[i], {
+        t: target,
+        duration: 0.28,
+        ease: 'power2.out',
+        overwrite: 'auto',
+        onUpdate: () => applyMagnify(span, proxies[i].t),
+      });
+    });
+  }, { passive: true });
+
+  root.addEventListener('mouseleave', () => {
+    chars.forEach((span, i) => {
+      gsap.to(proxies[i], {
+        t: 0,
+        duration: 0.6,
+        ease: 'power2.out',
+        overwrite: 'auto',
+        onUpdate: () => applyMagnify(span, proxies[i].t),
+      });
+    });
+  }, { passive: true });
+}
+
+export function initCharMagnify() {
+  if (window.matchMedia('(pointer: coarse)').matches) return;
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  document.querySelectorAll('.headline-magnify').forEach(splitAndBindMagnify);
 }

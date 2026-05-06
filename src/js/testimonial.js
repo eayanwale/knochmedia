@@ -34,28 +34,35 @@ gsap.registerPlugin(ScrollTrigger);
 const ADVANCE_MS  = 7000;
 const QUOTE_MAX   = 180;
 
-/* Client-name → portfolio image lookup for the hover bg reveal.
-   Keys are partial matches (case-insensitive). Add entries as
-   testimonials are added to Sanity. */
-const TESTIMONIAL_IMAGES = {
-  'rapha':   '/assets/portfolio/cover-rapha-records.jpg',
-  'alex':    '/assets/portfolio/cover-alex-morgan.jpg',
-  'fayo':    '/assets/portfolio/cover-fayo-femi.jpg',
-  'shawn':   '/assets/portfolio/cover-shawn-bekki.jpg',
-  'bekki':   '/assets/portfolio/cover-shawn-bekki.jpg',
-  'morgan':  '/assets/portfolio/cover-alex-morgan.jpg',
-};
-
-function getTestimonialImage(clientName) {
-  if (!clientName) return '/assets/portfolio/cover-alex-morgan.jpg';
-  const name = clientName.toLowerCase();
-  const key = Object.keys(TESTIMONIAL_IMAGES).find(k => name.includes(k));
-  return TESTIMONIAL_IMAGES[key] ?? '/assets/portfolio/cover-alex-morgan.jpg';
+/* Index → background image. Files in src/public/assets/testimonials/
+   are named testimonial-01.jpg…testimonial-NN.jpg matching Sanity's
+   `order asc` sort, so testimonials[i] pairs with testimonial-(i+1).jpg. */
+function getTestimonialImage(idx) {
+  const num = String((idx ?? 0) + 1).padStart(2, '0');
+  return `/assets/testimonials/testimonial-${num}.jpg`;
 }
 /* Cooldown tuned to match the word-stagger reveal duration so the user
    can advance again as soon as the text has visually settled.
    fade-out 0.18s + fade-in 0.25s + last word start (~0.66s) ≈ 0.85s total. */
 const WHEEL_WAIT  = 850;
+
+/* Spotlight reveal — KNOCH-036 (matched to the #frame section's bg-reveal
+   in src/js/frame.js so both atmospheric reveals on the homepage feel
+   consistent — same gradient shape, same radius default).
+   - SPOT_RADIUS px : the radial mask's outer radius (where alpha hits 0).
+   - BG_OPACITY     : peak opacity of the background image while hovered. */
+const SPOT_RADIUS = 200;
+const BG_OPACITY  = 1.0;
+
+/* Simple two-stop falloff — same gradient as #frame's spotlight: black at
+   the centre fading to transparent at 82% of the radius. The defined
+   edge reads cleanly against the section's dark surround. To keep the
+   reveal from feeling like a hard cut-out, .testimonial-bg's filter
+   stays slightly grayscale-d so the revealed image blends with the
+   section colour palette rather than punching through saturated. */
+function buildSpotMask(x, y) {
+  return `radial-gradient(circle ${SPOT_RADIUS}px at ${x}px ${y}px, black 0%, transparent 82%)`;
+}
 
 /* ── Helpers ────────────────────────────────────────────────────── */
 
@@ -153,6 +160,30 @@ function revealBatch(words, attr, startIdx) {
   }
 
   return newIdx;
+}
+
+/* Inverse of revealBatch — fades the most recently revealed batch back to
+   the outlined ghost state on scroll-up. Called only with the slice that
+   actually transitioned (oldIdx-1 down to newIdx) so we don't re-animate
+   already-hidden words. */
+function unrevealBatch(words, attr, newIdx, oldIdx) {
+  const batch = words.slice(newIdx, oldIdx);
+  if (!batch.length) return;
+
+  gsap.to(batch, {
+    color: 'transparent',
+    webkitTextStroke: '0.5px rgba(237, 230, 216, 0.35)',
+    y: 6,
+    stagger: { from: 'end', amount: 0.18 },
+    duration: 0.32,
+    ease: 'expo.in',
+    overwrite: 'auto',
+  });
+
+  /* Hide attribution — text is no longer fully revealed */
+  if (attr) {
+    gsap.to(attr, { opacity: 0, y: 8, duration: 0.25, ease: 'expo.in', overwrite: 'auto' });
+  }
 }
 
 /* ── Main init ──────────────────────────────────────────────────── */
@@ -274,12 +305,12 @@ export async function initTestimonial() {
       /* Cross-fade the background image so slide changes don't snap abruptly.
          If spotlight is active: fade out → swap image → fade back in.
          If not hovered: just swap silently. */
-      const newBg = `url('${getTestimonialImage(testimonials[idx]?.clientName)}')`;
+      const newBg = `url('${getTestimonialImage(idx)}')`;
       if (sectionHovered) {
         gsap.to(bgEl, { opacity: 0, duration: 0.2, ease: 'power2.in', overwrite: 'auto',
           onComplete: () => {
             bgEl.style.backgroundImage = newBg;
-            if (sectionHovered) gsap.to(bgEl, { opacity: 0.58, duration: 0.4, ease: 'power2.out' });
+            if (sectionHovered) gsap.to(bgEl, { opacity: BG_OPACITY, duration: 0.4, ease: 'power2.out' });
           }
         });
       } else {
@@ -361,8 +392,10 @@ export async function initTestimonial() {
         return;
       }
 
-      /* At the first testimonial scrolling up → release to prev section */
-      if (!goingDown && current <= 0) {
+      /* At the first testimonial scrolling up AND nothing left to un-reveal
+         → release to prev section. revealedIdx === 0 means the quote is
+         already in its outlined ghost state. */
+      if (!goingDown && current <= 0 && revealedIdx === 0) {
         stopIntercepting();
         return;
       }
@@ -372,7 +405,7 @@ export async function initTestimonial() {
 
       stopTimer();
 
-      /* Scroll-write: if text not fully revealed, reveal next batch (fast cooldown) */
+      /* Scroll-write down: reveal next batch (fast cooldown) */
       if (goingDown && !textRevealed) {
         if (!wheelReady) return;
         wheelReady = false;
@@ -384,7 +417,26 @@ export async function initTestimonial() {
         return;
       }
 
-      /* Slide transitions use longer cooldown to prevent skipping */
+      /* Scroll-write up: un-reveal the previous batch before changing slides.
+         Mirrors the typing motion — words ghost back from end to start with
+         the same cooldown as a forward reveal. Only fires while there's
+         still revealed text on the current testimonial. */
+      if (!goingDown && revealedIdx > 0) {
+        if (!wheelReady) return;
+        wheelReady = false;
+        setTimeout(() => { wheelReady = true; }, REVEAL_WAIT);
+
+        const oldIdx = revealedIdx;
+        revealedIdx = Math.max(0, revealedIdx - WORDS_PER_SCROLL);
+        unrevealBatch(currentWords, currentAttr, revealedIdx, oldIdx);
+        textRevealed = false;
+        if (inView) startTimer();
+        return;
+      }
+
+      /* Slide transitions use longer cooldown to prevent skipping.
+         Reached only at testimonial boundaries (top of current quote
+         scrolling up, or fully revealed quote scrolling down). */
       if (!wheelReady) return;
       wheelReady = false;
       setTimeout(() => { wheelReady = true; }, WHEEL_WAIT);
@@ -431,7 +483,7 @@ export async function initTestimonial() {
         ease: 'power2.out',
         overwrite: 'auto',
         onUpdate() {
-          const m = `radial-gradient(circle 220px at ${spotPos.x}px ${spotPos.y}px, black 0%, transparent 80%)`;
+          const m = buildSpotMask(spotPos.x, spotPos.y);
           bgEl.style.maskImage = m;
           bgEl.style.webkitMaskImage = m;
         },
@@ -448,10 +500,10 @@ export async function initTestimonial() {
       const rect = section.getBoundingClientRect();
       spotPos.x = e.clientX - rect.left;
       spotPos.y = e.clientY - rect.top;
-      const m = `radial-gradient(circle 220px at ${spotPos.x}px ${spotPos.y}px, black 0%, transparent 80%)`;
+      const m = buildSpotMask(spotPos.x, spotPos.y);
       bgEl.style.maskImage = m;
       bgEl.style.webkitMaskImage = m;
-      gsap.to(bgEl, { opacity: 0.58, duration: 0.5, ease: 'power2.out', overwrite: 'auto' });
+      gsap.to(bgEl, { opacity: BG_OPACITY, duration: 0.5, ease: 'power2.out', overwrite: 'auto' });
     });
     section.addEventListener('mouseleave', () => {
       sectionHovered = false;

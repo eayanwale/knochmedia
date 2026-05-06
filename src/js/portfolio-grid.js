@@ -28,20 +28,9 @@ import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { getGalleryCollections, imageUrl } from './sanity.js';
 import { initLazyLoad } from './lazy-load.js';
+import { handleTileActivate } from './tile-router.js';
 
 gsap.registerPlugin(ScrollTrigger);
-
-function handleTileClick(tile) {
-  const type = tile.dataset.linkType;
-  const url  = tile.dataset.url;
-  if (!url) return;
-
-  if (type === 'external-gallery' || type === 'youtube') {
-    window.open(url, '_blank', 'noopener,noreferrer');
-  } else {
-    window.location.href = url;
-  }
-}
 
 
 export function initPortfolioGrid() {
@@ -96,10 +85,14 @@ export function initPortfolioGrid() {
   });
 
 
+  /* Tile activation routes through the central tile-router (KNOCH-012):
+     video projects open the lightbox, photo projects expand into the
+     project.html page via the GSAP transition. Any tile lacking
+     data-project-id falls back to no-op (the router handles it). */
   section.querySelectorAll('.tile').forEach(tile => {
-    tile.addEventListener('click', () => handleTileClick(tile));
+    tile.addEventListener('click', () => handleTileActivate(tile));
     tile.addEventListener('keydown', e => {
-      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleTileClick(tile); }
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleTileActivate(tile); }
     });
   });
 
@@ -140,6 +133,26 @@ export function initPortfolioGrid() {
       start: 'top 88%',
       toggleActions: 'restart none none reverse',
     },
+  });
+
+  /* Subtle ambient float — each tile bobs independently on yPercent
+     (separate from the entry tween's y-pixel transform, so they compose
+     cleanly without overwriting each other). Pseudo-random durations
+     keep the tiles out of phase so the grid feels alive rather than
+     pulsing in unison. Range stays at ~3% of tile height — small enough
+     not to disturb hover targeting, big enough to read on the larger
+     tiles (t1, t6, t7).
+     Using yPercent here also avoids conflict with the .tile-img yPercent
+     parallax inside each tile, since those target different elements. */
+  tiles.forEach((tile, i) => {
+    gsap.to(tile, {
+      yPercent: -3 - (i % 2),                  // -3 or -4
+      duration: 3.8 + (i % 3) * 0.7,           // 3.8 - 5.2s
+      delay: -((i * 0.42) % 4),                // negative delay desyncs phases
+      ease: 'sine.inOut',
+      yoyo: true,
+      repeat: -1,
+    });
   });
 
   tiles.forEach(tile => {
