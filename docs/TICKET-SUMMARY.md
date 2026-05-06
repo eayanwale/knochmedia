@@ -1,7 +1,7 @@
 # Knoch Media — Ticket Summary
 
 > **Living document.** Updated whenever tickets are created, modified, split, or closed.  
-> Last updated: 2026-05-06 | Total tickets: 30 | Open: 10 | In progress: 1 | In review: 0 | Done: 16 | Deferred: 3
+> Last updated: 2026-05-06 | Total tickets: 30 | Open: 10 | In progress: 0 | In review: 1 | Done: 16 | Deferred: 3
 
 ---
 
@@ -72,7 +72,7 @@ Build in this order: About → Portfolio page → Project detail → Contact →
 | ID | Title | Status | Branch | Notes |
 |----|-------|--------|--------|-------|
 | [KNOCH-013](tickets/KNOCH-013.md) | About / Story Section (about.html) | `✅` | `feature/KNOCH-013-about-story-section` | QA PASSED — merged to test |
-| [KNOCH-011](tickets/KNOCH-011.md) | Portfolio Filter System (portfolio.html) | `🔵` | `feature/KNOCH-011-portfolio-filter` | Category tabs, URL hash state |
+| [KNOCH-011](tickets/KNOCH-011.md) | Portfolio Filter System (portfolio.html) | `🔵` | `feature/KNOCH-011-portfolio-filter` | PR #20 dev → test (in review) |
 | [KNOCH-012](tickets/KNOCH-012.md) | Project Detail View + Video Lightbox | `⬜` | — | Expanding tile transition |
 | [KNOCH-014](tickets/KNOCH-014.md) | Contact — Multi-Step Qualified Inquiry Form | `⬜` | — | 3-step form + Calendly sidebar |
 | [KNOCH-015](tickets/KNOCH-015.md) | Footer — Credits Bar + Sitemap Variant | `⬜` | — | Two variants: minimal + expanded |
@@ -173,6 +173,28 @@ CMS layer (cuts across phases — wire each section after it is built):
 ## Changelog
 
 All modifications to this document and ticket files are logged here. Tester agent and code review feedback should be recorded as entries.
+
+---
+
+### 2026-05-06 — KNOCH-011 PR opened — IN REVIEW
+
+**Action:** PR #20 opened dev → test
+**Tickets affected:** KNOCH-011
+**Reason:** Builder completed Portfolio Filter System (portfolio.html); PR open for tester / code review
+**Changes:**
+- KNOCH-011: Status changed 🔵 In progress → 🔵 In review
+- PR #20 opened: dev → test at https://github.com/eayanwale/knochmedia/pull/20
+- Files delivered:
+  - `src/portfolio.html` — full page (hero with filter tabs, 12-card grid, count + Load more meta row)
+  - `src/css/portfolio-page.css` — page styles (hero, tabs with animated underline, 3-col grid w/ aspect-ratio 4/5 cards, hover-reveal label, meta row, mobile + reduced-motion)
+  - `src/js/portfolio-page.js` — filter state machine (PAGE_SIZE=8), GSAP overlapping exit/enter tweens, URL hash sync via replaceState + hashchange, Load more
+  - `src/js/portfolio-main.js` — slim entry point (no homepage modules)
+  - `src/index.html` — "View the full portfolio →" link in `.reel-intro` panel for discoverability
+  - `src/css/reel.css` — `.reel-intro-portfolio-link` styles matching the existing amber-underline mono link vocabulary
+  - `vite.config.js` — portfolio.html added as third `rollupOptions.input`
+- Build: 60 modules → 65, dist/portfolio.html 14.31 kB / 3.39 kB gz, dist/index.html 26.62 kB / 7.79 kB gz, 132 ms
+- Header counts updated: In progress 1→0, In review 0→1
+**Requested by:** Builder agent
 
 ---
 
