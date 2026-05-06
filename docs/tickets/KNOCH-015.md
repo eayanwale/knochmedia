@@ -1,6 +1,6 @@
 # KNOCH-015 — Footer
 
-## Status: IN PROGRESS
+## Status: IN REVIEW
 ## Priority: P2 (medium)
 ## Epic: EPIC-003 — Secondary Pages
 ## Branch: feature/KNOCH-015-footer

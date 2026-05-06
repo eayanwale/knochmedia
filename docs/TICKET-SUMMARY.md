@@ -1,7 +1,7 @@
 # Knoch Media — Ticket Summary
 
 > **Living document.** Updated whenever tickets are created, modified, split, or closed.  
-> Last updated: 2026-05-06 | Total tickets: 30 | Open: 6 | In progress: 1 | In review: 0 | Done: 19 | Deferred: 4
+> Last updated: 2026-05-06 | Total tickets: 30 | Open: 6 | In progress: 0 | In review: 1 | Done: 19 | Deferred: 4
 
 ---
 
@@ -75,7 +75,7 @@ Build in this order: About → Portfolio page → Project detail → Contact →
 | [KNOCH-011](tickets/KNOCH-011.md) | Portfolio Filter System (portfolio.html) | `✅` | `feature/KNOCH-011-portfolio-filter` | QA PASSED — merged to test |
 | [KNOCH-012](tickets/KNOCH-012.md) | Project Detail View + Video Lightbox | `✅` | `feature/KNOCH-012-project-detail-lightbox` | PR #21 merged + KNOCH-036 polish bundled |
 | [KNOCH-014](tickets/KNOCH-014.md) | Contact — Multi-Step Qualified Inquiry Form | `✅` | `feature/KNOCH-014-contact-form` | PR #22 merged to test |
-| [KNOCH-015](tickets/KNOCH-015.md) | Footer — Credits Bar + Sitemap Variant | `🔵` | `feature/KNOCH-015-footer` | Two variants: minimal + expanded |
+| [KNOCH-015](tickets/KNOCH-015.md) | Footer — Credits Bar + Sitemap Variant | `🔵` | `feature/KNOCH-015-footer` | PR #23 — In review (dev → test) |
 
 ---
 
@@ -173,6 +173,26 @@ CMS layer (cuts across phases — wire each section after it is built):
 ## Changelog
 
 All modifications to this document and ticket files are logged here. Tester agent and code review feedback should be recorded as entries.
+
+---
+
+### 2026-05-06 — KNOCH-015 PR opened — IN REVIEW
+
+**Action:** PR #23 opened dev → test
+**Tickets affected:** KNOCH-015
+**Reason:** Footer module shipped — minimal credits bar (homepage) and expanded sitemap (about / portfolio / project / contact) sharing one `<footer id="site-footer">` host populated by `initFooter(variant)`. Editable constants block in footer.js means roll number / version / contact / social can be bumped in a one-line edit without engineer help.
+**Changes:**
+- KNOCH-015: Status IN PROGRESS → IN REVIEW.
+- PR #23 opened: dev → test at https://github.com/eayanwale/knochmedia/pull/23
+- Files delivered:
+  - `src/js/footer.js` — constants, SVG icons (Instagram + YouTube, 18×18, currentColor), `initFooter('minimal'|'expanded')`
+  - `src/css/footer.css` — base + minimal/expanded/mobile variants; 10 px mono / 0.2em LS / uppercase / paper @ 40 % typography matching chrome
+  - `src/index.html`, `src/about.html`, `src/portfolio.html`, `src/project.html`, `src/contact.html` — `<link rel="stylesheet" href="/css/footer.css">` + `<footer id="site-footer">`
+  - `src/js/main.js`, `about-main.js`, `portfolio-main.js`, `project-main.js`, `contact-main.js` — initFooter wiring
+  - `src/about.html` — `id="process"` on the How-We-Work section so the footer Studio column's Process link deep-links
+- Build: 5 HTML entries → emit; footer.css 7.50 kB / 2.37 kB gz; 144 ms.
+- Header counts updated: In progress 1→0, In review 0→1.
+**Requested by:** Builder agent
 
 ---
 
