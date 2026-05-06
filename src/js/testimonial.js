@@ -49,23 +49,29 @@ const WHEEL_WAIT  = 850;
 /* Spotlight reveal — KNOCH-035.
    - SPOT_RADIUS px : the radial mask's outer radius (where alpha hits 0).
    - BG_OPACITY     : peak opacity of the background image while hovered. */
-const SPOT_RADIUS = 460;
-const BG_OPACITY  = 0.75;
+const SPOT_RADIUS = 900;
+const BG_OPACITY  = 0.72;
 
-/* Multi-stop falloff — the original two-stop linear fade
-   (black 0% → transparent 90%) left a perceptible hard ring where the
-   reveal "ended". This curve holds a hot opaque core (out to 22% of the
-   radius), then steps through 0.65 and 0.22 alpha so the falloff feels
-   like a cinematic spotlight that dissolves into the dark rather than
-   one with a visible edge. Stops are alpha-on-black so they layer on
-   top of the section's dark background without bleeding any tint. */
+/* Long-tail feather — earlier curves still left a perceptible edge. This
+   curve extends the gradient out to 900px so the same "perceived" reveal
+   size (~360px around the cursor) is just the visible tip of a much
+   longer alpha tail. Most of the radius (520→900px) is in low-alpha
+   territory that dissolves imperceptibly into the section's dark
+   surround — there's no ring because there's no place where alpha drops
+   suddenly enough for the eye to latch onto.
+   The seven stops trace an ease-out curve: high alpha at the center,
+   most of the falloff happening between 18% and 58%, then a long faint
+   tail from 58% to 100%. Stops are alpha-on-black so the mask layers
+   without tinting the bg image. */
 function buildSpotMask(x, y) {
   return (
     `radial-gradient(circle ${SPOT_RADIUS}px at ${x}px ${y}px,` +
     ` black 0%,` +
-    ` black 22%,` +
-    ` rgba(0,0,0,0.65) 50%,` +
-    ` rgba(0,0,0,0.22) 78%,` +
+    ` rgba(0,0,0,0.88) 18%,` +
+    ` rgba(0,0,0,0.60) 36%,` +
+    ` rgba(0,0,0,0.32) 58%,` +
+    ` rgba(0,0,0,0.14) 76%,` +
+    ` rgba(0,0,0,0.04) 90%,` +
     ` transparent 100%)`
   );
 }
