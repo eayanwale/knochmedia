@@ -22,6 +22,8 @@ Thumbs.db
 
 # Claude Code local-only machine settings (not shared)
 .claude/settings.local.json
+# Agent scratch / memory directory — not project source
+.claude/memories/
 
 # Legacy / removed files
 claude-code-setup-guide.md
