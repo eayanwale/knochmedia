@@ -12,12 +12,14 @@ import { initCursor }         from './cursor.js';
 import { initCharHover }      from './char-hover.js';
 import { initLenis }          from './lenis.js';
 import { initContactPage }    from './contact-page.js';
+import { initFooter }         from './footer.js';
 
 initLazyLoad();
 initChrome();
 initCursor();
 initCharHover();
 initContactPage();
+initFooter('expanded');
 
 window.addEventListener('load', () => {
   initLenis();
