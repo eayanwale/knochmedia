@@ -198,13 +198,69 @@ function _onLoaderComplete() {
     );
   }
 
+  // ── Film-grain dissolve on per-character spans (KNOCH-030) ──────────────
+  // char-hover.js has already split the headline into .char-hover spans.
+  // We animate the shared SVG filter (feTurbulence displacement) from high
+  // distortion to zero while staggering each char's opacity from 0 → 1.
+  // This creates the effect of characters being "developed" through grain.
+  const grainChars  = document.querySelectorAll('.hero-headline .char-hover');
+  const turbulence  = document.getElementById('grain-turbulence');
+  const displace    = document.getElementById('grain-displace');
+
+  if (grainChars.length && turbulence && displace) {
+    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    if (prefersReduced) {
+      // Instant reveal — skip grain animation
+      grainChars.forEach(ch => {
+        ch.style.opacity = '1';
+        ch.classList.add('grain-revealed');
+      });
+    } else {
+      // Set initial displacement intensity high
+      displace.setAttribute('scale', '55');
+      turbulence.setAttribute('baseFrequency', '0.065');
+
+      // Animate SVG filter dissolution — shared across all chars
+      tl.to({}, {
+        duration: 1.8,
+        ease: 'power2.out',
+        onUpdate: function () {
+          const p = this.progress();
+          const scale = 55 * (1 - p);
+          const freq  = 0.065 * (1 - p * 0.8);
+          displace.setAttribute('scale', scale.toFixed(1));
+          turbulence.setAttribute('baseFrequency', freq.toFixed(4));
+        },
+        onComplete: () => {
+          displace.setAttribute('scale', '0');
+        },
+      }, 0.3);
+
+      // Stagger char opacity — each char fades in as grain dissolves
+      tl.to(grainChars, {
+        opacity: 1,
+        duration: 0.9,
+        ease: 'power2.out',
+        stagger: { from: 'start', amount: 0.8 },
+        onComplete: () => {
+          // Hand filter control back to char-hover.js
+          grainChars.forEach(ch => {
+            ch.classList.add('grain-revealed');
+            ch.style.filter = '';
+          });
+        },
+      }, 0.3);
+    }
+  }
+
   // Sub text fade in
   if (heroSub) {
     tl.to(heroSub, {
       opacity: 1,
       duration: 0.8,
       ease: 'power2.out',
-    }, 1.0);
+    }, 1.4);
   }
 
   // Set up scroll-exit triggers once the reveal completes

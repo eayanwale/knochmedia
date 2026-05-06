@@ -1,3 +1,4 @@
+import { initLazyLoad } from './lazy-load.js';
 import { initChrome } from './chrome.js';
 import { initCursor } from './cursor.js';
 import { initCharHover } from './char-hover.js';
@@ -7,6 +8,7 @@ import { initReel } from './reel.js';
 import { initFrame } from './frame.js';
 import { initTestimonial } from './testimonial.js';
 import { initPortfolioGrid } from './portfolio-grid.js';
+import { initInquiry } from './inquiry.js';
 import { getFeaturedCollections, imageUrl } from './sanity.js';
 
 // NOTE: initLenis() is intentionally NOT called here.
@@ -15,6 +17,11 @@ import { getFeaturedCollections, imageUrl } from './sanity.js';
 // only activates once the hero image is loaded and the intro has played.
 // Calling it here would allow scrolling during the loader and would set up
 // the ScrollTrigger proxy before the page is visually ready.
+
+// Lazy-load: set up IntersectionObserver for [data-bg] elements (KNOCH-030)
+// Must run before section inits so crosshatch placeholders are in place
+// when GSAP animations reference .tile-img elements.
+initLazyLoad();
 
 // Chrome navigation + timecode bar (KNOCH-003)
 initChrome();
@@ -43,6 +50,9 @@ initTestimonial();
 
 // Portfolio archive grid — asymmetric 12-col contact-sheet (KNOCH-010)
 initPortfolioGrid();
+
+// Qualified inquiry form — 4-step aperture iris wizard (KNOCH-030)
+initInquiry();
 
 // Horizontal reel — fetch featured collections from Sanity then init (KNOCH-007 + KNOCH-025)
 // Per-card background-position overrides — keyed by Sanity title.

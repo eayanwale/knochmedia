@@ -181,6 +181,77 @@
   backdrop-filter: blur(4px);
 }
 
+/* ── Experimental tile shapes (KNOCH-030) ─────────────────
+   Each tile gets a distinct geometric form — mixing circles,
+   arches, angular cuts, and rounded cards to break the
+   rectangular monotony. Creates a mood-board / darkroom-table
+   collage aesthetic where every print is trimmed differently.
+   Transition on clip-path lets shapes subtly animate on hover. */
+
+.tile {
+  transition: clip-path 0.6s var(--ease-cinematic);
+}
+
+/* t1: large hero tile — subtle rounded corners, stays rectangular */
+.t1 { clip-path: inset(0 round 6px); }
+
+/* t2: pill-arch top — like a film canister cross-section */
+.t2 { clip-path: inset(0 round 80px 80px 6px 6px); }
+
+/* t3: soft rounded card */
+.t3 { clip-path: inset(0 round 20px); }
+
+/* t4: wide banner — subtle rounded corners */
+.t4 { clip-path: inset(0 round 6px); }
+
+/* t5: circular portrait — full tile clipped, label sits inside circle.
+   Gradient is radial from bottom-center so it fades within the circle. */
+.t5 { clip-path: circle(50% at 50% 50%); }
+.t5 .tile-label {
+  background: radial-gradient(ellipse at 50% 100%, rgba(10, 10, 10, 0.85) 0%, transparent 70%);
+  text-align: center;
+  padding: 1.5rem 2rem 1.8rem;
+}
+
+/* t6: tall arch — rounded top, flat base */
+.t6 { clip-path: inset(0 round 100px 100px 6px 6px); }
+
+/* t7: angular cut — notched bottom-right corner */
+.t7 { clip-path: polygon(0% 0%, 100% 0%, 100% 82%, 82% 100%, 0% 100%); }
+
+/* ── Halftone dot overlay (KNOCH-030) ─────────────────────
+   Radial-gradient creates an evenly-spaced dot pattern.
+   mix-blend-mode: color-burn darkens the underlying image through
+   the dots, giving a printed/darkroom contact-sheet texture.
+   Visible only on hover to avoid visual noise at rest. */
+
+.tile::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  opacity: 0;
+  mix-blend-mode: color-burn;
+  background-image: radial-gradient(
+    circle 1.5px,
+    rgba(237, 230, 216, 0.3) 0.8px,
+    transparent 0.8px
+  );
+  background-size: 6px 6px;
+  transition: opacity 0.6s var(--ease-cinematic);
+}
+
+.tile:hover::after,
+.tile:focus-visible::after {
+  opacity: 0.35;
+}
+
+/* Ensure tile-label stays above halftone overlay */
+.tile-label { z-index: 3; }
+.tile-badge { z-index: 3; }
+.tile-notch { z-index: 3; }
+
 /* ── Reduced-motion override ────────────────────────────── */
 
 @media (prefers-reduced-motion: reduce) {

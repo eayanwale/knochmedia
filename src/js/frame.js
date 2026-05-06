@@ -68,10 +68,10 @@ export function initFrame() {
       scrub: 0.8,
       invalidateOnRefresh: true,
       onUpdate(self) {
-        if (self.progress >= 0.55 && !statsPlayed) {
+        if (self.progress >= 0.3 && !statsPlayed) {
           statsPlayed = true;
           playStats();
-        } else if (self.progress < 0.35 && statsPlayed) {
+        } else if (self.progress < 0.15 && statsPlayed) {
           /* Scrolled back above trigger — reset so stats count again on re-entry */
           statsPlayed = false;
           gsap.killTweensOf([...statEls, ...statNums, ...statLbls]);
@@ -167,8 +167,8 @@ export function initFrame() {
     gsap.to(statEls, {
       opacity: 1,
       y: 0,
-      stagger: 0.12,
-      duration: 0.9,
+      stagger: 0.2,
+      duration: 1.2,
       ease: 'expo.out',
     });
 
@@ -181,8 +181,8 @@ export function initFrame() {
 
       gsap.to(proxy, {
         v: target,
-        delay: i * 0.12,
-        duration: 1.4,
+        delay: i * 0.2,
+        duration: 2.6,
         ease: 'expo.out',
         onUpdate() {
           const n = Math.round(proxy.v).toLocaleString();
@@ -197,8 +197,8 @@ export function initFrame() {
       if (statLbls[i]) {
         gsap.to(statLbls[i], {
           opacity: 1,
-          delay: i * 0.12 + 0.2,
-          duration: 0.5,
+          delay: i * 0.2 + 0.3,
+          duration: 0.7,
           ease: 'expo.out',
         });
       }

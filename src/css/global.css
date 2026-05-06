@@ -25,9 +25,15 @@ html {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 
-  /* Prevent layout shift from scrollbar appearing/disappearing */
   overflow-y: scroll;
   scroll-behavior: auto; /* Lenis (KNOCH-016) overrides this */
+
+  /* Hide scrollbar across all browsers */
+  scrollbar-width: none;           /* Firefox */
+  -ms-overflow-style: none;        /* IE / Edge */
+}
+html::-webkit-scrollbar {
+  display: none;                   /* Chrome / Safari / Opera */
 }
 
 body {
@@ -35,6 +41,23 @@ body {
   color: var(--paper);
   min-height: 100dvh;
   /* cursor: none applied only on devices with fine pointer (desktop) */
+}
+
+/* Full-screen film grain — fixed overlay covering the entire site including loader.
+   z-index sits above everything visually but pointer-events: none keeps it non-blocking.
+   mix-blend-mode: screen adds light noise to dark areas without washing out light areas.
+   At 0.12 opacity, grain is visible on #0a0a0a backgrounds as subtle speckles. */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 99999;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23g)' opacity='1'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 200px 200px;
+  mix-blend-mode: screen;
+  opacity: 0.12;
 }
 
 /* ── Custom cursor — desktop only ── */
@@ -98,4 +121,17 @@ ol {
   -webkit-text-stroke: 0.5px transparent;
   transform-origin: center 80%; /* scale from near-baseline so text doesn't float up */
   /* No CSS transitions — GSAP proxy tweening owns all easing */
+}
+
+/* Word wrapper — keeps all chars of a word together so the browser
+   can only line-break between words, never mid-word */
+.char-word {
+  display: inline-block;
+  white-space: nowrap;
+}
+
+/* Space wrapper — visible gap between words */
+.char-space {
+  display: inline-block;
+  width: 0.25em;
 }

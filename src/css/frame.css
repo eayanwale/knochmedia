@@ -38,7 +38,7 @@
   background-image: url('/assets/studio/banner.jpg');
   background-size: cover;
   background-position: center;
-  filter: brightness(0.75) grayscale(0.05) contrast(1.05);
+  filter: brightness(1.0) grayscale(0) contrast(1.05);
   opacity: 0;
   pointer-events: none;
   will-change: opacity;

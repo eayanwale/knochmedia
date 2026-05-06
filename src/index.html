@@ -58,6 +58,10 @@
     <link rel="stylesheet" href="/css/testimonial.css" />
     <!-- Portfolio archive grid (KNOCH-010) -->
     <link rel="stylesheet" href="/css/portfolio-grid.css" />
+    <!-- Crosshatch lazy-load placeholder (KNOCH-030) -->
+    <link rel="stylesheet" href="/css/lazy-load.css" />
+    <!-- Qualified inquiry form (KNOCH-030) -->
+    <link rel="stylesheet" href="/css/inquiry.css" />
 
     <!--
       LCP image preload — hero-01.jpg is the largest contentful paint element.
@@ -138,6 +142,43 @@
         <div class="loader-progress-fill"></div>
       </div>
     </div>
+
+    <!--
+      SVG filter & clip-path definitions (KNOCH-030).
+      • #grain-dissolve: feTurbulence + feDisplacementMap for hero char reveals.
+      • #torn-edge-1/2/3: organic edge clip-paths for portfolio grid tiles.
+      Positioned offscreen (width/height 0) so they don't affect layout.
+    -->
+    <svg aria-hidden="true" style="position:absolute;width:0;height:0;overflow:hidden">
+      <defs>
+        <!-- Film-grain displacement filter — hero character dissolve reveal -->
+        <filter id="grain-dissolve" x="-20%" y="-20%" width="140%" height="140%">
+          <feTurbulence id="grain-turbulence"
+            type="fractalNoise"
+            baseFrequency="0.065"
+            numOctaves="3"
+            seed="42"
+            result="noise" />
+          <feDisplacementMap id="grain-displace"
+            in="SourceGraphic"
+            in2="noise"
+            scale="0"
+            xChannelSelector="R"
+            yChannelSelector="G" />
+        </filter>
+
+        <!-- Torn-edge clip paths — organic paper-tear masks for grid tiles -->
+        <clipPath id="torn-edge-1" clipPathUnits="objectBoundingBox">
+          <path d="M0,0.02 L0.03,0 L0.08,0.015 L0.15,0 L0.22,0.01 L0.3,0 L0.38,0.02 L0.45,0 L0.52,0.01 L0.6,0 L0.68,0.015 L0.75,0 L0.82,0.02 L0.9,0 L0.95,0.01 L1,0 L1,0.98 L0.97,1 L0.92,0.985 L0.85,1 L0.78,0.99 L0.7,1 L0.62,0.98 L0.55,1 L0.48,0.99 L0.4,1 L0.32,0.985 L0.25,1 L0.18,0.98 L0.1,1 L0.05,0.99 L0,1 Z"/>
+        </clipPath>
+        <clipPath id="torn-edge-2" clipPathUnits="objectBoundingBox">
+          <path d="M0,0 L0.05,0.02 L0.12,0 L0.2,0.015 L0.28,0 L0.35,0.02 L0.42,0 L0.5,0.01 L0.58,0 L0.65,0.02 L0.72,0 L0.8,0.015 L0.88,0 L0.95,0.02 L1,0 L1,1 L0.95,0.98 L0.88,1 L0.8,0.985 L0.72,1 L0.65,0.98 L0.58,1 L0.5,0.99 L0.42,1 L0.35,0.98 L0.28,1 L0.2,0.985 L0.12,1 L0.05,0.98 L0,1 Z"/>
+        </clipPath>
+        <clipPath id="torn-edge-3" clipPathUnits="objectBoundingBox">
+          <path d="M0.01,0 L0.06,0.018 L0.14,0.003 L0.21,0.02 L0.29,0 L0.36,0.015 L0.44,0.003 L0.51,0.02 L0.59,0 L0.66,0.018 L0.74,0 L0.81,0.015 L0.89,0.003 L0.96,0.02 L1,0.005 L1,0.995 L0.96,0.98 L0.89,0.997 L0.81,0.985 L0.74,1 L0.66,0.982 L0.59,1 L0.51,0.98 L0.44,0.997 L0.36,0.985 L0.29,1 L0.21,0.98 L0.14,0.997 L0.06,0.982 L0,1 L0,0.005 Z"/>
+        </clipPath>
+      </defs>
+    </svg>
 
     <!--
       Hero section — first viewport, 100vh × 100vw.
@@ -279,7 +320,7 @@
             <p class="meta-tag">— THE STUDIO &middot; BY THE NUMBERS</p>
             <h2 class="big headline-hover">
               <span class="frame-line-wrap"><span class="frame-line">Eight years.</span></span>
-              <span class="frame-line-wrap"><span class="frame-line"><em>Twelve&nbsp;thousand</em> frames.</span></span>
+              <span class="frame-line-wrap"><span class="frame-line"><em>Twelve&nbsp;thousand</em>&nbsp;frames.</span></span>
               <span class="frame-line-wrap"><span class="frame-line">One pair of hands.</span></span>
             </h2>
           </div>
@@ -320,7 +361,7 @@
       by testimonial.js. The .testimonial-list wrapper and .testimonial-item
       elements are created in JS — nothing is hardcoded here.
     -->
-    <section id="testimonial" class="testimonial" aria-label="Client testimonials">
+    <section id="testimonial" class="testimonial grain" aria-label="Client testimonials">
       <!-- populated by testimonial.js (KNOCH-024) -->
     </section><!-- /#testimonial -->
 
@@ -331,7 +372,7 @@
       slide-up label. Scroll reveal + inner image parallax via JS.
       Tile 7 will link to the YouTube lightbox in KNOCH-017.
     -->
-    <section id="archive" class="archive" aria-label="Portfolio archive">
+    <section id="archive" class="archive grain" aria-label="Portfolio archive">
 
       <div class="archive-header">
         <h2 class="archive-headline headline-hover">The <em>archive.</em></h2>
@@ -344,8 +385,9 @@
         <article class="tile t1" role="listitem" tabindex="0"
           data-link-type="external-gallery"
           data-url="https://knoch.pic-time.com/-alexmorgan/gallery"
+          data-depth="3"
           aria-label="Alex and Morgan — Wedding gallery">
-          <div class="tile-img" style="background-image: url('/assets/portfolio/cover-alex-morgan.jpg')" role="img" aria-hidden="true"></div>
+          <div class="tile-img" data-bg="/assets/portfolio/cover-alex-morgan.jpg" role="img" aria-hidden="true"></div>
           <span class="tile-notch tile-notch--tl" aria-hidden="true"></span>
           <span class="tile-notch tile-notch--tr" aria-hidden="true"></span>
           <span class="tile-notch tile-notch--bl" aria-hidden="true"></span>
@@ -361,8 +403,9 @@
         <article class="tile t2" role="listitem" tabindex="0"
           data-link-type="external-gallery"
           data-url="https://knoch.pic-time.com/-fayofemi/gallery"
+          data-depth="1" data-torn="1"
           aria-label="Fayo and Femi — Wedding gallery">
-          <div class="tile-img" style="background-image: url('/assets/portfolio/cover-fayo-femi.jpg'); background-position: 50% 65%" role="img" aria-hidden="true"></div>
+          <div class="tile-img" data-bg="/assets/portfolio/cover-fayo-femi.jpg" style="background-position: 50% 65%" role="img" aria-hidden="true"></div>
           <div class="tile-label">
             <span class="tile-num">№ 001 · Wedding</span>
             <h3 class="tile-title">Fayo and Femi</h3>
@@ -374,8 +417,9 @@
         <article class="tile t3" role="listitem" tabindex="0"
           data-link-type="external-gallery"
           data-url="https://knoch.pic-time.com/-shawnbekki/gallery"
+          data-depth="2"
           aria-label="Shawn and Bekki — Wedding gallery">
-          <div class="tile-img" style="background-image: url('https://cdn.sanity.io/images/2779g58e/production/471e43f5f31b05082fd6d39fb928704a6b47417a-1600x1067.jpg?w=1200&auto=format')" role="img" aria-hidden="true"></div>
+          <div class="tile-img" data-bg="https://cdn.sanity.io/images/2779g58e/production/471e43f5f31b05082fd6d39fb928704a6b47417a-1600x1067.jpg?w=1200&auto=format" role="img" aria-hidden="true"></div>
           <div class="tile-label">
             <span class="tile-num">№ 004 · Wedding</span>
             <h3 class="tile-title">Shawn and Bekki</h3>
@@ -385,8 +429,9 @@
 
         <!-- t4: Woodsmen, Sports & Events — wide banner, not linkable -->
         <article class="tile t4" role="listitem" tabindex="0"
+          data-depth="1"
           aria-label="Woodsmen — Sports &amp; Events">
-          <div class="tile-img" style="background-image: url('/assets/portfolio/cover-woodsmen.jpg')" role="img" aria-hidden="true"></div>
+          <div class="tile-img" data-bg="/assets/portfolio/cover-woodsmen.jpg" role="img" aria-hidden="true"></div>
           <div class="tile-label">
             <span class="tile-num">№ 009 · Sports &amp; Events</span>
             <h3 class="tile-title">Woodsmen</h3>
@@ -396,8 +441,9 @@
 
         <!-- t5: Jojo's Graduation, Portrait — not linkable -->
         <article class="tile t5" role="listitem" tabindex="0"
+          data-depth="3" data-torn="2"
           aria-label="Jojo's Graduation — Portrait">
-          <div class="tile-img" style="background-image: url('/assets/portfolio/cover-jojos-graduation.jpg')" role="img" aria-hidden="true"></div>
+          <div class="tile-img" data-bg="/assets/portfolio/cover-jojos-graduation.jpg" role="img" aria-hidden="true"></div>
           <div class="tile-label">
             <span class="tile-num">№ 008 · Portrait</span>
             <h3 class="tile-title">Jojo&rsquo;s Graduation</h3>
@@ -409,8 +455,9 @@
         <article class="tile t6" role="listitem" tabindex="0"
           data-link-type="youtube"
           data-url="https://youtu.be/KPerYKXlpX0?si=O5owuRrHWqUCCr68"
+          data-depth="2"
           aria-label="What Mighty Praise — Worship film">
-          <div class="tile-img" style="background-image: url('/assets/portfolio/cover-what-mighty-praise.png')" role="img" aria-hidden="true"></div>
+          <div class="tile-img" data-bg="/assets/portfolio/cover-what-mighty-praise.png" role="img" aria-hidden="true"></div>
           <div class="tile-label">
             <span class="tile-num">№ 002 · Worship</span>
             <h3 class="tile-title">What Mighty Praise</h3>
@@ -422,8 +469,9 @@
         <article class="tile t7" role="listitem" tabindex="0"
           data-link-type="youtube"
           data-url="https://www.youtube.com/watch?v=Hs25JK7WcZQ&t=75s"
+          data-depth="2" data-torn="3"
           aria-label="Rapha Records — Brand film">
-          <div class="tile-img" style="background-image: url('/assets/portfolio/cover-rapha-records.jpg')" role="img" aria-hidden="true"></div>
+          <div class="tile-img" data-bg="/assets/portfolio/cover-rapha-records.jpg" role="img" aria-hidden="true"></div>
           <span class="tile-badge" aria-hidden="true">▶ Film</span>
           <div class="tile-label">
             <span class="tile-num">№ 007 · Brand &amp; Commercial</span>
@@ -435,8 +483,8 @@
       </div><!-- /.archive-grid -->
     </section><!-- /#archive -->
 
-    <section id="cta" aria-label="Inquire">
-      <!-- KNOCH-014: Contact / qualified inquiry form -->
+<section id="cta" class="grain" aria-label="Inquire">
+      <!-- KNOCH-030: Qualified inquiry form with aperture iris transitions -->
     </section>
 
     <!--

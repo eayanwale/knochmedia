@@ -189,6 +189,28 @@
 }
 
 
+/* ── Film-grain dissolve for per-character reveals (KNOCH-030) ──
+   Each .char-hover span inside the hero headline starts with the
+   SVG displacement filter active and opacity 0. GSAP animates the
+   SVG filter attributes (scale 55→0, frequency 0.065→0) globally
+   while staggering each char's opacity 0→1.
+
+   Once the reveal completes, .grain-revealed is added — this removes
+   the filter reference so char-hover.js can apply its own blur on
+   mouse proximity without conflict. */
+
+.hero-headline .char-hover {
+  filter: url(#grain-dissolve);
+  opacity: 0;
+}
+
+.hero-headline .char-hover.grain-revealed {
+  filter: none;
+  opacity: 1;
+}
+
+
+
 /* ── Mobile / reduced-motion overrides ───────────────────── */
 
 @media (max-width: 800px) {

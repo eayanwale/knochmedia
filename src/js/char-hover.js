@@ -52,16 +52,33 @@ function splitAndBind(root) {
   textNodes.forEach(textNode => {
     const parent = textNode.parentNode;
     const frag   = document.createDocumentFragment();
-    [...textNode.textContent].forEach(char => {
-      if (/\s/.test(char)) {
-        frag.appendChild(document.createTextNode(char));
+    const text   = textNode.textContent;
+    let i = 0;
+
+    while (i < text.length) {
+      if (/\s/.test(text[i])) {
+        // Space between words — inline-block span so it can't collapse
+        const sp = document.createElement('span');
+        sp.className = 'char-space';
+        sp.innerHTML = '&nbsp;';
+        frag.appendChild(sp);
+        i++;
       } else {
-        const span = document.createElement('span');
-        span.className = 'char-hover';
-        span.textContent = char;
-        frag.appendChild(span);
+        // Word — group consecutive non-space chars in a wrapper that
+        // prevents line-breaks within the word (inline-block + nowrap)
+        const word = document.createElement('span');
+        word.className = 'char-word';
+        while (i < text.length && !/\s/.test(text[i])) {
+          const span = document.createElement('span');
+          span.className = 'char-hover';
+          span.textContent = text[i];
+          word.appendChild(span);
+          i++;
+        }
+        frag.appendChild(word);
       }
-    });
+    }
+
     parent.replaceChild(frag, textNode);
   });
 
@@ -108,4 +125,11 @@ export function initCharHover() {
   if (window.matchMedia('(pointer: coarse)').matches) return;
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   document.querySelectorAll('.headline-hover').forEach(splitAndBind);
+}
+
+/** Bind char-hover to a single element (for dynamically-created headlines) */
+export function bindCharHover(el) {
+  if (window.matchMedia('(pointer: coarse)').matches) return;
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  if (el) splitAndBind(el);
 }

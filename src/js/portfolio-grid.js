@@ -26,6 +26,8 @@
 
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { getGalleryCollections, imageUrl } from './sanity.js';
+import { initLazyLoad } from './lazy-load.js';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -45,6 +47,54 @@ function handleTileClick(tile) {
 export function initPortfolioGrid() {
   const section = document.querySelector('.archive');
   if (!section) return;
+
+  // ── Sanity image override ─────────────────────────────────────────────
+  // Fetch gallery collections from CMS — match tiles by URL to ensure the
+  // correct cover image maps to the correct tile regardless of Sanity order.
+  // Tiles without a Sanity counterpart (e.g. Woodsmen, Jojo's Graduation)
+  // keep their static fallback paths in data-bg untouched.
+  getGalleryCollections().then(collections => {
+    if (!collections.length) return;
+
+    const tiles = section.querySelectorAll('.tile');
+    tiles.forEach(tile => {
+      const tileUrl = tile.dataset.url;
+      if (!tileUrl) return; // No URL = no Sanity match possible, use static
+
+      // Match by URL — exact match for same-domain links, video ID
+      // extraction for YouTube cross-format (youtu.be vs youtube.com)
+      const col = collections.find(c => {
+        if (!c.url) return false;
+        const sanityUrl = c.url.replace(/\/+$/, '');
+        const htmlUrl = tileUrl.replace(/\/+$/, '');
+        if (sanityUrl === htmlUrl) return true;
+        // YouTube: extract video ID from both and compare
+        const sId = sanityUrl.match(/(?:youtu\.be\/|[?&]v=)([A-Za-z0-9_-]+)/)?.[1];
+        const hId = htmlUrl.match(/(?:youtu\.be\/|[?&]v=)([A-Za-z0-9_-]+)/)?.[1];
+        return !!(sId && hId && sId === hId);
+      });
+
+      if (!col || !col.coverImage) return;
+
+      const img = tile.querySelector('.tile-img');
+      if (!img) return;
+
+      // Swap data-bg with Sanity CDN URL (1200px wide, auto-format)
+      const cdnUrl = imageUrl(col.coverImage, 1200);
+      if (cdnUrl) {
+        img.dataset.bg = cdnUrl;
+        // If already loaded (lazy-load ran before Sanity resolved),
+        // re-apply the background image from the new CDN source
+        if (img.classList.contains('lazy-loaded')) {
+          img.style.backgroundImage = `url('${cdnUrl}')`;
+        } else if (!img.classList.contains('lazy-placeholder')) {
+          // Not yet observed — re-run lazy-load to pick up new URL
+          initLazyLoad();
+        }
+      }
+    });
+  });
+
 
   section.querySelectorAll('.tile').forEach(tile => {
     tile.addEventListener('click', () => handleTileClick(tile));
@@ -137,11 +187,19 @@ export function initPortfolioGrid() {
       }
     );
 
-    /* Inner image parallax — each tile independently scrubbed */
+    /* Inner image parallax — depth-variable (KNOCH-030).
+       data-depth controls parallax intensity:
+         depth 1 = ±4% (subtle, background feel)
+         depth 2 = ±8% (default, medium movement)
+         depth 3 = ±12% (dramatic, foreground feel)
+       The -12% inset on .tile-img provides room for max range. */
+    const depth = parseInt(tile.dataset.depth, 10) || 2;
+    const range = depth * 4;
+
     gsap.fromTo(img,
-      { yPercent: -8 },
+      { yPercent: -range },
       {
-        yPercent: 8,
+        yPercent: range,
         ease: 'none',
         scrollTrigger: {
           trigger: tile,

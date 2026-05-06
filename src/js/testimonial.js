@@ -106,19 +106,53 @@ function buildItem(t) {
   return item;
 }
 
-function revealItem(item, onDone) {
+/* Set up the outlined initial state for an item — words start as ghost text.
+   Does NOT auto-reveal. Returns { words, attr, mark } refs for scroll-reveal. */
+function prepareItem(item) {
   const mark  = item.querySelector('.testimonial-mark');
-  const words = item.querySelectorAll('.testimonial-word');
+  const words = Array.from(item.querySelectorAll('.testimonial-word'));
   const attr  = item.querySelector('.testimonial-attr');
 
-  if (mark)         { mark.style.opacity = '0'; mark.style.transform = 'scale(0.5)'; }
-  words.forEach(w => { w.style.opacity = '0'; w.style.transform = 'translateY(14px)'; });
-  if (attr)         { attr.style.opacity = '0'; attr.style.transform = 'translateY(8px)'; }
+  if (mark)  { mark.style.opacity = '0'; mark.style.transform = 'scale(0.5)'; }
+  words.forEach(w => {
+    w.style.color = 'transparent';
+    w.style.webkitTextStroke = '0.5px rgba(237, 230, 216, 0.35)';
+    w.style.transform = 'translateY(6px)';
+  });
+  if (attr)  { attr.style.opacity = '0'; attr.style.transform = 'translateY(8px)'; }
 
-  const tl = gsap.timeline({ onComplete: onDone });
-  if (mark)          tl.to(mark,  { opacity: 1, scale: 1, duration: 0.35, ease: 'back.out(2.5)' }, 0);
-  if (words.length)  tl.to(words, { opacity: 1, y: 0, stagger: 0.04, duration: 0.5, ease: 'expo.out', clearProps: 'all' }, 0.1);
-  if (attr)          tl.to(attr,  { opacity: 1, y: 0, duration: 0.35, ease: 'expo.out', clearProps: 'all' }, '-=0.15');
+  /* Reveal quote mark immediately (structural element, not text content) */
+  if (mark) gsap.to(mark, { opacity: 1, scale: 1, duration: 0.35, ease: 'back.out(2.5)' });
+
+  return { words, attr };
+}
+
+/* Reveal a batch of words (called per scroll gesture). Returns new index.
+   8 words per tick means a ~30-word quote fills in 4 quick scrolls. */
+const WORDS_PER_SCROLL = 8;
+
+function revealBatch(words, attr, startIdx) {
+  const batch = words.slice(startIdx, startIdx + WORDS_PER_SCROLL);
+  if (!batch.length) return startIdx;
+
+  gsap.to(batch, {
+    color: 'var(--paper)',
+    webkitTextStroke: '0px transparent',
+    y: 0,
+    stagger: 0.04,
+    duration: 0.5,
+    ease: 'expo.out',
+    clearProps: 'all',
+  });
+
+  const newIdx = startIdx + batch.length;
+
+  /* Reveal attribution once all words are done */
+  if (newIdx >= words.length && attr) {
+    gsap.to(attr, { opacity: 1, y: 0, duration: 0.35, ease: 'expo.out', delay: 0.15, clearProps: 'all' });
+  }
+
+  return newIdx;
 }
 
 /* ── Main init ──────────────────────────────────────────────────── */
@@ -214,6 +248,12 @@ export async function initTestimonial() {
     let wheelReady     = true;   /* cooldown flag */
     let sectionHovered = false;  /* spotlight active flag */
 
+    /* Scroll-write state — tracks progressive word reveal per testimonial */
+    let currentWords   = [];
+    let currentAttr    = null;
+    let revealedIdx    = 0;      /* how many words revealed so far */
+    let textRevealed   = false;  /* true once all words in current quote shown */
+
     /* ── Navigation ──────────────────────────────────────── */
 
     function setDots(idx) {
@@ -252,11 +292,30 @@ export async function initTestimonial() {
         const item = buildItem(testimonials[idx]);
         slider.appendChild(item);
 
-        if (prefersReduced) { busy = false; return; }
+        if (prefersReduced) {
+          busy = false;
+          textRevealed = true;
+          return;
+        }
 
         gsap.set(slider, { opacity: 0, y: 8 });
         gsap.to(slider, { opacity: 1, y: 0, duration: 0.25, ease: 'expo.out' });
-        revealItem(item, () => { busy = false; });
+
+        /* Prepare outlined state — text will reveal via scroll gestures */
+        const refs = prepareItem(item);
+        currentWords  = refs.words;
+        currentAttr   = refs.attr;
+        revealedIdx   = 0;
+        textRevealed  = currentWords.length === 0;
+        busy = false;
+
+        /* Auto-reveal first batch immediately so text doesn't feel laggy */
+        if (!textRevealed) {
+          setTimeout(() => {
+            revealedIdx = revealBatch(currentWords, currentAttr, revealedIdx);
+            textRevealed = revealedIdx >= currentWords.length;
+          }, 200);
+        }
       };
 
       if (current === -1 || prefersReduced || wasAnimating) {
@@ -269,7 +328,15 @@ export async function initTestimonial() {
       }
     }
 
-    function next() { goTo((current + 1) % total); }
+    function next() {
+      /* Auto-advance: reveal text first if not yet shown, then advance */
+      if (!textRevealed) {
+        revealedIdx = revealBatch(currentWords, currentAttr, revealedIdx);
+        textRevealed = revealedIdx >= currentWords.length;
+        return;
+      }
+      goTo((current + 1) % total);
+    }
 
     function startTimer() {
       clearInterval(timer);
@@ -282,13 +349,16 @@ export async function initTestimonial() {
 
     /* ── Wheel interception ──────────────────────────────── */
 
+    /* Short cooldown for word reveal (feels immediate), longer for slide transitions */
+    const REVEAL_WAIT = 120;
+
     const onWheel = (e) => {
       const goingDown = e.deltaY > 0;
 
-      /* At the last testimonial scrolling down → release to next section */
-      if (goingDown && current >= total - 1) {
+      /* At the last testimonial scrolling down AND text fully revealed → release */
+      if (goingDown && current >= total - 1 && textRevealed) {
         stopIntercepting();
-        return;   /* don't preventDefault — let Lenis take the event */
+        return;
       }
 
       /* At the first testimonial scrolling up → release to prev section */
@@ -297,14 +367,28 @@ export async function initTestimonial() {
         return;
       }
 
-      /* Otherwise: consume the scroll event and step one testimonial */
+      /* Consume the scroll event */
       e.preventDefault();
 
+      stopTimer();
+
+      /* Scroll-write: if text not fully revealed, reveal next batch (fast cooldown) */
+      if (goingDown && !textRevealed) {
+        if (!wheelReady) return;
+        wheelReady = false;
+        setTimeout(() => { wheelReady = true; }, REVEAL_WAIT);
+
+        revealedIdx = revealBatch(currentWords, currentAttr, revealedIdx);
+        textRevealed = revealedIdx >= currentWords.length;
+        if (inView) startTimer();
+        return;
+      }
+
+      /* Slide transitions use longer cooldown to prevent skipping */
       if (!wheelReady) return;
       wheelReady = false;
       setTimeout(() => { wheelReady = true; }, WHEEL_WAIT);
 
-      stopTimer();
       goTo(goingDown ? current + 1 : current - 1);
       if (inView) startTimer();
     };
