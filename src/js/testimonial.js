@@ -46,19 +46,28 @@ function getTestimonialImage(idx) {
    fade-out 0.18s + fade-in 0.25s + last word start (~0.66s) ≈ 0.85s total. */
 const WHEEL_WAIT  = 850;
 
-/* Spotlight reveal — KNOCH-035 widened the mask + lifted the opacity so
-   the bg image reads as an atmospheric reveal rather than a small
-   peephole (the original 220px / 0.58 / 80% felt voyeuristic).
-   - SPOT_RADIUS   px : the opaque-mask circle radius around the cursor.
-   - SPOT_FALLOFF  %  : where the radial mask starts fading to transparent;
-                        bigger number = harder edge, smaller = softer halo.
-   - BG_OPACITY        : peak opacity of the background image when hovered. */
-const SPOT_RADIUS  = 460;
-const SPOT_FALLOFF = '90%';
-const BG_OPACITY   = 0.75;
+/* Spotlight reveal — KNOCH-035.
+   - SPOT_RADIUS px : the radial mask's outer radius (where alpha hits 0).
+   - BG_OPACITY     : peak opacity of the background image while hovered. */
+const SPOT_RADIUS = 460;
+const BG_OPACITY  = 0.75;
 
+/* Multi-stop falloff — the original two-stop linear fade
+   (black 0% → transparent 90%) left a perceptible hard ring where the
+   reveal "ended". This curve holds a hot opaque core (out to 22% of the
+   radius), then steps through 0.65 and 0.22 alpha so the falloff feels
+   like a cinematic spotlight that dissolves into the dark rather than
+   one with a visible edge. Stops are alpha-on-black so they layer on
+   top of the section's dark background without bleeding any tint. */
 function buildSpotMask(x, y) {
-  return `radial-gradient(circle ${SPOT_RADIUS}px at ${x}px ${y}px, black 0%, transparent ${SPOT_FALLOFF})`;
+  return (
+    `radial-gradient(circle ${SPOT_RADIUS}px at ${x}px ${y}px,` +
+    ` black 0%,` +
+    ` black 22%,` +
+    ` rgba(0,0,0,0.65) 50%,` +
+    ` rgba(0,0,0,0.22) 78%,` +
+    ` transparent 100%)`
+  );
 }
 
 /* ── Helpers ────────────────────────────────────────────────────── */
