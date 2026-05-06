@@ -1,7 +1,7 @@
 # Knoch Media — Ticket Summary
 
 > **Living document.** Updated whenever tickets are created, modified, split, or closed.  
-> Last updated: 2026-05-05 | Total tickets: 30 | Open: 12 | In progress: 0 | In review: 0 | Done: 15 | Deferred: 3
+> Last updated: 2026-05-06 | Total tickets: 30 | Open: 11 | In progress: 1 | In review: 0 | Done: 15 | Deferred: 3
 
 ---
 
@@ -71,7 +71,7 @@ Build in this order: About → Portfolio page → Project detail → Contact →
 
 | ID | Title | Status | Branch | Notes |
 |----|-------|--------|--------|-------|
-| [KNOCH-013](tickets/KNOCH-013.md) | About / Story Section (about.html) | `⬜` | — | Sticky split layout |
+| [KNOCH-013](tickets/KNOCH-013.md) | About / Story Section (about.html) | `🔵` | `feature/KNOCH-013-about-story-section` | Sticky split layout |
 | [KNOCH-011](tickets/KNOCH-011.md) | Portfolio Filter System (portfolio.html) | `⬜` | — | Category tabs, URL hash state |
 | [KNOCH-012](tickets/KNOCH-012.md) | Project Detail View + Video Lightbox | `⬜` | — | Expanding tile transition |
 | [KNOCH-014](tickets/KNOCH-014.md) | Contact — Multi-Step Qualified Inquiry Form | `⬜` | — | 3-step form + Calendly sidebar |
@@ -173,6 +173,19 @@ CMS layer (cuts across phases — wire each section after it is built):
 ## Changelog
 
 All modifications to this document and ticket files are logged here. Tester agent and code review feedback should be recorded as entries.
+
+---
+
+### 2026-05-06 — KNOCH-013 implementation started — IN PROGRESS
+
+**Action:** Feature branch created; implementation in progress
+**Tickets affected:** KNOCH-013
+**Reason:** Builder agent starting About / Story page (about.html) — split-layout sticky narrative with scrolling image column, plus homepage studio teaser block
+**Changes:**
+- KNOCH-013: Status changed ⬜ Open → 🔵 In progress
+- Branch `feature/KNOCH-013-about-story-section` created from dev
+- Header counts updated: Open 12→11, In progress 0→1
+**Requested by:** Builder agent
 
 ---
 
