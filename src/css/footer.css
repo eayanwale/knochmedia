@@ -1,0 +1,214 @@
+/* ============================================================
+   KNOCH MEDIA — Footer (KNOCH-015)
+   Two variants share the .site-footer base; the variant class
+   (.site-footer--minimal | .site-footer--expanded) toggles the
+   grid template, padding, and presence of the legal row.
+
+   Typographic system across both variants:
+     10px JetBrains Mono · 0.2em LS · uppercase
+     rgba(paper, 0.4) for body lines, paper for .footer-strong
+   This matches the chrome/mono labels used elsewhere on the
+   site so the footer reads as one continuous tonal layer with
+   the rest of the chrome.
+   ============================================================ */
+
+.site-footer {
+  display: block;
+  background: var(--ink);
+  color: rgba(237, 230, 216, 0.4);
+  border-top: 1px solid rgba(237, 230, 216, 0.08);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 400;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  line-height: 1.85;
+  position: relative;
+  z-index: 1;
+}
+
+.site-footer p { margin: 0; }
+.site-footer ul { list-style: none; padding: 0; margin: 0; }
+
+/* Strong labels — column headers + the "Knoch · A Working Studio"
+   line. Bumped to full-paper colour so the eye reads them as
+   anchors before the dimmer body lines around them. */
+.site-footer .footer-strong {
+  color: var(--paper);
+  margin-bottom: 0.6rem;
+}
+
+/* Links inherit the dimmed body colour, brighten on hover. The
+   transition is purely opacity / colour — no transform — to keep
+   the footer feeling like static print rather than animated UI. */
+.site-footer a {
+  color: rgba(237, 230, 216, 0.55);
+  text-decoration: none;
+  transition: color 0.3s var(--ease-out-expo);
+}
+.site-footer a:hover,
+.site-footer a:focus-visible {
+  color: var(--paper);
+}
+.site-footer a:focus-visible {
+  outline: 1px solid var(--amber);
+  outline-offset: 3px;
+}
+
+/* ── Variant: minimal (homepage) ─────────────────────────────
+   3-column credits bar.
+
+   Padding "4rem 36px 2rem" is taken straight from the ticket's
+   AC. The grid is symmetric; the right column is text-aligned
+   right so the roll number sits flush like a reel slate. */
+.site-footer--minimal .footer-inner--minimal {
+  padding: 4rem 36px 2rem;
+}
+
+.footer-grid--3 {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 2.5rem;
+}
+
+.footer-col--roll {
+  text-align: right;
+}
+
+/* Social row sits below the 3-col grid, separated by a hairline
+   that mirrors the top border so the row reads as its own band. */
+.footer-social {
+  margin-top: 2.5rem;
+  padding-top: 1.4rem;
+  border-top: 1px solid rgba(237, 230, 216, 0.06);
+  display: flex;
+  align-items: center;
+  gap: 1.6rem;
+}
+
+.footer-social-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  color: rgba(237, 230, 216, 0.4);
+  /* svgs use currentColor so they inherit this directly */
+}
+.footer-social-link:hover,
+.footer-social-link:focus-visible {
+  color: var(--paper);
+}
+
+.footer-social-link svg {
+  flex-shrink: 0;
+  display: block;
+}
+
+.footer-social-handle {
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+/* ── Variant: expanded (about / portfolio / project / contact)
+   4-column sitemap. Generous padding to give it the breathing
+   room a fuller footer needs vs the minimal credits bar. */
+.site-footer--expanded .footer-inner--expanded {
+  padding: 5rem 8vw 3rem;
+}
+
+.footer-grid--4 {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr 1fr 1.2fr;
+  gap: 3rem;
+}
+
+/* Roll number in expanded variant lives inside the studio column
+   as a quieter accent, below city + region. Slight extra top
+   margin separates it visually. */
+.footer-roll {
+  margin-top: 0.8rem;
+  color: rgba(237, 230, 216, 0.3);
+}
+
+.footer-col--nav ul li {
+  margin-bottom: 0.25rem;
+}
+
+/* Placeholder span styling — visually distinct from active
+   links so visitors know "Journal" isn't yet a destination,
+   but still tonally consistent with the rest of the footer. */
+.footer-placeholder {
+  color: rgba(237, 230, 216, 0.2);
+  font-style: italic;
+  cursor: default;
+}
+
+/* Inline social row inside the contact column — icon + handle
+   stack inline with the email/phone lines so the column reads
+   as one tidy contact block rather than a list interrupted by
+   icon imagery. */
+.footer-inline-social {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: rgba(237, 230, 216, 0.55);
+}
+.footer-inline-social:hover,
+.footer-inline-social:focus-visible {
+  color: var(--paper);
+}
+
+/* Legal row — full-width band beneath the 4-col grid. Two
+   children flex apart so copyright sits left, version right,
+   like the chrome timecode bar at the top of the page. */
+.footer-legal {
+  margin-top: 3rem;
+  padding-top: 1.4rem;
+  border-top: 1px solid rgba(237, 230, 216, 0.06);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  color: rgba(237, 230, 216, 0.3);
+}
+
+.footer-version {
+  color: rgba(237, 230, 216, 0.25);
+}
+
+/* ── Mobile breakpoint ───────────────────────────────────────
+   At ≤ 720 px the multi-column grids collapse to a stack. The
+   minimal variant keeps studio / contact / roll in vertical
+   order; the expanded variant keeps studio first then nav
+   columns flow in. Right-align on roll column is dropped on
+   mobile so the stacked layout reads naturally top to bottom. */
+@media (max-width: 720px) {
+  .site-footer--minimal .footer-inner--minimal {
+    padding: 3rem 1.4rem 1.6rem;
+  }
+  .site-footer--expanded .footer-inner--expanded {
+    padding: 3.5rem 1.4rem 2rem;
+  }
+
+  .footer-grid--3,
+  .footer-grid--4 {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  .footer-col--roll {
+    text-align: left;
+  }
+
+  .footer-social {
+    flex-wrap: wrap;
+    gap: 1.2rem;
+  }
+
+  .footer-legal {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.4rem;
+  }
+}
