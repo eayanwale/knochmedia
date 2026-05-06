@@ -2,13 +2,26 @@
   portfolio-grid.js — Archive contact-sheet grid (KNOCH-010)
   ===========================================================
   Scroll animations:
-  - Header elements: y 40→0, opacity 0→1, stagger 0.15, trigger top 85%
-  - Tiles: y 80→0, opacity 0→1, stagger 0.05, trigger top 88%
-  - Per-tile image parallax: yPercent -8→8, scrubbed top-bottom→bottom-top
 
-  The parallax inset is -12% in CSS so the image is oversized in all
-  directions — the yPercent travel (±8%) never exposes the tile edge.
-  prefers-reduced-motion: reveals are instant; parallax is skipped.
+  Header — per-element slide-up clip reveal:
+    JS wraps .archive-headline and .archive-meta in .archive-clip divs
+    (overflow: hidden), then animates y: 110% → 0% in stagger so each
+    element wipes up from below its clip boundary like a curtain lift.
+
+  Tiles — darkroom "develop" effect:
+    Each tile's .tile-img starts as overexposed B&W (grayscale(1)
+    brightness(1.6)) and resolves to its normal resting state
+    (grayscale(0.5) brightness(0.7)) as it enters the viewport.
+    clearProps: 'filter' removes the inline style on completion so
+    the hover CSS transition (grayscale(0) brightness(1)) works.
+
+  Tiles — container reveal:
+    Staggered y + opacity fade on .tile wrappers (separate property
+    from .tile-img filter — no GSAP conflict).
+
+  Per-tile image parallax: yPercent -8→8, scrubbed top-bottom→bottom-top.
+
+  prefers-reduced-motion: all reveals are instant; parallax is skipped.
 */
 
 import { gsap } from 'gsap';
@@ -28,11 +41,18 @@ function handleTileClick(tile) {
   }
 }
 
+function wrapInClip(el) {
+  if (!el) return;
+  const wrap = document.createElement('div');
+  wrap.className = 'archive-clip';
+  el.parentNode.insertBefore(wrap, el);
+  wrap.appendChild(el);
+}
+
 export function initPortfolioGrid() {
   const section = document.querySelector('.archive');
   if (!section) return;
 
-  /* Wire click + keyboard on all tiles */
   section.querySelectorAll('.tile').forEach(tile => {
     tile.addEventListener('click', () => handleTileClick(tile));
     tile.addEventListener('keydown', e => {
@@ -43,44 +63,63 @@ export function initPortfolioGrid() {
   const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   if (prefersReduced) return;
 
-  const header = section.querySelector('.archive-header');
-  const grid   = section.querySelector('.archive-grid');
-  const tiles  = section.querySelectorAll('.tile');
+  const header   = section.querySelector('.archive-header');
+  const grid     = section.querySelector('.archive-grid');
+  const tiles    = section.querySelectorAll('.tile');
+  const headline = section.querySelector('.archive-headline');
+  const meta     = section.querySelector('.archive-meta');
 
-  /* Header elements reveal */
-  gsap.from([
-    section.querySelector('.archive-headline'),
-    section.querySelector('.archive-meta'),
-  ].filter(Boolean), {
-    y: 40,
-    opacity: 0,
-    stagger: 0.15,
-    duration: 1.2,
+  /* Wrap header elements in clip containers for slide-up reveal */
+  wrapInClip(headline);
+  wrapInClip(meta);
+
+  gsap.from([headline, meta].filter(Boolean), {
+    y: '110%',
+    stagger: 0.13,
+    duration: 1.1,
     ease: 'expo.out',
     scrollTrigger: {
       trigger: header,
       start: 'top 85%',
+      toggleActions: 'play none none none',
     },
   });
 
-  /* Tile scroll reveal — staggered y offset */
+  /* Tile container: staggered rise into view */
   gsap.from(tiles, {
-    y: 80,
+    y: 50,
     opacity: 0,
-    duration: 1.2,
+    duration: 1.1,
     ease: 'expo.out',
-    stagger: 0.05,
+    stagger: { from: 'start', amount: 0.5 },
     scrollTrigger: {
       trigger: grid,
       start: 'top 88%',
+      toggleActions: 'play none none none',
     },
   });
 
-  /* Inner image parallax — each tile independently scrubbed */
   tiles.forEach(tile => {
     const img = tile.querySelector('.tile-img');
     if (!img) return;
 
+    /* Darkroom develop — overexposed B&W resolves to normal resting state */
+    gsap.fromTo(img,
+      { filter: 'grayscale(1) brightness(1.6)' },
+      {
+        filter: 'grayscale(0.5) brightness(0.7)',
+        duration: 1.6,
+        ease: 'expo.out',
+        clearProps: 'filter',
+        scrollTrigger: {
+          trigger: tile,
+          start: 'top 90%',
+          toggleActions: 'play none none none',
+        },
+      }
+    );
+
+    /* Inner image parallax — each tile independently scrubbed */
     gsap.fromTo(img,
       { yPercent: -8 },
       {

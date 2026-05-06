@@ -61,11 +61,12 @@ export function initFrame() {
 
   const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  const bg       = section.querySelector('.bg');
-  const metaTag  = section.querySelector('.meta-tag');
-  const bigEl    = section.querySelector('.big');
-  const statNums = gsap.utils.toArray('.pinned-frame .stat .n');
-  const statLbls = gsap.utils.toArray('.pinned-frame .stat .l');
+  const bg         = section.querySelector('.bg');
+  const metaTag    = section.querySelector('.meta-tag');
+  const bigEl      = section.querySelector('.big');
+  const stripTrack = section.querySelector('.frame-strip-track');
+  const statNums   = gsap.utils.toArray('.pinned-frame .stat .n');
+  const statLbls   = gsap.utils.toArray('.pinned-frame .stat .l');
 
   /* Ensure counters always read their final value as the baseline.
      On the animated path these get reset to 0 below; on the reduced-
@@ -109,6 +110,17 @@ export function initFrame() {
     { scale: 1.0,  yPercent: -10, ease: 'none', duration: 1 },
     0
   );
+
+  /* Contact-sheet strip: drifts counter-scroll (right → left) across full range.
+     Uses invalidateOnRefresh via x function so the travel distance recalculates
+     if the window is resized. */
+  if (stripTrack) {
+    tl.fromTo(stripTrack,
+      { x: 0 },
+      { x: () => -(stripTrack.scrollWidth * 0.22), ease: 'none', duration: 1 },
+      0
+    );
+  }
 
   /* Meta label: 0 %→ 20 % */
   tl.to(metaTag, { opacity: 1, y: 0, ease: 'expo.out', duration: 0.2 }, 0);
