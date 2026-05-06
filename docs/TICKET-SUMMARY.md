@@ -1,7 +1,7 @@
 # Knoch Media — Ticket Summary
 
 > **Living document.** Updated whenever tickets are created, modified, split, or closed.  
-> Last updated: 2026-05-06 | Total tickets: 30 | Open: 8 | In progress: 0 | In review: 1 | Done: 18 | Deferred: 3
+> Last updated: 2026-05-06 | Total tickets: 30 | Open: 7 | In progress: 0 | In review: 1 | Done: 18 | Deferred: 4
 
 ---
 
@@ -84,7 +84,7 @@ Build in this order: About → Portfolio page → Project detail → Contact →
 | ID | Title | Status | Branch | Notes |
 |----|-------|--------|--------|-------|
 | [KNOCH-017](tickets/KNOCH-017.md) | YouTube Integration — Lightbox + Showreel | `⬜` | — | Lazy iframe inject on click |
-| [KNOCH-018](tickets/KNOCH-018.md) | Instagram Feed Integration | `⬜` | — | Behold.so or static fallback |
+| [KNOCH-018](tickets/KNOCH-018.md) | Instagram Feed Integration | `⏸` | — | Deferred — footer icon link covers it |
 
 ---
 
@@ -173,6 +173,19 @@ CMS layer (cuts across phases — wire each section after it is built):
 ## Changelog
 
 All modifications to this document and ticket files are logged here. Tester agent and code review feedback should be recorded as entries.
+
+---
+
+### 2026-05-06 — KNOCH-018 deferred — Instagram embed dropped from scope
+
+**Action:** KNOCH-018 status changed ⬜ Open → ⏸ Deferred
+**Tickets affected:** KNOCH-018
+**Reason:** Enoch reviewed the Phase 4 ticket list and decided a live Instagram feed adds complexity (paid embed service like Behold.so, or Meta Graph API setup, or manual screenshot updates) without meaningful UX gain on a portfolio site. The plain footer icon link to @knochmedia_ — already in KNOCH-015's scope — is the cleaner solution. Ticket file annotated with the rationale + revisit path (Behold.so) if a feed surfaces in a future iteration.
+**Changes:**
+- KNOCH-018: Status ⬜ Open → ⏸ Deferred. Header reason added to ticket file.
+- TICKET-SUMMARY table row swapped to ⏸ + "Deferred — footer icon link covers it" note.
+- Header counts updated: Open 8→7, Deferred 3→4.
+**Requested by:** Enoch
 
 ---
 
