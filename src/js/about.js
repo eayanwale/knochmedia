@@ -60,24 +60,42 @@ export function initAbout() {
     if (heroSub)      tl.to(heroSub,      { opacity: 1, y: 0, duration: 0.7 }, 0.5);
   }
 
-  /* ── 1b. Intro paragraph parallax ──────────────────────────── */
+  /* ── 1b. Intro paragraph float + scroll-tied parallax ───────── */
 
-  /* The studio statement under the hero floats slightly counter to the
-     scroll direction so it reads as a separate plane from the rest of
-     the page. Subtle — the y range is small but enough to feel like
-     parallax depth as the visitor scrolls past. */
+  /* Two layered effects so the intro body never feels static:
+     - Continuous yoyo on yPercent for an ambient bob (always on).
+     - Scroll-tied y-pixel parallax — the paragraph drifts upward as
+       the section passes through the viewport, separating its plane
+       from the rest of the body copy. yPercent and y are tracked as
+       independent transform components in GSAP so the two compose
+       without overwriting each other. */
   const introBody = document.querySelector('.about-intro-body');
   if (introBody && !prefersReduced) {
+    /* Continuous bob */
     gsap.to(introBody, {
-      y: -60,
-      ease: 'none',
-      scrollTrigger: {
-        trigger: '.about-intro',
-        start: 'top bottom',
-        end: 'bottom top',
-        scrub: 1,
-      },
+      yPercent: -2,
+      duration: 3.6,
+      ease: 'sine.inOut',
+      yoyo: true,
+      repeat: -1,
     });
+
+    /* Scroll-tied parallax — drift up 180px over the section's
+       visible range. Beefier than the previous 60px so the effect
+       reads clearly when scrolling past. */
+    gsap.fromTo(introBody,
+      { y: 80 },
+      {
+        y: -180,
+        ease: 'none',
+        scrollTrigger: {
+          trigger: '.about-intro',
+          start: 'top bottom',
+          end: 'bottom top',
+          scrub: 1,
+        },
+      }
+    );
   }
 
   /* ── 2. Pinned chapter overlay narrative ───────────────────── */
@@ -110,25 +128,16 @@ export function initAbout() {
   const total    = chapters.length;
 
   if (story && total && !prefersReduced) {
-    /* Pin the story container for total × 100vh of scroll. The fade
-       tweens below scrub against this same scroll range. */
-    ScrollTrigger.create({
-      trigger: story,
-      start: 'top top',
-      end: () => `+=${total * window.innerHeight}px`,
-      pin: true,
-      pinSpacing: true,
-      anticipatePin: 1,
-      invalidateOnRefresh: true,
-    });
-
-    chapters.forEach((chapter, i) => {
+    /* Reveal timelines per chapter — text settles when the chapter
+       becomes the active layer. Paused; played by ScrollTrigger
+       callbacks below. */
+    const reveals = chapters.map((chapter, i) => {
       const bg    = chapter.querySelector('.about-chapter-bg');
       const label = chapter.querySelector('.about-chapter-label');
       const title = chapter.querySelector('.about-chapter-title');
       const body  = chapter.querySelector('.about-chapter-body');
 
-      /* Set initial states — chapter 0 starts visible, rest hidden */
+      /* Initial states — chapter 0 starts visible, others hidden. */
       gsap.set(chapter, { opacity: i === 0 ? 1 : 0 });
       if (bg) gsap.set(bg, { scale: 1.12 });
       gsap.set(label, { opacity: 0, y: 16 });
@@ -136,89 +145,80 @@ export function initAbout() {
       const words = splitWords(body);
       if (words.length) gsap.set(words, { opacity: 0, y: 12 });
 
-      /* Build a paused reveal timeline for each chapter — text + bg
-         settle when this chapter becomes the active layer. */
-      const reveal = gsap.timeline({ paused: true, defaults: { ease: 'expo.out' } });
-      if (bg)    reveal.to(bg,    { scale: 1, duration: 1.6, ease: 'power3.out' }, 0);
-      if (label) reveal.to(label, { opacity: 1, y: 0, duration: 0.7 }, 0.1);
-      if (title) reveal.to(title, { opacity: 1, y: 0, duration: 1.0 }, 0.2);
+      const tl = gsap.timeline({ paused: true, defaults: { ease: 'expo.out' } });
+      if (bg)    tl.to(bg,    { scale: 1, duration: 1.6, ease: 'power3.out' }, 0);
+      if (label) tl.to(label, { opacity: 1, y: 0, duration: 0.7 }, 0.1);
+      if (title) tl.to(title, { opacity: 1, y: 0, duration: 1.0 }, 0.2);
       if (words.length) {
-        reveal.to(words, { opacity: 1, y: 0, duration: 0.6, stagger: { amount: 0.6 } }, 0.4);
+        tl.to(words, { opacity: 1, y: 0, duration: 0.6, stagger: { amount: 0.6 } }, 0.4);
       }
+      return tl;
+    });
 
-      /* Each chapter "owns" a 100vh slice of the pinned scroll range.
-         Fade-in scrubs across the trailing 30% of the previous slice
-         (so the new chapter is fully visible by the time its slice
-         starts) and fade-out scrubs across the trailing 30% of its
-         own slice (so the next chapter overlays cleanly). */
+    /* Master scrub timeline — pinned to the story container for
+       `total` viewport heights of scroll. Crossfades happen at each
+       chapter boundary; the timeline's own duration is padded to
+       `total` so scroll progress maps evenly across chapter slices.
 
-      const SEG_PX = () => window.innerHeight;
+       Why a master timeline (rather than per-tween ScrollTriggers
+       referencing the same trigger): the previous version mixed pin
+       + per-tween triggers using `top+=Npx top` syntax, which works
+       in theory but ended up with only the first chapter visible.
+       Consolidating into one scrub timeline lets GSAP own all the
+       position math and matches the canonical pinned-narrative
+       pattern from its own docs. */
+    const FADE = 0.18; /* timeline-unit length of each crossfade */
 
-      /* Fade-IN — except the first chapter, which is visible on load */
-      if (i > 0) {
-        gsap.to(chapter, {
-          opacity: 1,
-          ease: 'none',
-          scrollTrigger: {
-            trigger: story,
-            start: () => `top+=${(i * SEG_PX()) - SEG_PX() * 0.4}px top`,
-            end:   () => `top+=${i * SEG_PX()}px top`,
-            scrub: 1,
-            invalidateOnRefresh: true,
-          },
-        });
+    const masterTl = gsap.timeline({
+      scrollTrigger: {
+        trigger: story,
+        start: 'top top',
+        end: () => `+=${total * window.innerHeight}px`,
+        pin: true,
+        pinSpacing: true,
+        anticipatePin: 1,
+        scrub: 1,
+        invalidateOnRefresh: true,
+      },
+    });
+
+    /* Crossfades at each boundary i+1 (timeline position = boundary).
+       Both fade-out (current chapter) and fade-in (next chapter) are
+       placed at the same timeline position, with `FADE * 2` duration. */
+    for (let i = 0; i < total - 1; i++) {
+      const t = (i + 1) - FADE;
+      masterTl.to(chapters[i],     { opacity: 0, duration: FADE * 2, ease: 'none' }, t)
+              .to(chapters[i + 1], { opacity: 1, duration: FADE * 2, ease: 'none' }, t);
+    }
+
+    /* Pad the timeline so its total duration matches `total` chapter
+       units — without this, scroll-progress maps unevenly across
+       chapter slices and the last chapter only gets a sliver of the
+       visible scroll range. */
+    masterTl.set({}, {}, total);
+
+    /* Text reveal triggers — separate ScrollTriggers per chapter so
+       the reveal plays once when its slice enters, rather than
+       scrubbing with scroll (which would jitter the cascade). Each
+       trigger spans the back third of the previous slice (or the
+       page top, for chapter 0). */
+    chapters.forEach((chapter, i) => {
+      if (i === 0) {
+        /* Chapter 0 is visible on load — fire its reveal immediately
+           rather than waiting for a scroll trigger. */
+        reveals[0].play();
+        return;
       }
-
-      /* Fade-OUT — except the last chapter, which sticks around at the end */
-      if (i < total - 1) {
-        gsap.to(chapter, {
-          opacity: 0,
-          ease: 'none',
-          scrollTrigger: {
-            trigger: story,
-            start: () => `top+=${((i + 1) * SEG_PX()) - SEG_PX() * 0.4}px top`,
-            end:   () => `top+=${(i + 1) * SEG_PX()}px top`,
-            scrub: 1,
-            invalidateOnRefresh: true,
-          },
-        });
-      }
-
-      /* Text reveal trigger — fires once when the chapter's slice
-         comes within fade-in range. The reveal timeline plays
-         independently of scroll (paused/play model) so the text
-         doesn't scrub jitter with cursor scroll position. Reverse
-         on leave-back so re-entering chapters re-runs the cascade. */
       ScrollTrigger.create({
         trigger: story,
-        start: () => `top+=${(i * SEG_PX()) - SEG_PX() * 0.5}px top`,
-        end:   () => `top+=${i * SEG_PX()}px top`,
-        onEnter:     () => reveal.play(),
-        onEnterBack: () => reveal.play(),
+        start: () => `top+=${(i - 0.5) * window.innerHeight}px top`,
+        end:   () => `top+=${i * window.innerHeight}px top`,
+        onEnter:     () => reveals[i].play(),
+        onEnterBack: () => reveals[i].play(),
         invalidateOnRefresh: true,
       });
     });
-
-    /* Chapter 0's text isn't behind a scroll trigger because the chapter
-       starts visible — fire its reveal on init so the page doesn't open
-       with the first chapter blank. */
-    const firstReveal = chapters[0]?.dataset?.revealFired;
-    if (!firstReveal) {
-      const ch0 = chapters[0];
-      const bg    = ch0.querySelector('.about-chapter-bg');
-      const label = ch0.querySelector('.about-chapter-label');
-      const title = ch0.querySelector('.about-chapter-title');
-      const words = ch0.querySelectorAll('.about-word');
-      const tl0 = gsap.timeline({ defaults: { ease: 'expo.out' } });
-      if (bg)    tl0.to(bg,    { scale: 1, duration: 1.6, ease: 'power3.out' }, 0);
-      if (label) tl0.to(label, { opacity: 1, y: 0, duration: 0.7 }, 0.1);
-      if (title) tl0.to(title, { opacity: 1, y: 0, duration: 1.0 }, 0.2);
-      if (words.length) {
-        tl0.to(words, { opacity: 1, y: 0, duration: 0.6, stagger: { amount: 0.6 } }, 0.4);
-      }
-      ch0.dataset.revealFired = '1';
-    }
-  } else if (prefersReduced) {
+  } else if (prefersReduced && chapters.length) {
     /* Reduced-motion: snap chapters to fully visible state, all stacked.
        Without the pin, they'd just show as overlapping content — accept
        that the section won't tell its story scroll-wise, but at least
