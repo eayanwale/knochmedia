@@ -52,12 +52,17 @@ function _initTimecode() {
 }
 
 function _initNavLinks() {
-  // Logo — scroll to top via Lenis so the deceleration matches the site feel
+  // Logo — scroll to top via Lenis when clicked on the same page; otherwise
+  // let the browser navigate normally so cross-page links (e.g. Knoch.
+  // wordmark on about.html → home) actually leave the current document.
   const mark = document.querySelector('.mark');
   if (mark) {
     mark.addEventListener('click', (e) => {
-      e.preventDefault();
-      scrollTo(0, { duration: 1.2 });
+      const target = new URL(mark.href, window.location.href);
+      if (target.pathname === window.location.pathname) {
+        e.preventDefault();
+        scrollTo(0, { duration: 1.2 });
+      }
     });
   }
 
