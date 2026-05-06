@@ -131,6 +131,26 @@ export async function initTestimonial() {
 
     const total = testimonials.length;
 
+    /* ── Ambient index ───────────────────────────────────── */
+
+    const ambientIdx = document.createElement('div');
+    ambientIdx.className = 'testimonial-ambient-idx';
+    ambientIdx.setAttribute('aria-hidden', 'true');
+    ambientIdx.textContent = '01';
+    section.appendChild(ambientIdx);
+
+    function updateAmbientIdx(idx) {
+      const label = String(idx + 1).padStart(2, '0');
+      if (prefersReduced) { ambientIdx.textContent = label; return; }
+      gsap.to(ambientIdx, {
+        opacity: 0, duration: 0.2, ease: 'expo.in',
+        onComplete: () => {
+          ambientIdx.textContent = label;
+          gsap.to(ambientIdx, { opacity: 1, duration: 0.5, ease: 'expo.out' });
+        },
+      });
+    }
+
     /* ── DOM ─────────────────────────────────────────────── */
 
     const slider = document.createElement('div');
@@ -182,6 +202,7 @@ export async function initTestimonial() {
       const wasAnimating = busy;
       busy = true;
       setDots(idx);
+      updateAmbientIdx(idx);
 
       const mount = () => {
         current = idx;

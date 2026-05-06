@@ -20,10 +20,33 @@
 /* ── Section shell ──────────────────────────────────────── */
 
 .testimonial {
-  padding: 8rem 8vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 8vw;
+  position: relative;
   text-align: center;
   border-top: 1px solid rgba(237, 230, 216, 0.08);
   overflow: hidden;
+}
+
+/* Giant outline number in the background — ticks with each quote.
+   -webkit-text-stroke gives the outline-only effect without fill.
+   Clipped at the bottom so only the top ≈70% of the glyph is visible. */
+.testimonial-ambient-idx {
+  position: absolute;
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: clamp(180px, 26vw, 420px);
+  line-height: 1;
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(237, 230, 216, 0.07);
+  pointer-events: none;
+  user-select: none;
+  bottom: -0.18em;
+  right: 4vw;
+  z-index: 0;
 }
 
 /* ── Carousel wrapper ───────────────────────────────────── */
@@ -33,6 +56,8 @@
   flex-direction: column;
   align-items: center;
   width: 100%;
+  position: relative;
+  z-index: 1;
 }
 
 /* Single-item display area — one .testimonial-item lives here */
@@ -53,7 +78,7 @@
 
 .testimonial-mark {
   font-family: var(--font-serif);
-  font-size: 3rem;
+  font-size: 5rem;
   line-height: 0.5;
   color: var(--amber);
   opacity: 0.6;
@@ -67,10 +92,10 @@
 .testimonial-quote {
   font-family: var(--font-serif);
   font-weight: 300;
-  font-size: clamp(18px, 1.8vw, 28px);
-  line-height: 1.55;
-  letter-spacing: -0.01em;
-  max-width: 40ch;
+  font-size: clamp(22px, 2.2vw, 36px);
+  line-height: 1.5;
+  letter-spacing: -0.015em;
+  max-width: 46ch;
   margin: 0 auto;
   color: var(--paper);
 }
@@ -137,7 +162,8 @@
 @media (prefers-reduced-motion: reduce) {
   .testimonial-item,
   .testimonial-word,
-  .testimonial-slider {
+  .testimonial-slider,
+  .testimonial-ambient-idx {
     opacity: 1 !important;
     transform: none !important;
     transition: none !important;
@@ -151,10 +177,23 @@
 
 @media (max-width: 800px) {
   .testimonial {
-    padding: 5rem 6vw;
+    height: auto;
+    min-height: 100svh;
+    padding: 6rem 6vw;
+    align-items: center;
+  }
+
+  .testimonial-ambient-idx {
+    font-size: clamp(120px, 40vw, 200px);
+    bottom: -0.12em;
+    right: 2vw;
   }
 
   .testimonial-mark {
-    font-size: 2.5rem;
+    font-size: 3.5rem;
+  }
+
+  .testimonial-quote {
+    font-size: clamp(20px, 5vw, 28px);
   }
 }
