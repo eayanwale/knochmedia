@@ -109,8 +109,43 @@ function addMagneticZoom(card) {
   });
 }
 
-/* Reel intro text reveals — label floats up, headline clip-wipes,
-   desc lines clip-wipe with stagger, hint fades last. */
+/* Per-character split: walk every text node inside `el`, replace each
+   non-whitespace character with an inline-block <span class="char">.
+   Whitespace stays as plain text so word-break behaves naturally and
+   wrapping markup (e.g. <em>) is preserved. Returns the new char spans. */
+function splitChars(el) {
+  if (!el) return [];
+  const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
+  const textNodes = [];
+  let node;
+  while ((node = walker.nextNode())) textNodes.push(node);
+
+  textNodes.forEach(textNode => {
+    const text = textNode.textContent;
+    const frag = document.createDocumentFragment();
+    for (const ch of text) {
+      if (ch === ' ' || ch === ' ') {
+        frag.appendChild(document.createTextNode(ch));
+      } else {
+        const span = document.createElement('span');
+        span.className = 'reel-intro-char';
+        span.style.display = 'inline-block';
+        span.style.willChange = 'transform';
+        span.textContent = ch;
+        frag.appendChild(span);
+      }
+    }
+    textNode.replaceWith(frag);
+  });
+
+  return el.querySelectorAll('.reel-intro-char');
+}
+
+/* Reel intro text reveals — label rises, headline letters cascade up
+   from below their clip with a stagger, desc lines clip-wipe, hint
+   fades last. The per-character split makes "Selected work." land
+   noticeably even on a quick scroll-by, where the previous full-clip
+   reveal felt like a single instant flash. */
 function animateReelIntro(section) {
   const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   if (prefersReduced) return;
@@ -127,11 +162,16 @@ function animateReelIntro(section) {
       `<span class="reel-desc-line" style="display:block;overflow:hidden;"><span style="display:block;">${l.trim()}</span></span>`
     ).join('');
   }
-
   const descInners = desc ? desc.querySelectorAll('span > span') : [];
 
-  gsap.set([label, hint], { opacity: 0, y: 16 });
-  gsap.set(headline, { clipPath: 'inset(0 0 100% 0)', y: 20 });
+  /* Wrap headline so per-char yPercent slides up from below a clip edge.
+     Inline-block + overflow:hidden on the wrapper, each char tweens
+     yPercent: 110 → 0. <em> stays intact so "work." keeps its amber italic. */
+  if (headline) headline.style.overflow = 'hidden';
+  const headlineChars = splitChars(headline);
+
+  gsap.set([label, hint], { opacity: 0, y: 24 });
+  gsap.set(headlineChars, { yPercent: 115, opacity: 0 });
   gsap.set(descInners, { y: '110%' });
 
   const tl = gsap.timeline({
@@ -143,10 +183,13 @@ function animateReelIntro(section) {
     defaults: { ease: 'expo.out' },
   });
 
-  tl.to(label, { opacity: 1, y: 0, duration: 0.7 }, 0)
-    .to(headline, { clipPath: 'inset(0 0 0% 0)', y: 0, duration: 1.0 }, 0.1)
-    .to(descInners, { y: '0%', stagger: 0.1, duration: 0.8 }, 0.35)
-    .to(hint, { opacity: 1, y: 0, duration: 0.6 }, 0.65);
+  tl.to(label, { opacity: 1, y: 0, duration: 0.8 }, 0)
+    /* Stagger 0.035s × ~13 chars ≈ 0.45s wave; total headline duration ~1.4s
+       gives the eye time to track the cascade rather than blur into a single
+       motion blur. */
+    .to(headlineChars, { yPercent: 0, opacity: 1, stagger: 0.035, duration: 1.0 }, 0.18)
+    .to(descInners, { y: '0%', stagger: 0.12, duration: 0.9 }, 0.6)
+    .to(hint, { opacity: 1, y: 0, duration: 0.7 }, 0.95);
 }
 
 export function initReel(cards = CARDS) {

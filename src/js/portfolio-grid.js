@@ -142,6 +142,26 @@ export function initPortfolioGrid() {
     },
   });
 
+  /* Subtle ambient float — each tile bobs independently on yPercent
+     (separate from the entry tween's y-pixel transform, so they compose
+     cleanly without overwriting each other). Pseudo-random durations
+     keep the tiles out of phase so the grid feels alive rather than
+     pulsing in unison. Range stays at ~3% of tile height — small enough
+     not to disturb hover targeting, big enough to read on the larger
+     tiles (t1, t6, t7).
+     Using yPercent here also avoids conflict with the .tile-img yPercent
+     parallax inside each tile, since those target different elements. */
+  tiles.forEach((tile, i) => {
+    gsap.to(tile, {
+      yPercent: -3 - (i % 2),                  // -3 or -4
+      duration: 3.8 + (i % 3) * 0.7,           // 3.8 - 5.2s
+      delay: -((i * 0.42) % 4),                // negative delay desyncs phases
+      ease: 'sine.inOut',
+      yoyo: true,
+      repeat: -1,
+    });
+  });
+
   tiles.forEach(tile => {
     const img = tile.querySelector('.tile-img');
     if (!img) return;
