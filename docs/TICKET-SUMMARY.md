@@ -176,6 +176,21 @@ All modifications to this document and ticket files are logged here. Tester agen
 
 ---
 
+### 2026-05-06 — KNOCH-036 polish folded into PR #21
+
+**Action:** Phase 3 polish bundle merged into dev (cebdc46), folded into PR #21
+**Tickets affected:** KNOCH-036 (new ticket, in review), KNOCH-011 / KNOCH-012 / KNOCH-013 / KNOCH-035 (cross-ticket polish)
+**Reason:** Enoch reviewed the Phase 3 test preview after PR #21 opened and flagged a bundle of issues spanning multiple tickets — nav structure inconsistencies, homepage trims, testimonial reveal style, portfolio category taxonomy change (Sanity-side rename), about-page split feeling static, project page gallery showing irrelevant placeholder images. Fixes are tightly coupled across the four tickets so they ship as one branch (`feature/KNOCH-036-phase-3-polish`) folded into the still-open PR #21 rather than as a separate PR cycle.
+**Changes:**
+- KNOCH-036: Created. Status ⬜ Open → 🔵 In review (folded into PR #21).
+- Branch `feature/KNOCH-036-phase-3-polish` created from dev, six logical commits, merged into dev as fast-forward
+- PR #21 title updated to "feat(KNOCH-012 + KNOCH-036)"; description expanded with the polish item list and additional Test plan checkboxes
+- Files touched: src/index.html, src/about.html, src/portfolio.html, src/project.html, src/css/{about,chrome,project-page,reel,testimonial}.css, src/js/{about,portfolio-page,project-page,projects,testimonial}.js, docs/tickets/KNOCH-036.md
+- Build: 65 modules → 65, dist HTML totals: index 25.96 / 7.58 gz, about 12.13 / 3.82 gz, portfolio 11.84 / 3.13 gz, project 6.34 / 2.29 gz; 172 ms
+**Requested by:** Enoch (reviewed live preview, listed issues in chat)
+
+---
+
 ### 2026-05-06 — KNOCH-012 PR opened — IN REVIEW
 
 **Action:** PR #21 opened dev → test
