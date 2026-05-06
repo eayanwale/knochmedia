@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>The Studio — Knoch Media</title>
+
+    <!-- Primary meta -->
+    <meta name="description" content="A working studio — cinematic photography &amp; film by Knoch Media. The story, the philosophy, and how we work." />
+    <meta name="theme-color" content="#0a0a0a" />
+
+    <!-- Sanity CMS config (KNOCH-023) — kept consistent across pages -->
+    <meta name="sanity-project-id" content="2779g58e" />
+    <meta name="sanity-dataset" content="production" />
+
+    <!-- Google Fonts — same Fraunces / Inter Tight / JetBrains Mono triple as index.html -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;1,9..144,400&family=Inter+Tight:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap"
+    />
+
+    <!-- Global tokens + shared chrome / cursor + about-specific styles -->
+    <link rel="stylesheet" href="/css/global.css" />
+    <link rel="stylesheet" href="/css/chrome.css" />
+    <link rel="stylesheet" href="/css/cursor.css" />
+    <link rel="stylesheet" href="/css/about.css" />
+
+    <!--
+      LCP preload — about-01.jpg is the first image in the scrolling
+      right column and the largest contentful paint candidate on this
+      page once the hero text is in. fetchpriority promotes it above
+      the other four image fetches.
+    -->
+    <link rel="preload" as="image" href="/assets/about/about-01.jpg" fetchpriority="high" />
+  </head>
+  <body>
+
+    <!--
+      Custom cursor — same desktop ring as the homepage (KNOCH-004).
+      Hidden on touch via CSS pointer:coarse media query.
+    -->
+    <div class="cursor" id="cursor" aria-hidden="true"></div>
+
+    <!--
+      Chrome navigation overlay — same component as index.html, but the
+      nav links here use plain hrefs (no data-scroll-to) so they perform
+      a real cross-page navigation back to the homepage. The .mark click
+      handler in chrome.js detects same-page vs cross-page and only
+      intercepts clicks for in-page smooth-scroll on the homepage.
+    -->
+    <div class="chrome" id="chrome">
+      <div class="chrome-grid">
+
+        <a class="mark" href="/" aria-label="Knoch — back to home">Knoch<span class="dot" aria-hidden="true">.</span></a>
+
+        <nav class="nav-center" aria-label="Main navigation">
+          <a href="/#reel">Work</a>
+          <a href="/about.html" aria-current="page">Studio</a>
+          <a href="/#cta">Inquire</a>
+        </nav>
+
+        <div class="nav-right" aria-hidden="true">
+          <span class="rec-dot"></span>
+          <span>REC · <span id="tc">00:00:00</span></span>
+        </div>
+
+      </div>
+    </div>
+
+    <!--
+      Bottom timecode bar — cosmetic chrome, aria-hidden.
+      The progressbar role on .scroll-progress is kept for AT despite
+      the parent's aria-hidden — it's still a meaningful indicator.
+    -->
+    <div class="timecode-bar" aria-hidden="true">
+      <span>K/M · 2026 · MARYLAND</span>
+      <div class="scroll-progress"
+           id="scroll-progress"
+           role="progressbar"
+           aria-valuenow="0"
+           aria-valuemin="0"
+           aria-valuemax="100"
+           aria-label="Page scroll progress"></div>
+      <span id="frame-display">FRAME 01 / 36</span>
+    </div>
+
+    <!--
+      About hero — large Fraunces headline, amber meta label, mono sub.
+      headline-hover triggers the per-character proximity hover effect
+      (smoke wisps + scale + outline) once char-hover.js splits the text.
+    -->
+    <section class="about-hero" aria-label="About — A working studio">
+      <div class="about-hero-inner">
+        <p class="about-hero-meta">— THE STUDIO &middot; EST. 2018</p>
+        <h1 class="about-hero-headline headline-hover">
+          A working <em>studio.</em>
+        </h1>
+        <p class="about-hero-sub">Cinematic photography &amp; film &middot; Maryland</p>
+      </div>
+    </section>
+
+    <!--
+      Studio statement — the same brand sentence used as the homepage
+      teaser body, expanded slightly. Italic Fraunces so it reads as a
+      manifesto excerpt, not a tagline.
+    -->
+    <section class="about-intro" aria-label="Studio statement">
+      <p class="about-intro-body">
+        At Knoch Media, storytelling is at the core of everything we do.
+        Through cinematic photography and film, we capture life&rsquo;s
+        most meaningful moments &mdash; the adrenaline of a sports event,
+        the intimacy of a wedding, the essence of a brand.
+      </p>
+    </section>
+
+    <!--
+      Split layout — sticky chapters on the left, scrolling images on
+      the right. The IntersectionObserver in about.js syncs the .active
+      chapter to the image currently in view (>= 50% threshold).
+    -->
+    <section class="about-split" aria-label="Studio story">
+      <div class="about-split-inner">
+
+        <!-- Sticky narrative column -->
+        <div class="about-text">
+          <div class="about-text-sticky">
+
+            <article class="chapter" data-chapter="1" id="chapter-1">
+              <p class="chapter-label">Chapter 01 &middot; The beginning</p>
+              <h2 class="chapter-title">It started with a wedding.</h2>
+              <p class="chapter-body">
+                In 2018, while studying at the University of Maryland,
+                Enoch picked up a camera for a friend&rsquo;s wedding.
+                What started as a favour became a calling. The first roll
+                never developed into a portfolio &mdash; it developed into
+                a way of seeing.
+              </p>
+            </article>
+
+            <article class="chapter" data-chapter="2" id="chapter-2">
+              <p class="chapter-label">Chapter 02 &middot; The philosophy</p>
+              <h2 class="chapter-title">We don&rsquo;t photograph weddings.</h2>
+              <p class="chapter-body">
+                We attend them &mdash; quietly &mdash; and bring back what
+                was beautiful. The best frames come from staying out of
+                the way. Posed images have their place; the moments
+                we&rsquo;re after happen between them.
+              </p>
+            </article>
+
+            <article class="chapter" data-chapter="3" id="chapter-3">
+              <p class="chapter-label">Chapter 03 &middot; The craft</p>
+              <h2 class="chapter-title">Film-first mindset, even shooting digital.</h2>
+              <p class="chapter-body">
+                Limited frames force intention. We approach every shoot
+                with the discipline of a roll of film &mdash; every
+                exposure earned, every composition considered before the
+                shutter falls. The result is a body of work that holds up.
+              </p>
+            </article>
+
+            <article class="chapter" data-chapter="4" id="chapter-4">
+              <p class="chapter-label">Chapter 04 &middot; The work</p>
+              <h2 class="chapter-title">A short list of clients.</h2>
+              <p class="chapter-body">
+                We take on a small number of projects each year. Couples
+                planning weddings that feel like films. Artists shipping
+                records and music videos. Brands and athletes with a story
+                worth a roll of frames.
+              </p>
+            </article>
+
+          </div>
+        </div>
+
+        <!--
+          Scrolling image column — 5 figures with aspect-ratio 3/4.
+          The 5th image keeps Chapter 04 highlighted (data-image="4")
+          so the closing chapter is still active as the user lands on
+          the stats section below.
+        -->
+        <div class="about-images">
+          <figure class="about-image" data-image="1">
+            <div class="about-image-frame" style="background-image: url('/assets/about/about-01.jpg')" role="img" aria-label="Portrait — Maryland"></div>
+            <figcaption>Portrait &middot; Maryland</figcaption>
+          </figure>
+          <figure class="about-image" data-image="2">
+            <div class="about-image-frame" style="background-image: url('/assets/about/about-02.jpg')" role="img" aria-label="Worship — Live event"></div>
+            <figcaption>Worship &middot; Live event</figcaption>
+          </figure>
+          <figure class="about-image" data-image="3">
+            <div class="about-image-frame" style="background-image: url('/assets/about/about-03.jpg')" role="img" aria-label="Portrait — detail"></div>
+            <figcaption>Portrait &middot; Detail</figcaption>
+          </figure>
+          <figure class="about-image" data-image="4">
+            <div class="about-image-frame" style="background-image: url('/assets/about/about-04.jpg')" role="img" aria-label="Event — in motion"></div>
+            <figcaption>Event &middot; In motion</figcaption>
+          </figure>
+          <figure class="about-image" data-image="4">
+            <div class="about-image-frame" style="background-image: url('/assets/about/about-05.jpg')" role="img" aria-label="Studio — behind the scenes"></div>
+            <figcaption>Studio &middot; Behind the scenes</figcaption>
+          </figure>
+        </div>
+
+      </div>
+    </section>
+
+    <!--
+      By the numbers — three Fraunces numerals, animated on first
+      scroll-in by about.js (proxy tween, same pattern as KNOCH-008).
+      The em wrap on stats 1 and 3 carries the amber italic styling.
+    -->
+    <section class="about-stats" aria-label="By the numbers">
+      <div class="about-stats-inner">
+        <p class="about-stats-meta">— BY THE NUMBERS</p>
+        <div class="about-stats-grid">
+          <div class="about-stat">
+            <div class="about-stat-n" data-count="47" aria-label="47 projects"><em>47</em></div>
+            <div class="about-stat-l">Projects</div>
+          </div>
+          <div class="about-stat">
+            <div class="about-stat-n" data-count="8" aria-label="8 years">8</div>
+            <div class="about-stat-l">Years &middot; 2018&ndash;2026</div>
+          </div>
+          <div class="about-stat">
+            <div class="about-stat-n" data-count="12884" aria-label="12,884 frames developed"><em>12,884</em></div>
+            <div class="about-stat-l">Frames</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Process — 3 numbered steps. Plain text, no animation needed. -->
+    <section class="about-process" aria-label="How we work">
+      <div class="about-process-inner">
+        <p class="about-process-meta">— HOW WE WORK</p>
+        <div class="about-process-grid">
+          <div class="about-process-step">
+            <span class="about-process-num">01</span>
+            <h3 class="about-process-title">The inquiry</h3>
+            <p class="about-process-body">
+              Tell us about the project. We respond within 48 hours with
+              availability, scope questions, and a rough quote.
+            </p>
+          </div>
+          <div class="about-process-step">
+            <span class="about-process-num">02</span>
+            <h3 class="about-process-title">The shoot</h3>
+            <p class="about-process-body">
+              We show up, work the room, and stay invisible. You won&rsquo;t
+              see us chasing &mdash; we&rsquo;ll already be where the
+              moment is going.
+            </p>
+          </div>
+          <div class="about-process-step">
+            <span class="about-process-num">03</span>
+            <h3 class="about-process-title">The delivery</h3>
+            <p class="about-process-body">
+              Edited, colour-matched, and delivered through a private
+              gallery within three weeks. Full resolution, your archive
+              forever.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!--
+      Closing CTA — links to the homepage's #cta section so the inquiry
+      form (KNOCH-014, currently a placeholder) handles the conversion.
+      Using a real cross-page anchor href so browsers handle the
+      navigation; chrome.js's smooth scroll only fires for same-page
+      anchor links via data-scroll-to.
+    -->
+    <section class="about-cta" aria-label="Inquire">
+      <div class="about-cta-inner">
+        <h2 class="about-cta-headline headline-hover">Ready to make a roll?</h2>
+        <a class="about-cta-link" href="/#cta">Start an inquiry &rarr;</a>
+      </div>
+    </section>
+
+    <!--
+      About-specific entry point — see src/js/about-main.js for the
+      slim list of modules loaded here. type="module" gives us the
+      same automatic-defer behaviour as the homepage entry.
+    -->
+    <script type="module" src="/js/about-main.js"></script>
+  </body>
+</html>
