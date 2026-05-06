@@ -82,6 +82,13 @@
   width: 100%;
 }
 
+.nav-center a[aria-current="page"] {
+  color: var(--amber);
+}
+.nav-center a[aria-current="page"]::after {
+  width: 100%;
+}
+
 /* Show underline on keyboard focus too — mirrors hover */
 .nav-center a:focus-visible::after {
   width: 100%;

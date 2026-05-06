@@ -56,7 +56,7 @@
         <a class="mark" href="/" aria-label="Knoch — back to home">Knoch<span class="dot" aria-hidden="true">.</span></a>
 
         <nav class="nav-center" aria-label="Main navigation">
-          <a href="/#reel">Work</a>
+          <a href="/portfolio.html">Work</a>
           <a href="/about.html" aria-current="page">Studio</a>
           <a href="/#cta">Inquire</a>
         </nav>
@@ -116,95 +116,71 @@
     </section>
 
     <!--
-      Split layout — sticky chapters on the left, scrolling images on
-      the right. The IntersectionObserver in about.js syncs the .active
-      chapter to the image currently in view (>= 50% threshold).
+      Story chapters (KNOCH-036 redesign) — four full-bleed sections,
+      each with a wedding-photo bg + overlaid mono label, Fraunces
+      headline, and sans body. Reads as a scroll narrative rather than
+      a side-by-side text/image split. Each chapter triggers its own
+      reveal animation when it scrolls into view (about.js).
     -->
-    <section class="about-split" aria-label="Studio story">
-      <div class="about-split-inner">
+    <section class="about-story" aria-label="Studio story">
 
-        <!-- Sticky narrative column -->
-        <div class="about-text">
-          <div class="about-text-sticky">
-
-            <article class="chapter" data-chapter="1" id="chapter-1">
-              <p class="chapter-label">Chapter 01 &middot; The beginning</p>
-              <h2 class="chapter-title">It started with a wedding.</h2>
-              <p class="chapter-body">
-                In 2018, while studying at the University of Maryland,
-                Enoch picked up a camera for a friend&rsquo;s wedding.
-                What started as a favour became a calling. The first roll
-                never developed into a portfolio &mdash; it developed into
-                a way of seeing.
-              </p>
-            </article>
-
-            <article class="chapter" data-chapter="2" id="chapter-2">
-              <p class="chapter-label">Chapter 02 &middot; The philosophy</p>
-              <h2 class="chapter-title">We don&rsquo;t photograph weddings.</h2>
-              <p class="chapter-body">
-                We attend them &mdash; quietly &mdash; and bring back what
-                was beautiful. The best frames come from staying out of
-                the way. Posed images have their place; the moments
-                we&rsquo;re after happen between them.
-              </p>
-            </article>
-
-            <article class="chapter" data-chapter="3" id="chapter-3">
-              <p class="chapter-label">Chapter 03 &middot; The craft</p>
-              <h2 class="chapter-title">Film-first mindset, even shooting digital.</h2>
-              <p class="chapter-body">
-                Limited frames force intention. We approach every shoot
-                with the discipline of a roll of film &mdash; every
-                exposure earned, every composition considered before the
-                shutter falls. The result is a body of work that holds up.
-              </p>
-            </article>
-
-            <article class="chapter" data-chapter="4" id="chapter-4">
-              <p class="chapter-label">Chapter 04 &middot; The work</p>
-              <h2 class="chapter-title">A short list of clients.</h2>
-              <p class="chapter-body">
-                We take on a small number of projects each year. Couples
-                planning weddings that feel like films. Artists shipping
-                records and music videos. Brands and athletes with a story
-                worth a roll of frames.
-              </p>
-            </article>
-
-          </div>
+      <article class="about-chapter" data-chapter="1">
+        <div class="about-chapter-bg" style="background-image: url('/assets/about/about-01.jpg')" role="img" aria-hidden="true"></div>
+        <div class="about-chapter-content">
+          <p class="about-chapter-label">Chapter 01 &middot; The beginning</p>
+          <h2 class="about-chapter-title headline-hover">It started with a wedding.</h2>
+          <p class="about-chapter-body">
+            In 2018, while studying at the University of Maryland,
+            Enoch picked up a camera for a friend&rsquo;s wedding.
+            What started as a favour became a calling. The first
+            roll never developed into a portfolio &mdash; it
+            developed into a way of seeing.
+          </p>
         </div>
+      </article>
 
-        <!--
-          Scrolling image column — 5 figures with aspect-ratio 3/4.
-          The 5th image keeps Chapter 04 highlighted (data-image="4")
-          so the closing chapter is still active as the user lands on
-          the stats section below.
-        -->
-        <div class="about-images">
-          <figure class="about-image" data-image="1">
-            <div class="about-image-frame" style="background-image: url('/assets/about/about-01.jpg')" role="img" aria-label="Portrait — Maryland"></div>
-            <figcaption>Portrait &middot; Maryland</figcaption>
-          </figure>
-          <figure class="about-image" data-image="2">
-            <div class="about-image-frame" style="background-image: url('/assets/about/about-02.jpg')" role="img" aria-label="Worship — Live event"></div>
-            <figcaption>Worship &middot; Live event</figcaption>
-          </figure>
-          <figure class="about-image" data-image="3">
-            <div class="about-image-frame" style="background-image: url('/assets/about/about-03.jpg')" role="img" aria-label="Portrait — detail"></div>
-            <figcaption>Portrait &middot; Detail</figcaption>
-          </figure>
-          <figure class="about-image" data-image="4">
-            <div class="about-image-frame" style="background-image: url('/assets/about/about-04.jpg')" role="img" aria-label="Event — in motion"></div>
-            <figcaption>Event &middot; In motion</figcaption>
-          </figure>
-          <figure class="about-image" data-image="4">
-            <div class="about-image-frame" style="background-image: url('/assets/about/about-05.jpg')" role="img" aria-label="Studio — behind the scenes"></div>
-            <figcaption>Studio &middot; Behind the scenes</figcaption>
-          </figure>
+      <article class="about-chapter" data-chapter="2">
+        <div class="about-chapter-bg" style="background-image: url('/assets/about/about-02.jpg')" role="img" aria-hidden="true"></div>
+        <div class="about-chapter-content">
+          <p class="about-chapter-label">Chapter 02 &middot; The philosophy</p>
+          <h2 class="about-chapter-title headline-hover">We don&rsquo;t photograph weddings.</h2>
+          <p class="about-chapter-body">
+            We attend them &mdash; quietly &mdash; and bring back
+            what was beautiful. The best frames come from staying
+            out of the way. Posed images have their place; the
+            moments we&rsquo;re after happen between them.
+          </p>
         </div>
+      </article>
 
-      </div>
+      <article class="about-chapter" data-chapter="3">
+        <div class="about-chapter-bg" style="background-image: url('/assets/about/about-03.jpg')" role="img" aria-hidden="true"></div>
+        <div class="about-chapter-content">
+          <p class="about-chapter-label">Chapter 03 &middot; The craft</p>
+          <h2 class="about-chapter-title headline-hover">Film-first, even shooting digital.</h2>
+          <p class="about-chapter-body">
+            Limited frames force intention. We approach every shoot
+            with the discipline of a roll of film &mdash; every
+            exposure earned, every composition considered before the
+            shutter falls. The result is a body of work that holds up.
+          </p>
+        </div>
+      </article>
+
+      <article class="about-chapter" data-chapter="4">
+        <div class="about-chapter-bg" style="background-image: url('/assets/about/about-04.jpg')" role="img" aria-hidden="true"></div>
+        <div class="about-chapter-content">
+          <p class="about-chapter-label">Chapter 04 &middot; The work</p>
+          <h2 class="about-chapter-title headline-hover">A short list of clients.</h2>
+          <p class="about-chapter-body">
+            We take on a small number of projects each year. Couples
+            planning weddings that feel like films. Artists shipping
+            records and music videos. Brands and athletes with a
+            story worth a roll of frames.
+          </p>
+        </div>
+      </article>
+
     </section>
 
     <!--
@@ -239,7 +215,7 @@
         <div class="about-process-grid">
           <div class="about-process-step">
             <span class="about-process-num">01</span>
-            <h3 class="about-process-title">The inquiry</h3>
+            <h3 class="about-process-title headline-hover">The inquiry</h3>
             <p class="about-process-body">
               Tell us about the project. We respond within 48 hours with
               availability, scope questions, and a rough quote.
@@ -247,7 +223,7 @@
           </div>
           <div class="about-process-step">
             <span class="about-process-num">02</span>
-            <h3 class="about-process-title">The shoot</h3>
+            <h3 class="about-process-title headline-hover">The shoot</h3>
             <p class="about-process-body">
               We show up, work the room, and stay invisible. You won&rsquo;t
               see us chasing &mdash; we&rsquo;ll already be where the
@@ -256,7 +232,7 @@
           </div>
           <div class="about-process-step">
             <span class="about-process-num">03</span>
-            <h3 class="about-process-title">The delivery</h3>
+            <h3 class="about-process-title headline-hover">The delivery</h3>
             <p class="about-process-body">
               Edited, colour-matched, and delivered through a private
               gallery within three weeks. Full resolution, your archive

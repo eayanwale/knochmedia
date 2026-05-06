@@ -49,7 +49,7 @@
         <a class="mark" href="/" aria-label="Knoch — back to home">Knoch<span class="dot" aria-hidden="true">.</span></a>
 
         <nav class="nav-center" aria-label="Main navigation">
-          <a href="/#reel">Work</a>
+          <a href="/portfolio.html" aria-current="page">Work</a>
           <a href="/about.html">Studio</a>
           <a href="/#cta">Inquire</a>
         </nav>
@@ -98,17 +98,15 @@
     </section>
 
     <!--
-      Body — gallery (left, scrolls) + metadata (right, sticky on
-      desktop). Both columns are populated by project-page.js from
-      the project data; placeholders here only exist so the markup
-      shape is queryable.
+      Body — single centred metadata column. The previous KNOCH-012
+      build had a 2-col grid with a gallery of project images on the
+      left, but the placeholder images repeated across projects and
+      didn't carry information beyond the cover. KNOCH-036 replaced
+      the gallery with the "Other works" reel below, leaving this
+      section for the project-specific metadata only.
     -->
-    <section class="project-body" aria-label="Project gallery and details">
+    <section class="project-body" aria-label="Project details">
       <div class="project-body-inner">
-
-        <div class="project-gallery" aria-label="Project image gallery">
-          <!-- populated by project-page.js -->
-        </div>
 
         <aside class="project-meta">
           <span class="project-meta-cat">PROJECT</span>
@@ -121,6 +119,24 @@
           <a class="project-meta-link" href="#">View full gallery &rarr;</a>
         </aside>
 
+      </div>
+    </section>
+
+    <!--
+      Other works reel (KNOCH-036) — horizontal scroll of every other
+      project, matching the visual vocabulary of the homepage Selected
+      Work reel. Populated by project-page.js (querying
+      listProjects() and excluding the current project). The .project-
+      gallery class name is kept so the existing JS query still finds
+      this element; it's effectively a renamed responsibility now.
+    -->
+    <section class="project-others" aria-label="Other works">
+      <div class="project-others-header">
+        <p class="project-others-meta">— OTHER WORK</p>
+        <h2 class="project-others-headline headline-hover">Keep <em>looking.</em></h2>
+      </div>
+      <div class="project-gallery" aria-label="Other Knoch Media projects">
+        <!-- populated by project-page.js -->
       </div>
     </section>
 
