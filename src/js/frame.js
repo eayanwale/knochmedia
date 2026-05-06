@@ -84,6 +84,30 @@ export function initFrame() {
     0
   );
 
+  /* ── Magnetic cursor parallax on bg ────────────────────────────────────
+     x / y (pixels) compose with the scrub's scale + yPercent without
+     conflict — GSAP tracks each transform component independently.
+     Attaches to .sticky (the 100vh visible panel) not the outer 200vh section. */
+  const sticky = section.querySelector('.sticky');
+  if (sticky) {
+    sticky.addEventListener('mousemove', (e) => {
+      const rect = sticky.getBoundingClientRect();
+      const xRel = (e.clientX - rect.left) / rect.width  - 0.5;
+      const yRel = (e.clientY - rect.top)  / rect.height - 0.5;
+      gsap.to(bg, {
+        x: xRel * 22,
+        y: yRel * 14,
+        duration: 1.4,
+        ease: 'power2.out',
+        overwrite: 'auto',
+      });
+    }, { passive: true });
+
+    sticky.addEventListener('mouseleave', () => {
+      gsap.to(bg, { x: 0, y: 0, duration: 1.6, ease: 'power2.out', overwrite: 'auto' });
+    }, { passive: true });
+  }
+
   /* Meta label */
   tl.to(metaTag, { opacity: 1, y: 0, ease: 'expo.out', duration: 0.2 }, 0);
 
