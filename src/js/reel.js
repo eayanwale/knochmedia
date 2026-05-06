@@ -85,7 +85,7 @@ function addMagneticZoom(card) {
   if (!img) return;
 
   card.addEventListener('mouseenter', () => {
-    gsap.to(img, { scale: 1.06, duration: 0.5, ease: 'power2.out', overwrite: 'auto' });
+    gsap.to(img, { scale: 1.02, duration: 0.5, ease: 'power2.out', overwrite: 'auto' });
   });
 
   card.addEventListener('mousemove', (e) => {
@@ -93,8 +93,8 @@ function addMagneticZoom(card) {
     const xRel = (e.clientX - rect.left) / rect.width - 0.5;
     const yRel = (e.clientY - rect.top) / rect.height - 0.5;
     gsap.to(img, {
-      xPercent: xRel * 6,
-      yPercent: yRel * 6,
+      xPercent: xRel * 2,
+      yPercent: yRel * 2,
       duration: 0.6,
       ease: 'power2.out',
       overwrite: 'auto',

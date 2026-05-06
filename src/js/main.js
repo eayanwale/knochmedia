@@ -1,5 +1,6 @@
 import { initChrome } from './chrome.js';
 import { initCursor } from './cursor.js';
+import { initCharHover } from './char-hover.js';
 import { initHero } from './hero.js';
 import { initInterlude } from './interlude.js';
 import { initReel } from './reel.js';
@@ -20,6 +21,9 @@ initChrome();
 
 // Custom cursor + film-grain overlay (KNOCH-004)
 initCursor();
+
+// Per-character hollow-text hover on all .headline-hover elements
+initCharHover();
 
 // Hero loader + reveal sequence + scroll exit (KNOCH-005)
 // Also bootstraps Lenis (KNOCH-016) in its onComplete callback.

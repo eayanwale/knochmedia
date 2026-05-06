@@ -94,7 +94,13 @@ function buildItem(t) {
     if (i > 0) quote.appendChild(document.createTextNode(' '));
     const span = document.createElement('span');
     span.className = 'testimonial-word';
-    span.textContent = word;
+    /* Split word into per-character spans so hover tracking is per-char */
+    [...word].forEach(char => {
+      const ch = document.createElement('span');
+      ch.className = 'char-t';
+      ch.textContent = char;
+      span.appendChild(ch);
+    });
     quote.appendChild(span);
   });
 
@@ -212,6 +218,7 @@ export async function initTestimonial() {
     let inView       = false;
     let intercepting = false;
     let wheelReady   = true;   /* cooldown flag */
+    let hoveredCount = 0;      /* chars currently under cursor in active quote */
 
     /* ── Navigation ──────────────────────────────────────── */
 
@@ -233,10 +240,29 @@ export async function initTestimonial() {
 
 
       const mount = () => {
+        /* Reset hover count — old chars are being removed from DOM */
+        hoveredCount = 0;
+        gsap.to(bgEl, { opacity: 0, duration: 0.3, ease: 'power2.out', overwrite: 'auto' });
+
         current = idx;
         slider.innerHTML = '';
         const item = buildItem(testimonials[idx]);
         slider.appendChild(item);
+
+        /* Per-character bg image reveal — each .char-t tracks its own hover state */
+        item.querySelectorAll('.char-t').forEach(ch => {
+          ch.addEventListener('mouseenter', () => {
+            if (++hoveredCount === 1) {
+              gsap.to(bgEl, { opacity: 0.12, duration: 0.5, ease: 'power2.out', overwrite: 'auto' });
+            }
+          }, { passive: true });
+          ch.addEventListener('mouseleave', () => {
+            hoveredCount = Math.max(0, hoveredCount - 1);
+            if (hoveredCount === 0) {
+              gsap.to(bgEl, { opacity: 0, duration: 0.5, ease: 'power2.out', overwrite: 'auto' });
+            }
+          }, { passive: true });
+        });
 
         if (prefersReduced) { busy = false; return; }
 
@@ -318,15 +344,13 @@ export async function initTestimonial() {
       window.removeEventListener('wheel', onWheel);
     }
 
-    /* ── Hover — pause auto-advance + reveal bg image ───── */
+    /* ── Hover — pause auto-advance (bg image handled per-char in mount) ── */
 
-    list.addEventListener('mouseenter', () => {
-      stopTimer();
-      gsap.to(bgEl, { opacity: 0.1, duration: 0.8, ease: 'power2.out' });
-    });
+    list.addEventListener('mouseenter', () => { stopTimer(); });
     list.addEventListener('mouseleave', () => {
+      hoveredCount = 0;
+      gsap.to(bgEl, { opacity: 0, duration: 0.4, ease: 'power2.out', overwrite: 'auto' });
       if (inView) startTimer();
-      gsap.to(bgEl, { opacity: 0, duration: 0.6, ease: 'power2.out' });
     });
 
     /* ── IntersectionObserver ────────────────────────────── */
