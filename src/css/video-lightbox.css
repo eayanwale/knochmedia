@@ -1,0 +1,129 @@
+/*
+  video-lightbox.css — Full-screen YouTube modal (KNOCH-012)
+  ============================================================
+  Fixed-position overlay that takes over the viewport when a video
+  project is clicked. Dark backdrop, 16:9 embed centred, close
+  button top-right.
+
+  Lifecycle (driven by video-lightbox.js):
+    .video-lightbox {opacity:0; visibility:hidden} on load
+    On open  → .is-open → opacity:1, visibility:visible
+    On close → remove .is-open → fade out
+    visibility transition delays so pointer-events stay off
+    when the lightbox is hidden.
+
+  Embed container is locked to aspect-ratio: 16/9 with width:
+  min(90vw, 1200px) — never overflows tall viewports because
+  max-height: 80vh limits it on short screens (phones in landscape).
+
+  Focus trap is implemented in JS via trap-on-keydown; the close
+  button gets focus on open and focus is restored to the trigger
+  element on close.
+*/
+
+
+.video-lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 11000; /* above chrome (z 50) and cursor (z 9999) */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(10, 10, 10, 0.92);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  opacity: 0;
+  visibility: hidden;
+  /* Visibility transition delay matches opacity duration so pointer
+     events drop the moment the fade completes — prevents the invisible
+     overlay from intercepting clicks on the page beneath. */
+  transition: opacity 0.4s var(--ease-cinematic),
+              visibility 0s linear 0.4s;
+}
+
+.video-lightbox.is-open {
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 0.4s var(--ease-cinematic),
+              visibility 0s linear 0s;
+}
+
+/* Close button — top-right corner, mono caps, amber on hover */
+.video-lightbox-close {
+  position: absolute;
+  top: 2.5vh;
+  right: 3vw;
+  background: none;
+  border: none;
+  padding: 0.6rem 1rem;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: rgba(237, 230, 216, 0.7);
+  cursor: pointer;
+  transition: color 0.3s var(--ease-cinematic);
+}
+
+.video-lightbox-close:hover,
+.video-lightbox-close:focus-visible {
+  color: var(--amber);
+  outline: none;
+}
+
+/* 16:9 embed container — aspect-ratio handles the proportions; the
+   max-height clamp keeps the iframe inside the viewport even on
+   short / landscape phone screens. */
+.video-lightbox-embed {
+  position: relative;
+  width: min(90vw, 1200px);
+  aspect-ratio: 16 / 9;
+  max-height: 80vh;
+  background: #000;
+  /* Ken-Burns-style entry: small scale + opacity fade-in via the JS
+     animation hook; CSS just provides the ramp values. */
+  transform: scale(0.96);
+  opacity: 0;
+  transition: transform 0.5s var(--ease-cinematic),
+              opacity 0.4s var(--ease-cinematic);
+}
+
+.video-lightbox.is-open .video-lightbox-embed {
+  transform: scale(1);
+  opacity: 1;
+}
+
+.video-lightbox-embed iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  display: block;
+}
+
+
+/* Reduced motion — drop the scale entry and fade only */
+@media (prefers-reduced-motion: reduce) {
+  .video-lightbox,
+  .video-lightbox-embed,
+  .video-lightbox-close {
+    transition: none !important;
+  }
+  .video-lightbox-embed {
+    transform: none !important;
+  }
+}
+
+
+/* Mobile — looser corner padding so the close button stays reachable */
+@media (max-width: 800px) {
+  .video-lightbox-close {
+    top: 1.5vh;
+    right: 4vw;
+  }
+  .video-lightbox-embed {
+    width: 94vw;
+    max-height: 70vh;
+  }
+}
