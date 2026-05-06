@@ -23,7 +23,7 @@
 */
 
 import { gsap } from 'gsap';
-import { getProject } from './projects.js';
+import { getProject, listProjects } from './projects.js';
 
 export function initProjectPage() {
   const veil = document.querySelector('.project-veil');
@@ -116,21 +116,37 @@ export function initProjectPage() {
     }
   }
 
-  /* ── Populate gallery ────────────────────────────── */
+  /* ── Populate "Other works" reel ─────────────────── */
+  /* The element kept the class name `.project-gallery` for backwards
+     CSS compatibility, but the content shape changed in KNOCH-036:
+     instead of rendering this project's own images, it now shows a
+     horizontal reel of the other projects so the visitor can keep
+     browsing without backing out to /portfolio.html. The CSS for
+     `.project-gallery` was retuned to a flex row + scroll-snap. */
 
   const gallery = document.querySelector('.project-gallery');
-  if (gallery && Array.isArray(project.images) && project.images.length) {
-    gallery.innerHTML = project.images.map((src, i) => {
-      /* Every third image gets the landscape ratio for editorial rhythm */
-      const landscape = i % 3 === 2 ? ' is-landscape' : '';
-      return `<div class="project-gallery-img${landscape}" style="background-image: url('${src}')" role="img" aria-label="Project image ${i + 1}"></div>`;
-    }).join('');
-  } else if (gallery) {
-    /* No gallery images — show a graceful fallback rather than an empty grid */
-    gallery.innerHTML =
-      '<p style="font-family:var(--font-mono);font-size:11px;letter-spacing:0.2em;color:rgba(237,230,216,0.5);">' +
-      'Gallery coming soon &mdash; full set available via the link in the project metadata.' +
-      '</p>';
+  if (gallery) {
+    const others = listProjects()
+      .filter(p => p.id !== project.id)
+      .slice(0, 8); /* cap the reel — 8 keeps page weight reasonable */
+
+    if (others.length) {
+      gallery.innerHTML = others.map(p => `
+        <a class="project-other" href="/project.html?id=${encodeURIComponent(p.id)}"
+           aria-label="${p.title} — ${p.category}">
+          <div class="project-other-img" style="background-image: url('${p.cover}')" role="img" aria-hidden="true"></div>
+          <div class="project-other-meta">
+            <span class="project-other-cat">${(p.category || 'Project').toUpperCase()}</span>
+            <h4 class="project-other-title">${p.title}</h4>
+          </div>
+        </a>
+      `).join('');
+    } else {
+      gallery.innerHTML =
+        '<p style="font-family:var(--font-mono);font-size:11px;letter-spacing:0.2em;color:rgba(237,230,216,0.5);">' +
+        'More work coming soon.' +
+        '</p>';
+    }
   }
 
   /* ── Back link ─────────────────────────────────── */

@@ -139,49 +139,21 @@
 }
 
 
-/* ── Body — gallery + metadata split ──────────────────── */
+/* ── Body — centred metadata column ─────────────────── */
 
 .project-body {
   padding: 8rem 8vw;
+  border-bottom: 1px solid rgba(237, 230, 216, 0.08);
 }
 
 .project-body-inner {
-  display: grid;
-  grid-template-columns: 1.6fr 1fr;
-  gap: 6vw;
-  max-width: 1600px;
+  max-width: 920px;
   margin: 0 auto;
-  align-items: start;
 }
 
-/* Gallery — vertical stack of full-column-width images, mostly portrait
-   ratios. Each gets a tiny caption below it for editorial feel. */
-.project-gallery {
-  display: flex;
-  flex-direction: column;
-  gap: 4vw;
-}
-
-.project-gallery-img {
-  width: 100%;
-  aspect-ratio: 4 / 5;
-  background-size: cover;
-  background-position: center;
-  filter: grayscale(0.25) contrast(1.05) brightness(0.94);
-}
-
-/* Some images intentionally use 3/2 landscape ratio to break up the
-   rhythm — JS adds the .is-landscape modifier on every 3rd image. */
-.project-gallery-img.is-landscape {
-  aspect-ratio: 3 / 2;
-}
-
-/* Metadata column — sticky so the project context stays visible while
-   the visitor scrolls the gallery. top:12vh keeps clearance below the
-   chrome overlay. */
 .project-meta {
-  position: sticky;
-  top: 12vh;
+  /* No sticky — single-column body now, sticky has nothing to scroll past */
+  position: static;
 }
 
 .project-meta-cat {
@@ -267,6 +239,134 @@
 }
 
 
+/* ── Other works reel (KNOCH-036) ─────────────────────
+   Horizontal-scroll row of project cards for browsing without
+   bouncing back to /portfolio.html. Visual vocabulary matches the
+   homepage's Selected Work reel (KNOCH-007) — same card aspect, same
+   amber category label, same hover lift — but rendered with native
+   CSS overflow-scroll instead of GSAP-pinned horizontal scroll, since
+   this isn't a hero moment. */
+
+.project-others {
+  padding: 8rem 0 10rem;
+}
+
+.project-others-header {
+  padding: 0 8vw 3rem;
+  max-width: 1600px;
+  margin: 0 auto;
+}
+
+.project-others-meta {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--amber);
+  margin-bottom: 1rem;
+}
+
+.project-others-headline {
+  font-family: var(--font-serif);
+  font-weight: 300;
+  font-size: clamp(36px, 6vw, 80px);
+  line-height: 1;
+  letter-spacing: -0.04em;
+  color: var(--paper);
+  margin: 0;
+}
+
+.project-others-headline em {
+  font-style: italic;
+  color: var(--amber);
+}
+
+/* Reel track — JS dumps cards into .project-gallery (kept that class
+   name for back-compat with the existing query). Display flex so cards
+   sit in a row; overflow-x: auto + scroll-snap so the visitor can
+   swipe / drag through them on touch and trackpads. Padding-left
+   matches the section header's gutter so the first card aligns. */
+.project-gallery {
+  display: flex;
+  gap: 1.4rem;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: 0 8vw 1rem;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: thin;
+}
+
+.project-other {
+  flex: 0 0 28vw;
+  min-width: 280px;
+  max-width: 380px;
+  position: relative;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  background: #1a1a1a;
+  text-decoration: none;
+  color: inherit;
+  scroll-snap-align: start;
+  /* Cards lift slightly on hover so the affordance reads as clickable
+     even before the cursor reaches the meta band. */
+  transition: transform 0.5s var(--ease-cinematic);
+}
+
+.project-other:hover,
+.project-other:focus-visible {
+  transform: translateY(-6px);
+  outline: none;
+}
+
+.project-other-img {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  filter: grayscale(0.5) brightness(0.7);
+  transition:
+    filter 0.7s var(--ease-cinematic),
+    transform 1.2s var(--ease-cinematic);
+  will-change: transform;
+}
+
+.project-other:hover .project-other-img,
+.project-other:focus-visible .project-other-img {
+  filter: grayscale(0) brightness(1);
+  transform: scale(1.04);
+}
+
+.project-other-meta {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 1.6rem 1.4rem 1.2rem;
+  background: linear-gradient(to top, rgba(10, 10, 10, 0.92) 60%, transparent);
+  z-index: 2;
+}
+
+.project-other-cat {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--amber);
+  margin-bottom: 0.4rem;
+}
+
+.project-other-title {
+  font-family: var(--font-serif);
+  font-weight: 300;
+  font-size: 20px;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  color: var(--paper);
+  margin: 0;
+}
+
+
 /* ── Closing CTA ───────────────────────────────────────── */
 
 .project-cta {
@@ -337,15 +437,22 @@
     padding: 4rem 6vw;
   }
 
-  .project-body-inner {
-    grid-template-columns: 1fr;
-    gap: 4rem;
+  .project-others {
+    padding: 4rem 0 6rem;
   }
 
-  /* Stop the metadata from sticking — nothing to scroll past on a
-     single-column mobile layout. */
-  .project-meta {
-    position: static;
+  .project-others-header {
+    padding: 0 6vw 2rem;
+  }
+
+  /* Cards slightly bigger on mobile so they don't feel like thumbnails */
+  .project-other {
+    flex: 0 0 70vw;
+    min-width: 240px;
+  }
+
+  .project-gallery {
+    padding: 0 6vw 1rem;
   }
 
   .project-cta {
