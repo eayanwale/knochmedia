@@ -11,6 +11,8 @@
     stroke       → 0.5px rgba(paper, t*0.75) — soft, semi-opaque outline
     transform    → scale(1 + 0.18 * t)       — gentle pop
     filter       → blur(0.5 * t px)          — dreamy softening of the outline
+    text-shadow  → upward smoke wisps        — three stacked blurred copies
+                   that drift up and dissipate as intensity rises (KNOCH-034)
 
   GSAP tweens a per-char proxy object (not the DOM directly) so intensity
   eases in/out at its own rate regardless of how fast the cursor moves.
@@ -28,6 +30,7 @@ function applyIntensity(span, t, isEm) {
     span.style.setProperty('-webkit-text-stroke', '');
     span.style.transform = '';
     span.style.filter = '';
+    span.style.textShadow = '';
     return;
   }
   const [r, g, b] = isEm ? AMBER : PAPER;
@@ -39,6 +42,19 @@ function applyIntensity(span, t, isEm) {
   span.style.transform = `scale(${(1 + 0.18 * t).toFixed(4)})`;
   /* Blur softens the hard stroke edge */
   span.style.filter = `blur(${(0.5 * t).toFixed(3)}px)`;
+  /* Smoke wisps — three stacked text-shadow copies that climb upward with
+     increasing offset, blur, and decreasing opacity so they read as
+     dissipating vapor. Each layer's offsets and opacity scale with t so the
+     wisps grow with cursor proximity rather than appearing as a fixed glow.
+     Slightly desaturated toward warm grey (×0.92) to read as smoke against
+     the paper/amber chars rather than a colour-matched glow. */
+  const sr = Math.round(r * 0.92);
+  const sg = Math.round(g * 0.92);
+  const sb = Math.round(b * 0.92);
+  span.style.textShadow =
+    `0 ${(-2 * t).toFixed(2)}px ${(5 * t).toFixed(2)}px rgba(${sr},${sg},${sb},${(0.32 * t).toFixed(3)}),` +
+    `0 ${(-5 * t).toFixed(2)}px ${(11 * t).toFixed(2)}px rgba(${sr},${sg},${sb},${(0.18 * t).toFixed(3)}),` +
+    `0 ${(-9 * t).toFixed(2)}px ${(18 * t).toFixed(2)}px rgba(${sr},${sg},${sb},${(0.09 * t).toFixed(3)})`;
 }
 
 function splitAndBind(root) {

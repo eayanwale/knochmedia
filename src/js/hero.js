@@ -24,6 +24,107 @@ import { initLenis } from './lenis.js';
 
 gsap.registerPlugin(ScrollTrigger);
 
+/* All six reel stills, in cycle order. The first entry (reel-01.png) is
+   the loader/reveal frame so the visible state during the intro matches
+   what the slideshow will resume on after the reveal completes. */
+const HERO_SLIDESHOW_IMAGES = [
+  '/assets/reel/reel-01.png',
+  '/assets/reel/reel-02.png',
+  '/assets/reel/reel-03.jpg',
+  '/assets/reel/reel-04.jpg',
+  '/assets/reel/reel-05.jpg',
+  '/assets/reel/reel-06.jpg',
+];
+
+const SLIDE_HOLD_MS  = 5500;  // time each slide stays at full opacity
+const SLIDE_FADE_S   = 1.6;   // crossfade duration (seconds)
+
+/* Slide refs — populated inside initHero() so they exist before the reveal
+   timeline runs, consumed by _onLoaderComplete() to start the cycle. */
+let _heroSlides = null;
+
+/* Build the slideshow layer stack inside .hero-bg. Returns the slide
+   elements in cycle order, with slide[0] starting at opacity 1 so the
+   loader/reveal sequence can scale it up (transform on the parent .hero-bg
+   composites cleanly with the child opacity tweens here).
+   Called early in initHero() so the layers exist before the reveal timeline
+   triggers — otherwise the bg would be blank during scale(1.1)→scale(1). */
+function _buildHeroSlides(heroBg) {
+  const slides = HERO_SLIDESHOW_IMAGES.map((url, i) => {
+    const slide = document.createElement('div');
+    slide.className = 'hero-slide';
+    slide.style.backgroundImage = `url('${url}')`;
+    if (i === 0) slide.style.opacity = '1';
+    heroBg.appendChild(slide);
+    return slide;
+  });
+  return slides;
+}
+
+/* Slideshow loop — cycles through the slide layers with a crossfade,
+   pulsing the parent's --slide-blur and --slide-bright during the swap so
+   the transition reads as a soft "rack focus" rather than a hard cut.
+   Pauses while the document is hidden (Page Visibility API) to avoid
+   playing through wasted swaps if the user tabs away mid-cycle. */
+function _runHeroSlideshow(heroBg, slides) {
+  if (!slides.length || slides.length < 2) return;
+
+  let current = 0;
+  let timer   = null;
+
+  const advance = () => {
+    const next = (current + 1) % slides.length;
+
+    /* Crossfade the two layers in parallel. inOut on both halves so the
+       midpoint of the swap is also the midpoint of the blur/brightness
+       pulse — peaks line up perceptually as one event. */
+    gsap.to(slides[current], {
+      opacity: 0,
+      duration: SLIDE_FADE_S,
+      ease: 'power2.inOut',
+    });
+    gsap.to(slides[next], {
+      opacity: 1,
+      duration: SLIDE_FADE_S,
+      ease: 'power2.inOut',
+    });
+
+    /* Filter pulse on the parent — blur peaks at the crossfade midpoint
+       and the brightness lifts slightly so the swap feels like a film
+       projector dissolve instead of a flat fade. yoyo: true brings both
+       props back to their resting values, repeat: 1 = one out + one back. */
+    gsap.to(heroBg, {
+      '--slide-blur': '2.4px',
+      '--slide-bright': 0.55,
+      duration: SLIDE_FADE_S * 0.5,
+      ease: 'sine.inOut',
+      yoyo: true,
+      repeat: 1,
+      overwrite: 'auto',
+    });
+
+    current = next;
+  };
+
+  const start = () => {
+    if (timer) return;
+    timer = setInterval(advance, SLIDE_HOLD_MS);
+  };
+  const stop = () => {
+    clearInterval(timer);
+    timer = null;
+  };
+
+  start();
+
+  /* Cheap power saver — pause the cycle when the tab is hidden.
+     visibilitychange fires reliably across modern browsers; no need to
+     also handle pageshow/pagehide. */
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) stop(); else start();
+  });
+}
+
 export function initHero() {
   // ── 1. Pre-loader DOM state ────────────────────────────────────────────
 
@@ -49,6 +150,11 @@ export function initHero() {
   const heroBg        = document.querySelector('.hero-bg');
   const heroMeta      = document.querySelector('.hero-meta');
   const heroSub       = document.getElementById('hero-sub');
+
+  /* Build the slideshow layers immediately so they exist before the reveal
+     scale tween runs. Stored at module scope (_heroSlides) so
+     _onLoaderComplete can start the cycle once the reveal finishes. */
+  if (heroBg) _heroSlides = _buildHeroSlides(heroBg);
 
   // Guard: if critical loader elements are missing, skip gracefully
   if (!loader || !counterEl || !progressFill) {
@@ -265,6 +371,14 @@ function _onLoaderComplete() {
 
   // Set up scroll-exit triggers once the reveal completes
   tl.call(_setupScrollExit);
+
+  /* Start the reel slideshow after the reveal finishes. Fires from inside
+     the reveal timeline so the first crossfade lands well after reel-01
+     has had time to settle into place. prefers-reduced-motion users skip
+     it entirely — the static reel-01 stays visible. */
+  if (heroBg && _heroSlides && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    tl.call(() => _runHeroSlideshow(heroBg, _heroSlides));
+  }
 }
 
 // ── 6. Hero exit on scroll (ScrollTrigger) ─────────────────────────────────

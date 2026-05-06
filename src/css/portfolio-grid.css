@@ -195,29 +195,25 @@
 /* t1: large hero tile — subtle rounded corners, stays rectangular */
 .t1 { clip-path: inset(0 round 6px); }
 
-/* t2: pill-arch top — like a film canister cross-section */
-.t2 { clip-path: inset(0 round 80px 80px 6px 6px); }
-
 /* t3: soft rounded card */
 .t3 { clip-path: inset(0 round 20px); }
 
 /* t4: wide banner — subtle rounded corners */
 .t4 { clip-path: inset(0 round 6px); }
 
-/* t5: circular portrait — full tile clipped, label sits inside circle.
-   Gradient is radial from bottom-center so it fades within the circle. */
-.t5 { clip-path: circle(50% at 50% 50%); }
-.t5 .tile-label {
-  background: radial-gradient(ellipse at 50% 100%, rgba(10, 10, 10, 0.85) 0%, transparent 70%);
-  text-align: center;
-  padding: 1.5rem 2rem 1.8rem;
-}
-
 /* t6: tall arch — rounded top, flat base */
 .t6 { clip-path: inset(0 round 100px 100px 6px 6px); }
 
-/* t7: angular cut — notched bottom-right corner */
-.t7 { clip-path: polygon(0% 0%, 100% 0%, 100% 82%, 82% 100%, 0% 100%); }
+/* Torn-paper edges for tiles tagged data-torn=N (t2 / t5 / t7).
+   References the <clipPath id="torn-edge-N"> defs in index.html — three
+   slightly-different organic top/bottom tear paths so the tiles wearing
+   them don't all look identical. Mixed into the contact-sheet collage
+   alongside the geometric tiles above to break rectangular monotony.
+   Specificity ties with the .tN class above; placed last so cascade wins
+   when both could match. */
+.tile[data-torn="1"] { clip-path: url(#torn-edge-1); }
+.tile[data-torn="2"] { clip-path: url(#torn-edge-2); }
+.tile[data-torn="3"] { clip-path: url(#torn-edge-3); }
 
 /* ── Halftone dot overlay (KNOCH-030) ─────────────────────
    Radial-gradient creates an evenly-spaced dot pattern.
