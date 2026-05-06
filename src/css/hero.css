@@ -91,19 +91,42 @@
   justify-content: center;
 }
 
-/* Full-bleed background image with cinematic colour treatment.
-   scale(1.1) set here as initial state; GSAP will animate to scale(1)
-   during the reveal. The extra 10% prevents any white edge flash. */
+/* Full-bleed background container — hosts .hero-slide children for the
+   reel slideshow (KNOCH-033). The container itself owns the cinematic
+   colour treatment so all slides share one filter pipeline rather than
+   compounding filters per-layer. CSS vars on --slide-blur / --slide-bright
+   let hero.js GSAP-tween a brief pulse during each crossfade for the
+   "smooth filter transition" effect, without hitting the filter string
+   reparse overhead.
+   scale(1.1) is the initial state; GSAP animates to scale(1) on reveal.
+   The 10% margin prevents any white edge flash and gives the slides
+   room for a subtle ambient drift. */
 .hero-bg {
   position: absolute;
   inset: 0;
-  background-image: url('/assets/reel/reel-01.png');
+  --slide-blur: 0px;
+  --slide-bright: 0.45;
+  filter:
+    brightness(var(--slide-bright))
+    grayscale(0.4)
+    contrast(1.15)
+    blur(var(--slide-blur));
+  transform: scale(1.1);
+  will-change: transform, filter;
+}
+
+/* Per-image slide layer — one per reel image. All are absolutely positioned
+   over the parent and crossfade by opacity. background-size: cover keeps
+   wide and tall stills framed consistently. The first slide starts at
+   opacity 1 (set inline by hero.js) so the loader's initial scale(1.1)
+   reveal still has something to render against. */
+.hero-slide {
+  position: absolute;
+  inset: 0;
   background-size: cover;
   background-position: center;
-  filter: brightness(0.45) grayscale(0.4) contrast(1.15);
-  transform: scale(1.1);
-  /* will-change hints GPU compositor for scale tween */
-  will-change: transform;
+  opacity: 0;
+  will-change: opacity;
 }
 
 /* Radial vignette — darkens edges to draw eye to centre.
