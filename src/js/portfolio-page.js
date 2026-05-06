@@ -73,6 +73,25 @@ export function initPortfolioPage() {
   const loadMoreBtn = document.querySelector('.portfolio-load-more');
   if (!cards.length) return;
 
+  /* Subtle ambient float — same yoyo/yPercent pattern as the homepage
+     archive tiles (portfolio-grid.js), now mirrored on the dedicated
+     portfolio page so the project grid feels just as alive. Each card
+     bobs independently with pseudo-random durations and negative delays
+     so phases desync. Range stays small so hover targeting isn't
+     disturbed. Skipped on prefers-reduced-motion. */
+  if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    cards.forEach((card, i) => {
+      gsap.to(card, {
+        yPercent: -3 - (i % 2),                  // -3 or -4
+        duration: 3.8 + (i % 3) * 0.7,           // 3.8 - 5.2s
+        delay: -((i * 0.42) % 4),                // negative delay desyncs phases
+        ease: 'sine.inOut',
+        yoyo: true,
+        repeat: -1,
+      });
+    });
+  }
+
   /* Wire each card to the central tile router (KNOCH-012) — handles
      click + keyboard activation, branching to the video lightbox for
      video-typed projects or the expanding-tile transition + navigate
