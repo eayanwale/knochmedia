@@ -1,33 +1,41 @@
 /*
-  testimonial.js — Single-quote carousel wired to Sanity CMS
-  ===========================================================
-  Fetches testimonials, renders one at a time, auto-advances every 7 s.
-  IntersectionObserver starts/stops the timer as the section enters/leaves
-  the viewport. Dots let the visitor jump to any quote.
+  testimonial.js — Single-quote carousel with scroll-step navigation
+  ===================================================================
+  Fetches testimonials, shows one at a time. Three ways to advance:
+    1. Mouse-wheel / trackpad — one scroll gesture = one testimonial
+    2. Auto-advance every 7 s (pauses on hover, stops when off-screen)
+    3. Dot navigation — click to jump to any quote
 
-  Animation approach:
-  - Each reveal runs a 3-step GSAP timeline per item:
-      1. Quote mark  — opacity 0→1, scale 0.5→1  (back.out snap)
-      2. Quote words — .testimonial-word spans stagger up (expo.out)
-      3. Attribution — opacity/y fade (expo.out)
-  - Transitions between items: slider fades out (expo.in, 0.28 s),
-    content swaps, slider fades in while the word stagger plays.
-  - IntersectionObserver instead of GSAP ScrollTrigger: the Sanity fetch
-    resolves at ~200 ms, long before Lenis inits at ~2 s (hero onComplete).
-    IO has no proxy dependency and fires on real DOM intersection.
-  - prefers-reduced-motion: animation skipped, content swaps instantly.
+  Scroll behaviour:
+  - When the section enters the viewport (IO ≥ 60%), Lenis is paused and
+    wheel events are intercepted so each swipe advances one testimonial.
+  - At the last testimonial scrolling down: Lenis resumes → page scrolls
+    naturally to the CTA section below.
+  - At the first testimonial scrolling up: Lenis resumes → page scrolls
+    back to the frame section above.
+  - A 700 ms cooldown prevents a fast trackpad swipe from skipping
+    multiple quotes in one gesture.
+
+  Animation per item:
+  - Slide in: slider opacity 0→1, y 12→0 (0.4 s expo.out)
+  - Quote mark: opacity 0→1, scale 0.5→1 (back.out snap)
+  - Words: per-.testimonial-word span stagger (0.03 s, expo.out)
+  - Attribution: opacity/y fade last
+  - prefers-reduced-motion: instant swap, no animation
 */
 
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { getTestimonials } from './sanity.js';
+import { stopLenis, startLenis, getLenis } from './lenis.js';
 
 gsap.registerPlugin(ScrollTrigger);
 
-const ADVANCE_MS   = 7000;   /* auto-advance interval */
-const QUOTE_MAX    = 120;    /* max chars before ellipsis */
+const ADVANCE_MS  = 7000;
+const QUOTE_MAX   = 120;
+const WHEEL_WAIT  = 700;   /* ms cooldown between scroll-driven advances */
 
-/* ── Helpers ──────────────────────────────────────────────────────── */
+/* ── Helpers ────────────────────────────────────────────────────── */
 
 function clampQuote(text, max = QUOTE_MAX) {
   if (!text || text.length <= max) return text ?? '';
@@ -35,10 +43,6 @@ function clampQuote(text, max = QUOTE_MAX) {
   return (cut > 0 ? text.slice(0, cut) : text.slice(0, max)) + '…';
 }
 
-/**
- * Build one .testimonial-item node. The quote is truncated and each word
- * is wrapped in a .testimonial-word span for the per-word stagger reveal.
- */
 function buildItem(t) {
   const item = document.createElement('div');
   item.className = 'testimonial-item';
@@ -66,29 +70,22 @@ function buildItem(t) {
   return item;
 }
 
-/**
- * Animate a freshly-mounted item into view.
- * Assumes the slider is already at opacity 1 (or animating toward it).
- * Calls onDone when the timeline completes.
- */
 function revealItem(item, onDone) {
   const mark  = item.querySelector('.testimonial-mark');
   const words = item.querySelectorAll('.testimonial-word');
   const attr  = item.querySelector('.testimonial-attr');
 
-  /* Set initial hidden state via inline styles */
-  if (mark)        { mark.style.opacity = '0'; mark.style.transform = 'scale(0.5)'; }
+  if (mark)         { mark.style.opacity = '0'; mark.style.transform = 'scale(0.5)'; }
   words.forEach(w => { w.style.opacity = '0'; w.style.transform = 'translateY(14px)'; });
-  if (attr)        { attr.style.opacity = '0'; attr.style.transform = 'translateY(8px)'; }
+  if (attr)         { attr.style.opacity = '0'; attr.style.transform = 'translateY(8px)'; }
 
   const tl = gsap.timeline({ onComplete: onDone });
-
-  if (mark)        tl.to(mark,  { opacity: 1, scale: 1, duration: 0.45, ease: 'back.out(2.5)' }, 0);
-  if (words.length) tl.to(words, { opacity: 1, y: 0, stagger: 0.03, duration: 0.55, ease: 'expo.out', clearProps: 'all' }, 0.12);
-  if (attr)        tl.to(attr,  { opacity: 1, y: 0, duration: 0.4, ease: 'expo.out', clearProps: 'all' }, '-=0.15');
+  if (mark)          tl.to(mark,  { opacity: 1, scale: 1, duration: 0.45, ease: 'back.out(2.5)' }, 0);
+  if (words.length)  tl.to(words, { opacity: 1, y: 0, stagger: 0.03, duration: 0.55, ease: 'expo.out', clearProps: 'all' }, 0.12);
+  if (attr)          tl.to(attr,  { opacity: 1, y: 0, duration: 0.4, ease: 'expo.out', clearProps: 'all' }, '-=0.15');
 }
 
-/* ── Main init ────────────────────────────────────────────────────── */
+/* ── Main init ──────────────────────────────────────────────────── */
 
 export async function initTestimonial() {
   const section = document.querySelector('.testimonial');
@@ -96,11 +93,9 @@ export async function initTestimonial() {
 
   const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  /* List wrapper */
   const list = document.createElement('div');
   list.className = 'testimonial-list';
 
-  /* Skeleton while fetching */
   const skeleton = document.createElement('div');
   skeleton.className = 'testimonial-slider';
   skeleton.setAttribute('aria-hidden', 'true');
@@ -114,11 +109,12 @@ export async function initTestimonial() {
 
   try {
     const testimonials = await getTestimonials();
-
     list.innerHTML = '';
     if (!testimonials?.length) return;
 
-    /* ── DOM structure ─────────────────────────────────── */
+    const total = testimonials.length;
+
+    /* ── DOM ─────────────────────────────────────────────── */
 
     const slider = document.createElement('div');
     slider.className = 'testimonial-slider';
@@ -135,8 +131,6 @@ export async function initTestimonial() {
       btn.setAttribute('aria-label', `Show testimonial ${i + 1}`);
       btn.addEventListener('click', () => {
         goTo(i);
-        /* Reset the auto-advance timer so the user gets a full 7 s
-           after manually choosing, not the remainder of the old cycle. */
         stopTimer();
         if (inView) startTimer();
       });
@@ -147,14 +141,16 @@ export async function initTestimonial() {
     list.appendChild(slider);
     list.appendChild(nav);
 
-    /* ── State ─────────────────────────────────────────── */
+    /* ── State ───────────────────────────────────────────── */
 
-    let current  = -1;   /* index of visible testimonial (-1 = none yet) */
-    let busy     = false; /* animation lock — prevents overlapping tweens  */
-    let timer    = null;  /* setInterval handle for auto-advance           */
-    let inView   = false; /* true while section is in the viewport         */
+    let current      = -1;
+    let busy         = false;
+    let timer        = null;
+    let inView       = false;
+    let intercepting = false;
+    let wheelReady   = true;   /* cooldown flag */
 
-    /* ── Navigation helpers ───────────────────────────── */
+    /* ── Navigation ──────────────────────────────────────── */
 
     function setDots(idx) {
       dots.forEach((d, i) => {
@@ -163,10 +159,6 @@ export async function initTestimonial() {
       });
     }
 
-    /**
-     * Transition to testimonial at `idx`.
-     * If this is the first render, skips the fade-out step.
-     */
     function goTo(idx) {
       if (busy || idx === current) return;
       busy = true;
@@ -178,22 +170,16 @@ export async function initTestimonial() {
         const item = buildItem(testimonials[idx]);
         slider.appendChild(item);
 
-        if (prefersReduced) {
-          busy = false;
-          return;
-        }
+        if (prefersReduced) { busy = false; return; }
 
-        /* Fade slider in while word stagger plays */
         gsap.set(slider, { opacity: 0, y: 12 });
         gsap.to(slider, { opacity: 1, y: 0, duration: 0.4, ease: 'expo.out' });
         revealItem(item, () => { busy = false; });
       };
 
       if (current === -1 || prefersReduced) {
-        /* First render — no fade-out */
         mount();
       } else {
-        /* Fade out current content, then swap */
         gsap.to(slider, {
           opacity: 0, y: -10, duration: 0.28, ease: 'expo.in',
           onComplete: mount,
@@ -201,45 +187,85 @@ export async function initTestimonial() {
       }
     }
 
-    function next() { goTo((current + 1) % testimonials.length); }
+    function next() { goTo((current + 1) % total); }
 
     function startTimer() {
       clearInterval(timer);
       timer = setInterval(next, ADVANCE_MS);
     }
-
     function stopTimer() {
       clearInterval(timer);
       timer = null;
     }
 
-    /* ── Hover — pause auto-advance ───────────────────── */
+    /* ── Wheel interception ──────────────────────────────── */
+
+    const onWheel = (e) => {
+      const goingDown = e.deltaY > 0;
+
+      /* At the last testimonial scrolling down → release to next section */
+      if (goingDown && current >= total - 1) {
+        stopIntercepting();
+        return;   /* don't preventDefault — let Lenis take the event */
+      }
+
+      /* At the first testimonial scrolling up → release to prev section */
+      if (!goingDown && current <= 0) {
+        stopIntercepting();
+        return;
+      }
+
+      /* Otherwise: consume the scroll event and step one testimonial */
+      e.preventDefault();
+
+      if (!wheelReady || busy) return;
+      wheelReady = false;
+      setTimeout(() => { wheelReady = true; }, WHEEL_WAIT);
+
+      stopTimer();
+      goTo(goingDown ? current + 1 : current - 1);
+      if (inView) startTimer();
+    };
+
+    function startIntercepting() {
+      if (intercepting) return;
+      intercepting = true;
+      /* Pause Lenis so the page doesn't drift while we handle wheel */
+      stopLenis();
+      window.addEventListener('wheel', onWheel, { passive: false });
+    }
+
+    function stopIntercepting() {
+      if (!intercepting) return;
+      intercepting = false;
+      /* Resume Lenis so the page can scroll to the next section */
+      startLenis();
+      window.removeEventListener('wheel', onWheel);
+    }
+
+    /* ── Hover — pause auto-advance ──────────────────────── */
 
     list.addEventListener('mouseenter', stopTimer);
     list.addEventListener('mouseleave', () => { if (inView) startTimer(); });
 
-    /* ── IntersectionObserver — start/stop on visibility ─ */
-    /*
-     * Using IO rather than ScrollTrigger: the fetch resolves at ~200 ms,
-     * before Lenis initialises at ~2 s. IO fires on real intersection
-     * with no proxy dependency.
-     */
+    /* ── IntersectionObserver ────────────────────────────── */
+
     const sectionIO = new IntersectionObserver(
       ([entry]) => {
         inView = entry.isIntersecting;
         if (inView) {
-          if (current === -1) goTo(0); /* first appearance */
+          if (current === -1) goTo(0);
           startTimer();
+          if (!prefersReduced) startIntercepting();
         } else {
           stopTimer();
+          stopIntercepting();
         }
       },
-      { threshold: 0.25 }
+      { threshold: 0.6 }
     );
     sectionIO.observe(section);
 
-    /* Correct downstream ScrollTrigger positions (frame, interlude, reel)
-       now that the skeleton has been replaced and section height is final. */
     ScrollTrigger.refresh();
 
   } catch (err) {
