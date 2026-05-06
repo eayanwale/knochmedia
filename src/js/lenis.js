@@ -47,6 +47,12 @@ export function initLenis() {
 
   // Notify ScrollTrigger on every Lenis tick so pinned sections stay locked
   lenis.on('scroll', ScrollTrigger.update);
+
+  // Recalculate all ScrollTrigger start/end positions now that the Lenis
+  // proxy is live. Any triggers registered before initLenis() (testimonial,
+  // frame, interlude — registered at Sanity fetch time, ~200ms before this)
+  // had positions measured against native scroll. This corrects them all.
+  ScrollTrigger.refresh();
 }
 
 /** Returns the Lenis instance (null on touch devices or before init). */
