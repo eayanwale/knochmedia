@@ -33,7 +33,10 @@ gsap.registerPlugin(ScrollTrigger);
 
 const ADVANCE_MS  = 7000;
 const QUOTE_MAX   = 120;
-const WHEEL_WAIT  = 350;   /* ms cooldown between scroll-driven advances */
+/* Cooldown tuned to match the word-stagger reveal duration so the user
+   can advance again as soon as the text has visually settled.
+   fade-out 0.18s + fade-in 0.25s + last word start (~0.66s) ≈ 0.85s total. */
+const WHEEL_WAIT  = 850;
 
 /* ── Helpers ────────────────────────────────────────────────────── */
 
@@ -160,7 +163,9 @@ export async function initTestimonial() {
     }
 
     function goTo(idx) {
-      if (busy || idx === current) return;
+      if (idx === current) return;
+      gsap.killTweensOf(slider);
+      const wasAnimating = busy;
       busy = true;
       setDots(idx);
 
@@ -177,7 +182,7 @@ export async function initTestimonial() {
         revealItem(item, () => { busy = false; });
       };
 
-      if (current === -1 || prefersReduced) {
+      if (current === -1 || prefersReduced || wasAnimating) {
         mount();
       } else {
         gsap.to(slider, {
@@ -218,7 +223,7 @@ export async function initTestimonial() {
       /* Otherwise: consume the scroll event and step one testimonial */
       e.preventDefault();
 
-      if (!wheelReady || busy) return;
+      if (!wheelReady) return;
       wheelReady = false;
       setTimeout(() => { wheelReady = true; }, WHEEL_WAIT);
 
