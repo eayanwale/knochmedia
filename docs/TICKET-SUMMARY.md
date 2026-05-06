@@ -1,7 +1,7 @@
 # Knoch Media — Ticket Summary
 
 > **Living document.** Updated whenever tickets are created, modified, split, or closed.  
-> Last updated: 2026-05-06 | Total tickets: 30 | Open: 9 | In progress: 1 | In review: 0 | Done: 17 | Deferred: 3
+> Last updated: 2026-05-06 | Total tickets: 30 | Open: 9 | In progress: 0 | In review: 1 | Done: 17 | Deferred: 3
 
 ---
 
@@ -73,7 +73,7 @@ Build in this order: About → Portfolio page → Project detail → Contact →
 |----|-------|--------|--------|-------|
 | [KNOCH-013](tickets/KNOCH-013.md) | About / Story Section (about.html) | `✅` | `feature/KNOCH-013-about-story-section` | QA PASSED — merged to test |
 | [KNOCH-011](tickets/KNOCH-011.md) | Portfolio Filter System (portfolio.html) | `✅` | `feature/KNOCH-011-portfolio-filter` | QA PASSED — merged to test |
-| [KNOCH-012](tickets/KNOCH-012.md) | Project Detail View + Video Lightbox | `🔵` | `feature/KNOCH-012-project-detail-lightbox` | Expanding tile transition |
+| [KNOCH-012](tickets/KNOCH-012.md) | Project Detail View + Video Lightbox | `🔵` | `feature/KNOCH-012-project-detail-lightbox` | PR #21 dev → test (in review) |
 | [KNOCH-014](tickets/KNOCH-014.md) | Contact — Multi-Step Qualified Inquiry Form | `⬜` | — | 3-step form + Calendly sidebar |
 | [KNOCH-015](tickets/KNOCH-015.md) | Footer — Credits Bar + Sitemap Variant | `⬜` | — | Two variants: minimal + expanded |
 
@@ -173,6 +173,30 @@ CMS layer (cuts across phases — wire each section after it is built):
 ## Changelog
 
 All modifications to this document and ticket files are logged here. Tester agent and code review feedback should be recorded as entries.
+
+---
+
+### 2026-05-06 — KNOCH-012 PR opened — IN REVIEW
+
+**Action:** PR #21 opened dev → test
+**Tickets affected:** KNOCH-012
+**Reason:** Builder completed Project Detail View + Video Lightbox; PR open for tester / code review
+**Changes:**
+- KNOCH-012: Status changed 🔵 In progress → 🔵 In review
+- PR #21 opened: dev → test at https://github.com/eayanwale/knochmedia/pull/21
+- Files delivered:
+  - `src/js/projects.js` — 12-entry project data module (3 fully populated photo + 4 video + 5 placeholder)
+  - `src/css/video-lightbox.css` + `src/js/video-lightbox.js` — full-screen YouTube modal with focus trap, ESC, click-out
+  - `src/js/tile-router.js` — central click router (data-project-id → lightbox or expanding-tile transition + project.html navigate)
+  - `src/project.html` + `src/css/project-page.css` + `src/js/project-page.js` + `src/js/project-main.js` — standalone project page with hero, sticky metadata, image gallery, CTA
+  - `src/portfolio.html` — all 12 cards: data-project-id replaces inline onclick; role="button" added; video-lightbox.css linked
+  - `src/index.html` — archive tiles t1–t7 swap data-link-type/data-url for data-project-id; video-lightbox.css linked
+  - `src/js/main.js` + `src/js/portfolio-main.js` — initVideoLightbox added
+  - `src/js/portfolio-grid.js` + `src/js/portfolio-page.js` — click handlers delegate to handleTileActivate
+  - `vite.config.js` — project.html added as fourth `rollupOptions.input`
+- Build: 60 → 70 modules; dist/project.html 5.30 kB / 1.94 kB gz; new shared chunks tile-router-*.js 1.69 kB / 0.88 kB gz, video-lightbox-*.js 7.29 kB / 2.56 kB gz; 145 ms
+- Header counts updated: In progress 1→0, In review 0→1
+**Requested by:** Builder agent
 
 ---
 
