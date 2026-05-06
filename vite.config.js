@@ -16,8 +16,9 @@ export default defineConfig({
     // project detail) will be added here as their tickets are implemented.
     rollupOptions: {
       input: {
-        main:  resolve(__dirname, 'src/index.html'),
-        about: resolve(__dirname, 'src/about.html')
+        main:      resolve(__dirname, 'src/index.html'),
+        about:     resolve(__dirname, 'src/about.html'),
+        portfolio: resolve(__dirname, 'src/portfolio.html')
       }
     }
   }
