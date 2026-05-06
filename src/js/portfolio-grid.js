@@ -16,9 +16,29 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 gsap.registerPlugin(ScrollTrigger);
 
+function handleTileClick(tile) {
+  const type = tile.dataset.linkType;
+  const url  = tile.dataset.url;
+  if (!url) return;
+
+  if (type === 'external-gallery' || type === 'youtube') {
+    window.open(url, '_blank', 'noopener,noreferrer');
+  } else {
+    window.location.href = url;
+  }
+}
+
 export function initPortfolioGrid() {
   const section = document.querySelector('.archive');
   if (!section) return;
+
+  /* Wire click + keyboard on all tiles */
+  section.querySelectorAll('.tile').forEach(tile => {
+    tile.addEventListener('click', () => handleTileClick(tile));
+    tile.addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleTileClick(tile); }
+    });
+  });
 
   const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   if (prefersReduced) return;
