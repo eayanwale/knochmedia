@@ -270,4 +270,29 @@ export function initPortfolioPage() {
     setActiveTab('all');
     applyFilter({ animate: false });
   }
+
+  /* ── Page entry animation ──────────────────────────────
+     Hero meta + headline + tab list + grid stagger up on load so the
+     page has a beat of motion before the visitor starts interacting.
+     Skipped on prefers-reduced-motion — the elements snap to their
+     final state via the gsap.from-not-running path. */
+  if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    const heroMeta     = document.querySelector('.portfolio-hero-meta');
+    const heroHeadline = document.querySelector('.portfolio-hero-headline');
+    const tabsList     = document.querySelector('.portfolio-tabs');
+    const visibleCards = cards.filter(c => !c.classList.contains('is-hidden'));
+
+    const tl = gsap.timeline({ defaults: { ease: 'expo.out' } });
+    if (heroMeta)     tl.from(heroMeta,     { opacity: 0, y: 16, duration: 0.7 }, 0);
+    if (heroHeadline) tl.from(heroHeadline, { opacity: 0, y: 32, duration: 1.0 }, 0.15);
+    if (tabsList)     tl.from(tabsList,     { opacity: 0, y: 18, duration: 0.7 }, 0.4);
+    if (visibleCards.length) {
+      tl.from(visibleCards, {
+        opacity: 0,
+        y: 30,
+        duration: 0.8,
+        stagger: 0.05,
+      }, 0.55);
+    }
+  }
 }

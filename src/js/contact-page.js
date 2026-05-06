@@ -312,7 +312,7 @@ export function initContactPage() {
     goToStep(3);
   });
 
-  /* ── 8. Initial state ─────────────────────────────────── */
+  /* ── 8. Initial state + entry animations ──────────────── */
 
   /* First step is set to .is-active by default in HTML; ensure the
      transform / opacity are clean so the visitor doesn't see the
@@ -324,4 +324,47 @@ export function initContactPage() {
     first.style.transform = 'translateX(0)';
   }
   updateContinueEnabled();
+
+  /* Page entry — banner drops in from above, then hero meta / title /
+     sub stagger up, then the form column + sidebar blocks fade up
+     together. Skipped on prefers-reduced-motion (the gsap.from calls
+     would still set the off-state). */
+  if (!prefersReduced) {
+    const banner   = document.querySelector('.contact-banner');
+    const heroMeta = document.querySelector('.contact-hero-meta');
+    const heroTitle = document.querySelector('.contact-hero-title');
+    const heroSub  = document.querySelector('.contact-hero-sub');
+    const formCol  = document.querySelector('.contact-form-col');
+    const sideBlocks = document.querySelectorAll('.contact-sidebar-block');
+
+    const tl = gsap.timeline({ defaults: { ease: 'expo.out' } });
+
+    if (banner) {
+      tl.from(banner, {
+        yPercent: -100,
+        duration: 0.9,
+        ease: 'power3.out',
+      }, 0);
+    }
+    if (heroMeta) {
+      tl.from(heroMeta, { opacity: 0, y: 20, duration: 0.8 }, 0.4);
+    }
+    if (heroTitle) {
+      tl.from(heroTitle, { opacity: 0, y: 40, duration: 1.0 }, 0.55);
+    }
+    if (heroSub) {
+      tl.from(heroSub, { opacity: 0, y: 16, duration: 0.7 }, 0.85);
+    }
+    if (formCol) {
+      tl.from(formCol, { opacity: 0, y: 30, duration: 1.0 }, 1.0);
+    }
+    if (sideBlocks.length) {
+      tl.from(sideBlocks, {
+        opacity: 0,
+        y: 30,
+        duration: 0.9,
+        stagger: 0.12,
+      }, 1.1);
+    }
+  }
 }
