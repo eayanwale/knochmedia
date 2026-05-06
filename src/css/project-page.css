@@ -1,0 +1,500 @@
+/*
+  project-page.css — Standalone project.html (KNOCH-012)
+  ========================================================
+  Page layout, top → bottom:
+
+    .project-veil   — fixed black overlay; JS fades it from 1 → 0 on
+                      load to bridge the expanding-tile transition
+                      from the previous page.
+
+    .project-back   — tiny "← Back to work" mono link; uses
+                      history.back() so the user lands back on the
+                      portfolio.html with their filter hash intact.
+
+    .project-hero   — full-bleed hero image with title overlay.
+                      80vh tall on desktop, 60vh on mobile.
+
+    .project-body   — two-col split: gallery left (scrolls), sticky
+                      metadata right. Mobile collapses to one column.
+
+    .project-cta    — full-width section, "Book a similar project →"
+                      amber underline link.
+
+  All animations are entrance-only (no scroll-tied scrubs) so the
+  page stays performant even with a long gallery column.
+*/
+
+
+/* Black veil that's faded out by JS on page load */
+.project-veil {
+  position: fixed;
+  inset: 0;
+  z-index: 11999;
+  background: #0a0a0a;
+  pointer-events: none;
+  /* JS sets opacity 1 on load and tweens to 0; CSS keeps 0 default
+     in case JS fails so the page is still readable. */
+  opacity: 0;
+}
+
+
+/* Back link — sits below the chrome bar in the top-left corner.
+   Position: absolute over the hero so it sits on top of the image. */
+/* Top offset clears the chrome overlay (which sits at top:28px and is
+   ~22px tall, ending around 50px from the viewport top). 7rem keeps a
+   clean ~60px gap so the back link doesn't visually crash into the
+   "Knoch." wordmark. left: 8vw matches the gutter the rest of the
+   page sections use, so the back link aligns with the body content. */
+.project-back-wrap {
+  position: absolute;
+  top: 7rem;
+  left: 8vw;
+  z-index: 10;
+}
+
+.project-back {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--paper);
+  text-decoration: none;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid transparent;
+  transition: color 0.3s var(--ease-cinematic),
+              border-color 0.3s var(--ease-cinematic);
+}
+
+.project-back:hover,
+.project-back:focus-visible {
+  color: var(--amber);
+  border-color: var(--amber);
+  outline: none;
+}
+
+
+/* ── Hero ──────────────────────────────────────────────── */
+
+.project-hero {
+  position: relative;
+  height: 80vh;
+  min-height: 600px;
+  width: 100%;
+  overflow: hidden;
+  background: #1a1a1a;
+}
+
+.project-hero-img {
+  position: absolute;
+  inset: -8%; /* oversize so any GSAP parallax doesn't reveal edges */
+  background-size: cover;
+  background-position: center;
+  filter: grayscale(0.2) brightness(0.85) contrast(1.05);
+  will-change: transform;
+}
+
+/* Vignette + gradient that fades from transparent up to ink at the
+   bottom — title sits over the dark portion for legibility. */
+.project-hero::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(to top, rgba(10, 10, 10, 0.85) 0%, transparent 55%),
+    radial-gradient(ellipse at center, transparent 35%, rgba(10, 10, 10, 0.55) 95%);
+  pointer-events: none;
+}
+
+.project-hero-content {
+  position: absolute;
+  bottom: 8vh;
+  left: 0;
+  right: 0;
+  z-index: 2;
+  text-align: center;
+  padding: 0 5vw;
+  pointer-events: none;
+}
+
+.project-hero-meta {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--amber);
+  margin-bottom: 1.2rem;
+}
+
+.project-hero-title {
+  font-family: var(--font-serif);
+  font-weight: 300;
+  font-size: clamp(48px, 8vw, 120px);
+  line-height: 0.95;
+  letter-spacing: -0.04em;
+  color: var(--paper);
+  margin: 0 0 1rem;
+}
+
+.project-hero-sub {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: rgba(237, 230, 216, 0.65);
+}
+
+
+/* ── Body — centred metadata column ─────────────────── */
+
+.project-body {
+  padding: 8rem 8vw;
+  border-bottom: 1px solid rgba(237, 230, 216, 0.08);
+}
+
+.project-body-inner {
+  max-width: 920px;
+  margin: 0 auto;
+}
+
+.project-meta {
+  /* No sticky — single-column body now, sticky has nothing to scroll past */
+  position: static;
+}
+
+.project-meta-cat {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--amber);
+  border: 1px solid rgba(232, 162, 58, 0.35);
+  padding: 0.4rem 0.8rem;
+  margin-bottom: 1.6rem;
+}
+
+.project-meta-title {
+  font-family: var(--font-serif);
+  font-weight: 300;
+  font-size: clamp(28px, 3vw, 44px);
+  line-height: 1.1;
+  letter-spacing: -0.025em;
+  color: var(--paper);
+  margin-bottom: 0.6rem;
+}
+
+.project-meta-sub {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: rgba(237, 230, 216, 0.55);
+  margin-bottom: 2.5rem;
+}
+
+/* Spec row — date · frames count · location on small mono lines */
+.project-meta-spec {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  column-gap: 1.5rem;
+  row-gap: 0.5rem;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(237, 230, 216, 0.7);
+  padding-bottom: 2rem;
+  margin-bottom: 2rem;
+  border-bottom: 1px solid rgba(237, 230, 216, 0.12);
+}
+
+.project-meta-spec dt {
+  color: rgba(237, 230, 216, 0.4);
+}
+
+.project-meta-spec dd {
+  margin: 0;
+}
+
+.project-meta-desc {
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 1.75;
+  color: rgba(237, 230, 216, 0.78);
+  margin-bottom: 2.5rem;
+}
+
+.project-meta-link {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--amber);
+  text-decoration: none;
+  padding: 0.6rem 0;
+  border-bottom: 1px solid var(--amber);
+  transition: opacity 0.3s var(--ease-cinematic);
+}
+
+.project-meta-link:hover,
+.project-meta-link:focus-visible {
+  opacity: 0.7;
+  outline: none;
+}
+
+
+/* ── Other works reel (KNOCH-036) ─────────────────────
+   Pinned horizontal-scroll reel — mirrors the homepage Selected Work
+   pattern (KNOCH-007). The section pins for the duration of the
+   horizontal track; the track (.project-gallery) translates leftward
+   as the visitor scrolls, then the pin releases at the end and the
+   page resumes vertical scroll into the CTA section.
+
+   Mobile (≤800px) falls back to native overflow-x: auto so the
+   GSAP pin doesn't lock vertical scroll on touch devices, where
+   horizontal-with-pin can fight the browser's scroll-snap heuristics. */
+
+.project-others {
+  position: relative;
+  height: 100vh;
+  overflow: hidden;
+  background: var(--ink);
+}
+
+/* The horizontal track — flex row; GSAP translates this element on x
+   as scroll progresses through the pinned section. Native horizontal
+   scroll on mobile via overflow-x:auto + the @media block below. */
+.project-gallery {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  padding-left: 8vw;
+  gap: 3vw;
+  will-change: transform;
+}
+
+/* Intro panel — first item of the track, scrolls horizontally with the
+   cards just like .reel-intro on the homepage. Fixed width so the
+   headline + meta have room to breathe before the cards start. */
+.project-others-intro {
+  flex: 0 0 50vw;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 1.5rem;
+  padding-right: 6vw;
+}
+
+.project-others-meta {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--amber);
+}
+
+.project-others-headline {
+  font-family: var(--font-serif);
+  font-weight: 300;
+  font-size: clamp(48px, 7vw, 100px);
+  line-height: 1;
+  letter-spacing: -0.04em;
+  color: var(--paper);
+  margin: 0;
+}
+
+.project-others-headline em {
+  font-style: italic;
+  color: var(--amber);
+}
+
+.project-others-desc {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(237, 230, 216, 0.5);
+  line-height: 1.8;
+  max-width: 32ch;
+  margin: 0;
+}
+
+/* Cards — fixed-flex sized for the horizontal track. Same hover lift +
+   filter ramp as the previous overflow-scroll version. */
+.project-other {
+  flex: 0 0 32vw;
+  min-width: 320px;
+  max-width: 420px;
+  position: relative;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  background: #1a1a1a;
+  text-decoration: none;
+  color: inherit;
+  transition: transform 0.5s var(--ease-cinematic);
+}
+
+.project-other:hover,
+.project-other:focus-visible {
+  transform: translateY(-6px);
+  outline: none;
+}
+
+/* Trailing spacer — gives breathing room past the last card so the
+   pin's `end` position lands cleanly. Width matches reel.css's
+   .reel-spacer pattern. */
+.project-others-spacer {
+  flex: 0 0 12vw;
+}
+
+.project-other-img {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  filter: grayscale(0.5) brightness(0.7);
+  transition:
+    filter 0.7s var(--ease-cinematic),
+    transform 1.2s var(--ease-cinematic);
+  will-change: transform;
+}
+
+.project-other:hover .project-other-img,
+.project-other:focus-visible .project-other-img {
+  filter: grayscale(0) brightness(1);
+  transform: scale(1.04);
+}
+
+.project-other-meta {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 1.6rem 1.4rem 1.2rem;
+  background: linear-gradient(to top, rgba(10, 10, 10, 0.92) 60%, transparent);
+  z-index: 2;
+}
+
+.project-other-cat {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--amber);
+  margin-bottom: 0.4rem;
+}
+
+.project-other-title {
+  font-family: var(--font-serif);
+  font-weight: 300;
+  font-size: 20px;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  color: var(--paper);
+  margin: 0;
+}
+
+
+/* ── Closing CTA ───────────────────────────────────────── */
+
+.project-cta {
+  padding: 12rem 8vw;
+  text-align: center;
+  border-top: 1px solid rgba(237, 230, 216, 0.08);
+}
+
+.project-cta-headline {
+  font-family: var(--font-serif);
+  font-weight: 300;
+  font-size: clamp(36px, 5vw, 72px);
+  line-height: 1;
+  letter-spacing: -0.04em;
+  color: var(--paper);
+  margin-bottom: 2.5rem;
+}
+
+.project-cta-link {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--amber);
+  text-decoration: none;
+  padding: 1rem 0;
+  border-bottom: 1px solid var(--amber);
+  transition: opacity 0.3s var(--ease-cinematic);
+}
+
+.project-cta-link:hover,
+.project-cta-link:focus-visible {
+  opacity: 0.7;
+  outline: none;
+}
+
+
+/* ── Reduced motion ───────────────────────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  .project-back,
+  .project-meta-link,
+  .project-cta-link {
+    transition: none !important;
+  }
+}
+
+
+/* ── Mobile ≤ 800px ───────────────────────────────────── */
+
+@media (max-width: 800px) {
+  .project-back-wrap {
+    top: 6rem;
+    left: 6vw;
+  }
+
+  .project-hero {
+    height: 60vh;
+    min-height: 460px;
+  }
+
+  .project-hero-content {
+    bottom: 4vh;
+  }
+
+  .project-body {
+    padding: 4rem 6vw;
+  }
+
+  /* Mobile fallback — drop the GSAP pin (handled by skipping the JS
+     setup at ≤800px), let the track scroll natively horizontally. */
+  .project-others {
+    height: auto;
+    padding: 4rem 0 6rem;
+  }
+
+  .project-gallery {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    padding: 0 6vw 1rem;
+    height: auto;
+    align-items: stretch;
+    gap: 4vw;
+    scroll-snap-type: x mandatory;
+  }
+
+  .project-others-intro {
+    flex: 0 0 80vw;
+  }
+
+  .project-other {
+    flex: 0 0 70vw;
+    min-width: 240px;
+    scroll-snap-align: start;
+  }
+
+  .project-cta {
+    padding: 6rem 6vw;
+  }
+}

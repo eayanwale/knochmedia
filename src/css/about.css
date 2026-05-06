@@ -107,117 +107,92 @@
 }
 
 
-/* ── Split layout: sticky chapters + scrolling images ──── */
+/* ── Story chapters (KNOCH-036 — pinned overlay narrative) ───
+   Four chapters stacked absolutely inside .about-story; the section
+   itself is pinned by GSAP ScrollTrigger for ~4 viewport heights of
+   scroll. As the visitor scrolls, the active chapter fades out and
+   the next fades in over it. Within each chapter, the label / title /
+   body text cascades in once the chapter becomes the active layer. */
 
-.about-split {
-  padding: 4rem 8vw 12rem;
-}
-
-.about-split-inner {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 6vw;
-  max-width: 1600px;
-  margin: 0 auto;
-  align-items: start;
-}
-
-/* Left text column wrapper — must be tall enough for sticky to engage,
-   which happens automatically because the right column (.about-images)
-   stretches the grid track to its full height. */
-.about-text {
+.about-story {
   position: relative;
+  height: 100vh;
+  overflow: hidden;
 }
 
-/* The sticky element itself — sized to spec (top: 10vh; height: 80vh).
-   Content may extend past the 80vh box on short viewports because we
-   intentionally do NOT set overflow: hidden — clipping the 4th chapter
-   would defeat the narrative. The 80vh height still bounds the sticky
-   box for the active-chapter highlight and gives 20vh of breathing
-   room between sticky and the bottom of the viewport. */
-.about-text-sticky {
-  position: sticky;
-  top: 10vh;
-  height: 80vh;
+.about-chapter {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  /* JS sets opacity per-chapter — chapter 0 starts visible, the rest
+     start hidden. CSS keeps them all stacked so the GSAP fade tweens
+     have something to scrub through. */
+  opacity: 0;
 }
 
-.chapter {
-  padding: 1.6rem 0;
-  border-bottom: 1px solid rgba(237, 230, 216, 0.06);
-  opacity: 0.45;
-  transition: opacity 0.5s var(--ease-cinematic);
-}
-
-.chapter:last-child {
-  border-bottom: none;
-}
-
-.chapter.active {
+.about-chapter:first-child {
   opacity: 1;
 }
 
-.chapter-label {
-  font-family: var(--font-mono);
-  font-size: 10px;
-  letter-spacing: 0.3em;
-  text-transform: uppercase;
-  color: rgba(237, 230, 216, 0.45);
-  margin-bottom: 12px;
-  transition: color 0.4s var(--ease-cinematic);
-}
-
-.chapter.active .chapter-label {
-  color: var(--amber);
-}
-
-.chapter-title {
-  font-family: var(--font-serif);
-  font-weight: 300;
-  font-size: clamp(22px, 2.6vw, 32px);
-  line-height: 1.2;
-  letter-spacing: -0.015em;
-  color: var(--paper);
-  margin-bottom: 14px;
-}
-
-.chapter-body {
-  font-family: var(--font-sans);
-  font-size: 14px;
-  line-height: 1.7;
-  color: rgba(237, 230, 216, 0.7);
-  max-width: 32em;
-}
-
-/* Right image column — scrolls naturally past the sticky text */
-.about-images {
-  display: flex;
-  flex-direction: column;
-  gap: 6vw;
-}
-
-.about-image {
-  margin: 0;
-}
-
-/* aspect-ratio 3/4 frames — the bg image is sized to cover so any
-   landscape photo gets centred-cropped, portraits fill naturally.
-   grayscale + slight contrast lift keeps the column feeling like
-   a contact sheet rather than a hero strip. */
-.about-image-frame {
-  width: 100%;
-  aspect-ratio: 3 / 4;
+/* Full-bleed bg — slight grayscale + brightness ramp keeps the photo
+   atmospheric and gives the overlaid text enough contrast for legibility.
+   The radial vignette + linear bottom-fade pseudo-element below
+   reinforces both. */
+.about-chapter-bg {
+  position: absolute;
+  inset: 0;
   background-size: cover;
   background-position: center;
-  filter: grayscale(0.35) contrast(1.05) brightness(0.92);
+  filter: grayscale(0.35) brightness(0.55) contrast(1.05);
+  will-change: transform;
 }
 
-.about-image figcaption {
-  margin-top: 14px;
+/* Vignette overlay — radial darkens the edges and a bottom linear
+   gradient keeps the readable area at the lower-left corner. */
+.about-chapter::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(120deg, rgba(10,10,10,0.78) 0%, rgba(10,10,10,0.45) 45%, transparent 70%),
+    radial-gradient(ellipse at center, transparent 30%, rgba(10,10,10,0.6) 95%);
+  pointer-events: none;
+}
+
+.about-chapter-content {
+  position: relative;
+  z-index: 2;
+  padding: 0 8vw;
+  max-width: 720px;
+}
+
+.about-chapter-label {
   font-family: var(--font-mono);
-  font-size: 10px;
-  letter-spacing: 0.25em;
+  font-size: 11px;
+  letter-spacing: 0.3em;
   text-transform: uppercase;
-  color: rgba(237, 230, 216, 0.45);
+  color: var(--amber);
+  margin-bottom: 1.5rem;
+}
+
+.about-chapter-title {
+  font-family: var(--font-serif);
+  font-weight: 300;
+  font-size: clamp(36px, 5.5vw, 76px);
+  line-height: 1.05;
+  letter-spacing: -0.025em;
+  color: var(--paper);
+  margin-bottom: 1.8rem;
+}
+
+.about-chapter-body {
+  font-family: var(--font-sans);
+  font-size: clamp(15px, 1.4vw, 18px);
+  line-height: 1.7;
+  color: rgba(237, 230, 216, 0.85);
+  max-width: 38em;
 }
 
 
@@ -377,14 +352,9 @@
 /* ── Reduced motion ────────────────────────────────────── */
 
 @media (prefers-reduced-motion: reduce) {
-  .chapter,
-  .chapter-label {
+  .about-chapter-bg {
     transition: none !important;
-  }
-  /* All chapters fully visible — the active highlight still toggles via JS
-     but the fade-between is instant rather than easing. */
-  .chapter {
-    opacity: 1;
+    transform: none !important;
   }
 }
 
@@ -401,26 +371,12 @@
     padding: 5rem 6vw;
   }
 
-  .about-split {
-    padding: 4rem 6vw 8rem;
+  .about-chapter {
+    min-height: 90vh;
   }
 
-  .about-split-inner {
-    grid-template-columns: 1fr;
-    gap: 4rem;
-  }
-
-  /* Drop sticky on mobile — no second column to scroll past, so the
-     pinned text would just fight the natural document flow. */
-  .about-text-sticky {
-    position: static;
-  }
-
-  /* All chapters readable on mobile rather than dimmed; active state
-     still highlights the label in amber via the JS toggle, but body
-     opacity is full so the narrative reads like a normal article. */
-  .chapter {
-    opacity: 1;
+  .about-chapter-content {
+    padding: 0 6vw;
   }
 
   .about-stats,

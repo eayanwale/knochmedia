@@ -28,20 +28,9 @@ import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { getGalleryCollections, imageUrl } from './sanity.js';
 import { initLazyLoad } from './lazy-load.js';
+import { handleTileActivate } from './tile-router.js';
 
 gsap.registerPlugin(ScrollTrigger);
-
-function handleTileClick(tile) {
-  const type = tile.dataset.linkType;
-  const url  = tile.dataset.url;
-  if (!url) return;
-
-  if (type === 'external-gallery' || type === 'youtube') {
-    window.open(url, '_blank', 'noopener,noreferrer');
-  } else {
-    window.location.href = url;
-  }
-}
 
 
 export function initPortfolioGrid() {
@@ -96,10 +85,14 @@ export function initPortfolioGrid() {
   });
 
 
+  /* Tile activation routes through the central tile-router (KNOCH-012):
+     video projects open the lightbox, photo projects expand into the
+     project.html page via the GSAP transition. Any tile lacking
+     data-project-id falls back to no-op (the router handles it). */
   section.querySelectorAll('.tile').forEach(tile => {
-    tile.addEventListener('click', () => handleTileClick(tile));
+    tile.addEventListener('click', () => handleTileActivate(tile));
     tile.addEventListener('keydown', e => {
-      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleTileClick(tile); }
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleTileActivate(tile); }
     });
   });
 

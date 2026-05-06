@@ -29,13 +29,12 @@
   background-size: cover;
   background-position: center;
   opacity: 0;
-  /* Filter eased in KNOCH-035 — original brightness 0.45 + blur 2 made the
-     spotlighted area read as muddy/peering-through-fog, which read as
-     "creepy" rather than atmospheric. Lifted brightness, dropped blur,
-     and pulled grayscale back so faces and colour information survive
-     the reveal. Still dim/desaturated enough that the section reads as
-     atmospheric rather than a portfolio-tile redux. */
-  filter: grayscale(0.4) brightness(0.7) blur(1px);
+  /* Filter aligned to #frame's `.pinned-frame .bg-reveal` (KNOCH-036) so
+     the cursor-revealed image reads with the same natural-warm-with-
+     light-grayscale character as the homepage's "Eight years…" section.
+     The slight grayscale + brightness lift below 1.0 keeps the
+     testimonial text legible when overlaid on the spotlight. */
+  filter: grayscale(0.15) brightness(0.92) contrast(1.05);
   pointer-events: none;
   will-change: opacity;
 }

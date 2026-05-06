@@ -68,6 +68,7 @@
   color: var(--amber);
   opacity: 0.6;
   margin: 0;
+  padding-top: 2rem;
 }
 
 /* Inline link to the full portfolio page (KNOCH-011) — sits below the
@@ -83,7 +84,7 @@
   text-transform: uppercase;
   color: var(--amber);
   text-decoration: none;
-  padding: 0.5rem 0;
+  padding-top: 0.8rem;
   border-bottom: 1px solid var(--amber);
   transition: opacity 0.3s var(--ease-cinematic);
 }

@@ -89,6 +89,32 @@
   color: var(--amber);
 }
 
+/* "Read the story →" link below the .big headline (KNOCH-036).
+   Sits as a sibling of <h2> inside .frame-left, separated from the
+   final headline line by a 2.5rem gap so the small mono link reads
+   as a chrome control rather than another stat line. Mirrors the
+   amber-underline mono link vocabulary used by .reel-intro-portfolio-
+   link and .about-cta-link elsewhere on the site. */
+.frame-story-link {
+  display: inline-block;
+  margin-top: 2.5rem;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--amber);
+  text-decoration: none;
+  padding: 0.6rem 0;
+  border-bottom: 1px solid var(--amber);
+  transition: opacity 0.3s var(--ease-cinematic);
+}
+
+.frame-story-link:hover,
+.frame-story-link:focus-visible {
+  opacity: 0.7;
+  outline: none;
+}
+
 /* ── Right column — stat blocks ───────────────────────────────────── */
 
 .pinned-frame .stats {
