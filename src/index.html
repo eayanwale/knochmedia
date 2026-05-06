@@ -284,32 +284,13 @@
     </section><!-- /#frame -->
 
     <!--
-      Testimonial — editorial pull-quote section (KNOCH-009).
-      Single impactful testimonial between studio stats and portfolio grid.
-      .testimonial > * stagger reveal: quote mark → quote → attribution.
-      KNOCH-024 will wire this to Sanity testimonials once built.
+      Testimonial — editorial pull-quote section (KNOCH-009 / KNOCH-024).
+      All 5 testimonials are fetched from Sanity CMS and rendered dynamically
+      by testimonial.js. The .testimonial-list wrapper and .testimonial-item
+      elements are created in JS — nothing is hardcoded here.
     -->
-    <section id="testimonial" class="testimonial" aria-label="Client testimonial">
-
-      <!--
-        Decorative opening quotation mark — Fraunces 8rem, amber, line-height:0.5.
-        aria-hidden="true": purely decorative glyph; screen readers should
-        not announce "left double quotation mark" before the quote text.
-      -->
-      <div class="testimonial-mark" aria-hidden="true">&ldquo;</div>
-
-      <!--
-        Pull-quote — Fraunces 300 at clamp(28px,4vw,56px).
-        <em> wraps "better than we had imagined." for italic amber treatment.
-        max-width: 22ch forces tight newspaper-style line breaks.
-      -->
-      <p class="testimonial-quote">
-        The final product turned out <em>better than we had imagined.</em> We knew we made the right decision.
-      </p>
-
-      <!-- Attribution — 10px JetBrains Mono, 0.3em letter-spacing, muted paper -->
-      <p class="testimonial-attr">— Marcus T. &middot; Brand Director &middot; 2025</p>
-
+    <section id="testimonial" class="testimonial" aria-label="Client testimonials">
+      <!-- populated by testimonial.js (KNOCH-024) -->
     </section><!-- /#testimonial -->
 
     <section id="cta" aria-label="Inquire">

@@ -131,7 +131,7 @@
       <div class="l">Total tickets</div>
     </div>
     <div class="stat">
-      <div class="n" id="stat-open">15</div>
+      <div class="n" id="stat-open">13</div>
       <div class="l">Open</div>
     </div>
     <div class="stat">
@@ -139,11 +139,11 @@
       <div class="l">In progress</div>
     </div>
     <div class="stat">
-      <div class="n yellow" id="stat-review">0</div>
+      <div class="n yellow" id="stat-review">1</div>
       <div class="l">In review</div>
     </div>
     <div class="stat">
-      <div class="n green" id="stat-done">12</div>
+      <div class="n green" id="stat-done">13</div>
       <div class="l">Done</div>
     </div>
   </div>
@@ -250,8 +250,8 @@
         <tr>
           <td class="tid">KNOCH-024</td>
           <td class="ttitle"><a href="docs/tickets/KNOCH-024.md">Wire Testimonials to Sanity</a></td>
-          <td><span class="badge badge-todo"><span class="dot dot-todo"></span>Todo</span></td>
-          <td class="tbranch">—</td>
+          <td><span class="badge badge-review"><span class="dot dot-review"></span>In Review</span></td>
+          <td class="tbranch">feature/KNOCH-024-wire-testimonials-sanity</td>
           <td class="tpri p1">P1</td>
         </tr>
         <tr>
@@ -336,8 +336,8 @@
         <tr>
           <td class="tid">KNOCH-009</td>
           <td class="ttitle"><a href="docs/tickets/KNOCH-009.md">Testimonial Pull-Quote Section</a></td>
-          <td><span class="badge badge-todo"><span class="dot dot-todo"></span>Todo</span></td>
-          <td class="tbranch">—</td>
+          <td><span class="badge badge-pass"><span class="dot dot-pass"></span>QA Passed</span></td>
+          <td class="tbranch">feature/KNOCH-009-testimonial-section</td>
           <td class="tpri p2">P2</td>
         </tr>
         <tr>
@@ -487,8 +487,8 @@
   // Live date
   document.getElementById('date-display').textContent = new Date().toLocaleDateString('en-US', { weekday:'short', year:'numeric', month:'short', day:'numeric' });
 
-  // Progress bar — "done" = merged to test (11 of 30)
-  const total = 30, done = 11;
+  // Progress bar — "done" = merged to test (13 of 30)
+  const total = 30, done = 13;
   document.getElementById('progress-fill').style.width = (done / total * 100).toFixed(1) + '%';
   document.getElementById('pct-label').textContent = done + ' / ' + total + ' tickets done';
 </script>

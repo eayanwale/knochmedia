@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Accent Color Preview — Knoch Media</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;1,9..144,400&family=JetBrains+Mono:wght@400;500&display=swap" />
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #0a0a0a;
+    color: #ede6d8;
+    font-family: 'JetBrains Mono', monospace;
+    padding: 48px 40px 80px;
+  }
+
+  h1 {
+    font-family: 'Fraunces', serif;
+    font-weight: 300;
+    font-size: 28px;
+    color: #ede6d8;
+    margin-bottom: 6px;
+  }
+  .subtitle {
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    color: rgba(237,230,216,0.4);
+    text-transform: uppercase;
+    margin-bottom: 48px;
+  }
+
+  /* ── Section header ── */
+  .section-head {
+    font-size: 9px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: rgba(237,230,216,0.3);
+    margin-bottom: 2px;
+    margin-top: 48px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid rgba(237,230,216,0.07);
+  }
+  .section-head:first-of-type { margin-top: 0; }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+    margin-top: 2px;
+    margin-bottom: 4px;
+  }
+  .grid-2 { grid-template-columns: repeat(2, 1fr); }
+
+  /* ── Swatch card ── */
+  .swatch {
+    background: #111;
+    padding: 28px 24px 22px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    position: relative;
+  }
+  .swatch.fav { outline: 1px solid rgba(237,230,216,0.18); }
+  .swatch-label {
+    position: absolute;
+    top: 12px;
+    right: 14px;
+    font-size: 9px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgba(237,230,216,0.3);
+  }
+  .fav-tag {
+    position: absolute;
+    top: 12px;
+    left: 14px;
+    font-size: 9px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: rgba(237,230,216,0.55);
+    background: rgba(237,230,216,0.07);
+    padding: 2px 6px;
+    border-radius: 2px;
+  }
+
+  /* ── UI element previews ── */
+  .nav-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+  }
+  .dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+
+  .meta { font-size: 10px; letter-spacing: 0.3em; text-transform: uppercase; }
+
+  .headline {
+    font-family: 'Fraunces', serif;
+    font-weight: 300;
+    font-size: 30px;
+    line-height: 1;
+    letter-spacing: -0.025em;
+    color: #ede6d8;
+  }
+  .headline em { font-style: italic; }
+
+  .stat-row { display: flex; flex-direction: column; gap: 4px; }
+  .stat-num {
+    font-family: 'Fraunces', serif;
+    font-weight: 300;
+    font-size: 44px;
+    line-height: 1;
+    letter-spacing: -0.02em;
+  }
+  .stat-num em { font-style: italic; }
+  .stat-lbl { font-size: 9px; letter-spacing: 0.25em; text-transform: uppercase; color: rgba(237,230,216,0.45); }
+
+  .quote-mark { font-family: 'Fraunces', serif; font-size: 56px; line-height: 0.5; }
+
+  .cursor-row { display: flex; align-items: center; gap: 10px; }
+  .cursor-ring { width: 22px; height: 22px; border-radius: 50%; border: 1.5px solid currentColor; display: inline-block; flex-shrink:0; }
+
+  .accent-line { height: 1px; width: 100%; }
+
+  .hex {
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    color: rgba(237,230,216,0.3);
+    margin-top: auto;
+    padding-top: 10px;
+    border-top: 1px solid rgba(237,230,216,0.06);
+    line-height: 1.8;
+  }
+  .hex span { display: block; font-size: 9px; color: rgba(237,230,216,0.2); letter-spacing: 0.08em; }
+
+  /* ── Color definitions ── */
+  /* Your top 2 picks */
+  .c1 { color: #c9a84c; } .b1 { background: #c9a84c; }   /* dusty gold */
+  .c2 { color: #d4c4a8; } .b2 { background: #d4c4a8; }   /* warm cream */
+
+  /* Sampled from photos */
+  .c3 { color: #8c6258; } .b3 { background: #8c6258; }   /* logo rose */
+  .c4 { color: #b8925a; } .b4 { background: #b8925a; }   /* cello wood */
+  .c5 { color: #c4a87c; } .b5 { background: #c4a87c; }   /* ceremony sand */
+  .c6 { color: #a89882; } .b6 { background: #a89882; }   /* cellist stone */
+  .c7 { color: #c97a50; } .b7 { background: #c97a50; }   /* wedding terracotta */
+
+  @media (max-width: 900px) { .grid { grid-template-columns: repeat(2,1fr); } .grid-2 { grid-template-columns: 1fr; } }
+  @media (max-width: 560px) { .grid, .grid-2 { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<h1>Accent Color Preview</h1>
+<p class="subtitle">Colors sampled from your photography + your two top picks</p>
+
+<!-- ── YOUR FAVOURITES ─────────────────────────── -->
+<div class="section-head">Your top 2 picks</div>
+<div class="grid grid-2">
+
+  <div class="swatch fav">
+    <span class="fav-tag">&#10003; Liked</span>
+    <span class="swatch-label">Option 2</span>
+    <div class="nav-row"><span class="dot b1"></span><span class="c1">REC · 00:01:42</span></div>
+    <div class="meta c1">— Film 01 · A Wedding in May</div>
+    <div class="headline">Nothing <em class="c1">staged.</em><br>Everything remembered.</div>
+    <div class="stat-row"><div class="stat-num"><em class="c1">47</em></div><div class="stat-lbl">Projects · 2018–2026</div></div>
+    <div class="quote-mark c1">&ldquo;</div>
+    <div class="cursor-row"><span class="cursor-ring c1"></span><span style="font-size:10px;letter-spacing:0.1em;color:rgba(237,230,216,0.35);">Cursor ring</span></div>
+    <div class="accent-line b1" style="opacity:0.25;"></div>
+    <div class="hex">Dusty Gold — #c9a84c<span>Richer, more editorial than current amber</span></div>
+  </div>
+
+  <div class="swatch fav">
+    <span class="fav-tag">&#10003; Liked</span>
+    <span class="swatch-label">Option 3</span>
+    <div class="nav-row"><span class="dot b2"></span><span class="c2">REC · 00:01:42</span></div>
+    <div class="meta c2">— Film 01 · A Wedding in May</div>
+    <div class="headline">Nothing <em class="c2">staged.</em><br>Everything remembered.</div>
+    <div class="stat-row"><div class="stat-num"><em class="c2">47</em></div><div class="stat-lbl">Projects · 2018–2026</div></div>
+    <div class="quote-mark c2">&ldquo;</div>
+    <div class="cursor-row"><span class="cursor-ring c2"></span><span style="font-size:10px;letter-spacing:0.1em;color:rgba(237,230,216,0.35);">Cursor ring</span></div>
+    <div class="accent-line b2" style="opacity:0.25;"></div>
+    <div class="hex">Warm Cream — #d4c4a8<span>Minimal — almost no accent, very quiet</span></div>
+  </div>
+
+</div>
+
+<!-- ── SAMPLED FROM YOUR PHOTOS ───────────────── -->
+<div class="section-head">Sampled from your photography</div>
+<div class="grid">
+
+  <div class="swatch">
+    <span class="swatch-label">Logo</span>
+    <div class="nav-row"><span class="dot b3"></span><span class="c3">REC · 00:01:42</span></div>
+    <div class="meta c3">— Film 01 · A Wedding in May</div>
+    <div class="headline">Nothing <em class="c3">staged.</em><br>Everything remembered.</div>
+    <div class="stat-row"><div class="stat-num"><em class="c3">47</em></div><div class="stat-lbl">Projects · 2018–2026</div></div>
+    <div class="quote-mark c3">&ldquo;</div>
+    <div class="cursor-row"><span class="cursor-ring c3"></span><span style="font-size:10px;letter-spacing:0.1em;color:rgba(237,230,216,0.35);">Cursor ring</span></div>
+    <div class="accent-line b3" style="opacity:0.35;"></div>
+    <div class="hex">Logo Rose — #8c6258<span>Sampled from your stamp logo text. Already in your brand DNA.</span></div>
+  </div>
+
+  <div class="swatch">
+    <span class="swatch-label">Cellist</span>
+    <div class="nav-row"><span class="dot b4"></span><span class="c4">REC · 00:01:42</span></div>
+    <div class="meta c4">— Film 01 · A Wedding in May</div>
+    <div class="headline">Nothing <em class="c4">staged.</em><br>Everything remembered.</div>
+    <div class="stat-row"><div class="stat-num"><em class="c4">47</em></div><div class="stat-lbl">Projects · 2018–2026</div></div>
+    <div class="quote-mark c4">&ldquo;</div>
+    <div class="cursor-row"><span class="cursor-ring c4"></span><span style="font-size:10px;letter-spacing:0.1em;color:rgba(237,230,216,0.35);">Cursor ring</span></div>
+    <div class="accent-line b4" style="opacity:0.3;"></div>
+    <div class="hex">Cello Wood — #b8925a<span>Sampled from the cello in reel-02. Between amber and dusty gold.</span></div>
+  </div>
+
+  <div class="swatch">
+    <span class="swatch-label">Studio</span>
+    <div class="nav-row"><span class="dot b5"></span><span class="c5">REC · 00:01:42</span></div>
+    <div class="meta c5">— Film 01 · A Wedding in May</div>
+    <div class="headline">Nothing <em class="c5">staged.</em><br>Everything remembered.</div>
+    <div class="stat-row"><div class="stat-num"><em class="c5">47</em></div><div class="stat-lbl">Projects · 2018–2026</div></div>
+    <div class="quote-mark c5">&ldquo;</div>
+    <div class="cursor-row"><span class="cursor-ring c5"></span><span style="font-size:10px;letter-spacing:0.1em;color:rgba(237,230,216,0.35);">Cursor ring</span></div>
+    <div class="accent-line b5" style="opacity:0.3;"></div>
+    <div class="hex">Ceremony Sand — #c4a87c<span>Sampled from the banner/sneaker earthtones. Very natural.</span></div>
+  </div>
+
+  <div class="swatch">
+    <span class="swatch-label">Venue</span>
+    <div class="nav-row"><span class="dot b6"></span><span class="c6">REC · 00:01:42</span></div>
+    <div class="meta c6">— Film 01 · A Wedding in May</div>
+    <div class="headline">Nothing <em class="c6">staged.</em><br>Everything remembered.</div>
+    <div class="stat-row"><div class="stat-num"><em class="c6">47</em></div><div class="stat-lbl">Projects · 2018–2026</div></div>
+    <div class="quote-mark c6">&ldquo;</div>
+    <div class="cursor-row"><span class="cursor-ring c6"></span><span style="font-size:10px;letter-spacing:0.1em;color:rgba(237,230,216,0.35);">Cursor ring</span></div>
+    <div class="accent-line b6" style="opacity:0.3;"></div>
+    <div class="hex">Cellist Stone — #a89882<span>Sampled from the venue walls in reel-02. Extremely muted, sophisticated.</span></div>
+  </div>
+
+  <div class="swatch">
+    <span class="swatch-label">Ceremony</span>
+    <div class="nav-row"><span class="dot b7"></span><span class="c7">REC · 00:01:42</span></div>
+    <div class="meta c7">— Film 01 · A Wedding in May</div>
+    <div class="headline">Nothing <em class="c7">staged.</em><br>Everything remembered.</div>
+    <div class="stat-row"><div class="stat-num"><em class="c7">47</em></div><div class="stat-lbl">Projects · 2018–2026</div></div>
+    <div class="quote-mark c7">&ldquo;</div>
+    <div class="cursor-row"><span class="cursor-ring c7"></span><span style="font-size:10px;letter-spacing:0.1em;color:rgba(237,230,216,0.35);">Cursor ring</span></div>
+    <div class="accent-line b7" style="opacity:0.3;"></div>
+    <div class="hex">Wedding Terracotta — #c97a50<span>Sampled from the Nigerian ceremony fabrics in reel-03. Warm but not orange.</span></div>
+  </div>
+
+</div>
+
+<div style="margin-top:48px;padding-top:20px;border-top:1px solid rgba(237,230,216,0.06);font-size:10px;color:rgba(237,230,216,0.3);letter-spacing:0.1em;line-height:2;">
+  To apply any color: open <code style="color:rgba(237,230,216,0.5)">src/css/tokens.css</code> and change <code style="color:rgba(237,230,216,0.5)">--amber: #e8a23a</code> to the new value. One line — every accent on the site updates instantly.
+</div>
+
+</body>
+</html>

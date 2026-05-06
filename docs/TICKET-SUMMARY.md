@@ -1,7 +1,7 @@
 # Knoch Media — Ticket Summary
 
 > **Living document.** Updated whenever tickets are created, modified, split, or closed.  
-> Last updated: 2026-05-05 | Total tickets: 30 | Open: 14 | In progress: 0 | In review: 1 | Done: 12 | Deferred: 3
+> Last updated: 2026-05-05 | Total tickets: 30 | Open: 13 | In progress: 0 | In review: 1 | Done: 13 | Deferred: 3
 
 ---
 
@@ -40,7 +40,7 @@ KNOCH-022 and KNOCH-023 are infrastructure — implement these first. The wiring
 |----|-------|--------|--------|-------|
 | [KNOCH-022](tickets/KNOCH-022.md) | Sanity Project Init + Schema Definitions | `✅` | `feature/KNOCH-022-023-sanity-cms-setup` | Studio scaffolded; testimonial, galleryCollection, service schemas deployed; all 5 testimonials + 7 collections entered |
 | [KNOCH-023](tickets/KNOCH-023.md) | JS Content-Fetch Layer | `✅` | `feature/KNOCH-022-023-sanity-cms-setup` | `src/js/sanity.js` built with hardened fetch, logging, and `imageUrl()` helper; meta tags in index.html |
-| [KNOCH-024](tickets/KNOCH-024.md) | Wire Testimonials to Sanity | `⬜` | — | After KNOCH-009 is built |
+| [KNOCH-024](tickets/KNOCH-024.md) | Wire Testimonials to Sanity | `🔵` | `feature/KNOCH-024-wire-testimonials-sanity` | In review — PR #13 |
 | [KNOCH-025](tickets/KNOCH-025.md) | Wire Gallery Reel to Sanity | `✅` | `feature/KNOCH-007-horizontal-reel` | `main.js` fetches `getFeaturedCollections()` → `initReel()`; 3 featured collections with Sanity CDN images; `subtitle` field added to schema |
 | [KNOCH-026](tickets/KNOCH-026.md) | Migrate Hero Images to Sanity CDN | `⏸` | — | Deferred — hero is LCP-critical and design-tied; static files are the correct approach |
 | [KNOCH-027](tickets/KNOCH-027.md) | Wire About Page to Sanity | `⬜` | — | After KNOCH-013 (about page) is built |
@@ -60,7 +60,7 @@ Build top-to-bottom in scroll order. Wire each section to Sanity immediately aft
 | [KNOCH-006](tickets/KNOCH-006.md) | Interlude — Word-by-Word Scroll Reveal | `✅` | `feature/KNOCH-006-interlude-manifesto` | QA PASSED — merged to test |
 | [KNOCH-007](tickets/KNOCH-007.md) | Horizontal Reel — Pinned Scroll Carousel | `✅` | `feature/KNOCH-007-horizontal-reel` | Sanity-driven (3 featured collections); cinematic full-greyscale filter; inner parallax; KNOCH-025 included |
 | [KNOCH-008](tickets/KNOCH-008.md) | Pinned Frame — Parallax + Animated Counters | `✅` | `feature/KNOCH-008-pinned-frame` | QA PASSED — merged to test |
-| [KNOCH-009](tickets/KNOCH-009.md) | Testimonial Pull-Quote Section | `🔵` | `feature/KNOCH-009-testimonial-section` | Scroll-stagger reveal → wire via KNOCH-024 |
+| [KNOCH-009](tickets/KNOCH-009.md) | Testimonial Pull-Quote Section | `✅` | `feature/KNOCH-009-testimonial-section` | QA PASSED — merged to test |
 | [KNOCH-010](tickets/KNOCH-010.md) | Portfolio Grid — Asymmetric 12-Col Archive | `⬜` | — | 7 tiles, contact-sheet layout |
 
 ---
@@ -173,6 +173,53 @@ CMS layer (cuts across phases — wire each section after it is built):
 ## Changelog
 
 All modifications to this document and ticket files are logged here. Tester agent and code review feedback should be recorded as entries.
+
+---
+
+### 2026-05-05 — KNOCH-024 PR opened — IN REVIEW
+
+**Action:** PR #13 opened dev → test
+**Tickets affected:** KNOCH-024
+**Reason:** Builder agent completed wiring of testimonial section to Sanity CMS; PR open for tester/code review
+**Changes:**
+- KNOCH-024: Status changed MERGED TO DEV → IN REVIEW
+- PR #13 opened: dev → test at https://github.com/eayanwale/knochmedia/pull/13
+- Files delivered:
+  - `src/js/testimonial.js` — async initTestimonial(); skeleton → fetch → buildItem() render → GSAP stagger; ScrollTrigger.refresh(); failure collapse
+  - `src/css/testimonial.css` — .testimonial-list (flex column), .testimonial-item (max-width 680px, padding 4rem 0), inter-item divider, updated reduced-motion guard
+  - `src/index.html` — hardcoded mark/quote/attr removed; section shell only, JS-populated
+  - `src/js/main.js` — comment updated for async fire-and-forget pattern
+- Build: 27 modules, 14.43 kB CSS / 3.59 kB gz, 143.23 kB JS / 53.05 kB gz, 88ms
+- Header counts updated: In progress 1→0, In review 0→1
+**Requested by:** Builder agent
+
+---
+
+### 2026-05-05 — KNOCH-024 implementation started — IN PROGRESS
+
+**Action:** Feature branch created; implementation in progress
+**Tickets affected:** KNOCH-024
+**Reason:** Builder agent wiring testimonial section to Sanity CMS; replaces hardcoded single quote with dynamic fetch of all 5 testimonials
+**Changes:**
+- KNOCH-024: Status changed ⬜ Open → 🔵 In progress
+- Branch `feature/KNOCH-024-wire-testimonials-sanity` created from dev
+- Header counts updated: Open 14→13, In progress 0→1
+**Requested by:** Builder agent
+
+---
+
+### 2026-05-05 — KNOCH-009 QA PASSED — merged to test
+
+**Action:** PR #12 merged (dev → test) — KNOCH-009 QA PASSED
+**Tickets affected:** KNOCH-009
+**Reason:** Tester agent verified all 8 acceptance criteria and all additional checks; build clean at 87ms, 27 modules
+**Changes:**
+- KNOCH-009: Status changed IN REVIEW → QA PASSED
+- PR #12 merged with full merge commit; branch `feature/KNOCH-009-testimonial-section` deleted
+- All test plan checkboxes ticked in ticket file
+- Test report written: `docs/test-reports/KNOCH-009-test-report.md`
+- Header counts updated: In review 1→0, Done 12→13
+**Completed by:** Tester Agent
 
 ---
 
