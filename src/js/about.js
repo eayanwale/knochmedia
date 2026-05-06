@@ -60,42 +60,26 @@ export function initAbout() {
     if (heroSub)      tl.to(heroSub,      { opacity: 1, y: 0, duration: 0.7 }, 0.5);
   }
 
-  /* ── 1b. Intro paragraph float + scroll-tied parallax ───────── */
+  /* ── 1b. Intro paragraph entrance ──────────────────────────── */
 
-  /* Two layered effects so the intro body never feels static:
-     - Continuous yoyo on yPercent for an ambient bob (always on).
-     - Scroll-tied y-pixel parallax — the paragraph drifts upward as
-       the section passes through the viewport, separating its plane
-       from the rest of the body copy. yPercent and y are tracked as
-       independent transform components in GSAP so the two compose
-       without overwriting each other. */
+  /* The previous build tried a scroll-tied parallax + continuous bob
+     on this paragraph, but Lenis-smoothed scroll combined with the
+     mixed yPercent/y transforms produced visibly choppy increments.
+     Replaced with a single smooth entrance animation — opacity + y
+     fade-up when the section enters view, then no further motion. */
   const introBody = document.querySelector('.about-intro-body');
   if (introBody && !prefersReduced) {
-    /* Continuous bob */
-    gsap.to(introBody, {
-      yPercent: -2,
-      duration: 3.6,
-      ease: 'sine.inOut',
-      yoyo: true,
-      repeat: -1,
+    gsap.from(introBody, {
+      opacity: 0,
+      y: 40,
+      duration: 1.2,
+      ease: 'expo.out',
+      scrollTrigger: {
+        trigger: '.about-intro',
+        start: 'top 80%',
+        toggleActions: 'play none none reverse',
+      },
     });
-
-    /* Scroll-tied parallax — drift up 180px over the section's
-       visible range. Beefier than the previous 60px so the effect
-       reads clearly when scrolling past. */
-    gsap.fromTo(introBody,
-      { y: 80 },
-      {
-        y: -180,
-        ease: 'none',
-        scrollTrigger: {
-          trigger: '.about-intro',
-          start: 'top bottom',
-          end: 'bottom top',
-          scrub: 1,
-        },
-      }
-    );
   }
 
   /* ── 2. Pinned chapter overlay narrative ───────────────────── */
@@ -155,19 +139,21 @@ export function initAbout() {
       return tl;
     });
 
-    /* Master scrub timeline — pinned to the story container for
-       `total` viewport heights of scroll. Crossfades happen at each
-       chapter boundary; the timeline's own duration is padded to
-       `total` so scroll progress maps evenly across chapter slices.
+    /* Master scrub timeline — pinned to the story container. Owns the
+       chapter crossfades. Text reveals are NOT in this timeline (they
+       play once per chapter on a one-shot basis, via onUpdate progress
+       monitoring below — scrubbing the cascades with scroll position
+       would jitter them).
 
-       Why a master timeline (rather than per-tween ScrollTriggers
-       referencing the same trigger): the previous version mixed pin
-       + per-tween triggers using `top+=Npx top` syntax, which works
-       in theory but ended up with only the first chapter visible.
-       Consolidating into one scrub timeline lets GSAP own all the
-       position math and matches the canonical pinned-narrative
-       pattern from its own docs. */
-    const FADE = 0.18; /* timeline-unit length of each crossfade */
+       The previous build registered text-reveal ScrollTriggers as
+       separate per-chapter triggers using `top+=Npx top` syntax. Under
+       Lenis-smoothed scroll those triggers didn't fire, so the chapter
+       images crossfaded but their text never appeared. Replaced with
+       a single onUpdate handler on the master ScrollTrigger that
+       watches progress and plays the appropriate paused reveal
+       timeline when crossing chapter thresholds. */
+    const FADE = 0.18;
+    let lastChapter = -1;
 
     const masterTl = gsap.timeline({
       scrollTrigger: {
@@ -179,6 +165,19 @@ export function initAbout() {
         anticipatePin: 1,
         scrub: 1,
         invalidateOnRefresh: true,
+        onUpdate: (self) => {
+          /* Activate-early offset of 0.05 so the text cascade starts
+             part-way through the crossfade (when the new chapter is
+             ~50% visible), not at the very end. */
+          const idx = Math.max(0, Math.min(
+            total - 1,
+            Math.floor((self.progress + 0.05) * total)
+          ));
+          if (idx !== lastChapter) {
+            reveals[idx].play();
+            lastChapter = idx;
+          }
+        },
       },
     });
 
@@ -197,27 +196,10 @@ export function initAbout() {
        visible scroll range. */
     masterTl.set({}, {}, total);
 
-    /* Text reveal triggers — separate ScrollTriggers per chapter so
-       the reveal plays once when its slice enters, rather than
-       scrubbing with scroll (which would jitter the cascade). Each
-       trigger spans the back third of the previous slice (or the
-       page top, for chapter 0). */
-    chapters.forEach((chapter, i) => {
-      if (i === 0) {
-        /* Chapter 0 is visible on load — fire its reveal immediately
-           rather than waiting for a scroll trigger. */
-        reveals[0].play();
-        return;
-      }
-      ScrollTrigger.create({
-        trigger: story,
-        start: () => `top+=${(i - 0.5) * window.innerHeight}px top`,
-        end:   () => `top+=${i * window.innerHeight}px top`,
-        onEnter:     () => reveals[i].play(),
-        onEnterBack: () => reveals[i].play(),
-        invalidateOnRefresh: true,
-      });
-    });
+    /* Chapter 0's reveal fires on init since its content is visible
+       on page load — onUpdate doesn't fire until first scroll. */
+    reveals[0].play();
+    lastChapter = 0;
   } else if (prefersReduced && chapters.length) {
     /* Reduced-motion: snap chapters to fully visible state, all stacked.
        Without the pin, they'd just show as overlapping content — accept
