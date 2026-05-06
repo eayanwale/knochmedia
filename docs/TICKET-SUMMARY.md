@@ -1,7 +1,7 @@
 # Knoch Media — Ticket Summary
 
 > **Living document.** Updated whenever tickets are created, modified, split, or closed.  
-> Last updated: 2026-05-06 | Total tickets: 30 | Open: 6 | In progress: 0 | In review: 1 | Done: 19 | Deferred: 4
+> Last updated: 2026-05-06 | Total tickets: 30 | Open: 6 | In progress: 0 | In review: 0 | Done: 20 | Deferred: 4 | Phase 3 shipped to main 🚀
 
 ---
 
@@ -71,11 +71,11 @@ Build in this order: About → Portfolio page → Project detail → Contact →
 
 | ID | Title | Status | Branch | Notes |
 |----|-------|--------|--------|-------|
-| [KNOCH-013](tickets/KNOCH-013.md) | About / Story Section (about.html) | `✅` | `feature/KNOCH-013-about-story-section` | QA PASSED — merged to test |
-| [KNOCH-011](tickets/KNOCH-011.md) | Portfolio Filter System (portfolio.html) | `✅` | `feature/KNOCH-011-portfolio-filter` | QA PASSED — merged to test |
-| [KNOCH-012](tickets/KNOCH-012.md) | Project Detail View + Video Lightbox | `✅` | `feature/KNOCH-012-project-detail-lightbox` | PR #21 merged + KNOCH-036 polish bundled |
-| [KNOCH-014](tickets/KNOCH-014.md) | Contact — Multi-Step Qualified Inquiry Form | `✅` | `feature/KNOCH-014-contact-form` | PR #22 merged to test |
-| [KNOCH-015](tickets/KNOCH-015.md) | Footer — Credits Bar + Sitemap Variant | `🔵` | `feature/KNOCH-015-footer` | PR #23 — In review (dev → test) |
+| [KNOCH-013](tickets/KNOCH-013.md) | About / Story Section (about.html) | `🚀` | `feature/KNOCH-013-about-story-section` | Shipped — Phase 3 squash to main |
+| [KNOCH-011](tickets/KNOCH-011.md) | Portfolio Filter System (portfolio.html) | `🚀` | `feature/KNOCH-011-portfolio-filter` | Shipped — Phase 3 squash to main |
+| [KNOCH-012](tickets/KNOCH-012.md) | Project Detail View + Video Lightbox | `🚀` | `feature/KNOCH-012-project-detail-lightbox` | Shipped — Phase 3 squash to main (KNOCH-036 polish included) |
+| [KNOCH-014](tickets/KNOCH-014.md) | Contact — Multi-Step Qualified Inquiry Form | `🚀` | `feature/KNOCH-014-contact-form` | Shipped — Phase 3 squash to main |
+| [KNOCH-015](tickets/KNOCH-015.md) | Footer — Credits Bar + Sitemap Variant | `🚀` | `feature/KNOCH-015-footer` | Shipped — Phase 3 squash to main (PR #23 + release squash) |
 
 ---
 
@@ -173,6 +173,31 @@ CMS layer (cuts across phases — wire each section after it is built):
 ## Changelog
 
 All modifications to this document and ticket files are logged here. Tester agent and code review feedback should be recorded as entries.
+
+---
+
+### 2026-05-06 — Phase 3 SHIPPED — squash-merged to main 🚀
+
+**Action:** test → main squash merge (commit `30da046`)
+**Tickets affected:** KNOCH-011, KNOCH-012, KNOCH-013, KNOCH-014, KNOCH-015 (and the bundled KNOCH-036 polish pass)
+**Reason:** Phase 3 closed at 5/5. The five secondary-page tickets plus the polish bundle landed on test in sequence and all passed live review on dev — the squash to main is the phase-milestone commit that takes the site from "homepage only" to "full multi-page studio site."
+**Changes:**
+- Single squash commit on main covering 50+ test commits.
+- All five Phase 3 ticket statuses flipped ✅ → 🚀 in their ticket files and in the table above.
+- Header counts updated: In review 1→0, Done 19→20. Phase 3 shipped marker added to header line.
+- Branch lineage: main `30da046` ← squash of test `5037e92` ← merge of dev (PR #23 + earlier).
+- Live site (knochmedia.xyz on Vercel) will redeploy from main automatically.
+
+**What's on main now:**
+- /index.html — homepage with hero, interlude, reel, frame, testimonials, archive, inquiry CTA, footer (minimal)
+- /about.html — pinned chapter narrative, How-We-Work, footer (expanded)
+- /portfolio.html — filter tabs (Weddings / Brand / Music), URL-hash sync, Load-more, footer (expanded)
+- /project.html — runtime URL-param renderer, sticky metadata, "Keep looking" reel, footer (expanded)
+- /contact.html — 3-step inquiry form, scarcity banner, ?type= pre-fill, Calendly sidebar, footer (expanded)
+
+**Next phase:** KNOCH-017 (YouTube integration) is the only un-deferred Phase 4 ticket. Then Phase 5 polish trio (KNOCH-019 perf → KNOCH-020 mobile → KNOCH-021 a11y) before launch.
+
+**Requested by:** Enoch
 
 ---
 
