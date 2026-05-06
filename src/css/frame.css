@@ -18,15 +18,22 @@
 }
 
 /* Background image — inset: -10% bleeds past container edges so
-   the parallax yPercent movement never reveals white edges */
+   the parallax yPercent movement never reveals white edges.
+   Default: heavy desaturation so the section reads as texture.
+   On .sticky hover: slow ease reveals the actual image. */
 .pinned-frame .bg {
   position: absolute;
   inset: -10%;
   background-image: url('/assets/studio/banner.jpg');
   background-size: cover;
   background-position: center;
-  filter: brightness(0.5) grayscale(0.2) contrast(1.1);
+  filter: brightness(0.3) grayscale(0.8) contrast(1.0);
+  transition: filter 1.4s ease;
   will-change: transform;
+}
+
+.pinned-frame .sticky:hover .bg {
+  filter: brightness(0.62) grayscale(0.1) contrast(1.05);
 }
 
 /* Vignette gradient + SVG film-grain layered on a single pseudo-element */

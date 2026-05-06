@@ -27,6 +27,11 @@ gsap.registerPlugin(ScrollTrigger);
 export function initHero() {
   // ── 1. Pre-loader DOM state ────────────────────────────────────────────
 
+  // Clip hero headline lines immediately — fromTo at t=0.2 in _onLoaderComplete
+  // doesn't apply the from-state until the playhead reaches that offset, so
+  // without this set() the text is briefly visible during the loader.
+  gsap.set(document.querySelectorAll('.hero-headline .line > span'), { y: '110%' });
+
   // Hide chrome until loader completes — prevents nav flashing in before the
   // intro sequence has run. Faded back in inside loader onComplete.
   const chrome = document.querySelector('#chrome');
@@ -158,11 +163,11 @@ function _onLoaderComplete() {
     }, 0);
   }
 
-  // Headline clip-reveal — fromTo so GSAP owns the initial hidden state;
-  // no CSS translateY(110%) needed, which avoids affecting .char-hover children.
+  // Headline clip-reveal — initial y:'110%' is pre-set by gsap.set() in initHero()
+  // so we only need a to() here. fromTo at a non-zero timeline offset doesn't
+  // apply the from-state until the playhead reaches it, causing a brief flash.
   if (lineSpans.length) {
-    tl.fromTo(lineSpans,
-      { y: '110%' },
+    tl.to(lineSpans,
       { y: 0, duration: 1.2, ease: 'expo.out', stagger: 0.12 },
       0.2
     );

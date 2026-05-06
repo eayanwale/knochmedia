@@ -29,7 +29,7 @@
   background-size: cover;
   background-position: center;
   opacity: 0;
-  filter: grayscale(0.7) brightness(0.35) blur(8px);
+  filter: grayscale(0.6) brightness(0.45) blur(6px);
   pointer-events: none;
   will-change: opacity;
 }

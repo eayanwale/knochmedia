@@ -93,32 +93,9 @@ ol {
    ─────────────────────────────────────────────────────────────────────── */
 
 .char-hover {
-  /* inline-block required for transform scale to apply */
+  /* inline-block required for GSAP scale to apply */
   display: inline-block;
-  -webkit-text-stroke: 1px transparent;
+  -webkit-text-stroke: 0.5px transparent;
   transform-origin: center 80%; /* scale from near-baseline so text doesn't float up */
-  transition:
-    color 0.35s ease,
-    -webkit-text-stroke-color 0.35s ease,
-    transform 0.35s ease,
-    filter 0.35s ease;
-}
-
-@media (hover: hover) and (pointer: fine) {
-  .char-hover.is-hollow {
-    color: transparent;
-    -webkit-text-stroke-color: var(--paper);
-    transform: scale(1.18);
-    filter: blur(0.6px);
-  }
-
-  em .char-hover.is-hollow {
-    -webkit-text-stroke-color: var(--amber);
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .char-hover {
-    transition: none;
-  }
+  /* No CSS transitions — GSAP proxy tweening owns all easing */
 }
