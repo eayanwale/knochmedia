@@ -19,12 +19,14 @@ import { initChrome }         from './chrome.js';
 import { initCursor }         from './cursor.js';
 import { initCharHover }      from './char-hover.js';
 import { initLenis }          from './lenis.js';
+import { initVideoLightbox }  from './video-lightbox.js';
 import { initPortfolioPage }  from './portfolio-page.js';
 
 initLazyLoad();
 initChrome();
 initCursor();
 initCharHover();
+initVideoLightbox();
 initPortfolioPage();
 
 window.addEventListener('load', () => {

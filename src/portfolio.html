@@ -25,6 +25,7 @@
     <link rel="stylesheet" href="/css/global.css" />
     <link rel="stylesheet" href="/css/chrome.css" />
     <link rel="stylesheet" href="/css/cursor.css" />
+    <link rel="stylesheet" href="/css/video-lightbox.css" />
     <link rel="stylesheet" href="/css/portfolio-page.css" />
 
     <!--
@@ -125,9 +126,8 @@
       <div class="portfolio-grid">
 
         <!-- 1 — Wedding -->
-        <article class="portfolio-card" data-category="wedding" tabindex="0"
-          aria-label="Alex and Morgan — Eastern Shore wedding"
-          onclick="window.open('https://knoch.pic-time.com/-alexmorgan/gallery','_blank','noopener')">
+        <article class="portfolio-card" data-category="wedding" data-project-id="alex-morgan" tabindex="0" role="button"
+          aria-label="Alex and Morgan — Eastern Shore wedding">
           <div class="portfolio-card-img" style="background-image: url('/assets/portfolio/cover-alex-morgan.jpg')" role="img" aria-hidden="true"></div>
           <div class="portfolio-card-label">
             <span class="portfolio-card-cat">№ 005 · Wedding</span>
@@ -137,9 +137,8 @@
         </article>
 
         <!-- 2 — Wedding -->
-        <article class="portfolio-card" data-category="wedding" tabindex="0"
-          aria-label="Fayo and Femi — Maryland introduction"
-          onclick="window.open('https://knoch.pic-time.com/-fayofemi/gallery','_blank','noopener')">
+        <article class="portfolio-card" data-category="wedding" data-project-id="fayo-femi" tabindex="0" role="button"
+          aria-label="Fayo and Femi — Maryland introduction">
           <div class="portfolio-card-img" style="background-image: url('/assets/portfolio/cover-fayo-femi.jpg'); background-position: 50% 65%" role="img" aria-hidden="true"></div>
           <div class="portfolio-card-label">
             <span class="portfolio-card-cat">№ 001 · Wedding</span>
@@ -149,9 +148,8 @@
         </article>
 
         <!-- 3 — Wedding -->
-        <article class="portfolio-card" data-category="wedding" tabindex="0"
-          aria-label="Shawn and Bekki — Pennsylvania wedding"
-          onclick="window.open('https://knoch.pic-time.com/-shawnbekki/gallery','_blank','noopener')">
+        <article class="portfolio-card" data-category="wedding" data-project-id="shawn-bekki" tabindex="0" role="button"
+          aria-label="Shawn and Bekki — Pennsylvania wedding">
           <div class="portfolio-card-img" style="background-image: url('/assets/portfolio/cover-shawn-bekki.jpg')" role="img" aria-hidden="true"></div>
           <div class="portfolio-card-label">
             <span class="portfolio-card-cat">№ 004 · Wedding</span>
@@ -161,9 +159,8 @@
         </article>
 
         <!-- 4 — Brand -->
-        <article class="portfolio-card" data-category="brand" tabindex="0"
-          aria-label="Rapha Records — brand film"
-          onclick="window.open('https://www.youtube.com/watch?v=Hs25JK7WcZQ','_blank','noopener')">
+        <article class="portfolio-card" data-category="brand" data-project-id="rapha-records" tabindex="0" role="button"
+          aria-label="Rapha Records — brand film">
           <div class="portfolio-card-img" style="background-image: url('/assets/portfolio/cover-rapha-records.jpg')" role="img" aria-hidden="true"></div>
           <div class="portfolio-card-label">
             <span class="portfolio-card-cat">№ 007 · Brand</span>
@@ -173,9 +170,8 @@
         </article>
 
         <!-- 5 — Brand / Worship -->
-        <article class="portfolio-card" data-category="brand" tabindex="0"
-          aria-label="What Mighty Praise — worship film"
-          onclick="window.open('https://youtu.be/KPerYKXlpX0','_blank','noopener')">
+        <article class="portfolio-card" data-category="brand" data-project-id="what-mighty-praise" tabindex="0" role="button"
+          aria-label="What Mighty Praise — worship film">
           <div class="portfolio-card-img" style="background-image: url('/assets/portfolio/cover-what-mighty-praise.png')" role="img" aria-hidden="true"></div>
           <div class="portfolio-card-label">
             <span class="portfolio-card-cat">№ 002 · Worship</span>
@@ -185,9 +181,8 @@
         </article>
 
         <!-- 6 — Brand / Worship -->
-        <article class="portfolio-card" data-category="brand" tabindex="0"
-          aria-label="Yahweh We You — worship cover"
-          onclick="window.open('https://youtu.be/umcEatTpzBk','_blank','noopener')">
+        <article class="portfolio-card" data-category="brand" data-project-id="yahweh-we-you" tabindex="0" role="button"
+          aria-label="Yahweh We You — worship cover">
           <div class="portfolio-card-img" style="background-image: url('/assets/portfolio/cover-yahweh-we-you.png')" role="img" aria-hidden="true"></div>
           <div class="portfolio-card-label">
             <span class="portfolio-card-cat">№ 010 · Worship</span>
@@ -197,7 +192,7 @@
         </article>
 
         <!-- 7 — Sport -->
-        <article class="portfolio-card" data-category="sport" tabindex="0"
+        <article class="portfolio-card" data-category="sport" data-project-id="woodsmen" tabindex="0" role="button"
           aria-label="Mont Alto Woodsmen — sports event">
           <div class="portfolio-card-img" style="background-image: url('/assets/portfolio/cover-woodsmen.jpg')" role="img" aria-hidden="true"></div>
           <div class="portfolio-card-label">
@@ -208,9 +203,8 @@
         </article>
 
         <!-- 8 — Sport -->
-        <article class="portfolio-card" data-category="sport" tabindex="0"
-          aria-label="BCF Gala Night — sports event"
-          onclick="window.open('https://youtu.be/Wg1LFjr6DZE','_blank','noopener')">
+        <article class="portfolio-card" data-category="sport" data-project-id="bcf-gala" tabindex="0" role="button"
+          aria-label="BCF Gala Night — sports event">
           <div class="portfolio-card-img" style="background-image: url('/assets/reel/reel-04.jpg')" role="img" aria-hidden="true"></div>
           <div class="portfolio-card-label">
             <span class="portfolio-card-cat">№ 011 · Sports</span>
@@ -226,7 +220,7 @@
         -->
 
         <!-- 9 — Portrait -->
-        <article class="portfolio-card is-hidden" data-category="portrait" tabindex="0"
+        <article class="portfolio-card is-hidden" data-category="portrait" data-project-id="jojos-graduation" tabindex="0" role="button"
           aria-label="Jojo's Graduation — portrait session">
           <div class="portfolio-card-img" style="background-image: url('/assets/portfolio/cover-jojos-graduation.jpg')" role="img" aria-hidden="true"></div>
           <div class="portfolio-card-label">
@@ -237,7 +231,7 @@
         </article>
 
         <!-- 10 — Portrait -->
-        <article class="portfolio-card is-hidden" data-category="portrait" tabindex="0"
+        <article class="portfolio-card is-hidden" data-category="portrait" data-project-id="senior-portrait" tabindex="0" role="button"
           aria-label="Senior portrait session">
           <div class="portfolio-card-img" style="background-image: url('/assets/about/about-01.jpg')" role="img" aria-hidden="true"></div>
           <div class="portfolio-card-label">
@@ -248,7 +242,7 @@
         </article>
 
         <!-- 11 — Portrait -->
-        <article class="portfolio-card is-hidden" data-category="portrait" tabindex="0"
+        <article class="portfolio-card is-hidden" data-category="portrait" data-project-id="studio-session" tabindex="0" role="button"
           aria-label="Studio session — Maryland">
           <div class="portfolio-card-img" style="background-image: url('/assets/about/about-03.jpg')" role="img" aria-hidden="true"></div>
           <div class="portfolio-card-label">
@@ -259,7 +253,7 @@
         </article>
 
         <!-- 12 — Portrait -->
-        <article class="portfolio-card is-hidden" data-category="portrait" tabindex="0"
+        <article class="portfolio-card is-hidden" data-category="portrait" data-project-id="family-session" tabindex="0" role="button"
           aria-label="Family session — Maryland">
           <div class="portfolio-card-img" style="background-image: url('/assets/about/about-05.jpg')" role="img" aria-hidden="true"></div>
           <div class="portfolio-card-label">

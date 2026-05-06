@@ -60,6 +60,8 @@
     <link rel="stylesheet" href="/css/studio-teaser.css" />
     <!-- Portfolio archive grid (KNOCH-010) -->
     <link rel="stylesheet" href="/css/portfolio-grid.css" />
+    <!-- Video lightbox modal (KNOCH-012) — used when video tiles are clicked -->
+    <link rel="stylesheet" href="/css/video-lightbox.css" />
     <!-- Crosshatch lazy-load placeholder (KNOCH-030) -->
     <link rel="stylesheet" href="/css/lazy-load.css" />
     <!-- Qualified inquiry form (KNOCH-030) -->
@@ -404,8 +406,7 @@
 
         <!-- t1: large feature — Alex and Morgan, Wedding -->
         <article class="tile t1" role="listitem" tabindex="0"
-          data-link-type="external-gallery"
-          data-url="https://knoch.pic-time.com/-alexmorgan/gallery"
+          data-project-id="alex-morgan"
           data-depth="3"
           aria-label="Alex and Morgan — Wedding gallery">
           <div class="tile-img" data-bg="/assets/portfolio/cover-alex-morgan.jpg" role="img" aria-hidden="true"></div>
@@ -422,8 +423,7 @@
 
         <!-- t2: Fayo and Femi, Wedding -->
         <article class="tile t2" role="listitem" tabindex="0"
-          data-link-type="external-gallery"
-          data-url="https://knoch.pic-time.com/-fayofemi/gallery"
+          data-project-id="fayo-femi"
           data-depth="1" data-torn="1"
           aria-label="Fayo and Femi — Wedding gallery">
           <div class="tile-img" data-bg="/assets/portfolio/cover-fayo-femi.jpg" style="background-position: 50% 65%" role="img" aria-hidden="true"></div>
@@ -436,8 +436,7 @@
 
         <!-- t3: Shawn and Bekki, Wedding — colour image from Sanity CDN -->
         <article class="tile t3" role="listitem" tabindex="0"
-          data-link-type="external-gallery"
-          data-url="https://knoch.pic-time.com/-shawnbekki/gallery"
+          data-project-id="shawn-bekki"
           data-depth="2"
           aria-label="Shawn and Bekki — Wedding gallery">
           <div class="tile-img" data-bg="https://cdn.sanity.io/images/2779g58e/production/471e43f5f31b05082fd6d39fb928704a6b47417a-1600x1067.jpg?w=1200&auto=format" role="img" aria-hidden="true"></div>
@@ -448,8 +447,9 @@
           </div>
         </article>
 
-        <!-- t4: Woodsmen, Sports & Events — wide banner, not linkable -->
+        <!-- t4: Woodsmen, Sports & Events — wide banner -->
         <article class="tile t4" role="listitem" tabindex="0"
+          data-project-id="woodsmen"
           data-depth="1"
           aria-label="Woodsmen — Sports &amp; Events">
           <div class="tile-img" data-bg="/assets/portfolio/cover-woodsmen.jpg" role="img" aria-hidden="true"></div>
@@ -460,8 +460,9 @@
           </div>
         </article>
 
-        <!-- t5: Jojo's Graduation, Portrait — not linkable -->
+        <!-- t5: Jojo's Graduation, Portrait -->
         <article class="tile t5" role="listitem" tabindex="0"
+          data-project-id="jojos-graduation"
           data-depth="3" data-torn="2"
           aria-label="Jojo's Graduation — Portrait">
           <div class="tile-img" data-bg="/assets/portfolio/cover-jojos-graduation.jpg" role="img" aria-hidden="true"></div>
@@ -474,8 +475,7 @@
 
         <!-- t6: What Mighty Praise, Worship — YouTube maxres thumbnail -->
         <article class="tile t6" role="listitem" tabindex="0"
-          data-link-type="youtube"
-          data-url="https://youtu.be/KPerYKXlpX0?si=O5owuRrHWqUCCr68"
+          data-project-id="what-mighty-praise"
           data-depth="2"
           aria-label="What Mighty Praise — Worship film">
           <div class="tile-img" data-bg="/assets/portfolio/cover-what-mighty-praise.png" role="img" aria-hidden="true"></div>
@@ -488,8 +488,7 @@
 
         <!-- t7: Rapha Records, Brand & Commercial — YouTube maxres thumbnail -->
         <article class="tile t7" role="listitem" tabindex="0"
-          data-link-type="youtube"
-          data-url="https://www.youtube.com/watch?v=Hs25JK7WcZQ&t=75s"
+          data-project-id="rapha-records"
           data-depth="2" data-torn="3"
           aria-label="Rapha Records — Brand film">
           <div class="tile-img" data-bg="/assets/portfolio/cover-rapha-records.jpg" role="img" aria-hidden="true"></div>

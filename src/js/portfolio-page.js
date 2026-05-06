@@ -45,6 +45,7 @@
 */
 
 import { gsap } from 'gsap';
+import { bindTileRouter } from './tile-router.js';
 
 const PAGE_SIZE = 8;
 
@@ -72,6 +73,13 @@ export function initPortfolioPage() {
   const countEl     = document.querySelector('.portfolio-count');
   const loadMoreBtn = document.querySelector('.portfolio-load-more');
   if (!cards.length) return;
+
+  /* Wire each card to the central tile router (KNOCH-012) — handles
+     click + keyboard activation, branching to the video lightbox for
+     video-typed projects or the expanding-tile transition + navigate
+     to /project.html for photo-typed ones. Replaces the inline
+     onclick handlers we shipped in KNOCH-011. */
+  bindTileRouter(cards);
 
   const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
