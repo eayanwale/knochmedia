@@ -139,11 +139,11 @@
       <div class="l">In progress</div>
     </div>
     <div class="stat">
-      <div class="n yellow" id="stat-review">1</div>
+      <div class="n yellow" id="stat-review">0</div>
       <div class="l">In review</div>
     </div>
     <div class="stat">
-      <div class="n green" id="stat-done">15</div>
+      <div class="n green" id="stat-done">16</div>
       <div class="l">Done</div>
     </div>
   </div>
@@ -366,7 +366,7 @@
         <tr>
           <td class="tid">KNOCH-013</td>
           <td class="ttitle"><a href="docs/tickets/KNOCH-013.md">About / Story Section</a></td>
-          <td><span class="badge badge-review"><span class="dot dot-review"></span>In Review</span></td>
+          <td><span class="badge badge-done"><span class="dot dot-done"></span>QA Passed</span></td>
           <td class="tbranch">feature/KNOCH-013-about-story-section</td>
           <td class="tpri p2">P2</td>
         </tr>
@@ -472,26 +472,7 @@
   <!-- Open PRs -->
   <div class="prs">
     <h2>Open Pull Requests</h2>
-    <table>
-      <thead>
-        <tr>
-          <th>PR</th>
-          <th>Title</th>
-          <th>Tickets</th>
-          <th>Base</th>
-          <th>Status</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td><a href="https://github.com/eayanwale/knochmedia/pull/19">#19</a></td>
-          <td>feat(KNOCH-013): About / Story page — sticky chapters + scrolling images</td>
-          <td>KNOCH-013</td>
-          <td>dev → test</td>
-          <td><span class="badge badge-review"><span class="dot dot-review"></span>In Review</span></td>
-        </tr>
-      </tbody>
-    </table>
+    <p style="font-size:11px;color:var(--dim);padding:10px 0;">No open pull requests.</p>
   </div>
 
   <!-- Footer -->
@@ -507,7 +488,7 @@
   document.getElementById('date-display').textContent = new Date().toLocaleDateString('en-US', { weekday:'short', year:'numeric', month:'short', day:'numeric' });
 
   // Progress bar — "done" = merged to test (15 of 30)
-  const total = 30, done = 15;
+  const total = 30, done = 16;
   document.getElementById('progress-fill').style.width = (done / total * 100).toFixed(1) + '%';
   document.getElementById('pct-label').textContent = done + ' / ' + total + ' tickets done';
 </script>

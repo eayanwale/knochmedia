@@ -129,11 +129,16 @@
   position: relative;
 }
 
-/* The sticky element itself — height auto so it sizes to its chapters.
-   top: 12vh leaves clearance below the chrome overlay. */
+/* The sticky element itself — sized to spec (top: 10vh; height: 80vh).
+   Content may extend past the 80vh box on short viewports because we
+   intentionally do NOT set overflow: hidden — clipping the 4th chapter
+   would defeat the narrative. The 80vh height still bounds the sticky
+   box for the active-chapter highlight and gives 20vh of breathing
+   room between sticky and the bottom of the viewport. */
 .about-text-sticky {
   position: sticky;
-  top: 12vh;
+  top: 10vh;
+  height: 80vh;
 }
 
 .chapter {

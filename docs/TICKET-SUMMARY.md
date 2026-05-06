@@ -1,7 +1,7 @@
 # Knoch Media — Ticket Summary
 
 > **Living document.** Updated whenever tickets are created, modified, split, or closed.  
-> Last updated: 2026-05-06 | Total tickets: 30 | Open: 11 | In progress: 0 | In review: 1 | Done: 15 | Deferred: 3
+> Last updated: 2026-05-06 | Total tickets: 30 | Open: 11 | In progress: 0 | In review: 0 | Done: 16 | Deferred: 3
 
 ---
 
@@ -71,7 +71,7 @@ Build in this order: About → Portfolio page → Project detail → Contact →
 
 | ID | Title | Status | Branch | Notes |
 |----|-------|--------|--------|-------|
-| [KNOCH-013](tickets/KNOCH-013.md) | About / Story Section (about.html) | `🔵` | `feature/KNOCH-013-about-story-section` | PR #19 dev → test (in review) |
+| [KNOCH-013](tickets/KNOCH-013.md) | About / Story Section (about.html) | `✅` | `feature/KNOCH-013-about-story-section` | QA PASSED — merged to test |
 | [KNOCH-011](tickets/KNOCH-011.md) | Portfolio Filter System (portfolio.html) | `⬜` | — | Category tabs, URL hash state |
 | [KNOCH-012](tickets/KNOCH-012.md) | Project Detail View + Video Lightbox | `⬜` | — | Expanding tile transition |
 | [KNOCH-014](tickets/KNOCH-014.md) | Contact — Multi-Step Qualified Inquiry Form | `⬜` | — | 3-step form + Calendly sidebar |
@@ -173,6 +173,22 @@ CMS layer (cuts across phases — wire each section after it is built):
 ## Changelog
 
 All modifications to this document and ticket files are logged here. Tester agent and code review feedback should be recorded as entries.
+
+---
+
+### 2026-05-06 — KNOCH-013 QA PASSED — merged to test
+
+**Action:** PR #19 merged (dev → test) — KNOCH-013 QA PASSED
+**Tickets affected:** KNOCH-013
+**Reason:** Tester agent verified all 12 acceptance criteria; build clean at 124 ms / 60 modules. Two findings, both LOW: sticky CSS values aligned to spec exactly during QA (originally `top: 12vh` no `height` → now `top: 10vh; height: 80vh`); image 5's duplicate `data-image="4"` attribute is intentional design (keeps chapter 4 lit through the closing image) and documented in HTML / JS comments.
+**Changes:**
+- KNOCH-013: Status changed IN REVIEW → ✅ QA PASSED
+- PR #19 merged with full merge commit (no squash, per workflow); test branch advanced to include the About page + homepage teaser
+- Sticky CSS fix committed on dev as part of QA pass — `src/css/about.css:135-137` now matches AC values
+- All 12 Test plan checkboxes ticked in PR body
+- Test report written: `docs/test-reports/KNOCH-013-test-report.md`
+- Header counts updated: In review 1→0, Done 15→16
+**Completed by:** Tester Agent
 
 ---
 
