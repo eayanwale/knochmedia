@@ -163,13 +163,9 @@
   display: block;
 }
 
-/* The actual text node that slides up from translateY(110%).
-   display: block inside overflow:hidden parent — this is the
-   standard "mask reveal" technique. GSAP will tween to translateY(0). */
-.hero-headline .line span {
+/* Direct span child of each .line — block so each word stays on its own row. */
+.hero-headline .line > span {
   display: block;
-  transform: translateY(110%);
-  will-change: transform;
 }
 
 /* Italic amber highlight for "staged." and "remembered." */
@@ -213,8 +209,8 @@
     transform: scale(1); /* skip the scale-down reveal */
   }
 
-  .hero-headline .line span {
-    transform: translateY(0); /* skip the line reveal */
+  .hero-headline .line > span {
+    transform: none;
   }
 
   .hero-meta,

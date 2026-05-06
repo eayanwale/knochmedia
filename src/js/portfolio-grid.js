@@ -100,15 +100,15 @@ export function initPortfolioGrid() {
        xPercent / yPercent compose with the yPercent parallax tween safely
        because GSAP tracks each axis independently in its transform matrix. */
     tile.addEventListener('mouseenter', () => {
-      gsap.to(img, { scale: 1.025, duration: 0.5, ease: 'power2.out', overwrite: 'auto' });
+      gsap.to(img, { scale: 1.012, duration: 0.5, ease: 'power2.out', overwrite: 'auto' });
     });
     tile.addEventListener('mousemove', (e) => {
       const r = tile.getBoundingClientRect();
       const xRel = (e.clientX - r.left) / r.width - 0.5;
       const yRel = (e.clientY - r.top) / r.height - 0.5;
       gsap.to(img, {
-        xPercent: xRel * 3,
-        yPercent: yRel * 3,
+        xPercent: xRel * 2,
+        yPercent: yRel * 2,
         duration: 0.5,
         ease: 'power2.out',
         overwrite: 'auto',

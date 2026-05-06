@@ -43,7 +43,6 @@ export function initHero() {
 
   const heroBg        = document.querySelector('.hero-bg');
   const heroMeta      = document.querySelector('.hero-meta');
-  const heroLineSans  = document.querySelectorAll('.hero-headline .line span');
   const heroSub       = document.getElementById('hero-sub');
 
   // Guard: if critical loader elements are missing, skip gracefully
@@ -132,7 +131,6 @@ export function initHero() {
 function _onLoaderComplete() {
   const heroBg       = document.querySelector('.hero-bg');
   const heroMeta     = document.querySelector('.hero-meta');
-  const lineSpans    = document.querySelectorAll('.hero-headline .line span');
   const heroSub      = document.getElementById('hero-sub');
 
   const tl = gsap.timeline();
@@ -146,7 +144,7 @@ function _onLoaderComplete() {
     }, 0);
   }
 
-  // Meta label fade in — runs concurrently with bg scale
+  // Meta label fade in
   if (heroMeta) {
     tl.to(heroMeta, {
       opacity: 1,
@@ -155,25 +153,13 @@ function _onLoaderComplete() {
     }, 0);
   }
 
-  // Headline clip-reveal — each line span slides up from translateY(110%)
-  // expo.out gives the snappy-then-settle feel of high-end editorial sites.
-  // Stagger 0.12s = subtle cascade without feeling slow.
-  if (lineSpans.length) {
-    tl.to(lineSpans, {
-      y: 0,
-      duration: 1.2,
-      ease: 'expo.out',
-      stagger: 0.12,
-    }, 0.2);
-  }
-
-  // Sub text fade in — appears after most of the headline has revealed
+  // Sub text fade in
   if (heroSub) {
     tl.to(heroSub, {
       opacity: 1,
       duration: 0.8,
       ease: 'power2.out',
-    }, 1.4);
+    }, 0.4);
   }
 
   // Set up scroll-exit triggers once the reveal completes

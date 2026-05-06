@@ -94,13 +94,7 @@ function buildItem(t) {
     if (i > 0) quote.appendChild(document.createTextNode(' '));
     const span = document.createElement('span');
     span.className = 'testimonial-word';
-    /* Split word into per-character spans so hover tracking is per-char */
-    [...word].forEach(char => {
-      const ch = document.createElement('span');
-      ch.className = 'char-t';
-      ch.textContent = char;
-      span.appendChild(ch);
-    });
+    span.textContent = word;
     quote.appendChild(span);
   });
 
@@ -218,7 +212,6 @@ export async function initTestimonial() {
     let inView       = false;
     let intercepting = false;
     let wheelReady   = true;   /* cooldown flag */
-    let hoveredCount = 0;      /* chars currently under cursor in active quote */
 
     /* ── Navigation ──────────────────────────────────────── */
 
@@ -240,29 +233,10 @@ export async function initTestimonial() {
 
 
       const mount = () => {
-        /* Reset hover count — old chars are being removed from DOM */
-        hoveredCount = 0;
-        gsap.to(bgEl, { opacity: 0, duration: 0.3, ease: 'power2.out', overwrite: 'auto' });
-
         current = idx;
         slider.innerHTML = '';
         const item = buildItem(testimonials[idx]);
         slider.appendChild(item);
-
-        /* Per-character bg image reveal — each .char-t tracks its own hover state */
-        item.querySelectorAll('.char-t').forEach(ch => {
-          ch.addEventListener('mouseenter', () => {
-            if (++hoveredCount === 1) {
-              gsap.to(bgEl, { opacity: 0.12, duration: 0.5, ease: 'power2.out', overwrite: 'auto' });
-            }
-          }, { passive: true });
-          ch.addEventListener('mouseleave', () => {
-            hoveredCount = Math.max(0, hoveredCount - 1);
-            if (hoveredCount === 0) {
-              gsap.to(bgEl, { opacity: 0, duration: 0.5, ease: 'power2.out', overwrite: 'auto' });
-            }
-          }, { passive: true });
-        });
 
         if (prefersReduced) { busy = false; return; }
 
@@ -344,11 +318,35 @@ export async function initTestimonial() {
       window.removeEventListener('wheel', onWheel);
     }
 
-    /* ── Hover — pause auto-advance (bg image handled per-char in mount) ── */
+    /* ── Spotlight — radial-gradient mask follows cursor across the section ── */
 
-    list.addEventListener('mouseenter', () => { stopTimer(); });
-    list.addEventListener('mouseleave', () => {
-      hoveredCount = 0;
+    /* Smooth spotlight position — GSAP tweens a proxy so the circle eases
+       toward the cursor rather than jumping frame to frame. */
+    const spotPos = { x: 0, y: 0 };
+
+    section.addEventListener('mousemove', (e) => {
+      const rect = section.getBoundingClientRect();
+      gsap.to(spotPos, {
+        x: e.clientX - rect.left,
+        y: e.clientY - rect.top,
+        duration: 0.25,
+        ease: 'power2.out',
+        overwrite: 'auto',
+        onUpdate() {
+          const m = `radial-gradient(circle 220px at ${spotPos.x}px ${spotPos.y}px, black 0%, transparent 80%)`;
+          bgEl.style.maskImage = m;
+          bgEl.style.webkitMaskImage = m;
+        },
+      });
+    }, { passive: true });
+
+    /* ── Section hover — timer + bg opacity ────────────────────────────── */
+
+    section.addEventListener('mouseenter', () => {
+      stopTimer();
+      gsap.to(bgEl, { opacity: 0.5, duration: 0.5, ease: 'power2.out', overwrite: 'auto' });
+    });
+    section.addEventListener('mouseleave', () => {
       gsap.to(bgEl, { opacity: 0, duration: 0.4, ease: 'power2.out', overwrite: 'auto' });
       if (inView) startTimer();
     });
