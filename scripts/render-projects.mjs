@@ -1,27 +1,34 @@
 /*
-  render-projects.mjs — Build-time per-project static HTML (KNOCH-040)
-  =====================================================================
-  Runs after `vite build`. Reads:
-    - src/js/projects.js     (project data — listProjects())
-    - dist/project.html      (Vite-built template with hashed asset paths)
-    - dist/sitemap.xml       (static sitemap from src/public/)
+  render-projects.mjs — Build-time static HTML emission (KNOCH-040 + 042)
+  =======================================================================
+  Runs after `vite build`. Two responsibilities:
 
-  Emits:
-    - dist/project/<slug>.html         (one per project, per-project meta)
-    - dist/sitemap.xml                 (overwritten with static + project URLs)
+  1. Per-project static pages (KNOCH-040)
+     - For each project in src/js/projects.js, emit dist/project/<slug>.html
+       with per-project canonical / og:image / Article JSON-LD baked in.
+     - Append /project/<slug> URLs to dist/sitemap.xml.
+
+  2. Sanity-driven portfolio tiles (KNOCH-042)
+     - Fetch all `galleryCollection` entries from Sanity at build time.
+     - Cache the response in .sanity-cache.json (gitignored) so a Sanity
+       outage at build time falls back to the last successful fetch
+       instead of failing the whole build.
+     - Generate the portfolio.html tile grid + filter buttons HTML.
+     - Substitute both into dist/portfolio.html between marker comments.
 
   Why dist/ and not src/ as the template input: Vite rewrites asset
   references (CSS / JS imports) to hashed bundle paths during build —
   reading src/project.html directly would mean the rendered output
-  references the unhashed dev paths and breaks. Reading dist/project.html
-  preserves the hashed asset paths Vite produced.
+  references the unhashed dev paths and breaks. Reading dist/* preserves
+  the hashed asset paths Vite produced.
 
   String-replace approach (no DOM parser): the head's per-project meta
   tags follow a fixed pattern, so targeted regex replacement is simpler
-  than spinning up jsdom / cheerio for what amounts to ~10 substitutions.
+  than spinning up jsdom / cheerio. Marker comments delimit the tile +
+  filter blocks in dist/portfolio.html so substitution is unambiguous.
 */
 
-import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
+import { readFileSync, writeFileSync, mkdirSync, existsSync } from 'node:fs';
 import { resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { listProjects } from '../src/js/projects.js';
@@ -30,6 +37,13 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, '..');
 const DIST = resolve(ROOT, 'dist');
 const SITE = 'https://knoch.media';
+
+/* Sanity project — values mirror sanity.js / studio config. Hardcoded
+   here rather than imported so the build script has no runtime
+   dependency on the Vite-bundled fetch layer. */
+const SANITY_PROJECT_ID = '2779g58e';
+const SANITY_DATASET    = 'production';
+const SANITY_CACHE_PATH = resolve(ROOT, '.sanity-cache.json');
 
 /* ── Helpers ─────────────────────────────────────────────────────── */
 
@@ -206,9 +220,143 @@ function renderProjectHTML(template, p) {
   return html;
 }
 
+/* ── Sanity fetch (KNOCH-042) ─────────────────────────────────────── */
+
+/* Fetch all galleryCollection entries ordered by `order asc`. Returns
+   the array (possibly empty) on success. Throws on network / HTTP
+   error so the caller can fall back to cache. */
+async function fetchGalleryCollections() {
+  const groq = `*[_type == "galleryCollection"] | order(order asc, _createdAt asc)`;
+  const url = `https://${SANITY_PROJECT_ID}.api.sanity.io/v2024-01-01/data/query/${SANITY_DATASET}?query=${encodeURIComponent(groq)}`;
+  const res = await fetch(url, { headers: { Accept: 'application/json' } });
+  if (!res.ok) throw new Error(`Sanity API responded ${res.status}`);
+  const json = await res.json();
+  return Array.isArray(json.result) ? json.result : [];
+}
+
+/* Wraps the fetch with cache-on-failure semantics. Successful fetches
+   write to .sanity-cache.json; failures fall back to the cache if it
+   exists. Build never fails on Sanity outage — just warns. */
+async function fetchGalleryCollectionsWithCache() {
+  try {
+    const data = await fetchGalleryCollections();
+    writeFileSync(SANITY_CACHE_PATH, JSON.stringify(data, null, 2), 'utf8');
+    console.log(`[render-projects] ✓ Sanity fetch ok (${data.length} galleryCollection entries)`);
+    return data;
+  } catch (err) {
+    console.warn(`[render-projects] ⚠ Sanity fetch failed: ${err.message}`);
+    if (existsSync(SANITY_CACHE_PATH)) {
+      try {
+        const cached = JSON.parse(readFileSync(SANITY_CACHE_PATH, 'utf8'));
+        console.warn(`[render-projects]   → Using cached data (${cached.length} entries) — last successful fetch`);
+        return cached;
+      } catch (cacheErr) {
+        console.warn(`[render-projects]   → Cache file is unreadable: ${cacheErr.message}`);
+      }
+    }
+    console.warn('[render-projects]   → No cache available; portfolio tiles will be empty in this build');
+    return [];
+  }
+}
+
+/* Resolve a Sanity image asset _ref (e.g., image-abc123-1600x1067-jpg)
+   into a CDN URL. Mirrors src/js/sanity.js's imageUrl(). */
+function sanityImageUrl(coverImage, width = 1200) {
+  const ref = coverImage?.asset?._ref ?? '';
+  const parts = String(ref).split('-');
+  if (parts.length < 4) return '';
+  const [, id, dims, ext] = parts;
+  return `https://cdn.sanity.io/images/${SANITY_PROJECT_ID}/${SANITY_DATASET}/${id}-${dims}.${ext}?w=${width}&auto=format`;
+}
+
+/* Map Sanity's category strings to the lowercase data-category values
+   the portfolio filter (data-filter on each tab button) compares
+   against. Mirrors the existing convention from the previously-
+   hardcoded tiles: Worship → music (worship videos lived under the
+   Music filter); Sports & Events → brand (BCF Gala lived under Brand).
+   New categories slot into "all" only unless added here. */
+const CATEGORY_TO_FILTER = {
+  'Wedding':            'wedding',
+  'Brand & Commercial': 'brand',
+  'Sports & Events':    'brand',
+  'Worship':            'music',
+  'Portrait':           'portrait',
+};
+
+/* Display labels for filter button text. Values match
+   CATEGORY_TO_FILTER's right-hand side. */
+const FILTER_LABELS = {
+  wedding:  'Weddings',
+  brand:    'Brand',
+  music:    'Music',
+  portrait: 'Portrait',
+};
+
+/* Build one <article class="portfolio-card"> for a Sanity collection.
+   Mirrors the existing static markup shape, just with data sourced
+   from the Sanity entry instead of hardcoded. Adds data-link-type +
+   data-url so tile-router can route the click without consulting
+   projects.js. */
+function buildPortfolioTile(c, idx) {
+  const num = String(idx + 1).padStart(3, '0');
+  const slug = c.slug?.current ?? '';
+  const filterValue = CATEGORY_TO_FILTER[c.category] ?? 'all';
+  const cover = sanityImageUrl(c.coverImage, 1200);
+  const title = c.title ?? '';
+  const subtitle = c.subtitle ?? c.category ?? '';
+  const url = c.url ?? '';
+  const linkType = c.linkType ?? 'external-gallery';
+  const ariaLabel = `${title}${c.category ? ` — ${c.category}` : ''}`;
+
+  return `        <article class="portfolio-card" data-category="${escapeHTML(filterValue)}" data-project-id="${escapeHTML(slug)}" data-link-type="${escapeHTML(linkType)}" data-url="${escapeHTML(url)}" tabindex="0" role="button"
+          aria-label="${escapeHTML(ariaLabel)}">
+          <div class="portfolio-card-img" data-bg="${escapeHTML(cover)}" role="img" aria-hidden="true"></div>
+          <div class="portfolio-card-label">
+            <span class="portfolio-card-cat">№ ${num} · ${escapeHTML(c.category ?? '')}</span>
+            <h3 class="portfolio-card-title">${escapeHTML(title)}</h3>
+            <p class="portfolio-card-sub">${escapeHTML(subtitle)}</p>
+          </div>
+        </article>`;
+}
+
+/* Build the filter button list. Always includes "All". Includes a
+   button for each filter value present in the current Sanity data,
+   in the order they first appear. Categories that don't have a
+   FILTER_LABELS entry are skipped (never reachable since the map
+   covers all five Sanity-allowed values). */
+function buildPortfolioFilters(collections) {
+  const seen = new Set();
+  const filterValues = [];
+  for (const c of collections) {
+    const f = CATEGORY_TO_FILTER[c.category];
+    if (f && !seen.has(f)) {
+      seen.add(f);
+      filterValues.push(f);
+    }
+  }
+  const items = [
+    `          <li role="presentation"><button class="portfolio-tab is-active" data-filter="all"      role="tab" aria-selected="true"  tabindex="0">All</button></li>`,
+    ...filterValues.map(f => {
+      const label = FILTER_LABELS[f] ?? (f.charAt(0).toUpperCase() + f.slice(1));
+      return `          <li role="presentation"><button class="portfolio-tab"           data-filter="${escapeHTML(f)}" role="tab" aria-selected="false" tabindex="-1">${escapeHTML(label)}</button></li>`;
+    }),
+  ];
+  return items.join('\n');
+}
+
+/* Substitute content between BEGIN/END marker comments. The src
+   templates carry the markers; this script writes whatever's between.
+   Idempotent — re-running a build doesn't accumulate. */
+function substituteMarkerBlock(html, markerName, replacement) {
+  const open  = `<!-- ${markerName}: BEGIN -->`;
+  const close = `<!-- ${markerName}: END -->`;
+  const re = new RegExp(`${open.replace(/[/-]/g, '\\$&')}[\\s\\S]*?${close.replace(/[/-]/g, '\\$&')}`, 'g');
+  return html.replace(re, `${open}\n${replacement}\n${close}`);
+}
+
 /* ── Main ────────────────────────────────────────────────────────── */
 
-function main() {
+async function main() {
   const projects = listProjects();
   if (!projects.length) {
     console.error('[render-projects] No projects found. Aborting.');
@@ -273,6 +421,31 @@ function main() {
   writeFileSync(sitemapPath, sitemap, 'utf8');
 
   console.log(`[render-projects] ✓ Emitted ${projects.length} static project pages + sitemap entries`);
+
+  /* ── KNOCH-042: Sanity-driven portfolio tiles ─────────────────────
+     Fetches galleryCollection entries from Sanity and substitutes the
+     tile grid + filter buttons into dist/portfolio.html. Cache-backed
+     so a Sanity outage doesn't fail the build. */
+  const collections = await fetchGalleryCollectionsWithCache();
+  const portfolioPath = resolve(DIST, 'portfolio.html');
+  if (!existsSync(portfolioPath)) {
+    console.warn('[render-projects] ⚠ dist/portfolio.html not found — skipping portfolio tile substitution');
+  } else {
+    let portfolio = readFileSync(portfolioPath, 'utf8');
+    const tilesHTML = collections.length > 0
+      ? collections.map((c, i) => buildPortfolioTile(c, i)).join('\n\n')
+      : '        <!-- No portfolio entries — Sanity returned empty AND no cache available -->';
+    const filtersHTML = buildPortfolioFilters(collections);
+
+    portfolio = substituteMarkerBlock(portfolio, 'KNOCH-042 portfolio tiles', tilesHTML);
+    portfolio = substituteMarkerBlock(portfolio, 'KNOCH-042 portfolio filters', filtersHTML);
+
+    writeFileSync(portfolioPath, portfolio, 'utf8');
+    console.log(`[render-projects] ✓ Portfolio: ${collections.length} tiles + filter buttons substituted into dist/portfolio.html`);
+  }
 }
 
-main();
+main().catch(err => {
+  console.error('[render-projects] Fatal:', err);
+  process.exit(1);
+});

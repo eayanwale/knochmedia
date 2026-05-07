@@ -37,6 +37,7 @@
 import { gsap } from 'gsap';
 import { getProject } from './projects.js';
 import { openVideoLightbox } from './video-lightbox.js';
+import { parseYouTubeId } from './youtube-id.js';
 
 const TRANSITION_DURATION_S = 0.55;
 
@@ -127,8 +128,9 @@ function _transitionAndNavigate(tile, slug) {
 }
 
 /* Public handler — wire this to click + Enter/Space on any element
-   carrying data-project-id. Looks up the project, branches to
-   lightbox or transition+navigate. */
+   carrying data-project-id. Branches based on data attributes
+   (KNOCH-042) first, falling back to projects.js lookup for tiles
+   that don't carry the new attributes (homepage archive grid). */
 export function handleTileActivate(tile) {
   const id = tile?.dataset?.projectId;
   if (!id) {
@@ -138,19 +140,62 @@ export function handleTileActivate(tile) {
     return;
   }
 
+  /* KNOCH-042: prefer data-link-type + data-url (set by the build
+     script from Sanity galleryCollection). The portfolio tiles wear
+     these; archive tiles in index.html don't yet (intentionally —
+     archive stays hardcoded), so they fall through to the
+     projects.js path below. */
+  const linkType = tile.dataset.linkType;
+  const url      = tile.dataset.url;
+
+  if (linkType === 'external-gallery' && url) {
+    /* External galleries (Pic-Time, Pixieset) open in a new tab.
+       Matches the homepage reel's behaviour for the same linkType. */
+    window.open(url, '_blank', 'noopener,noreferrer');
+    return;
+  }
+
+  if (linkType === 'youtube' && url) {
+    /* YouTube videos route into the embedded lightbox. parseYouTubeId
+       handles the various URL shapes (youtu.be, watch?v=, embed/...). */
+    const ytId = parseYouTubeId(url);
+    if (ytId) {
+      openVideoLightbox(ytId, tile);
+      return;
+    }
+    /* Fall through to opening the URL in a new tab if the YouTube ID
+       parse fails — better a working external link than a dead click. */
+    window.open(url, '_blank', 'noopener,noreferrer');
+    return;
+  }
+
+  if (linkType === 'internal-page') {
+    /* Sanity entries that explicitly want a self-hosted detail page —
+       falls through to KNOCH-040's static /project/<slug> route. */
+    _transitionAndNavigate(tile, id);
+    return;
+  }
+
+  /* No data-link-type — this tile is from the homepage archive grid
+     (still hardcoded) or the homepage reel (whose Sanity wiring
+     predates KNOCH-042's data-link-type convention). Fall back to
+     the projects.js lookup that's been the routing source since
+     KNOCH-012. */
   const project = getProject(id);
-  if (!project) {
-    console.warn(`[tile-router] No project found for id="${id}"`);
+  if (project) {
+    if (project.type === 'video' && project.youtubeId) {
+      openVideoLightbox(project.youtubeId, tile);
+      return;
+    }
+    _transitionAndNavigate(tile, project.id);
     return;
   }
 
-  if (project.type === 'video' && project.youtubeId) {
-    openVideoLightbox(project.youtubeId, tile);
-    return;
-  }
-
-  /* photo or unspecified type — go to project.html */
-  _transitionAndNavigate(tile, project.id);
+  /* No projects.js entry either — assume it's a Sanity-only project
+     with the static /project/<slug> page emitted by KNOCH-040. The
+     transition + navigate covers it gracefully. */
+  console.warn(`[tile-router] No data-link-type and no projects.js entry for id="${id}" — defaulting to /project/${id}`);
+  _transitionAndNavigate(tile, id);
 }
 
 /* Convenience binder — call from any module that has a NodeList of
