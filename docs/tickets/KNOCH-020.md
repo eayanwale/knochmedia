@@ -1,6 +1,7 @@
 # KNOCH-020 — Responsive / Mobile Adaptations
 
-## Status: TODO
+## Status: IN PROGRESS
+## Branch: feature/KNOCH-020-mobile
 ## Priority: P1 (high)
 ## Epic: EPIC-005 — Polish & Ship
 

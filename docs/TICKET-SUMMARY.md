@@ -1,7 +1,7 @@
 # Knoch Media — Ticket Summary
 
 > **Living document.** Updated whenever tickets are created, modified, split, or closed.  
-> Last updated: 2026-05-07 | Total tickets: 30 | Open: 4 | In progress: 0 | In review: 0 | Done: 22 | Deferred: 4 | Phases 1–4 shipped to main 🚀
+> Last updated: 2026-05-07 | Total tickets: 30 | Open: 3 | In progress: 1 | In review: 0 | Done: 22 | Deferred: 4 | Phases 1–4 shipped to main 🚀
 
 ---
 
@@ -95,7 +95,7 @@ Run in this exact order: perf first (changes markup), then mobile (tests perf ch
 | ID | Title | Status | Branch | Notes |
 |----|-------|--------|--------|-------|
 | [KNOCH-019](tickets/KNOCH-019.md) | Performance Optimization — Images, Build, CWV | `✅` | `feature/KNOCH-019-performance` | Done — merged to test (PR #25 + footer polish bundled); Lighthouse verification pending |
-| [KNOCH-020](tickets/KNOCH-020.md) | Responsive / Mobile Adaptations | `⬜` | — | 800px breakpoint; reel → CSS snap |
+| [KNOCH-020](tickets/KNOCH-020.md) | Responsive / Mobile Adaptations | `🔵` | `feature/KNOCH-020-mobile` | 800px breakpoint; reel → CSS snap |
 | [KNOCH-021](tickets/KNOCH-021.md) | Accessibility Pass — WCAG 2.1 AA | `⬜` | — | Reduced motion, focus, ARIA |
 
 ---
@@ -173,6 +173,20 @@ CMS layer (cuts across phases — wire each section after it is built):
 ## Changelog
 
 All modifications to this document and ticket files are logged here. Tester agent and code review feedback should be recorded as entries.
+
+---
+
+### 2026-05-07 — KNOCH-020 implementation started — IN PROGRESS
+
+**Action:** Feature branch created; implementation in progress
+**Tickets affected:** KNOCH-020
+**Reason:** Phase 5 / 2 of 3. Most sections already had mobile breakpoints (chrome / hero / reel CSS-snap / portfolio grid full-width / footer / cursor). Real gaps the audit found: (1) no hamburger menu — `.nav-center` hides at ≤800 px with no replacement, leaving mobile visitors stranded; (2) interlude strip parallax runs on mobile too; (3) tile labels are hover-only, invisible on touch. KNOCH-006 was simplified to a one-shot stagger (not the original word-scrub) so the "scrub → IO fade" AC item is obsolete — current implementation already mobile-friendly.
+**Changes:**
+- Branch `feature/KNOCH-020-mobile` cut from dev (b0f7d3f).
+- KNOCH-020: Status TODO → IN PROGRESS, Branch line added.
+- TICKET-SUMMARY row swapped to 🔵 with branch column filled.
+- Header counts updated: Open 4→3, In progress 0→1.
+**Requested by:** /implement-ticket auto-detect (Enoch)
 
 ---
 
