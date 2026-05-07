@@ -1,7 +1,7 @@
 # Knoch Media — Ticket Summary
 
 > **Living document.** Updated whenever tickets are created, modified, split, or closed.  
-> Last updated: 2026-05-07 | Total tickets: 35 | Open: 7 | In progress: 0 | In review: 0 | Done: 24 | Deferred: 4 | Phases 1–4 shipped to main 🚀
+> Last updated: 2026-05-07 | Total tickets: 35 | Open: 6 | In progress: 0 | In review: 1 | Done: 24 | Deferred: 4 | Phases 1–4 shipped to main 🚀
 
 ---
 
@@ -43,7 +43,7 @@ KNOCH-022 and KNOCH-023 are infrastructure — implement these first. The wiring
 | [KNOCH-024](tickets/KNOCH-024.md) | Wire Testimonials to Sanity | `✅` | `feature/KNOCH-024-wire-testimonials-sanity` | QA PASSED — merged to test |
 | [KNOCH-025](tickets/KNOCH-025.md) | Wire Gallery Reel to Sanity | `✅` | `feature/KNOCH-007-horizontal-reel` | `main.js` fetches `getFeaturedCollections()` → `initReel()`; 3 featured collections with Sanity CDN images; `subtitle` field added to schema |
 | [KNOCH-026](tickets/KNOCH-026.md) | Migrate Hero Images to Sanity CDN | `⏸` | — | Deferred — hero is LCP-critical and design-tied; static files are the correct approach |
-| [KNOCH-027](tickets/KNOCH-027.md) | Wire About Page to Sanity | `⬜` | — | After KNOCH-013 (about page) is built |
+| [KNOCH-027](tickets/KNOCH-027.md) | Wire About Page to Sanity | `🔵` | `feature/KNOCH-027-wire-about-sanity` | In review — PR #29 dev → test |
 | [KNOCH-028](tickets/KNOCH-028.md) | Wire Services Page to Sanity | `⬜` | — | After services page is built |
 | [KNOCH-029](tickets/KNOCH-029.md) | Blog Listing Page | `⏸` | — | Deferred — blog schema needs redesign (dynamic related posts, YouTube + Instagram content types) |
 | [KNOCH-030](tickets/KNOCH-030.md) | Blog Post Detail Page | `⏸` | — | Deferred — blocked by KNOCH-029 redesign |
@@ -187,6 +187,42 @@ CMS layer (cuts across phases — wire each section after it is built):
 ## Changelog
 
 All modifications to this document and ticket files are logged here. Tester agent and code review feedback should be recorded as entries.
+
+---
+
+### 2026-05-07 — KNOCH-027 PR opened — IN REVIEW
+
+**Action:** PR #29 opened dev → test. Awaiting QA gate.
+**Tickets affected:** KNOCH-027
+**Reason:** Implementation merged to dev (commit ba7d9ec). PR carries the full About-page Sanity hydration (schema register, `getAboutContent()`, `about-cms.js` injection module, init-order chain) + the tracking-doc updates. Header counts shift In progress 1→0, In review 0→1.
+
+**Requested by:** Enoch
+
+---
+
+### 2026-05-07 — KNOCH-027 merged to dev — awaiting PR open
+
+**Action:** `feature/KNOCH-027-wire-about-sanity` merged into `dev` (no-ff). PR to `test` opens next.
+**Tickets affected:** KNOCH-027
+**Reason:** Implementation complete: `aboutContent` schema registered in `studio/sanity.config.js`, `getAboutContent()` added to `src/js/sanity.js`, and `src/js/about-cms.js` hydrates `.about-hero-headline` (with `*word*` italic-marker convention), `.about-hero-sub`, `.about-intro-body`, an injected headshot figure, an injected specialties pill row, and the `data-stat="years"` stat's `data-count` + visible value + aria-label. CMS init runs before `initAbout()` so the years counter tweens to the CMS target instead of the static 8. Static markup remains the fallback — Sanity API currently returns `[]`, exercising the no-doc path; page renders unchanged.
+**Changes:**
+- KNOCH-027: Status 🔵 In progress → 🔵 Merged to dev (still 🔵 until QA gate).
+- Files: 6 changed, +219 lines (`sanity.config.js`, `sanity.js`, `about-cms.js` new, `about-main.js`, `about.html`, `about.css`).
+
+**Requested by:** Enoch (auto-selected via /implement-ticket)
+
+---
+
+### 2026-05-07 — KNOCH-027 started — 🔵 IN PROGRESS
+
+**Action:** Cut `feature/KNOCH-027-wire-about-sanity` from dev to wire the About page to Sanity.
+**Tickets affected:** KNOCH-027
+**Reason:** With KNOCH-013 (about page) shipped to main and the CMS layer (022/023) live, the About page is the next CMS-wireable surface. Plan: register the existing `aboutContent` singleton schema in `studio/sanity.config.js`, add `getAboutContent()` to `src/js/sanity.js`, and progressively enhance `about.html` so headline / subheadline / bio / headshot / specialties / yearsExperience hydrate from Studio while the static fallback copy stays in the markup.
+**Changes:**
+- KNOCH-027: Status ⬜ Open → 🔵 In progress; Branch column populated.
+- Header counts: Open 7→6, In progress 0→1.
+
+**Requested by:** Enoch (auto-selected via /implement-ticket)
 
 ---
 
