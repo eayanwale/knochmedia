@@ -27,10 +27,42 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { getProject, listProjects } from './projects.js';
 import { openVideoLightbox } from './video-lightbox.js';
 import { loadBgImage, initLazyLoad } from './lazy-load.js';
+import { getGalleryCollectionBySlug, getGalleryCollections, imageUrl } from './sanity.js';
+import { parseYouTubeId } from './youtube-id.js';
 
 gsap.registerPlugin(ScrollTrigger);
 
-export function initProjectPage() {
+/* Map a Sanity galleryCollection entry into the same shape
+   project-page.js's renderer expects (id / title / category / cover /
+   location / galleryUrl / youtubeId). Sanity's schema is thinner
+   than projects.js — description / images[] / frames / date as
+   discrete fields aren't present. The renderer already gracefully
+   skips missing fields, so the on-site detail page renders a
+   "preview + redirect" experience for Sanity-only entries. */
+function _projectFromSanity(doc) {
+  if (!doc) return null;
+  const ytId = doc.linkType === 'youtube' && doc.url ? parseYouTubeId(doc.url) : null;
+  return {
+    id:         doc.slug?.current ?? '',
+    type:       doc.linkType === 'youtube' ? 'video' : 'photo',
+    category:   doc.category ?? '',
+    title:      doc.title ?? '',
+    /* subtitle field on Sanity ("Maryland · 2024") doubles as
+       location for the hero sub-line. The static template has
+       both location and date as separate fields; we lump them
+       both into location since Sanity carries them combined. */
+    location:   doc.subtitle ?? '',
+    date:       '',
+    frames:     undefined,
+    description: '',
+    cover:      doc.coverImage ? imageUrl(doc.coverImage, 1500) : '',
+    images:     [],
+    galleryUrl: doc.linkType === 'external-gallery' ? (doc.url ?? null) : null,
+    youtubeId:  ytId,
+  };
+}
+
+export async function initProjectPage() {
   const veil = document.querySelector('.project-veil');
   const hero = document.querySelector('.project-hero');
   if (!hero) return; /* not on the project page */
@@ -70,7 +102,19 @@ export function initProjectPage() {
   }
 
   const id = _slugFromUrl();
-  const project = id ? getProject(id) : null;
+  /* KNOCH-043: try projects.js first (richer content for the original
+     hardcoded entries), then fall back to a Sanity fetch by slug
+     (covers the KNOCH-042-era galleryCollection entries that don't
+     exist in projects.js). projectSource lets us know later whether
+     to source the "Other works" reel from projects.js or Sanity. */
+  let project = id ? getProject(id) : null;
+  let projectSource = project ? 'projects.js' : null;
+
+  if (!project && id) {
+    const sanityDoc = await getGalleryCollectionBySlug(id);
+    project = _projectFromSanity(sanityDoc);
+    if (project) projectSource = 'sanity';
+  }
 
   if (!project) {
     /* No id or unknown id — bounce to portfolio so the user lands
@@ -170,9 +214,25 @@ export function initProjectPage() {
   const gallery = document.querySelector('.project-gallery');
   const otherSection = document.querySelector('.project-others');
   if (gallery) {
-    const others = listProjects()
-      .filter(p => p.id !== project.id)
-      .slice(0, 8); /* cap the reel — 8 keeps page weight reasonable */
+    /* KNOCH-043: source "Other works" from the same place this
+       project came from. Sanity-sourced project → other Sanity
+       galleryCollection entries. projects.js-sourced project →
+       other projects.js entries. Mixing the two sources would link
+       to slugs that don't all have static pages emitted, leading
+       to 404s in the reel. */
+    let others = [];
+    if (projectSource === 'sanity') {
+      const all = await getGalleryCollections();
+      others = all
+        .filter(d => (d.slug?.current ?? '') !== project.id)
+        .slice(0, 8)
+        .map(_projectFromSanity)
+        .filter(Boolean);
+    } else {
+      others = listProjects()
+        .filter(p => p.id !== project.id)
+        .slice(0, 8);
+    }
 
     if (others.length) {
       /* Append cards after the existing intro panel. innerHTML +=

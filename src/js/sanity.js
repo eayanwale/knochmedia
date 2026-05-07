@@ -2,13 +2,20 @@ const PROJECT_ID = document.querySelector('meta[name="sanity-project-id"]')?.con
 const DATASET    = document.querySelector('meta[name="sanity-dataset"]')?.content ?? ''
 const BASE = `https://${PROJECT_ID}.api.sanity.io/v2024-01-01/data/query/${DATASET}`
 
-async function fetchQuery(groq) {
+async function fetchQuery(groq, params = {}) {
   if (!PROJECT_ID || !DATASET) {
     console.warn('[Sanity] project-id or dataset meta tag missing — using static fallback')
     return []
   }
   try {
-    const url = `${BASE}?query=${encodeURIComponent(groq)}`
+    /* Append GROQ params as $name=value — Sanity's REST API accepts
+       them via query string when prefixed with $. Lets callers pass
+       in slug / id values without string interpolation (which would
+       require GROQ-injection escaping). */
+    const paramString = Object.entries(params)
+      .map(([k, v]) => `&$${encodeURIComponent(k)}=${encodeURIComponent(JSON.stringify(v))}`)
+      .join('')
+    const url = `${BASE}?query=${encodeURIComponent(groq)}${paramString}`
     console.log('[Sanity] fetching:', url)
     const res = await fetch(url)
     if (!res.ok) {
@@ -30,6 +37,16 @@ export function getTestimonials() {
 
 export function getGalleryCollections() {
   return fetchQuery(`*[_type == "galleryCollection"] | order(order asc)`)
+}
+
+/* Fetch a single galleryCollection by slug. Used by project-page.js
+   when the URL slug doesn't match anything in projects.js — falls
+   back to Sanity so KNOCH-042 entries render their on-site detail
+   page (KNOCH-043). Returns null if no entry matches. */
+export async function getGalleryCollectionBySlug(slug) {
+  if (!slug) return null
+  const docs = await fetchQuery(`*[_type == "galleryCollection" && slug.current == $slug][0..0]`, { slug })
+  return Array.isArray(docs) ? (docs[0] ?? null) : null
 }
 
 export function getFeaturedCollections() {
