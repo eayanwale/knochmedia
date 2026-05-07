@@ -19,8 +19,110 @@ export function initChrome() {
   _initTimecode();
   _initNavLinks();
   _initGlassHeader();
+  _initMobileNav();
 
   window.addEventListener('resize', () => ScrollTrigger.refresh(), { passive: true });
+}
+
+/* Mobile hamburger nav (KNOCH-020).
+   The chrome HTML on every page entry includes both .nav-center
+   (desktop) and .nav-overlay (mobile). On init we clone the
+   .nav-center > a links into .nav-overlay-inner so the link list
+   stays a single source of truth - a future page that adjusts its
+   nav-center link set automatically gets the same set in its mobile
+   overlay without a separate edit.
+
+   Open / close behaviour:
+     - Click .nav-toggle             -> toggle .is-open on toggle + overlay,
+                                        body gets .nav-overlay-open to lock scroll
+     - Click any link inside overlay -> close (so internal anchor scrolls work)
+     - Press Escape while open       -> close
+     - Resize past 800 px            -> close (defensive, prevents stuck-open
+                                        state if user rotates from mobile to
+                                        landscape iPad).
+
+   Animation: GSAP fade on the overlay (CSS already handles opacity)
+   plus a stagger on the link spans from y: 24 -> 0 with 0.06s
+   stagger so the links cascade up rather than appearing in a block. */
+function _initMobileNav() {
+  const toggle  = document.querySelector('.nav-toggle');
+  const overlay = document.querySelector('.nav-overlay');
+  const inner   = document.querySelector('.nav-overlay-inner');
+  const navCenter = document.querySelector('.nav-center');
+  if (!toggle || !overlay || !inner || !navCenter) return;
+
+  /* Clone the desktop nav-center links into the overlay. cloneNode(true)
+     keeps the existing data-scroll-to / aria-current attributes so the
+     mobile links behave identically (smooth-scroll for anchors, current
+     marker for the current page). */
+  const sourceLinks = navCenter.querySelectorAll('a');
+  sourceLinks.forEach(a => inner.appendChild(a.cloneNode(true)));
+
+  /* Re-bind the data-scroll-to handlers on the cloned anchors - the
+     original handlers in _initNavLinks() are bound to the desktop DOM
+     nodes only. */
+  inner.querySelectorAll('a[data-scroll-to]').forEach((link) => {
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      const target = link.getAttribute('data-scroll-to');
+      close();
+      /* Scroll fires after the close animation so the user sees the
+         destination land cleanly. 350 ms matches the overlay fade. */
+      setTimeout(() => scrollTo(target, { duration: 1.5 }), 350);
+    });
+  });
+
+  /* Cross-page links (no data-scroll-to) - just close the overlay
+     and let the browser navigate. */
+  inner.querySelectorAll('a:not([data-scroll-to])').forEach((link) => {
+    link.addEventListener('click', () => close());
+  });
+
+  const links = inner.querySelectorAll('a');
+
+  function open() {
+    toggle.classList.add('is-open');
+    toggle.setAttribute('aria-expanded', 'true');
+    overlay.classList.add('is-open');
+    overlay.setAttribute('aria-hidden', 'false');
+    document.body.classList.add('nav-overlay-open');
+
+    /* Cascade the links up from y: 24. fromTo so re-opens always start
+       from the offset state. */
+    gsap.fromTo(links,
+      { y: 24, opacity: 0 },
+      { y: 0, opacity: 1, duration: 0.55, ease: 'expo.out', stagger: 0.06 }
+    );
+  }
+
+  function close() {
+    toggle.classList.remove('is-open');
+    toggle.setAttribute('aria-expanded', 'false');
+    overlay.classList.remove('is-open');
+    overlay.setAttribute('aria-hidden', 'true');
+    document.body.classList.remove('nav-overlay-open');
+  }
+
+  toggle.addEventListener('click', () => {
+    if (toggle.classList.contains('is-open')) close();
+    else open();
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && toggle.classList.contains('is-open')) {
+      close();
+    }
+  });
+
+  /* Defensive: if the user resizes past the desktop breakpoint while
+     the overlay is open (e.g. rotating an iPad from portrait to
+     landscape), close it so the desktop nav doesn't leave the body
+     scroll-locked. */
+  window.addEventListener('resize', () => {
+    if (window.innerWidth > 800 && toggle.classList.contains('is-open')) {
+      close();
+    }
+  }, { passive: true });
 }
 
 /* Liquid-glass header — fades a frosted backdrop pane in once the

@@ -233,6 +233,138 @@
   background: var(--amber);
 }
 
+/* ── Mobile hamburger toggle (KNOCH-020) ──
+   Desktop: hidden. Mobile: visible at top-right of the chrome row,
+   replacing the .nav-center which hides at <=800 px. The button is
+   a 44x44 tap target (WCAG 2.5.5) with three 2 px paper lines that
+   animate to an X when .is-open lands. The actual menu lives in
+   .nav-overlay below. */
+.nav-toggle {
+  display: none;
+  appearance: none;
+  -webkit-appearance: none;
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  width: 44px;
+  height: 44px;
+  position: relative;
+  /* Sit at the right end of the chrome grid so it replaces the
+     REC indicator visually on mobile (REC is decorative, lower
+     priority than the menu). */
+  margin-left: auto;
+  z-index: calc(var(--z-chrome) + 2); /* above the overlay so it stays clickable when menu is open */
+  color: var(--paper);
+}
+
+.nav-toggle:focus-visible {
+  outline: 2px solid var(--amber);
+  outline-offset: 4px;
+}
+
+.nav-toggle-line {
+  display: block;
+  position: absolute;
+  left: 10px;
+  width: 24px;
+  height: 1.5px;
+  background: currentColor;
+  border-radius: 1px;
+  transform-origin: center;
+  transition:
+    transform 0.35s var(--ease-cinematic),
+    top 0.35s var(--ease-cinematic),
+    opacity 0.2s var(--ease-cinematic);
+}
+
+.nav-toggle-line:nth-child(1) { top: 16px; }
+.nav-toggle-line:nth-child(2) { top: 22px; }  /* center, exact button mid */
+.nav-toggle-line:nth-child(3) { top: 28px; }
+
+/* Open state: lines collapse into an X. Top + bottom translate to
+   center then rotate; middle fades out so the X reads cleanly. */
+.nav-toggle.is-open .nav-toggle-line:nth-child(1) {
+  top: 22px;
+  transform: rotate(45deg);
+}
+.nav-toggle.is-open .nav-toggle-line:nth-child(2) {
+  opacity: 0;
+}
+.nav-toggle.is-open .nav-toggle-line:nth-child(3) {
+  top: 22px;
+  transform: rotate(-45deg);
+}
+
+/* ── Mobile nav overlay (KNOCH-020) ──
+   Full-viewport ink panel. Hidden by default (visibility hidden +
+   opacity 0). When .is-open lands, fades in over 0.4 s and the
+   links stagger up from y: 24 px (handled by JS via GSAP). */
+.nav-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: calc(var(--z-chrome) + 1);
+  background: var(--ink);
+  /* Frosted-edge feel matches the new liquid-glass header treatment */
+  backdrop-filter: blur(18px) saturate(1.4);
+  -webkit-backdrop-filter: blur(18px) saturate(1.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity 0.4s var(--ease-cinematic),
+    visibility 0s linear 0.4s;
+  /* Hidden on desktop entirely - it's mobile-only chrome. */
+  display: none;
+}
+
+.nav-overlay.is-open {
+  opacity: 1;
+  visibility: visible;
+  transition:
+    opacity 0.4s var(--ease-cinematic),
+    visibility 0s linear 0s;
+}
+
+.nav-overlay-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.6rem;
+  padding: 0 6vw;
+  text-align: center;
+}
+
+.nav-overlay-inner a {
+  font-family: var(--font-serif);
+  font-weight: 300;
+  font-size: clamp(40px, 11vw, 72px);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  color: var(--paper);
+  text-decoration: none;
+  /* Tap target padding so each link is comfortably >=44 px tall
+     even at smaller font sizes (WCAG 2.5.5). */
+  padding: 0.4rem 0;
+  transition: color 0.3s var(--ease-cinematic);
+}
+
+.nav-overlay-inner a:hover,
+.nav-overlay-inner a:focus-visible {
+  color: var(--amber);
+}
+
+.nav-overlay-inner a:focus-visible {
+  outline: none;
+}
+
+.nav-overlay-inner a[aria-current="page"] {
+  color: var(--amber);
+  font-style: italic;
+}
+
 /* ── Mobile ≤800px ── */
 @media (max-width: 800px) {
   .chrome {
@@ -249,7 +381,35 @@
     display: none;
   }
 
+  /* Hide REC indicator on mobile - the hamburger replaces it visually
+     and the chrome-grid's third column needs to free up for the toggle. */
+  .nav-right {
+    display: none;
+  }
+
+  /* Activate hamburger toggle on mobile. Force into the third grid
+     column with justify-self end so it pins to the right edge -
+     without this, auto-flow places it in col 2 (since .nav-center
+     and .nav-right are display:none and don't take a slot). */
+  .nav-toggle {
+    display: block;
+    grid-column: 3;
+    justify-self: end;
+  }
+
+  /* Activate the overlay container (display: flex when JS toggles
+     .is-open via the visibility/opacity gate above) */
+  .nav-overlay {
+    display: flex;
+  }
+
   .timecode-bar {
     padding: 14px 20px;
   }
+}
+
+/* Lock body scroll when the mobile nav overlay is open. JS adds this
+   class to <body> so the underlying page can't scroll behind the menu. */
+body.nav-overlay-open {
+  overflow: hidden;
 }

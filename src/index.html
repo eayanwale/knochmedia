@@ -161,8 +161,33 @@
           <span>REC · <span id="tc">00:00:00</span></span>
         </div>
 
+        <!--
+          Mobile hamburger toggle (KNOCH-020) — replaces .nav-center
+          on ≤800 px. CSS hides on desktop (display: none), mobile
+          breakpoint flips it on. chrome.js binds the click handler
+          and animates the overlay below.
+        -->
+        <button class="nav-toggle" type="button"
+                aria-label="Open navigation"
+                aria-expanded="false"
+                aria-controls="nav-overlay">
+          <span class="nav-toggle-line" aria-hidden="true"></span>
+          <span class="nav-toggle-line" aria-hidden="true"></span>
+          <span class="nav-toggle-line" aria-hidden="true"></span>
+        </button>
+
       </div>
     </div>
+
+    <!--
+      Mobile nav overlay (KNOCH-020). chrome.js clones the
+      .nav-center > a links into .nav-overlay-inner at init so the
+      mobile menu always reflects the current page's nav set.
+      Hidden on desktop via CSS; opens via .is-open class.
+    -->
+    <nav class="nav-overlay" id="nav-overlay" aria-hidden="true" aria-label="Mobile navigation">
+      <div class="nav-overlay-inner"><!-- populated by chrome.js --></div>
+    </nav>
 
     <!--
       Bottom timecode bar — cosmetic chrome, aria-hidden.
