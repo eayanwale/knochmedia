@@ -371,8 +371,23 @@
     padding: 5rem 6vw;
   }
 
+  /* KNOCH-041: chapters flow vertically as a stacked narrative on
+     mobile. Desktop has them stacked absolute inset: 0 inside a
+     100vh .about-story so the GSAP master timeline can scrub
+     between them; mobile has no GSAP (about.js bails on the same
+     gate as prefers-reduced-motion) so we override to natural flow.
+     min-height: 80vh so each chapter still gets a "slide-like"
+     amount of vertical space before the next one starts. */
+  .about-story {
+    height: auto;
+    overflow: visible;
+  }
+
   .about-chapter {
-    min-height: 90vh;
+    position: relative;
+    inset: auto;
+    min-height: 80vh;
+    opacity: 1;
   }
 
   .about-chapter-content {

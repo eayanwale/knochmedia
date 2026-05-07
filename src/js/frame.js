@@ -26,6 +26,10 @@ export function initFrame() {
   if (!section) return;
 
   const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  /* KNOCH-041: mobile takes the same static path as prefers-reduced-motion -
+     the scrub-tied parallax + count-up was glitching on iOS Safari, sometimes
+     leaving stats stuck on 0. Final values are already written above. */
+  const isMobile       = window.matchMedia('(max-width: 800px)').matches;
 
   const bg       = section.querySelector('.bg');
   const metaTag  = section.querySelector('.meta-tag');
@@ -42,7 +46,7 @@ export function initFrame() {
     el.innerHTML = hasEm ? `<em>${target.toLocaleString()}</em>` : target.toLocaleString();
   });
 
-  if (prefersReduced) return;
+  if (prefersReduced || isMobile) return;
 
   const lines = bigEl ? Array.from(bigEl.querySelectorAll('.frame-line')) : [];
 

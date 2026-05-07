@@ -1,7 +1,7 @@
 # Knoch Media — Ticket Summary
 
 > **Living document.** Updated whenever tickets are created, modified, split, or closed.  
-> Last updated: 2026-05-07 | Total tickets: 30 | Open: 3 | In progress: 0 | In review: 1 | Done: 22 | Deferred: 4 | Phases 1–4 shipped to main 🚀
+> Last updated: 2026-05-07 | Total tickets: 35 | Open: 7 | In progress: 0 | In review: 1 | Done: 23 | Deferred: 4 | Phases 1–4 shipped to main 🚀
 
 ---
 
@@ -95,8 +95,22 @@ Run in this exact order: perf first (changes markup), then mobile (tests perf ch
 | ID | Title | Status | Branch | Notes |
 |----|-------|--------|--------|-------|
 | [KNOCH-019](tickets/KNOCH-019.md) | Performance Optimization — Images, Build, CWV | `✅` | `feature/KNOCH-019-performance` | Done — merged to test (PR #25 + footer polish bundled); Lighthouse verification pending |
-| [KNOCH-020](tickets/KNOCH-020.md) | Responsive / Mobile Adaptations | `🔵` | `feature/KNOCH-020-mobile` | 800px breakpoint; reel → CSS snap |
+| [KNOCH-020](tickets/KNOCH-020.md) | Responsive / Mobile Adaptations | `✅` | `feature/KNOCH-020-mobile` | Done — merged to test (PR #26 + reel-vertical / project-others-hide / per-slide hero meta polish bundled) |
 | [KNOCH-021](tickets/KNOCH-021.md) | Accessibility Pass — WCAG 2.1 AA | `⬜` | — | Reduced motion, focus, ARIA |
+| [KNOCH-041](tickets/KNOCH-041.md) | Mobile Sustainable Mode — strip GSAP / Lenis / scroll-driven animation | `🔵` In review | `feature/KNOCH-041-mobile-sustainable` | PR #27 — strips scroll-tied GSAP across hero/frame/portfolio-grid/inquiry/about/contact; fixes back-to-works + contact sidebar overlap |
+
+---
+
+## Phase 6 — Launch & SEO
+
+Three launch-readiness tickets + one post-launch SEO deepening. KNOCH-039 (form anti-spam + real submission) is the launch-blocker — `/contact.html` currently posts to a placeholder. KNOCH-037 and KNOCH-038 are small polish wins to land alongside it. KNOCH-040 is a bigger architectural change deferred to post-launch.
+
+| ID | Title | Status | Branch | Notes |
+|----|-------|--------|--------|-------|
+| [KNOCH-037](tickets/KNOCH-037.md) | SEO Basics — sitemap, robots, Article schema | `⬜` | — | After KNOCH-021 |
+| [KNOCH-038](tickets/KNOCH-038.md) | Custom 404 Page | `⬜` | — | Half-day; can bundle with 037 |
+| [KNOCH-039](tickets/KNOCH-039.md) | Contact Form — real submit + anti-spam (Vercel function + Turnstile + honeypot) | `⬜` | — | **Launch-blocker** |
+| [KNOCH-040](tickets/KNOCH-040.md) | Per-project SEO + Static `/project/<slug>` Routes | `⬜` | — | Post-launch deepening |
 
 ---
 
@@ -173,6 +187,67 @@ CMS layer (cuts across phases — wire each section after it is built):
 ## Changelog
 
 All modifications to this document and ticket files are logged here. Tester agent and code review feedback should be recorded as entries.
+
+---
+
+### 2026-05-07 — KNOCH-041 PR opened — IN REVIEW
+
+**Action:** PR #27 opened dev → test
+**Tickets affected:** KNOCH-041
+**Reason:** Mobile sustainable mode shipped. Strips scroll-tied GSAP work across hero / frame / portfolio-grid / inquiry / about / contact-page modules so touch devices get a static, simple-transition experience. Fixes the two specific bugs flagged on live device review: (1) "Back to works" leaving the project image stuck on screen — tile-router now skips the expanding-tile transition on mobile + has a `pageshow` listener that wipes any leftover overlay clones when Safari restores from bfcache; (2) contact form sidebar overlapping the form region on mobile — CSS rewritten so the active step is `position: relative` and inactive steps `display: none`, letting the form-col size to its real content. About page chapters also stack vertically on mobile (CSS override from `position: absolute; inset: 0` to `position: relative; min-height: 80vh`) since the GSAP scrub timeline no longer runs to scrub between them.
+**Changes:**
+- KNOCH-041: Status IN PROGRESS → IN REVIEW; PR line added.
+- PR #27 opened: dev → test at https://github.com/eayanwale/knochmedia/pull/27
+- Files modified: src/js/hero.js, src/js/frame.js, src/js/portfolio-grid.js, src/js/inquiry.js, src/js/about.js, src/js/contact-page.js, src/js/tile-router.js (mobile gates + bfcache cleanup); src/css/about.css, src/css/contact-page.css (mobile layout overrides).
+- Build: 159 ms; main.js 32.09 kB / 9.97 kB gz; bundle delta nil. Desktop unchanged.
+- Header counts updated: In progress 1→0, In review 0→1.
+**Requested by:** Builder agent
+
+---
+
+### 2026-05-07 — KNOCH-041 created — IN PROGRESS (P0 mobile fix-pass)
+
+**Action:** New ticket; feature branch cut from dev (85564a9)
+**Tickets affected:** KNOCH-041
+**Reason:** Live mobile review of KNOCH-020 found the cinematic stack still breaks on real phones — content not loading, glitchy scroll, transitions stuck on screen. KNOCH-020 gated some scroll-tied animations but missed the long tail (hero scroll-exit, frame parallax, tile-router transition, about chapters, inquiry/contact step transitions). Two specific bugs flagged: back-to-works leaves the project image stuck on screen (likely tile-router clone preserved by bfcache); the contact form's "skip the form" sidebar overlaps the form region under the mobile breakpoint.
+**Changes:**
+- New `docs/tickets/KNOCH-041.md` with the full audit + AC list.
+- TICKET-SUMMARY: Phase 5 table gains a KNOCH-041 row at 🔵 In Progress; header counts Total 34→35, In progress 0→1.
+- Branch `feature/KNOCH-041-mobile-sustainable` cut from dev.
+- Phase 5 polish trio is now KNOCH-019 ✅ + KNOCH-020 ✅ + KNOCH-021 ⬜ + KNOCH-041 🔵 (the last one is essentially a KNOCH-020 follow-up).
+**Requested by:** Enoch (live device review)
+
+---
+
+### 2026-05-07 — Phase 6 added: 4 launch-readiness tickets
+
+**Action:** Created KNOCH-037 → KNOCH-040; new "Phase 6 — Launch & SEO" section in TICKET-SUMMARY.
+**Tickets affected:** KNOCH-037, KNOCH-038, KNOCH-039, KNOCH-040
+**Reason:** Enoch raised three change requests after KNOCH-020 merged — SEO, error pages, anti-spam — and asked for a write-up of what they'd look like as tickets and how to sequence them. Numbers 031–036 were already taken by older tickets / hotfixes, so the new entries land at 037–040. Phase 6 is named "Launch & SEO" and slots in after the Phase 5 polish trio.
+**Changes:**
+- New ticket files:
+  - `KNOCH-037.md` — SEO Basics. Sitemap.xml + robots.txt + per-project Article JSON-LD on /project.html. P1. Cleanly fits after KNOCH-021.
+  - `KNOCH-038.md` — Custom 404 Page. Branded "ROLL ENDED" page with reused chrome, vercel.json wired so unknown routes serve it. P2, half-day.
+  - `KNOCH-039.md` — Contact form real submission + anti-spam. **Launch-blocker** (P0). Recommends Vercel serverless function + Resend for transport, Cloudflare Turnstile + honeypot for anti-spam. /contact.html currently posts to a placeholder.
+  - `KNOCH-040.md` — Per-project SEO + static `/project/<slug>` routes. Build-time render of one HTML per project with per-project og:image, canonical, Article schema. P3, deferred to post-launch.
+- TICKET-SUMMARY: new Phase 6 section after Phase 5; header counts Total 30→34, Open 3→7.
+- Recommended sequencing: KNOCH-021 → KNOCH-039 → KNOCH-037 + KNOCH-038 (could bundle as one PR) → Phase 5 + 6 squash to main → KNOCH-040 post-launch.
+**Requested by:** Enoch (post-KNOCH-020 review)
+
+---
+
+### 2026-05-07 — KNOCH-020 merged to test — ✅ DONE
+
+**Action:** PR #26 merged dev → test (regular merge, no squash)
+**Tickets affected:** KNOCH-020
+**Reason:** Mobile pass passed live review on dev. Hamburger menu shipped on all 5 entries; tap-target sweep complete. Polish bundled into the same PR per pre-merge review: homepage reel went from horizontal scroll-snap to vertical stack on mobile, project-page "Keep looking" section hidden on mobile, scroll-tied "text write" effects (reel-intro per-char cascade + interlude line reveal) gated to desktop, hero meta slate now changes per slide (`A QUIET PORTRAIT` → `A NIGHT OF WORSHIP` → `A NIGERIAN INTRODUCTION` → `A WEDDING IN MAY` → `HUSBAND AND WIFE` → `THE WOODSMEN`).
+**Changes:**
+- KNOCH-020: Status 🔵 In review → ✅ Done.
+- PR #26 merged at 2026-05-07T05:13:54Z; dev and test now aligned at c79c510.
+- Header counts updated: In review 1→0, Done 22→23.
+- Phase 5 progress: 2/3 (KNOCH-019 + KNOCH-020 done; KNOCH-021 a11y still open). No squash to main yet — phase rule says only squash after a completed phase.
+
+**Requested by:** Enoch
 
 ---
 
