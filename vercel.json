@@ -1,0 +1,12 @@
+{
+  "redirects": [
+    {
+      "source": "/project.html",
+      "has": [
+        { "type": "query", "key": "id", "value": "(?<slug>.+)" }
+      ],
+      "destination": "/project/:slug",
+      "permanent": true
+    }
+  ]
+}

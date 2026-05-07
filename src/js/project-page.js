@@ -57,10 +57,19 @@ export function initProjectPage() {
     });
   }
 
-  /* ── Read ?id from URL ────────────────────────────────── */
+  /* ── Resolve project from URL ────────────────────────────
+     KNOCH-040: prefer the path-based shape (/project/<slug>) — that's
+     the canonical static route emitted by scripts/render-projects.mjs.
+     Fall back to the legacy ?id=<slug> query for any visit that
+     somehow bypassed the vercel.json redirect (older external link,
+     local dev preview hitting /project.html directly, etc.). */
+  function _slugFromUrl() {
+    const m = window.location.pathname.match(/^\/project\/([^/]+)/);
+    if (m) return decodeURIComponent(m[1]);
+    return new URLSearchParams(window.location.search).get('id');
+  }
 
-  const params = new URLSearchParams(window.location.search);
-  const id = params.get('id');
+  const id = _slugFromUrl();
   const project = id ? getProject(id) : null;
 
   if (!project) {
@@ -172,7 +181,7 @@ export function initProjectPage() {
          WebP rewrite happens (KNOCH-019); initLazyLoad() picks up the
          new elements and observes them for IO entry. */
       gallery.insertAdjacentHTML('beforeend', others.map(p => `
-        <a class="project-other" href="/project.html?id=${encodeURIComponent(p.id)}"
+        <a class="project-other" href="/project/${encodeURIComponent(p.id)}"
            aria-label="${p.title} — ${p.category}">
           <div class="project-other-img" data-bg="${p.cover}" role="img" aria-hidden="true"></div>
           <div class="project-other-meta">
