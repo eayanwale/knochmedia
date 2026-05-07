@@ -244,7 +244,7 @@ export async function initTestimonial() {
 
     function updateAmbientIdx(idx) {
       const label = String(idx + 1).padStart(2, '0');
-      if (prefersReduced) { ambientIdx.textContent = label; return; }
+      if (skipScrollWrite) { ambientIdx.textContent = label; return; }
       gsap.to(ambientIdx, {
         opacity: 0, duration: 0.2, ease: 'expo.in',
         onComplete: () => {
@@ -361,7 +361,7 @@ export async function initTestimonial() {
         }
       };
 
-      if (current === -1 || prefersReduced || wasAnimating) {
+      if (current === -1 || skipScrollWrite || wasAnimating) {
         mount();
       } else {
         gsap.to(slider, {
