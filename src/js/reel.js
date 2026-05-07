@@ -65,6 +65,28 @@ function buildCard(card) {
     if (e.key === 'Enter' || e.key === ' ') {
       e.preventDefault();
       handleCardClick(card);
+      return;
+    }
+
+    /* KNOCH-021: ArrowLeft / ArrowRight move focus between sibling
+       reel cards. The browser's default focus behaviour scrolls the
+       newly-focused card into view; since the reel is GSAP-pinned
+       and scroll-tied, that vertical scroll is translated into
+       horizontal track motion — so focusing the next card naturally
+       advances the pinned timeline to bring it on-screen. Home / End
+       jump to the ends. */
+    if (e.key === 'ArrowLeft' || e.key === 'ArrowRight' || e.key === 'Home' || e.key === 'End') {
+      const siblings = Array.from(el.parentElement?.querySelectorAll('.reel-card') ?? []);
+      const i = siblings.indexOf(el);
+      let next = -1;
+      if (e.key === 'ArrowRight') next = Math.min(i + 1, siblings.length - 1);
+      else if (e.key === 'ArrowLeft') next = Math.max(i - 1, 0);
+      else if (e.key === 'Home') next = 0;
+      else if (e.key === 'End') next = siblings.length - 1;
+      if (next >= 0 && next !== i) {
+        e.preventDefault();
+        siblings[next].focus();
+      }
     }
   });
 

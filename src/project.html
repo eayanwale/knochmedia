@@ -46,6 +46,9 @@
   </head>
   <body>
 
+    <!-- Skip-to-content link (KNOCH-021) — first focusable, slides in on focus -->
+    <a class="skip-link" href="#main-content">Skip to content</a>
+
     <!--
       Black veil — fades from opaque to transparent on page load to
       bridge the expanding-tile transition from the previous page.
@@ -106,7 +109,7 @@
            aria-valuemin="0"
            aria-valuemax="100"
            aria-label="Page scroll progress"></div>
-      <span id="frame-display">FRAME 01 / 36</span>
+      <span id="frame-display" aria-hidden="true">FRAME 01 / 36</span>
     </div>
 
     <!--
@@ -114,6 +117,8 @@
       the bg-image style on .project-hero-img and rewrites the meta /
       title / sub strings from the project data lookup.
     -->
+    <main id="main-content">
+
     <section class="project-hero" aria-label="Project hero">
 
       <!-- Back link sits on top of the hero, top-left -->
@@ -190,6 +195,8 @@
       <h2 class="project-cta-headline">Book a similar project.</h2>
       <a class="project-cta-link" href="/contact.html">Start an inquiry &rarr;</a>
     </section>
+
+    </main><!-- /#main-content -->
 
     <!-- Shared footer host (KNOCH-015) — populated by initFooter('expanded') -->
     <footer id="site-footer"></footer>

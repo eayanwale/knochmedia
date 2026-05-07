@@ -101,6 +101,95 @@ ol {
   outline-offset: 3px;
 }
 
+/* ── Visually-hidden utility (KNOCH-021) ──────────────────────────────────
+   Off-screen but readable by AT — for live regions that announce state
+   changes (form step transitions, etc.) and for any future label that
+   needs to exist for screen readers without taking visual space.
+   ─────────────────────────────────────────────────────────────────────── */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ── Skip-to-content link (KNOCH-021) ─────────────────────────────────────
+   Off-screen by default, slides into view when focused so keyboard users
+   can bypass the chrome / loader markup and land directly on the page's
+   <main>. Sits at z-index 100000 so it pops above the loader (10000) and
+   chrome (50). The amber-on-ink palette already passes AAA contrast, so
+   no extra background style needed beyond the dark fill.
+   ─────────────────────────────────────────────────────────────────────── */
+.skip-link {
+  position: fixed;
+  top: -100px;
+  left: 16px;
+  z-index: 100000;
+  background: var(--ink);
+  color: var(--amber);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  padding: 12px 20px;
+  border: 1px solid var(--amber);
+  text-decoration: none;
+  transition: top 0.2s var(--ease-cinematic);
+}
+
+.skip-link:focus,
+.skip-link:focus-visible {
+  top: 16px;
+}
+
+/* ── Custom-cursor swap on keyboard navigation (KNOCH-021) ────────────────
+   When the visitor presses Tab the cursor.js handler adds .using-keyboard
+   to <body>. We override the (pointer: fine) cursor: none rule and hide
+   the custom cursor element so focus rings drive interaction instead.
+   The body class flips back off on the next mousemove, restoring the
+   custom cursor for mouse users. */
+body.using-keyboard {
+  cursor: auto !important;
+}
+
+body.using-keyboard #cursor {
+  opacity: 0 !important;
+  visibility: hidden;
+}
+
+/* ── Reduced-motion site-wide cascade (KNOCH-021) ─────────────────────────
+   Per-module entrance animations and scroll-tied scrubs already gate on
+   matchMedia('(prefers-reduced-motion: reduce)') in JS (17 modules at
+   last count), and 14 component CSS files have explicit @media blocks
+   for their own transitions. This blanket rule is a defensive backstop
+   for any animation/transition added later that forgets the gate —
+   collapses durations to ~instant so vestibular-sensitive users never
+   see a stray fade or scale tween.
+
+   The rule is intentionally NOT in tokens.css — it must apply after
+   every component import so its !important defeats more-specific rules
+   that may have been imported later. Keeping it scoped to global.css
+   (which is loaded after tokens but before component sheets) means it
+   sits at the top of the cascade and lets per-component @media blocks
+   that already exist still override it cleanly when they need a
+   different reduced-motion value (e.g. opacity: 1 instead of 0).
+   ─────────────────────────────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
 /* ── Light mode stub — dark is primary; this block is intentionally empty.
    Component-level overrides will live here once a light-mode toggle
    is wired up (post-Phase-5). ── */

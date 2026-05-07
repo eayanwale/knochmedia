@@ -140,6 +140,18 @@ export function openVideoLightbox(youtubeId, triggerEl) {
      doesn't drift behind the embed during a wheel gesture. */
   document.body.style.overflow = 'hidden';
 
+  /* KNOCH-021: hide background content from assistive tech while
+     the dialog is open. The dialog itself sits outside the main
+     landmark (it's appended to body), so flagging the main element
+     as inert removes the rest of the page from the AT tree without
+     touching the dialog. data-a11y-hidden marker lets close() undo
+     only what we set here, never any pre-existing aria-hidden. */
+  const main = document.getElementById('main-content');
+  if (main) {
+    main.setAttribute('aria-hidden', 'true');
+    main.dataset.a11yHidden = '1';
+  }
+
   /* Focus the close button after the open transition starts so screen
      readers announce the dialog and keyboard users can immediately
      dismiss with Enter / Space. */
@@ -160,6 +172,16 @@ export function closeVideoLightbox() {
   }, 420);
 
   document.body.style.overflow = '';
+
+  /* KNOCH-021: restore the main landmark to the AT tree. Only undo
+     what we set ourselves — checking the marker prevents wiping a
+     legitimate pre-existing aria-hidden if some other code added
+     one (none does today, but the guard keeps the contract clean). */
+  const main = document.getElementById('main-content');
+  if (main && main.dataset.a11yHidden === '1') {
+    main.removeAttribute('aria-hidden');
+    delete main.dataset.a11yHidden;
+  }
 
   /* Restore focus to the element that triggered the modal. */
   if (_trigger && typeof _trigger.focus === 'function') {

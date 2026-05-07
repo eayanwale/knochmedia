@@ -1,7 +1,7 @@
 # Knoch Media — Ticket Summary
 
 > **Living document.** Updated whenever tickets are created, modified, split, or closed.  
-> Last updated: 2026-05-07 | Total tickets: 35 | Open: 5 | In progress: 0 | In review: 0 | Done: 25 | Deferred: 5 | Phases 1–4 shipped to main 🚀
+> Last updated: 2026-05-07 | Total tickets: 35 | Open: 4 | In progress: 1 | In review: 0 | Done: 25 | Deferred: 5 | Phases 1–4 shipped to main 🚀
 
 ---
 
@@ -96,7 +96,7 @@ Run in this exact order: perf first (changes markup), then mobile (tests perf ch
 |----|-------|--------|--------|-------|
 | [KNOCH-019](tickets/KNOCH-019.md) | Performance Optimization — Images, Build, CWV | `✅` | `feature/KNOCH-019-performance` | Done — merged to test (PR #25 + footer polish bundled); Lighthouse verification pending |
 | [KNOCH-020](tickets/KNOCH-020.md) | Responsive / Mobile Adaptations | `✅` | `feature/KNOCH-020-mobile` | Done — merged to test (PR #26 + reel-vertical / project-others-hide / per-slide hero meta polish bundled) |
-| [KNOCH-021](tickets/KNOCH-021.md) | Accessibility Pass — WCAG 2.1 AA | `⬜` | — | Reduced motion, focus, ARIA |
+| [KNOCH-021](tickets/KNOCH-021.md) | Accessibility Pass — WCAG 2.1 AA | `🔵` | `feature/KNOCH-021-a11y-pass` | In progress — finishing Phase 5 |
 | [KNOCH-041](tickets/KNOCH-041.md) | Mobile Sustainable Mode — strip GSAP / Lenis / scroll-driven animation | `✅` | `feature/KNOCH-041-mobile-sustainable` | Done — merged to test (PR #27 + image culling + chrome wordmark + hamburger close polish bundled) |
 
 ---
@@ -187,6 +187,19 @@ CMS layer (cuts across phases — wire each section after it is built):
 ## Changelog
 
 All modifications to this document and ticket files are logged here. Tester agent and code review feedback should be recorded as entries.
+
+---
+
+### 2026-05-07 — KNOCH-021 started — 🔵 IN PROGRESS
+
+**Action:** Cut `feature/KNOCH-021-a11y-pass` from dev to finish Phase 5.
+**Tickets affected:** KNOCH-021
+**Reason:** Final Phase 5 ticket — accessibility pass to complete the polish phase before squashing test → main. Audit (via Explore agent) shows strong ARIA foundations already in place (modals, progress bars, nav landmarks, per-module reduced-motion gates across 17 JS modules + 14 CSS files). Gaps to close in this ticket: skip link + `<main>` landmark on every page, global reduced-motion CSS cascade, Lenis reduced-motion guard, body aria-hidden when video lightbox open, aria-required on form fields, step-transition aria-live region, filter tabs `aria-pressed` → `aria-selected`, frame-display aria-hidden, reel arrow-key navigation, custom-cursor keyboard detection. Tile-selector native-radio refactor (button[role=radio] → input[type=radio]) deferred — current pattern is a valid WAI-ARIA radio implementation and meets AA, refactor is scope creep.
+**Changes:**
+- KNOCH-021: Status ⬜ Open → 🔵 In progress; Branch column populated.
+- Header counts: Open 5→4, In progress 0→1.
+
+**Requested by:** Enoch (defer 28, finish phase 5)
 
 ---
 
