@@ -7,6 +7,21 @@
 
     <!-- Primary meta -->
     <meta name="description" content="A working studio — cinematic photography &amp; film by Knoch Media. The story, the philosophy, and how we work." />
+    <link rel="canonical" href="https://knochmedia.xyz/about.html" />
+
+    <!-- Open Graph / social share (KNOCH-019) -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Knoch Media" />
+    <meta property="og:title" content="The Studio — Knoch Media" />
+    <meta property="og:description" content="A working studio — the story, the philosophy, and how we work." />
+    <meta property="og:url" content="https://knochmedia.xyz/about.html" />
+    <meta property="og:image" content="https://knochmedia.xyz/assets/og/og-default.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="The Studio — Knoch Media" />
+    <meta name="twitter:description" content="A working studio — the story, the philosophy, and how we work." />
+    <meta name="twitter:image" content="https://knochmedia.xyz/assets/og/og-default.jpg" />
     <meta name="theme-color" content="#0a0a0a" />
 
     <!-- Sanity CMS config (KNOCH-023) — kept consistent across pages -->
@@ -35,7 +50,8 @@
       page once the hero text is in. fetchpriority promotes it above
       the other four image fetches.
     -->
-    <link rel="preload" as="image" href="/assets/about/about-01.jpg" fetchpriority="high" />
+    <!-- LCP preload (KNOCH-019): WebP sibling, ~63% smaller than the JPG source -->
+    <link rel="preload" as="image" href="/assets/about/about-01.webp" fetchpriority="high" />
   </head>
   <body>
 
@@ -127,7 +143,7 @@
     <section class="about-story" aria-label="Studio story">
 
       <article class="about-chapter" data-chapter="1">
-        <div class="about-chapter-bg" style="background-image: url('/assets/about/about-01.jpg')" role="img" aria-hidden="true"></div>
+        <div class="about-chapter-bg" data-bg="/assets/about/about-01.jpg" role="img" aria-hidden="true"></div>
         <div class="about-chapter-content">
           <p class="about-chapter-label">Chapter 01 &middot; The beginning</p>
           <h2 class="about-chapter-title headline-hover">It started with a wedding.</h2>
@@ -142,7 +158,7 @@
       </article>
 
       <article class="about-chapter" data-chapter="2">
-        <div class="about-chapter-bg" style="background-image: url('/assets/about/about-02.jpg')" role="img" aria-hidden="true"></div>
+        <div class="about-chapter-bg" data-bg="/assets/about/about-02.jpg" role="img" aria-hidden="true"></div>
         <div class="about-chapter-content">
           <p class="about-chapter-label">Chapter 02 &middot; The philosophy</p>
           <h2 class="about-chapter-title headline-hover">We don&rsquo;t photograph weddings.</h2>
@@ -156,7 +172,7 @@
       </article>
 
       <article class="about-chapter" data-chapter="3">
-        <div class="about-chapter-bg" style="background-image: url('/assets/about/about-03.jpg')" role="img" aria-hidden="true"></div>
+        <div class="about-chapter-bg" data-bg="/assets/about/about-03.jpg" role="img" aria-hidden="true"></div>
         <div class="about-chapter-content">
           <p class="about-chapter-label">Chapter 03 &middot; The craft</p>
           <h2 class="about-chapter-title headline-hover">Film-first, even shooting digital.</h2>
@@ -170,7 +186,7 @@
       </article>
 
       <article class="about-chapter" data-chapter="4">
-        <div class="about-chapter-bg" style="background-image: url('/assets/about/about-04.jpg')" role="img" aria-hidden="true"></div>
+        <div class="about-chapter-bg" data-bg="/assets/about/about-04.jpg" role="img" aria-hidden="true"></div>
         <div class="about-chapter-content">
           <p class="about-chapter-label">Chapter 04 &middot; The work</p>
           <h2 class="about-chapter-title headline-hover">A short list of clients.</h2>

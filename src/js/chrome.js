@@ -4,6 +4,16 @@ import { scrollTo } from './lenis.js';
 
 gsap.registerPlugin(ScrollTrigger);
 
+/* GSAP frame-budget cap (KNOCH-019). Pins ticker.fps to 60 so on
+   120 Hz / variable-refresh displays GSAP doesn't tick at the higher
+   rate - the reel + frame parallax + cursor + glass header all read
+   identically at 60 fps and the cap saves ~50% animation CPU on
+   high-refresh laptops. Set at module scope (not inside initChrome)
+   so the cap is in place before any other module's GSAP work starts;
+   chrome.js is imported by every page entry so this fires once per
+   page load regardless of which entry boots. */
+gsap.ticker.fps(60);
+
 export function initChrome() {
   _initScrollProgress();
   _initTimecode();
