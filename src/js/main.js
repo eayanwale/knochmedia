@@ -3,6 +3,7 @@ import { initChrome } from './chrome.js';
 import { initCursor } from './cursor.js';
 import { initCharHover } from './char-hover.js';
 import { initHero } from './hero.js';
+import { initHeroReel } from './hero-reel.js';
 import { initInterlude } from './interlude.js';
 import { initReel } from './reel.js';
 import { initFrame } from './frame.js';
@@ -37,6 +38,13 @@ initCharHover();
 // Hero loader + reveal sequence + scroll exit (KNOCH-005)
 // Also bootstraps Lenis (KNOCH-016) in its onComplete callback.
 initHero();
+
+// Hero PLAY REEL CTA — paints YouTube thumb + binds lightbox open (KNOCH-017).
+// Runs immediately after initHero() so the thumbnail Image() probe starts
+// while the loader is playing; by the time the hero reveal fades the button
+// in, the bg-image is already in cache. The reveal opacity tween itself
+// lives in hero.js so all hero choreography stays in one place.
+initHeroReel();
 
 // Interlude manifesto — word-by-word scroll-driven reveal (KNOCH-006)
 initInterlude();
