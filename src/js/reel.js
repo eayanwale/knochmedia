@@ -171,10 +171,16 @@ function splitChars(el) {
    from below their clip with a stagger, desc lines clip-wipe, hint
    fades last. The per-character split makes "Selected work." land
    noticeably even on a quick scroll-by, where the previous full-clip
-   reveal felt like a single instant flash. */
+   reveal felt like a single instant flash.
+   KNOCH-020: skipped on mobile. The scroll-tied write-on cascade was
+   too much on touch devices (Enoch flagged it after the first mobile
+   PR landed); without the dramatic intro the reel-intro panel just
+   reads as a normal headline + desc, which is the right register for
+   a vertical-stack mobile flow. */
 function animateReelIntro(section) {
   const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if (prefersReduced) return;
+  const isMobile       = window.matchMedia('(max-width: 800px)').matches;
+  if (prefersReduced || isMobile) return;
 
   const label    = section.querySelector('.reel-intro-label');
   const headline = section.querySelector('.reel-intro-headline');

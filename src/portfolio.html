@@ -79,8 +79,23 @@
           <span>REC · <span id="tc">00:00:00</span></span>
         </div>
 
+        <!-- Mobile hamburger toggle (KNOCH-020) -->
+        <button class="nav-toggle" type="button"
+                aria-label="Open navigation"
+                aria-expanded="false"
+                aria-controls="nav-overlay">
+          <span class="nav-toggle-line" aria-hidden="true"></span>
+          <span class="nav-toggle-line" aria-hidden="true"></span>
+          <span class="nav-toggle-line" aria-hidden="true"></span>
+        </button>
+
       </div>
     </div>
+
+    <!-- Mobile nav overlay (KNOCH-020) — populated by chrome.js -->
+    <nav class="nav-overlay" id="nav-overlay" aria-hidden="true" aria-label="Mobile navigation">
+      <div class="nav-overlay-inner"></div>
+    </nav>
 
     <!-- Bottom timecode bar — cosmetic chrome -->
     <div class="timecode-bar" aria-hidden="true">

@@ -467,31 +467,14 @@
     padding: 4rem 6vw;
   }
 
-  /* Mobile fallback — drop the GSAP pin (handled by skipping the JS
-     setup at ≤800px), let the track scroll natively horizontally. */
+  /* "Keep looking" / Other works section is hidden entirely on
+     mobile (KNOCH-020 review feedback). Same reasoning as the
+     homepage reel: a horizontal scroll-snap carousel fights the
+     vertical page scroll, and on a project detail page the visitor
+     already has the project gallery + the inquiry CTA right below -
+     the related-works rail is a desktop-only enhancement. */
   .project-others {
-    height: auto;
-    padding: 4rem 0 6rem;
-  }
-
-  .project-gallery {
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    padding: 0 6vw 1rem;
-    height: auto;
-    align-items: stretch;
-    gap: 4vw;
-    scroll-snap-type: x mandatory;
-  }
-
-  .project-others-intro {
-    flex: 0 0 80vw;
-  }
-
-  .project-other {
-    flex: 0 0 70vw;
-    min-width: 240px;
-    scroll-snap-align: start;
+    display: none;
   }
 
   .project-cta {

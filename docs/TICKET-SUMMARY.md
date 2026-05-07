@@ -1,7 +1,7 @@
 # Knoch Media — Ticket Summary
 
 > **Living document.** Updated whenever tickets are created, modified, split, or closed.  
-> Last updated: 2026-05-07 | Total tickets: 30 | Open: 4 | In progress: 0 | In review: 1 | Done: 21 | Deferred: 4 | Phases 1–4 shipped to main 🚀
+> Last updated: 2026-05-07 | Total tickets: 30 | Open: 3 | In progress: 0 | In review: 1 | Done: 22 | Deferred: 4 | Phases 1–4 shipped to main 🚀
 
 ---
 
@@ -94,8 +94,8 @@ Run in this exact order: perf first (changes markup), then mobile (tests perf ch
 
 | ID | Title | Status | Branch | Notes |
 |----|-------|--------|--------|-------|
-| [KNOCH-019](tickets/KNOCH-019.md) | Performance Optimization — Images, Build, CWV | `🔵` | `feature/KNOCH-019-performance` | Lighthouse ≥85 mobile target |
-| [KNOCH-020](tickets/KNOCH-020.md) | Responsive / Mobile Adaptations | `⬜` | — | 800px breakpoint; reel → CSS snap |
+| [KNOCH-019](tickets/KNOCH-019.md) | Performance Optimization — Images, Build, CWV | `✅` | `feature/KNOCH-019-performance` | Done — merged to test (PR #25 + footer polish bundled); Lighthouse verification pending |
+| [KNOCH-020](tickets/KNOCH-020.md) | Responsive / Mobile Adaptations | `🔵` | `feature/KNOCH-020-mobile` | 800px breakpoint; reel → CSS snap |
 | [KNOCH-021](tickets/KNOCH-021.md) | Accessibility Pass — WCAG 2.1 AA | `⬜` | — | Reduced motion, focus, ARIA |
 
 ---
@@ -173,6 +173,50 @@ CMS layer (cuts across phases — wire each section after it is built):
 ## Changelog
 
 All modifications to this document and ticket files are logged here. Tester agent and code review feedback should be recorded as entries.
+
+---
+
+### 2026-05-07 — KNOCH-020 PR opened — IN REVIEW
+
+**Action:** PR #26 opened dev → test
+**Tickets affected:** KNOCH-020
+**Reason:** Mobile pass closed. The audit confirmed most sections were already mobile-friendly from individual section tickets — three real gaps closed: (1) hamburger menu — `.nav-center` hides at ≤800 px and the new toggle + full-screen overlay nav replaces it across all 5 entries, with chrome.js cloning the desktop link list into the mobile overlay so there's one source of truth; (2) interlude strip parallax gated on mobile to avoid iOS rubber-band jitter; (3) portfolio.html card labels always-visible on mobile (homepage archive already had this). Plus a tap-target sweep — `.mark`, footer links, and social icons all bumped to ≥44 × 44 (WCAG 2.5.5).
+**Changes:**
+- KNOCH-020: Status IN PROGRESS → IN REVIEW; PR line added.
+- PR #26 opened: dev → test at https://github.com/eayanwale/knochmedia/pull/26
+- Files modified: src/index.html, src/about.html, src/portfolio.html, src/project.html, src/contact.html (toggle + overlay markup); src/css/chrome.css (~150 new lines for toggle + overlay), src/css/footer.css (mobile tap-padding), src/css/portfolio-page.css (mobile card-label visible); src/js/chrome.js (~95 lines for `_initMobileNav`), src/js/interlude.js (mobile gate).
+- Build: 167 ms; main.js 32.09 kB / 9.97 kB gz; bundle delta essentially nil.
+- Header counts updated: In progress 1→0, In review 0→1.
+**Requested by:** Builder agent
+
+---
+
+### 2026-05-07 — KNOCH-020 implementation started — IN PROGRESS
+
+**Action:** Feature branch created; implementation in progress
+**Tickets affected:** KNOCH-020
+**Reason:** Phase 5 / 2 of 3. Most sections already had mobile breakpoints (chrome / hero / reel CSS-snap / portfolio grid full-width / footer / cursor). Real gaps the audit found: (1) no hamburger menu — `.nav-center` hides at ≤800 px with no replacement, leaving mobile visitors stranded; (2) interlude strip parallax runs on mobile too; (3) tile labels are hover-only, invisible on touch. KNOCH-006 was simplified to a one-shot stagger (not the original word-scrub) so the "scrub → IO fade" AC item is obsolete — current implementation already mobile-friendly.
+**Changes:**
+- Branch `feature/KNOCH-020-mobile` cut from dev (b0f7d3f).
+- KNOCH-020: Status TODO → IN PROGRESS, Branch line added.
+- TICKET-SUMMARY row swapped to 🔵 with branch column filled.
+- Header counts updated: Open 4→3, In progress 0→1.
+**Requested by:** /implement-ticket auto-detect (Enoch)
+
+---
+
+### 2026-05-07 — KNOCH-019 merged to test — ✅ DONE
+
+**Action:** PR #25 merged dev → test (regular merge, no squash)
+**Tickets affected:** KNOCH-019
+**Reason:** Performance pass passed live review on dev. Three pieces landed: (1) WebP image pipeline with the new `scripts/optimize-images.mjs` + runtime URL rewrite in `lazy-load.js` — total assets 16.4 MB → 3.94 MB (-76%), hero LCP 1.96 MB → 39.6 KB (-98%); (2) per-page Open Graph + Twitter cards + LocalBusiness JSON-LD on the homepage; (3) `gsap.ticker.fps(60)` cap. Footer fix bundled in: social row centred, bottom padding bumped so it clears the fixed timecode-bar.
+**Changes:**
+- KNOCH-019: Status 🔵 In review → ✅ Done.
+- PR #25 merged at 2026-05-07T04:42:12Z; dev and test now aligned at 7426f11.
+- Header counts updated: In review 1→0, Done 21→22.
+- Phase 5 progress: 1/3 (KNOCH-019 done; KNOCH-020 mobile + KNOCH-021 a11y still open). No squash to main yet — phase rule says only squash after a completed phase.
+
+**Requested by:** Enoch
 
 ---
 

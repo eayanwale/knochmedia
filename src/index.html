@@ -161,8 +161,33 @@
           <span>REC · <span id="tc">00:00:00</span></span>
         </div>
 
+        <!--
+          Mobile hamburger toggle (KNOCH-020) — replaces .nav-center
+          on ≤800 px. CSS hides on desktop (display: none), mobile
+          breakpoint flips it on. chrome.js binds the click handler
+          and animates the overlay below.
+        -->
+        <button class="nav-toggle" type="button"
+                aria-label="Open navigation"
+                aria-expanded="false"
+                aria-controls="nav-overlay">
+          <span class="nav-toggle-line" aria-hidden="true"></span>
+          <span class="nav-toggle-line" aria-hidden="true"></span>
+          <span class="nav-toggle-line" aria-hidden="true"></span>
+        </button>
+
       </div>
     </div>
+
+    <!--
+      Mobile nav overlay (KNOCH-020). chrome.js clones the
+      .nav-center > a links into .nav-overlay-inner at init so the
+      mobile menu always reflects the current page's nav set.
+      Hidden on desktop via CSS; opens via .is-open class.
+    -->
+    <nav class="nav-overlay" id="nav-overlay" aria-hidden="true" aria-label="Mobile navigation">
+      <div class="nav-overlay-inner"><!-- populated by chrome.js --></div>
+    </nav>
 
     <!--
       Bottom timecode bar — cosmetic chrome, aria-hidden.
@@ -252,8 +277,13 @@
       <!-- Centered content stack — meta label, headline, sub text -->
       <div class="hero-content">
 
-        <!-- Amber mono label — film roll identifier / editorial context -->
-        <p class="hero-meta">[ FILM 01 &mdash; A WEDDING IN MAY ]</p>
+        <!--
+          Amber mono label — film-slate identifier per slide. JS owns
+          this text at runtime (hero.js HERO_SLIDESHOW_META) so the
+          label always matches the active slide. The default below is
+          the slide-01 string and is what readers see if JS fails.
+        -->
+        <p class="hero-meta">[ FILM 01 &mdash; A QUIET PORTRAIT ]</p>
 
         <!--
           H1 headline — four lines, each in a clip-reveal wrapper.

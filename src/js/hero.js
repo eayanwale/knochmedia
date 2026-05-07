@@ -42,6 +42,32 @@ const HERO_SLIDESHOW_IMAGES = [
   '/assets/reel/reel-06.webp',
 ];
 
+/* Editorial film-slate label for each slide. Index aligns with
+   HERO_SLIDESHOW_IMAGES above. Swapped in sync with the bg crossfade
+   so the meta caption always describes what the visitor is looking
+   at. To retitle a slide, edit one line here - no other code change.
+
+   Mapped from the actual reel imagery:
+     01  studio portrait silhouette          - "A QUIET PORTRAIT"
+     02  cellist at an anniversary / worship - "A NIGHT OF WORSHIP"
+                                                gathering
+     03  Nigerian introduction ceremony      - "A NIGERIAN INTRODUCTION"
+     04  outdoor woods wedding (triangle arch)- "A WEDDING IN MAY"
+     05  B&W wedding recessional, the couple - "HUSBAND AND WIFE"
+     06  Mont Alto Woodsmen competition      - "THE WOODSMEN"
+
+   Format mirrors the existing markup default: bracketed mono caps
+   with an em-dash separator. Keep <22 chars after the dash so the
+   label fits the hero-meta line on narrow viewports. */
+const HERO_SLIDESHOW_META = [
+  '[ FILM 01 — A QUIET PORTRAIT ]',
+  '[ FILM 02 — A NIGHT OF WORSHIP ]',
+  '[ FILM 03 — A NIGERIAN INTRODUCTION ]',
+  '[ FILM 04 — A WEDDING IN MAY ]',
+  '[ FILM 05 — HUSBAND AND WIFE ]',
+  '[ FILM 06 — THE WOODSMEN ]',
+];
+
 const SLIDE_HOLD_MS  = 5500;  // time each slide stays at full opacity
 const SLIDE_FADE_S   = 1.6;   // crossfade duration (seconds)
 
@@ -74,6 +100,12 @@ function _buildHeroSlides(heroBg) {
    playing through wasted swaps if the user tabs away mid-cycle. */
 function _runHeroSlideshow(heroBg, slides) {
   if (!slides.length || slides.length < 2) return;
+
+  /* The hero-meta caption is swapped in sync with the bg crossfade so
+     the editorial slate always describes what the visitor is looking at.
+     Optional - if the element is missing (defensive against future
+     markup edits) the slideshow still cycles images. */
+  const heroMeta = document.querySelector('.hero-meta');
 
   let current = 0;
   let timer   = null;
@@ -108,6 +140,29 @@ function _runHeroSlideshow(heroBg, slides) {
       repeat: 1,
       overwrite: 'auto',
     });
+
+    /* Hero-meta caption swap — fade out (~40% of crossfade), set new
+       text at the midpoint, fade back in. Lands the new label right
+       around the time the new bg image hits full opacity, so the
+       caption and the image transition feel like one event rather
+       than two. Guarded against missing meta data (returns null in
+       a future-edge case where the arrays drift out of sync). */
+    const nextMeta = HERO_SLIDESHOW_META[next];
+    if (heroMeta && nextMeta) {
+      gsap.to(heroMeta, {
+        opacity: 0,
+        duration: SLIDE_FADE_S * 0.4,
+        ease: 'power2.in',
+        onComplete: () => {
+          heroMeta.textContent = nextMeta;
+          gsap.to(heroMeta, {
+            opacity: 1,
+            duration: SLIDE_FADE_S * 0.6,
+            ease: 'power2.out',
+          });
+        },
+      });
+    }
 
     current = next;
   };
@@ -156,6 +211,15 @@ export function initHero() {
   const heroBg        = document.querySelector('.hero-bg');
   const heroMeta      = document.querySelector('.hero-meta');
   const heroSub       = document.getElementById('hero-sub');
+
+  /* Set the initial slate label to match slide 0 - the HTML markup
+     ships with a sensible default but the data lives here, in
+     HERO_SLIDESHOW_META, so any retitle is a one-line edit. The
+     label is currently opacity:0 (set in CSS); the reveal timeline
+     fades it in along with the rest of the hero. */
+  if (heroMeta && HERO_SLIDESHOW_META[0]) {
+    heroMeta.textContent = HERO_SLIDESHOW_META[0];
+  }
 
   /* Build the slideshow layers immediately so they exist before the reveal
      scale tween runs. Stored at module scope (_heroSlides) so
