@@ -58,11 +58,14 @@
 /* ── Variant: minimal (homepage) ─────────────────────────────
    3-column credits bar.
 
-   Padding "4rem 36px 2rem" is taken straight from the ticket's
-   AC. The grid is symmetric; the right column is text-aligned
-   right so the roll number sits flush like a reel slate. */
+   Bottom padding is generous (5rem) so the social row clears the
+   fixed .timecode-bar (~48 px tall, pinned at bottom: 0). Without
+   this, the bar visually crashed into the Instagram + YouTube
+   icons — flagged on review. The grid is symmetric; the right
+   column is text-aligned right so the roll number sits flush
+   like a reel slate. */
 .site-footer--minimal .footer-inner--minimal {
-  padding: 4rem 36px 2rem;
+  padding: 4rem 36px 5rem;
 }
 
 .footer-grid--3 {
@@ -76,13 +79,16 @@
 }
 
 /* Social row sits below the 3-col grid, separated by a hairline
-   that mirrors the top border so the row reads as its own band. */
+   that mirrors the top border so the row reads as its own band.
+   Centered horizontally — flagged on review; left-alignment looked
+   off-balance under the symmetric 3-col grid. */
 .footer-social {
   margin-top: 2.5rem;
   padding-top: 1.4rem;
   border-top: 1px solid rgba(237, 230, 216, 0.06);
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 1.6rem;
 }
 
@@ -111,9 +117,11 @@
 
 /* ── Variant: expanded (about / portfolio / project / contact)
    4-column sitemap. Generous padding to give it the breathing
-   room a fuller footer needs vs the minimal credits bar. */
+   room a fuller footer needs vs the minimal credits bar.
+   Bottom padding (5rem) clears the fixed .timecode-bar same as
+   the minimal variant. */
 .site-footer--expanded .footer-inner--expanded {
-  padding: 5rem 8vw 3rem;
+  padding: 5rem 8vw 5rem;
 }
 
 .footer-grid--4 {
@@ -184,11 +192,13 @@
    columns flow in. Right-align on roll column is dropped on
    mobile so the stacked layout reads naturally top to bottom. */
 @media (max-width: 720px) {
+  /* Mobile bottom-paddings (4rem) keep clear of the .timecode-bar,
+     which is ~40 px tall on mobile (14 px padding × 2 + ~12 px text). */
   .site-footer--minimal .footer-inner--minimal {
-    padding: 3rem 1.4rem 1.6rem;
+    padding: 3rem 1.4rem 4rem;
   }
   .site-footer--expanded .footer-inner--expanded {
-    padding: 3.5rem 1.4rem 2rem;
+    padding: 3.5rem 1.4rem 4rem;
   }
 
   .footer-grid--3,
