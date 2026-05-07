@@ -97,7 +97,12 @@ export function initPortfolioGrid() {
   });
 
   const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if (prefersReduced) return;
+  /* KNOCH-041: mobile bails before any scroll-tied tweens run. Tiles are
+     already in the DOM with full opacity (CSS default); the GSAP from()
+     timelines below would normally drive the hidden initial state, but on
+     mobile we skip that entirely so tiles just appear when scrolled to. */
+  const isMobile       = window.matchMedia('(max-width: 800px)').matches;
+  if (prefersReduced || isMobile) return;
 
   const header   = section.querySelector('.archive-header');
   const grid     = section.querySelector('.archive-grid');

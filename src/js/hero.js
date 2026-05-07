@@ -467,6 +467,13 @@ function _onLoaderComplete() {
  * the hero is fully revealed.
  */
 function _setupScrollExit() {
+  /* KNOCH-041: skip the scroll-tied parallax on mobile. The scrub-tied
+     yPercent + opacity animation fights iOS rubber-band scroll and was
+     occasionally leaving the hero in a half-faded state. Mobile gets
+     plain document scroll - the hero simply scrolls off like any other
+     section. */
+  if (window.matchMedia('(max-width: 800px)').matches) return;
+
   const heroBg      = document.querySelector('.hero-bg');
   const heroContent = document.querySelector('.hero-content');
 

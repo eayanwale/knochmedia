@@ -63,6 +63,9 @@ export function initInquiry() {
   if (!section) return;
 
   const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  /* KNOCH-041: mobile takes the same path as prefers-reduced-motion - skip
+     the scroll-tied reveal and the GSAP step transitions. */
+  const isMobile       = window.matchMedia('(max-width: 800px)').matches;
 
   // ── Build form DOM ──────────────────────────────────────────────────────
 
@@ -174,7 +177,7 @@ export function initInquiry() {
     const prev = panels[current];
     const next = panels[idx];
 
-    if (!prefersReduced) {
+    if (!prefersReduced && !isMobile) {
       // Aperture iris close on current step
       gsap.to(prev, {
         clipPath: 'circle(0% at 50% 50%)',
@@ -195,8 +198,14 @@ export function initInquiry() {
         },
       });
     } else {
+      /* KNOCH-041: mobile + reduced-motion path - instant swap, no
+         clipPath dance. Reset any inline styles GSAP might have left
+         behind from a previous transition (clipPath, opacity, position)
+         so the panel renders cleanly. */
       prev.classList.remove('active');
+      prev.style.cssText = '';
       next.classList.add('active');
+      next.style.cssText = '';
     }
 
     current = idx;
@@ -230,7 +239,7 @@ export function initInquiry() {
 
   // ── Scroll-triggered reveal ─────────────────────────────────────────────
 
-  if (!prefersReduced) {
+  if (!prefersReduced && !isMobile) {
     gsap.from(wrapper, {
       opacity: 0,
       y: 40,
@@ -363,7 +372,7 @@ function _handleSubmit(form, data, prefersReduced) {
     <p>Expect a response within 24\u201348 hours.</p>
   `;
 
-  if (!prefersReduced) {
+  if (!prefersReduced && !isMobile) {
     gsap.to(stepsContainer, {
       clipPath: 'circle(0% at 50% 50%)',
       opacity: 0,
@@ -379,6 +388,9 @@ function _handleSubmit(form, data, prefersReduced) {
       },
     });
   } else {
+    /* KNOCH-041: mobile + reduced-motion - instant swap, no iris.
+       Clear inline styles in case a prior transition left them set. */
+    stepsContainer.style.cssText = '';
     stepsContainer.innerHTML = '';
     stepsContainer.appendChild(confirmation);
   }
