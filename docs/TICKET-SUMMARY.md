@@ -1,7 +1,7 @@
 # Knoch Media — Ticket Summary
 
 > **Living document.** Updated whenever tickets are created, modified, split, or closed.  
-> Last updated: 2026-05-07 | Total tickets: 35 | Open: 6 | In progress: 1 | In review: 0 | Done: 24 | Deferred: 4 | Phases 1–4 shipped to main 🚀
+> Last updated: 2026-05-07 | Total tickets: 35 | Open: 6 | In progress: 0 | In review: 1 | Done: 24 | Deferred: 4 | Phases 1–4 shipped to main 🚀
 
 ---
 
@@ -43,7 +43,7 @@ KNOCH-022 and KNOCH-023 are infrastructure — implement these first. The wiring
 | [KNOCH-024](tickets/KNOCH-024.md) | Wire Testimonials to Sanity | `✅` | `feature/KNOCH-024-wire-testimonials-sanity` | QA PASSED — merged to test |
 | [KNOCH-025](tickets/KNOCH-025.md) | Wire Gallery Reel to Sanity | `✅` | `feature/KNOCH-007-horizontal-reel` | `main.js` fetches `getFeaturedCollections()` → `initReel()`; 3 featured collections with Sanity CDN images; `subtitle` field added to schema |
 | [KNOCH-026](tickets/KNOCH-026.md) | Migrate Hero Images to Sanity CDN | `⏸` | — | Deferred — hero is LCP-critical and design-tied; static files are the correct approach |
-| [KNOCH-027](tickets/KNOCH-027.md) | Wire About Page to Sanity | `🔵` | `feature/KNOCH-027-wire-about-sanity` | Merged to dev — PR pending; singleton aboutContent doc, headline / sub / bio / headshot / specialties / years |
+| [KNOCH-027](tickets/KNOCH-027.md) | Wire About Page to Sanity | `🔵` | `feature/KNOCH-027-wire-about-sanity` | In review — PR #29 dev → test |
 | [KNOCH-028](tickets/KNOCH-028.md) | Wire Services Page to Sanity | `⬜` | — | After services page is built |
 | [KNOCH-029](tickets/KNOCH-029.md) | Blog Listing Page | `⏸` | — | Deferred — blog schema needs redesign (dynamic related posts, YouTube + Instagram content types) |
 | [KNOCH-030](tickets/KNOCH-030.md) | Blog Post Detail Page | `⏸` | — | Deferred — blocked by KNOCH-029 redesign |
@@ -187,6 +187,16 @@ CMS layer (cuts across phases — wire each section after it is built):
 ## Changelog
 
 All modifications to this document and ticket files are logged here. Tester agent and code review feedback should be recorded as entries.
+
+---
+
+### 2026-05-07 — KNOCH-027 PR opened — IN REVIEW
+
+**Action:** PR #29 opened dev → test. Awaiting QA gate.
+**Tickets affected:** KNOCH-027
+**Reason:** Implementation merged to dev (commit ba7d9ec). PR carries the full About-page Sanity hydration (schema register, `getAboutContent()`, `about-cms.js` injection module, init-order chain) + the tracking-doc updates. Header counts shift In progress 1→0, In review 0→1.
+
+**Requested by:** Enoch
 
 ---
 
