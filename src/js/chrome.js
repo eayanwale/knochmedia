@@ -8,8 +8,51 @@ export function initChrome() {
   _initScrollProgress();
   _initTimecode();
   _initNavLinks();
+  _initGlassHeader();
 
   window.addEventListener('resize', () => ScrollTrigger.refresh(), { passive: true });
+}
+
+/* Liquid-glass header — fades a frosted backdrop pane in once the
+   interlude reaches the top of the viewport. The hero stays clean
+   (mix-blend-mode handles its dark cinematography); from interlude
+   onward the navbar sits over a soft glass strip so it reads against
+   any of the busier sections that follow.
+
+   The trigger element is the homepage interlude. On other pages
+   (about / portfolio / project / contact) the element doesn't exist,
+   so the glass simply turns on at page load via a fallback below.
+   That's the desired behaviour - secondary pages don't have a
+   full-bleed cinematic hero, so the navbar wants the glass surface
+   from frame 1. */
+function _initGlassHeader() {
+  const chrome = document.getElementById('chrome');
+  if (!chrome) return;
+
+  const interlude = document.getElementById('interlude');
+
+  if (!interlude) {
+    /* Non-homepage entry — no hero-to-interlude transition to scrub
+       against, so just keep the glass on permanently. The chrome
+       transition still fires once on load so it fades in cleanly
+       rather than snapping. */
+    chrome.classList.add('is-glass');
+    return;
+  }
+
+  /* Homepage — toggle on as the interlude top reaches just below the
+     chrome bar. start: 'top top+=80' fires when the interlude's top
+     edge sits 80 px below viewport top, which is roughly the moment
+     the navbar starts visually overlapping interlude content rather
+     than the hero. onLeaveBack reverts when the visitor scrolls back
+     up into the hero so the original mix-blend-mode treatment
+     returns over the cinematography. */
+  ScrollTrigger.create({
+    trigger: interlude,
+    start: 'top top+=80',
+    onEnter:     () => chrome.classList.add('is-glass'),
+    onLeaveBack: () => chrome.classList.remove('is-glass'),
+  });
 }
 
 function _initScrollProgress() {

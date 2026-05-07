@@ -1,5 +1,7 @@
 import gsap from 'gsap';
 import ScrollTrigger from 'gsap/ScrollTrigger';
+import { openVideoLightbox } from './video-lightbox.js';
+import { parseYouTubeId } from './youtube-id.js';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -69,12 +71,36 @@ function buildCard(card) {
   return el;
 }
 
+/* Reel card activation router (KNOCH-007 + KNOCH-017).
+   - external-gallery → open the Pic-Time link in a new tab. The
+     external gallery is a separate property and we don't want to
+     replace the current tab; reel scroll position is also useful
+     to preserve.
+   - youtube → open the embedded lightbox (KNOCH-017). Extract the
+     11-char video ID from the URL (any youtu.be / watch?v= shape).
+     If extraction fails, fall back to the new-tab open so the
+     visitor still reaches the video instead of getting a dead
+     click.
+   - internal-page (or any other linkType) → same-tab navigation. */
 function handleCardClick(card) {
-  if (card.linkType === 'external-gallery' || card.linkType === 'youtube') {
+  if (card.linkType === 'youtube') {
+    const id = parseYouTubeId(card.url);
+    if (id) {
+      openVideoLightbox(id);
+      return;
+    }
+    /* Fall through to new-tab open if the URL didn't match a known
+       YouTube shape — better a working external link than nothing. */
     window.open(card.url, '_blank', 'noopener,noreferrer');
-  } else {
-    window.location.href = card.url;
+    return;
   }
+
+  if (card.linkType === 'external-gallery') {
+    window.open(card.url, '_blank', 'noopener,noreferrer');
+    return;
+  }
+
+  window.location.href = card.url;
 }
 
 /* Magnetic cursor zoom on reel cards — image pans toward cursor within
