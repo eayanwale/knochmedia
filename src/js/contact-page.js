@@ -294,9 +294,31 @@ export function initContactPage() {
     form.querySelectorAll('.contact-error').forEach(el => el.remove());
   }
 
-  /* ── 7. Form submission ───────────────────────────────── */
+  /* ── 7. Form submission (KNOCH-039 — Formspree) ──────────
 
-  form.addEventListener('submit', (e) => {
+     Real submission flow:
+       1. preventDefault (form's action would otherwise navigate away)
+       2. validate step 2 (name + email — service type already
+          validated to leave step 1)
+       3. build the step-3 summary from FormData
+       4. flip the submit button into a loading state (disabled +
+          "SENDING…")
+       5. POST to Formspree's endpoint with Accept: application/json
+          so it returns JSON instead of redirecting to its own
+          thank-you page (we keep visitors on our step-3 panel)
+       6. on { ok: true } → goToStep(3) reveals the confirmation
+          panel with the summary already built
+       7. on non-OK or network error → restore the submit button +
+          inline error message near it that points at hello@knoch.media
+          as the fallback. Form data is preserved (the visitor never
+          left step 2). */
+
+  /* AbortController-driven 10s timeout — Formspree's API is fast,
+     but a hung connection shouldn't leave the visitor staring at a
+     spinning button forever. */
+  const SUBMIT_TIMEOUT_MS = 10_000;
+
+  form.addEventListener('submit', async (e) => {
     e.preventDefault();
     if (!validateStep(2)) return;
 
@@ -321,18 +343,83 @@ export function initContactPage() {
       summary.innerHTML = rows.map(([k, v]) => `<dt>${k}</dt><dd>${v}</dd>`).join('');
     }
 
-    /* TODO when wiring real submission:
-       - For Formspree: form action="https://formspree.io/f/<ID>" + this
-         handler still preventDefaults and uses fetch(action, { method:
-         'POST', body: data }) so the user stays on the page and we can
-         show step 3 on success.
-       - For Netlify Forms: add `data-netlify="true"` on the <form> and
-         a hidden <input name="form-name"> so Netlify's bot picks it up
-         on deploy. Same fetch pattern.
-       For now we just advance to the confirmation step — gives the
-       visitor a sense of completion during dev / preview. */
-    goToStep(3);
+    const submitBtn = form.querySelector('button[type="submit"]');
+    const originalLabel = submitBtn?.textContent;
+
+    /* Loading state — disable + label swap. The .is-sending class
+       can be styled later if a spinner is desired; for now the
+       text + disabled attribute is the visible signal. */
+    if (submitBtn) {
+      submitBtn.disabled = true;
+      submitBtn.classList.add('is-sending');
+      submitBtn.textContent = 'SENDING…';
+    }
+    clearErrors();
+
+    /* Wrap fetch in an AbortController so a hung connection times out
+       at SUBMIT_TIMEOUT_MS rather than leaving the button spinning. */
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), SUBMIT_TIMEOUT_MS);
+
+    try {
+      const res = await fetch(form.action, {
+        method:  'POST',
+        body:    data,
+        headers: { Accept: 'application/json' },
+        signal:  controller.signal,
+      });
+      clearTimeout(timeoutId);
+
+      if (res.ok) {
+        /* Success — Formspree accepted. Step 3 confirmation panel was
+           already populated above; goToStep handles the visual swap. */
+        goToStep(3);
+      } else {
+        /* Formspree returned a non-OK status. Try to surface the first
+           field-level error if its body has one; otherwise generic. */
+        let detail = '';
+        try {
+          const body = await res.json();
+          if (Array.isArray(body.errors) && body.errors[0]?.message) {
+            detail = ` (${body.errors[0].message})`;
+          }
+        } catch { /* response wasn't JSON — ignore */ }
+        showSubmitError(`Couldn't deliver right now${detail}. Try again, or email hello@knoch.media directly.`);
+        restoreSubmitButton(submitBtn, originalLabel);
+      }
+    } catch (err) {
+      clearTimeout(timeoutId);
+      const msg = err.name === 'AbortError'
+        ? "Request timed out. Try again, or email hello@knoch.media directly."
+        : "Couldn't deliver right now. Try again, or email hello@knoch.media directly.";
+      showSubmitError(msg);
+      restoreSubmitButton(submitBtn, originalLabel);
+    }
   });
+
+  /* Helpers — kept inside initContactPage so they can close over the
+     form reference and reuse showError's per-field rendering. */
+  function showSubmitError(message) {
+    const submitBtn = form.querySelector('button[type="submit"]');
+    if (!submitBtn) return;
+    /* Wrap the button in its containing field so showError's
+       insertion logic places the error near it. */
+    const field = submitBtn.closest('.contact-actions') || submitBtn.parentElement;
+    /* Drop any prior submit-error before adding the new one. */
+    field.querySelectorAll('.contact-error--submit').forEach(el => el.remove());
+    const error = document.createElement('span');
+    error.className = 'contact-error contact-error--submit';
+    error.setAttribute('role', 'alert');
+    error.textContent = message;
+    field.appendChild(error);
+  }
+
+  function restoreSubmitButton(btn, label) {
+    if (!btn) return;
+    btn.disabled = false;
+    btn.classList.remove('is-sending');
+    if (label) btn.textContent = label;
+  }
 
   /* ── 8. Initial state + entry animations ──────────────── */
 

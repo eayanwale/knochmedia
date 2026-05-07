@@ -75,8 +75,35 @@ export function initInquiry() {
 
   const form = document.createElement('form');
   form.className = 'inquiry';
+  form.action = 'https://formspree.io/f/xlgzwdjj';
+  form.method = 'POST';
   form.setAttribute('novalidate', '');
   form.setAttribute('aria-label', 'Qualified inquiry form');
+
+  /* KNOCH-039: Formspree honeypot. _gotcha is Formspree's reserved
+     field name — non-empty triggers their server-side spam filter
+     before counting against the monthly quota. Off-screen +
+     tabindex=-1 + aria-hidden so neither sighted nor screen-reader
+     users encounter it. */
+  const honeypot = document.createElement('input');
+  honeypot.type = 'text';
+  honeypot.name = '_gotcha';
+  honeypot.tabIndex = -1;
+  honeypot.autocomplete = 'off';
+  honeypot.setAttribute('aria-hidden', 'true');
+  honeypot.style.cssText = 'position:absolute; left:-9999px; opacity:0; height:0; width:0; pointer-events:none;';
+  form.appendChild(honeypot);
+
+  /* KNOCH-039: subject line for the studio inbox. Formspree
+     interpolates {field} references against form data — the email
+     lands as "[Knoch · Inquiry — Homepage] wedding — Alex Smith"
+     so we can tell at a glance which surface (homepage CTA vs
+     /contact.html) generated each inquiry. */
+  const subject = document.createElement('input');
+  subject.type = 'hidden';
+  subject.name = '_subject';
+  subject.value = '[Knoch · Inquiry — Homepage] {projectType} — {name}';
+  form.appendChild(subject);
 
   // Section title + assurance text (above progress)
   const intro = document.createElement('div');
@@ -351,51 +378,119 @@ function _collectStepData(panel, stepConfig, data) {
   }
 }
 
-function _handleSubmit(form, data, prefersReduced) {
-  console.log('[KNOCH-030] Inquiry submitted:', data);
+async function _handleSubmit(form, data, prefersReduced) {
+  /* KNOCH-039: real submission via Formspree.
+     1. POST form data (FormData(form) picks up the honeypot + subject
+        + every step's inputs since they're all inside the form)
+     2. on { ok: true } \u2192 run the existing iris-reveal confirmation
+     3. on non-OK / network error / timeout \u2192 restore the button +
+        inline error pointing at hello@knoch.media as the fallback */
 
-  // TODO: POST to backend (Netlify Functions, Formspree, or Sanity webhook)
-  // For now, show a branded confirmation with aperture reveal.
+  /* isMobile defined locally \u2014 original code referenced an
+     out-of-scope variable; safer to derive it here. */
+  const isMobile = window.matchMedia('(max-width: 800px)').matches;
 
-  const stepsContainer = form.querySelector('.inquiry-steps');
-  const nav = form.querySelector('.inquiry-nav');
+  const submitBtn = form.querySelector('.inquiry-btn--next');
+  const originalLabel = submitBtn?.textContent;
 
-  const confirmation = document.createElement('div');
-  confirmation.className = 'inquiry-step active inquiry-confirm';
-  confirmation.style.position = 'relative';
-  confirmation.style.clipPath = 'circle(75% at 50% 50%)';
-  confirmation.style.opacity = '1';
-  confirmation.style.pointerEvents = 'auto';
-  confirmation.innerHTML = `
-    <h3 class="inquiry-heading">Thank you. We\u2019ll be in <em>touch.</em></h3>
-    <p>Expect a response within 24\u201348 hours.</p>
-  `;
-
-  if (!prefersReduced && !isMobile) {
-    gsap.to(stepsContainer, {
-      clipPath: 'circle(0% at 50% 50%)',
-      opacity: 0,
-      duration: 0.5,
-      ease: 'power2.in',
-      onComplete: () => {
-        stepsContainer.innerHTML = '';
-        stepsContainer.appendChild(confirmation);
-        gsap.fromTo(stepsContainer,
-          { clipPath: 'circle(0% at 50% 50%)', opacity: 0 },
-          { clipPath: 'circle(75% at 50% 50%)', opacity: 1, duration: 0.7, ease: 'power2.out' }
-        );
-      },
-    });
-  } else {
-    /* KNOCH-041: mobile + reduced-motion - instant swap, no iris.
-       Clear inline styles in case a prior transition left them set. */
-    stepsContainer.style.cssText = '';
-    stepsContainer.innerHTML = '';
-    stepsContainer.appendChild(confirmation);
+  /* Loading state \u2014 disable + label swap */
+  if (submitBtn) {
+    submitBtn.disabled = true;
+    submitBtn.classList.add('is-sending');
+    submitBtn.textContent = 'SENDING\u2026';
   }
 
-  // Hide nav buttons
-  if (nav) nav.style.display = 'none';
+  /* AbortController gives us a 10s ceiling on a hung connection */
+  const SUBMIT_TIMEOUT_MS = 10_000;
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), SUBMIT_TIMEOUT_MS);
+
+  try {
+    const res = await fetch(form.action, {
+      method:  'POST',
+      body:    new FormData(form),
+      headers: { Accept: 'application/json' },
+      signal:  controller.signal,
+    });
+    clearTimeout(timeoutId);
+
+    if (!res.ok) {
+      let detail = '';
+      try {
+        const body = await res.json();
+        if (Array.isArray(body.errors) && body.errors[0]?.message) {
+          detail = ` (${body.errors[0].message})`;
+        }
+      } catch { /* non-JSON body \u2014 ignore */ }
+      throw new Error(`Formspree responded ${res.status}${detail}`);
+    }
+
+    /* \u2500\u2500 Success: existing iris-reveal confirmation flow \u2500\u2500\u2500\u2500\u2500\u2500 */
+
+    const stepsContainer = form.querySelector('.inquiry-steps');
+    const nav = form.querySelector('.inquiry-nav');
+
+    const confirmation = document.createElement('div');
+    confirmation.className = 'inquiry-step active inquiry-confirm';
+    confirmation.style.position = 'relative';
+    confirmation.style.clipPath = 'circle(75% at 50% 50%)';
+    confirmation.style.opacity = '1';
+    confirmation.style.pointerEvents = 'auto';
+    confirmation.innerHTML = `
+      <h3 class="inquiry-heading">Thank you. We\u2019ll be in <em>touch.</em></h3>
+      <p>Expect a response within 24\u201348 hours.</p>
+    `;
+
+    if (!prefersReduced && !isMobile) {
+      gsap.to(stepsContainer, {
+        clipPath: 'circle(0% at 50% 50%)',
+        opacity: 0,
+        duration: 0.5,
+        ease: 'power2.in',
+        onComplete: () => {
+          stepsContainer.innerHTML = '';
+          stepsContainer.appendChild(confirmation);
+          gsap.fromTo(stepsContainer,
+            { clipPath: 'circle(0% at 50% 50%)', opacity: 0 },
+            { clipPath: 'circle(75% at 50% 50%)', opacity: 1, duration: 0.7, ease: 'power2.out' }
+          );
+        },
+      });
+    } else {
+      /* KNOCH-041: mobile + reduced-motion \u2014 instant swap, no iris. */
+      stepsContainer.style.cssText = '';
+      stepsContainer.innerHTML = '';
+      stepsContainer.appendChild(confirmation);
+    }
+
+    if (nav) nav.style.display = 'none';
+    return;
+  } catch (err) {
+    clearTimeout(timeoutId);
+
+    /* Restore the submit button so the visitor can retry */
+    if (submitBtn) {
+      submitBtn.disabled = false;
+      submitBtn.classList.remove('is-sending');
+      submitBtn.textContent = originalLabel || 'Submit';
+    }
+
+    /* Inline error inside the nav row, near the button. role="alert"
+       triggers a screen-reader announcement. */
+    const nav = form.querySelector('.inquiry-nav');
+    if (nav) {
+      nav.querySelectorAll('.inquiry-error').forEach(el => el.remove());
+      const errEl = document.createElement('span');
+      errEl.className = 'inquiry-error';
+      errEl.setAttribute('role', 'alert');
+      errEl.style.cssText = 'display:block; margin-top:1rem; font-family:var(--font-mono); font-size:11px; color:#c97070; letter-spacing:0.08em; line-height:1.5;';
+      const msg = err.name === 'AbortError'
+        ? "Request timed out. Try again, or email hello@knoch.media directly."
+        : "Couldn't deliver right now. Try again, or email hello@knoch.media directly.";
+      errEl.textContent = msg;
+      nav.appendChild(errEl);
+    }
+  }
 
   // Update progress to full
   const fill = form.querySelector('.inquiry-progress-fill');
