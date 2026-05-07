@@ -143,18 +143,21 @@ function _initMobileNav() {
 }
 
 /* Liquid-glass chrome — fades frosted backdrop panes in on BOTH the
-   top navbar and the bottom timecode bar once the interlude reaches
-   the top of the viewport. The hero stays clean (mix-blend-mode
-   handles its dark cinematography); from interlude onward both
-   chrome surfaces sit over a soft glass strip so they read against
-   any of the busier sections that follow.
+   top navbar and the bottom timecode bar once the visitor has
+   scrolled past the page's opening. The hero / page top stays
+   clean (mix-blend-mode handles its dark cinematography); past
+   that, both chrome surfaces sit over a soft glass strip so they
+   read against any of the busier sections that follow.
 
-   The trigger element is the homepage interlude. On other pages
-   (about / portfolio / project / contact) the element doesn't exist,
-   so the glass simply turns on at page load via a fallback below.
-   That's the desired behaviour - secondary pages don't have a
-   full-bleed cinematic hero, so the chrome wants the glass surface
-   from frame 1.
+   Trigger varies by page:
+     - Homepage: ScrollTrigger anchored to #interlude — fires when
+       the interlude top reaches just below the chrome bar (the
+       moment hero gives way to interlude content).
+     - Other pages (about / portfolio / project / contact): no
+       interlude anchor, so the trigger fires at ~10 % of total
+       document scroll. Percentage scales naturally across page
+       lengths and matches the homepage principle (clear chrome
+       over the opening, glass once you've moved past it).
 
    Top + bottom toggle in lockstep so the navbar and the timecode bar
    always read as one consistent chrome treatment — no half-frosted
@@ -177,11 +180,24 @@ function _initGlassHeader() {
   const interlude = document.getElementById('interlude');
 
   if (!interlude) {
-    /* Non-homepage entry — no hero-to-interlude transition to scrub
-       against, so just keep the glass on permanently. The chrome
-       transition still fires once on load so it fades in cleanly
-       rather than snapping. */
-    setGlass(true);
+    /* Non-homepage entry — no interlude anchor, so trigger on the
+       page's scroll progress instead. Glass fades in once the
+       visitor has scrolled ~10 % of the document; reverts when
+       they scroll back to the top. Matches the homepage principle
+       (clear chrome over the page's opening, glass once you've
+       moved past it) without depending on a section that only
+       exists on the homepage.
+
+       trigger: document.body + start: '10% top' = when 10 % down
+       the body reaches viewport top, i.e. scrollTop is 10 % of
+       total page height. Percentage scales naturally to long pages
+       (about: long story scroll) and short ones (contact form). */
+    ScrollTrigger.create({
+      trigger: document.body,
+      start: '10% top',
+      onEnter:     () => setGlass(true),
+      onLeaveBack: () => setGlass(false),
+    });
     return;
   }
 
