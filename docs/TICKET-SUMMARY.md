@@ -1,7 +1,7 @@
 # Knoch Media — Ticket Summary
 
 > **Living document.** Updated whenever tickets are created, modified, split, or closed.  
-> Last updated: 2026-05-07 | Total tickets: 30 | Open: 5 | In progress: 0 | In review: 0 | Done: 21 | Deferred: 4 | Phases 1–4 shipped to main 🚀
+> Last updated: 2026-05-07 | Total tickets: 30 | Open: 4 | In progress: 1 | In review: 0 | Done: 21 | Deferred: 4 | Phases 1–4 shipped to main 🚀
 
 ---
 
@@ -94,7 +94,7 @@ Run in this exact order: perf first (changes markup), then mobile (tests perf ch
 
 | ID | Title | Status | Branch | Notes |
 |----|-------|--------|--------|-------|
-| [KNOCH-019](tickets/KNOCH-019.md) | Performance Optimization — Images, Build, CWV | `⬜` | — | Lighthouse ≥85 mobile target |
+| [KNOCH-019](tickets/KNOCH-019.md) | Performance Optimization — Images, Build, CWV | `🔵` | `feature/KNOCH-019-performance` | Lighthouse ≥85 mobile target |
 | [KNOCH-020](tickets/KNOCH-020.md) | Responsive / Mobile Adaptations | `⬜` | — | 800px breakpoint; reel → CSS snap |
 | [KNOCH-021](tickets/KNOCH-021.md) | Accessibility Pass — WCAG 2.1 AA | `⬜` | — | Reduced motion, focus, ARIA |
 
@@ -173,6 +173,20 @@ CMS layer (cuts across phases — wire each section after it is built):
 ## Changelog
 
 All modifications to this document and ticket files are logged here. Tester agent and code review feedback should be recorded as entries.
+
+---
+
+### 2026-05-07 — KNOCH-019 implementation started — IN PROGRESS
+
+**Action:** Feature branch created; implementation in progress
+**Tickets affected:** KNOCH-019
+**Reason:** First ticket of Phase 5 polish trio. Phase 4 just shipped to main; the trio (perf → mobile → a11y) is the launch path. KNOCH-019 covers the perf-specific work that's not already handled by individual component tickets — image optimisation, WebP pipeline, GSAP frame-budget knobs, per-page meta / SEO / structured data. Largest-leverage item is the LCP image (hero `reel-01.png` is 2 MB raw); converting all assets to WebP siblings + serving them via image-set() should be the single biggest mobile-Lighthouse win.
+**Changes:**
+- Branch `feature/KNOCH-019-performance` cut from dev (716bb9f).
+- KNOCH-019: Status TODO → IN PROGRESS, Branch line added to ticket file.
+- TICKET-SUMMARY row swapped to 🔵 with branch column filled.
+- Header counts updated: Open 5→4, In progress 0→1.
+**Requested by:** /implement-ticket auto-detect (Enoch)
 
 ---
 
