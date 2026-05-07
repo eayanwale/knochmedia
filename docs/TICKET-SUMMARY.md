@@ -1,7 +1,7 @@
 # Knoch Media — Ticket Summary
 
 > **Living document.** Updated whenever tickets are created, modified, split, or closed.  
-> Last updated: 2026-05-06 | Total tickets: 30 | Open: 6 | In progress: 0 | In review: 0 | Done: 20 | Deferred: 4 | Phases 1–3 shipped to main 🚀
+> Last updated: 2026-05-06 | Total tickets: 30 | Open: 5 | In progress: 1 | In review: 0 | Done: 20 | Deferred: 4 | Phases 1–3 shipped to main 🚀
 
 ---
 
@@ -83,7 +83,7 @@ Build in this order: About → Portfolio page → Project detail → Contact →
 
 | ID | Title | Status | Branch | Notes |
 |----|-------|--------|--------|-------|
-| [KNOCH-017](tickets/KNOCH-017.md) | YouTube Integration — Lightbox + Showreel | `⬜` | — | Lazy iframe inject on click |
+| [KNOCH-017](tickets/KNOCH-017.md) | YouTube Integration — Lightbox + Showreel | `🔵` | `feature/KNOCH-017-youtube-integration` | Lazy iframe inject on click |
 | [KNOCH-018](tickets/KNOCH-018.md) | Instagram Feed Integration | `⏸` | — | Deferred — footer icon link covers it |
 
 ---
@@ -173,6 +173,20 @@ CMS layer (cuts across phases — wire each section after it is built):
 ## Changelog
 
 All modifications to this document and ticket files are logged here. Tester agent and code review feedback should be recorded as entries.
+
+---
+
+### 2026-05-06 — KNOCH-017 implementation started — IN PROGRESS
+
+**Action:** Feature branch created; implementation in progress
+**Tickets affected:** KNOCH-017
+**Reason:** First ticket of Phase 4. The lightbox modal itself was built under KNOCH-012 and is already wired through tile-router.js for archive tiles, portfolio cards, and the project-page CTA — KNOCH-017 closes the remaining gaps: (1) honour the `color=white` AC param on the iframe URL, (2) route reel cards with `linkType: 'youtube'` through the lightbox instead of opening a new tab, (3) add the "PLAY REEL" hero CTA with cinematic chrome (`▢ 16:9 · 24FPS` + `TC` overlay + maxresdefault thumbnail) per the cinema-vérité reference.
+**Changes:**
+- Branch `feature/KNOCH-017-youtube-integration` cut from dev (a6dabb4).
+- KNOCH-017: Status TODO → IN PROGRESS, Branch line added to ticket file.
+- TICKET-SUMMARY row swapped to 🔵 with branch column filled.
+- Header counts updated: Open 6→5, In progress 0→1.
+**Requested by:** /implement-ticket auto-detect (Enoch)
 
 ---
 
