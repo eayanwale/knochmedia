@@ -142,21 +142,37 @@ function _initMobileNav() {
   }, { passive: true });
 }
 
-/* Liquid-glass header — fades a frosted backdrop pane in once the
-   interlude reaches the top of the viewport. The hero stays clean
-   (mix-blend-mode handles its dark cinematography); from interlude
-   onward the navbar sits over a soft glass strip so it reads against
+/* Liquid-glass chrome — fades frosted backdrop panes in on BOTH the
+   top navbar and the bottom timecode bar once the interlude reaches
+   the top of the viewport. The hero stays clean (mix-blend-mode
+   handles its dark cinematography); from interlude onward both
+   chrome surfaces sit over a soft glass strip so they read against
    any of the busier sections that follow.
 
    The trigger element is the homepage interlude. On other pages
    (about / portfolio / project / contact) the element doesn't exist,
    so the glass simply turns on at page load via a fallback below.
    That's the desired behaviour - secondary pages don't have a
-   full-bleed cinematic hero, so the navbar wants the glass surface
-   from frame 1. */
+   full-bleed cinematic hero, so the chrome wants the glass surface
+   from frame 1.
+
+   Top + bottom toggle in lockstep so the navbar and the timecode bar
+   always read as one consistent chrome treatment — no half-frosted
+   state where the top is glass and the bottom is still doing the
+   mix-blend-mode invert. */
 function _initGlassHeader() {
   const chrome = document.getElementById('chrome');
   if (!chrome) return;
+
+  /* timecode bar is part of the same chrome treatment but lives on a
+     separate fixed element. May be missing on a future minimal page;
+     guard with a no-op so the function still toggles the navbar. */
+  const timecodeBar = document.querySelector('.timecode-bar');
+
+  const setGlass = (on) => {
+    chrome.classList.toggle('is-glass', on);
+    timecodeBar?.classList.toggle('is-glass', on);
+  };
 
   const interlude = document.getElementById('interlude');
 
@@ -165,7 +181,7 @@ function _initGlassHeader() {
        against, so just keep the glass on permanently. The chrome
        transition still fires once on load so it fades in cleanly
        rather than snapping. */
-    chrome.classList.add('is-glass');
+    setGlass(true);
     return;
   }
 
@@ -179,8 +195,8 @@ function _initGlassHeader() {
   ScrollTrigger.create({
     trigger: interlude,
     start: 'top top+=80',
-    onEnter:     () => chrome.classList.add('is-glass'),
-    onLeaveBack: () => chrome.classList.remove('is-glass'),
+    onEnter:     () => setGlass(true),
+    onLeaveBack: () => setGlass(false),
   });
 }
 
