@@ -1,0 +1,109 @@
+/*
+  error.css — 404 + 500 error page layout (KNOCH-038)
+  =====================================================
+  Both error pages share the same vertical-centered hero layout.
+  No hero image — empty space reinforces the "no frame found" /
+  "roll jammed" idea. Headline + accent + subtext + two CTAs.
+  All other styling reuses chrome.css, cursor.css, footer.css,
+  global.css already imported on each page.
+*/
+
+.error-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 12rem 6vw 8rem;
+  position: relative;
+}
+
+.error-meta {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--amber);
+  margin-bottom: 2rem;
+}
+
+.error-headline {
+  font-family: var(--font-serif);
+  font-weight: 300;
+  font-size: clamp(56px, 11vw, 160px);
+  line-height: 0.95;
+  letter-spacing: -0.04em;
+  color: var(--paper);
+  margin: 0 0 1rem;
+  max-width: 16ch;
+}
+
+.error-headline em {
+  font-style: italic;
+  color: var(--amber);
+}
+
+.error-sub {
+  font-family: var(--font-sans);
+  font-size: clamp(15px, 1.5vw, 18px);
+  line-height: 1.65;
+  color: rgba(237, 230, 216, 0.55);
+  max-width: 38em;
+  margin: 1.5rem 0 3rem;
+}
+
+.error-sub a {
+  color: var(--amber);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(232, 162, 58, 0.35);
+  padding-bottom: 1px;
+  transition: border-color 0.3s var(--ease-cinematic);
+}
+
+.error-sub a:hover,
+.error-sub a:focus-visible {
+  border-bottom-color: var(--amber);
+}
+
+.error-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+  justify-content: center;
+  align-items: center;
+}
+
+.error-cta {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--amber);
+  text-decoration: none;
+  padding: 1rem 0;
+  border-bottom: 1px solid var(--amber);
+  transition: opacity 0.3s var(--ease-cinematic);
+}
+
+.error-cta--secondary {
+  color: rgba(237, 230, 216, 0.7);
+  border-bottom-color: rgba(237, 230, 216, 0.4);
+}
+
+.error-cta:hover,
+.error-cta:focus-visible {
+  opacity: 0.7;
+}
+
+@media (max-width: 800px) {
+  .error-page {
+    padding: 10rem 6vw 6rem;
+  }
+
+  .error-actions {
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+}
