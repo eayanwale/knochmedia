@@ -65,7 +65,11 @@
     <div class="chrome" id="chrome">
       <div class="chrome-grid">
 
-        <a class="mark" href="/" aria-label="Knoch — back to home">Knoch<span class="dot" aria-hidden="true">.</span></a>
+        <a class="mark" href="/" aria-label="Knoch Media — back to home">
+          <img class="mark-logo" src="/assets/logo/logo.webp" alt="" aria-hidden="true"
+               onerror="this.parentNode.classList.add('mark-fallback'); this.remove();" />
+          <span class="mark-text">Knoch<span class="dot" aria-hidden="true">.</span></span>
+        </a>
 
         <nav class="nav-center" aria-label="Main navigation">
           <a href="/portfolio.html" aria-current="page">Work</a>
