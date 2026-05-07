@@ -196,6 +196,15 @@ export async function initTestimonial() {
   if (!section) return;
 
   const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  /* KNOCH-021: drop the scroll-tied per-word reveal on phones — touch
+     visitors can't generate the wheel events that drive the reveal,
+     so the section was rendering as outlined ghost text that never
+     filled in. Treat mobile the same as prefers-reduced-motion for
+     the text-reveal flow: render the full quote immediately on each
+     slide, and skip the wheel-intercept setup since there are no
+     wheel events to intercept anyway. */
+  const isMobile = window.matchMedia('(max-width: 800px)').matches;
+  const skipScrollWrite = prefersReduced || isMobile;
 
   const list = document.createElement('div');
   list.className = 'testimonial-list';
@@ -326,7 +335,7 @@ export async function initTestimonial() {
         const item = buildItem(testimonials[idx]);
         slider.appendChild(item);
 
-        if (prefersReduced) {
+        if (skipScrollWrite) {
           busy = false;
           textRevealed = true;
           return;
@@ -522,7 +531,7 @@ export async function initTestimonial() {
         if (inView) {
           if (current === -1) goTo(0);
           startTimer();
-          if (!prefersReduced) startIntercepting();
+          if (!skipScrollWrite) startIntercepting();
         } else {
           stopTimer();
           stopIntercepting();
