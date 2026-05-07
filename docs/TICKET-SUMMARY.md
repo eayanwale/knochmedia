@@ -1,7 +1,7 @@
 # Knoch Media — Ticket Summary
 
 > **Living document.** Updated whenever tickets are created, modified, split, or closed.  
-> Last updated: 2026-05-07 | Total tickets: 30 | Open: 3 | In progress: 0 | In review: 0 | Done: 23 | Deferred: 4 | Phases 1–4 shipped to main 🚀
+> Last updated: 2026-05-07 | Total tickets: 34 | Open: 7 | In progress: 0 | In review: 0 | Done: 23 | Deferred: 4 | Phases 1–4 shipped to main 🚀
 
 ---
 
@@ -100,6 +100,19 @@ Run in this exact order: perf first (changes markup), then mobile (tests perf ch
 
 ---
 
+## Phase 6 — Launch & SEO
+
+Three launch-readiness tickets + one post-launch SEO deepening. KNOCH-039 (form anti-spam + real submission) is the launch-blocker — `/contact.html` currently posts to a placeholder. KNOCH-037 and KNOCH-038 are small polish wins to land alongside it. KNOCH-040 is a bigger architectural change deferred to post-launch.
+
+| ID | Title | Status | Branch | Notes |
+|----|-------|--------|--------|-------|
+| [KNOCH-037](tickets/KNOCH-037.md) | SEO Basics — sitemap, robots, Article schema | `⬜` | — | After KNOCH-021 |
+| [KNOCH-038](tickets/KNOCH-038.md) | Custom 404 Page | `⬜` | — | Half-day; can bundle with 037 |
+| [KNOCH-039](tickets/KNOCH-039.md) | Contact Form — real submit + anti-spam (Vercel function + Turnstile + honeypot) | `⬜` | — | **Launch-blocker** |
+| [KNOCH-040](tickets/KNOCH-040.md) | Per-project SEO + Static `/project/<slug>` Routes | `⬜` | — | Post-launch deepening |
+
+---
+
 ## Dependency Graph
 
 ```
@@ -173,6 +186,23 @@ CMS layer (cuts across phases — wire each section after it is built):
 ## Changelog
 
 All modifications to this document and ticket files are logged here. Tester agent and code review feedback should be recorded as entries.
+
+---
+
+### 2026-05-07 — Phase 6 added: 4 launch-readiness tickets
+
+**Action:** Created KNOCH-037 → KNOCH-040; new "Phase 6 — Launch & SEO" section in TICKET-SUMMARY.
+**Tickets affected:** KNOCH-037, KNOCH-038, KNOCH-039, KNOCH-040
+**Reason:** Enoch raised three change requests after KNOCH-020 merged — SEO, error pages, anti-spam — and asked for a write-up of what they'd look like as tickets and how to sequence them. Numbers 031–036 were already taken by older tickets / hotfixes, so the new entries land at 037–040. Phase 6 is named "Launch & SEO" and slots in after the Phase 5 polish trio.
+**Changes:**
+- New ticket files:
+  - `KNOCH-037.md` — SEO Basics. Sitemap.xml + robots.txt + per-project Article JSON-LD on /project.html. P1. Cleanly fits after KNOCH-021.
+  - `KNOCH-038.md` — Custom 404 Page. Branded "ROLL ENDED" page with reused chrome, vercel.json wired so unknown routes serve it. P2, half-day.
+  - `KNOCH-039.md` — Contact form real submission + anti-spam. **Launch-blocker** (P0). Recommends Vercel serverless function + Resend for transport, Cloudflare Turnstile + honeypot for anti-spam. /contact.html currently posts to a placeholder.
+  - `KNOCH-040.md` — Per-project SEO + static `/project/<slug>` routes. Build-time render of one HTML per project with per-project og:image, canonical, Article schema. P3, deferred to post-launch.
+- TICKET-SUMMARY: new Phase 6 section after Phase 5; header counts Total 30→34, Open 3→7.
+- Recommended sequencing: KNOCH-021 → KNOCH-039 → KNOCH-037 + KNOCH-038 (could bundle as one PR) → Phase 5 + 6 squash to main → KNOCH-040 post-launch.
+**Requested by:** Enoch (post-KNOCH-020 review)
 
 ---
 
