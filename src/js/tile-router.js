@@ -41,7 +41,12 @@ import { openVideoLightbox } from './video-lightbox.js';
 const TRANSITION_DURATION_S = 0.55;
 
 function _navigateToProject(slug) {
-  window.location.href = `/project.html?id=${encodeURIComponent(slug)}`;
+  /* KNOCH-040: route to the static /project/<slug> page instead of
+     /project.html?id=<slug>. Each slug has a pre-rendered HTML file
+     emitted by scripts/render-projects.mjs at build time, with
+     per-project meta + Article JSON-LD baked in. Vercel auto-serves
+     dist/project/<slug>.html at the cleaner URL. */
+  window.location.href = `/project/${encodeURIComponent(slug)}`;
 }
 
 /* Run the expanding-tile transition then navigate. The clone is
