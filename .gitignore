@@ -34,3 +34,4 @@ claude-code-setup-guide.md
 *.hcl
 *.tfvars
 *.lock
+reference/
