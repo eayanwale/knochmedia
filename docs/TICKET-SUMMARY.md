@@ -1,7 +1,7 @@
 # Knoch Media — Ticket Summary
 
 > **Living document.** Updated whenever tickets are created, modified, split, or closed.  
-> Last updated: 2026-05-07 | Total tickets: 35 | Open: 2 | In progress: 1 | In review: 1 | Done: 26 | Deferred: 5 | Phases 1–5 shipped to main 🚀
+> Last updated: 2026-05-07 | Total tickets: 35 | Open: 2 | In progress: 0 | In review: 2 | Done: 26 | Deferred: 5 | Phases 1–5 shipped to main 🚀
 
 ---
 
@@ -108,7 +108,7 @@ Three launch-readiness tickets + one post-launch SEO deepening. KNOCH-039 (form 
 | ID | Title | Status | Branch | Notes |
 |----|-------|--------|--------|-------|
 | [KNOCH-037](tickets/KNOCH-037.md) | SEO Basics — sitemap, robots, Article schema | `🔵` | `feature/KNOCH-037-seo-basics` | In review — PR #32 dev → test |
-| [KNOCH-038](tickets/KNOCH-038.md) | Custom 404 + 500 Pages | `🔵` | `feature/KNOCH-038-error-pages` | In progress — bundling with 037 in PR #32 |
+| [KNOCH-038](tickets/KNOCH-038.md) | Custom 404 + 500 Pages | `🔵` | `feature/KNOCH-038-error-pages` | In review — bundled with 037 in PR #32 |
 | [KNOCH-039](tickets/KNOCH-039.md) | Contact Form — real submit + anti-spam (Vercel function + Turnstile + honeypot) | `⬜` | — | **Launch-blocker** |
 | [KNOCH-040](tickets/KNOCH-040.md) | Per-project SEO + Static `/project/<slug>` Routes | `⬜` | — | Post-launch deepening |
 
@@ -187,6 +187,19 @@ CMS layer (cuts across phases — wire each section after it is built):
 ## Changelog
 
 All modifications to this document and ticket files are logged here. Tester agent and code review feedback should be recorded as entries.
+
+---
+
+### 2026-05-07 — KNOCH-038 merged to dev + bundled into PR #32 — IN REVIEW
+
+**Action:** `feature/KNOCH-038-error-pages` merged into dev. Joins PR #32 dev → test alongside KNOCH-037. PR title + description updated to reflect both tickets.
+**Tickets affected:** KNOCH-038 (KNOCH-037 status unchanged — already in review)
+**Reason:** Implementation complete. PR #32 now bundles SEO basics (sitemap + robots + Article JSON-LD) + custom 404 / 500 error pages + the recent dev-only commits (Phase 5 SHIPPED bookkeeping, reference/ folder move, knochmedia.xyz → knoch.media domain swap). Header counts: In progress 1→0, In review 1→2.
+**Changes:**
+- KNOCH-038: Status 🔵 In progress → 🔵 In review.
+- Header counts: In progress 1→0, In review 1→2.
+
+**Requested by:** Enoch — bundle 037 + 038 + "different error pages for whatever error could happen"
 
 ---
 
