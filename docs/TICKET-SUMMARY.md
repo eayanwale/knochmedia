@@ -1,7 +1,7 @@
 # Knoch Media — Ticket Summary
 
 > **Living document.** Updated whenever tickets are created, modified, split, or closed.  
-> Last updated: 2026-05-07 | Total tickets: 34 | Open: 7 | In progress: 0 | In review: 0 | Done: 23 | Deferred: 4 | Phases 1–4 shipped to main 🚀
+> Last updated: 2026-05-07 | Total tickets: 35 | Open: 7 | In progress: 1 | In review: 0 | Done: 23 | Deferred: 4 | Phases 1–4 shipped to main 🚀
 
 ---
 
@@ -97,6 +97,7 @@ Run in this exact order: perf first (changes markup), then mobile (tests perf ch
 | [KNOCH-019](tickets/KNOCH-019.md) | Performance Optimization — Images, Build, CWV | `✅` | `feature/KNOCH-019-performance` | Done — merged to test (PR #25 + footer polish bundled); Lighthouse verification pending |
 | [KNOCH-020](tickets/KNOCH-020.md) | Responsive / Mobile Adaptations | `✅` | `feature/KNOCH-020-mobile` | Done — merged to test (PR #26 + reel-vertical / project-others-hide / per-slide hero meta polish bundled) |
 | [KNOCH-021](tickets/KNOCH-021.md) | Accessibility Pass — WCAG 2.1 AA | `⬜` | — | Reduced motion, focus, ARIA |
+| [KNOCH-041](tickets/KNOCH-041.md) | Mobile Sustainable Mode — strip GSAP / Lenis / scroll-driven animation | `🔵` | `feature/KNOCH-041-mobile-sustainable` | P0 — second pass after KNOCH-020; fixes back-to-works + contact overlap |
 
 ---
 
@@ -186,6 +187,20 @@ CMS layer (cuts across phases — wire each section after it is built):
 ## Changelog
 
 All modifications to this document and ticket files are logged here. Tester agent and code review feedback should be recorded as entries.
+
+---
+
+### 2026-05-07 — KNOCH-041 created — IN PROGRESS (P0 mobile fix-pass)
+
+**Action:** New ticket; feature branch cut from dev (85564a9)
+**Tickets affected:** KNOCH-041
+**Reason:** Live mobile review of KNOCH-020 found the cinematic stack still breaks on real phones — content not loading, glitchy scroll, transitions stuck on screen. KNOCH-020 gated some scroll-tied animations but missed the long tail (hero scroll-exit, frame parallax, tile-router transition, about chapters, inquiry/contact step transitions). Two specific bugs flagged: back-to-works leaves the project image stuck on screen (likely tile-router clone preserved by bfcache); the contact form's "skip the form" sidebar overlaps the form region under the mobile breakpoint.
+**Changes:**
+- New `docs/tickets/KNOCH-041.md` with the full audit + AC list.
+- TICKET-SUMMARY: Phase 5 table gains a KNOCH-041 row at 🔵 In Progress; header counts Total 34→35, In progress 0→1.
+- Branch `feature/KNOCH-041-mobile-sustainable` cut from dev.
+- Phase 5 polish trio is now KNOCH-019 ✅ + KNOCH-020 ✅ + KNOCH-021 ⬜ + KNOCH-041 🔵 (the last one is essentially a KNOCH-020 follow-up).
+**Requested by:** Enoch (live device review)
 
 ---
 

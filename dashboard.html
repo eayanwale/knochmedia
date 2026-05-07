@@ -127,7 +127,7 @@
   <!-- Stats -->
   <div class="stats">
     <div class="stat">
-      <div class="n" id="stat-total">34</div>
+      <div class="n" id="stat-total">35</div>
       <div class="l">Total tickets</div>
     </div>
     <div class="stat">
@@ -135,7 +135,7 @@
       <div class="l">Open</div>
     </div>
     <div class="stat">
-      <div class="n blue" id="stat-progress">0</div>
+      <div class="n blue" id="stat-progress">1</div>
       <div class="l">In progress</div>
     </div>
     <div class="stat">
@@ -152,10 +152,10 @@
   <div class="progress-wrap">
     <div class="progress-label">
       <span>Overall progress</span>
-      <span id="pct-label">23 / 34 tickets done</span>
+      <span id="pct-label">23 / 35 tickets done</span>
     </div>
     <div class="progress-track">
-      <div class="progress-fill" id="progress-fill" style="width:67.6%"></div>
+      <div class="progress-fill" id="progress-fill" style="width:65.7%"></div>
     </div>
   </div>
 
@@ -465,6 +465,13 @@
           <td class="tbranch">—</td>
           <td class="tpri p1">P1</td>
         </tr>
+        <tr>
+          <td class="tid">KNOCH-041</td>
+          <td class="ttitle"><a href="docs/tickets/KNOCH-041.md">Mobile Sustainable Mode — strip GSAP / Lenis on mobile</a></td>
+          <td><span class="badge badge-progress"><span class="dot dot-progress"></span>In Progress</span></td>
+          <td class="tbranch">feature/KNOCH-041-mobile-sustainable</td>
+          <td class="tpri p0">P0</td>
+        </tr>
       </tbody>
     </table>
   </div>
@@ -550,8 +557,8 @@
   // Live date
   document.getElementById('date-display').textContent = new Date().toLocaleDateString('en-US', { weekday:'short', year:'numeric', month:'short', day:'numeric' });
 
-  // Progress bar — "done" = merged to test (KNOCH-020 done; Phase 5 2/3, Phase 6 added with 4 new tickets)
-  const total = 34, done = 23;
+  // Progress bar — "done" = merged to test (KNOCH-041 added as a Phase 5 mobile fix-pass)
+  const total = 35, done = 23;
   document.getElementById('progress-fill').style.width = (done / total * 100).toFixed(1) + '%';
   document.getElementById('pct-label').textContent = done + ' / ' + total + ' tickets done';
 </script>
