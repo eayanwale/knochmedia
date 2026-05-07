@@ -1,7 +1,7 @@
 # Knoch Media — Ticket Summary
 
 > **Living document.** Updated whenever tickets are created, modified, split, or closed.  
-> Last updated: 2026-05-07 | Total tickets: 30 | Open: 4 | In progress: 1 | In review: 0 | Done: 21 | Deferred: 4 | Phases 1–4 shipped to main 🚀
+> Last updated: 2026-05-07 | Total tickets: 30 | Open: 4 | In progress: 0 | In review: 1 | Done: 21 | Deferred: 4 | Phases 1–4 shipped to main 🚀
 
 ---
 
@@ -173,6 +173,26 @@ CMS layer (cuts across phases — wire each section after it is built):
 ## Changelog
 
 All modifications to this document and ticket files are logged here. Tester agent and code review feedback should be recorded as entries.
+
+---
+
+### 2026-05-07 — KNOCH-019 PR opened — IN REVIEW
+
+**Action:** PR #25 opened dev → test
+**Tickets affected:** KNOCH-019
+**Reason:** Builder closed the perf pass with three focused improvements. (1) WebP image pipeline: new `scripts/optimize-images.mjs` (sharp, quality 80) generates `.webp` siblings for every JPG/PNG; `lazy-load.js` does runtime WebP detection + URL rewrite; HTML inline backgrounds across `index/about/portfolio` converted to `data-bg`; `hero.js` + `testimonial.js` + `frame.css` updated; LCP preload tags target `.webp`. Total assets 16.4 MB → 3.94 MB (-76%); hero LCP 1.96 MB → 39.6 KB (-98%). (2) Per-page meta + structured data: canonical URLs, Open Graph + Twitter cards on all 5 entries, new 1200×630 og-default.jpg, LocalBusiness JSON-LD on homepage. (3) GSAP frame-budget cap: `gsap.ticker.fps(60)` in `chrome.js` module scope to keep high-refresh-rate displays from doubling animation CPU.
+**Changes:**
+- KNOCH-019: Status IN PROGRESS → IN REVIEW; PR line added to ticket file.
+- PR #25 opened: dev → test at https://github.com/eayanwale/knochmedia/pull/25
+- Files added:
+  - `scripts/optimize-images.mjs` (~120 lines, sharp-based)
+  - `src/public/assets/og/og-default.jpg` (1200×630, 156 KB)
+  - 24 `.webp` siblings under `src/public/assets/`
+  - 4 `.webp` siblings under `src/assets/`
+- Files modified: package.json (sharp devDep + optimize:images npm script), src/index.html, src/about.html, src/portfolio.html, src/project.html, src/contact.html (data-bg + meta + JSON-LD), src/css/frame.css (image-set), src/js/hero.js, src/js/lazy-load.js, src/js/project-page.js, src/js/testimonial.js, src/js/chrome.js (ticker.fps).
+- Build: 57 modules → emit; main 32.04 kB / 9.96 kB gz; main.css 25.23 kB / 5.26 kB gz; 214 ms.
+- Header counts updated: In progress 1→0, In review 0→1.
+**Requested by:** Builder agent
 
 ---
 
