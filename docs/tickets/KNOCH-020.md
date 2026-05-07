@@ -1,7 +1,8 @@
 # KNOCH-020 — Responsive / Mobile Adaptations
 
-## Status: IN PROGRESS
+## Status: IN REVIEW
 ## Branch: feature/KNOCH-020-mobile
+## PR: https://github.com/eayanwale/knochmedia/pull/26
 ## Priority: P1 (high)
 ## Epic: EPIC-005 — Polish & Ship
 

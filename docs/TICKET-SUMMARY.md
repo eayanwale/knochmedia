@@ -1,7 +1,7 @@
 # Knoch Media — Ticket Summary
 
 > **Living document.** Updated whenever tickets are created, modified, split, or closed.  
-> Last updated: 2026-05-07 | Total tickets: 30 | Open: 3 | In progress: 1 | In review: 0 | Done: 22 | Deferred: 4 | Phases 1–4 shipped to main 🚀
+> Last updated: 2026-05-07 | Total tickets: 30 | Open: 3 | In progress: 0 | In review: 1 | Done: 22 | Deferred: 4 | Phases 1–4 shipped to main 🚀
 
 ---
 
@@ -173,6 +173,21 @@ CMS layer (cuts across phases — wire each section after it is built):
 ## Changelog
 
 All modifications to this document and ticket files are logged here. Tester agent and code review feedback should be recorded as entries.
+
+---
+
+### 2026-05-07 — KNOCH-020 PR opened — IN REVIEW
+
+**Action:** PR #26 opened dev → test
+**Tickets affected:** KNOCH-020
+**Reason:** Mobile pass closed. The audit confirmed most sections were already mobile-friendly from individual section tickets — three real gaps closed: (1) hamburger menu — `.nav-center` hides at ≤800 px and the new toggle + full-screen overlay nav replaces it across all 5 entries, with chrome.js cloning the desktop link list into the mobile overlay so there's one source of truth; (2) interlude strip parallax gated on mobile to avoid iOS rubber-band jitter; (3) portfolio.html card labels always-visible on mobile (homepage archive already had this). Plus a tap-target sweep — `.mark`, footer links, and social icons all bumped to ≥44 × 44 (WCAG 2.5.5).
+**Changes:**
+- KNOCH-020: Status IN PROGRESS → IN REVIEW; PR line added.
+- PR #26 opened: dev → test at https://github.com/eayanwale/knochmedia/pull/26
+- Files modified: src/index.html, src/about.html, src/portfolio.html, src/project.html, src/contact.html (toggle + overlay markup); src/css/chrome.css (~150 new lines for toggle + overlay), src/css/footer.css (mobile tap-padding), src/css/portfolio-page.css (mobile card-label visible); src/js/chrome.js (~95 lines for `_initMobileNav`), src/js/interlude.js (mobile gate).
+- Build: 167 ms; main.js 32.09 kB / 9.97 kB gz; bundle delta essentially nil.
+- Header counts updated: In progress 1→0, In review 0→1.
+**Requested by:** Builder agent
 
 ---
 
