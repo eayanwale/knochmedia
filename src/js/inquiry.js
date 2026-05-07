@@ -131,16 +131,16 @@ export function initInquiry() {
   sidebar.innerHTML = `
     <div class="inquiry-sidebar-block">
       <span class="inquiry-sidebar-tag">— Or skip the form</span>
-      <h3 class="inquiry-sidebar-heading">Book a 15-min call</h3>
+      <h3 class="inquiry-sidebar-heading">Book a 30-min call</h3>
       <p class="inquiry-sidebar-desc">Sometimes a real conversation tells us more than a form ever could.</p>
-      <a href="https://calendly.com/knochmedia" target="_blank" rel="noopener" class="inquiry-sidebar-link">Pick a time on my calendar \u2192</a>
+      <a href="https://calendly.com/knochmedia/30min" target="_blank" rel="noopener" class="inquiry-sidebar-link">Pick a time on my calendar \u2192</a>
     </div>
 
     <div class="inquiry-sidebar-block inquiry-sidebar-steps">
       <span class="inquiry-sidebar-tag">What happens next</span>
       <ol class="inquiry-next-steps">
         <li><span class="inquiry-next-num">01</span><span>I reply within 24 hrs with availability and a sample gallery for your event type.</span></li>
-        <li><span class="inquiry-next-num">02</span><span>If we\u2019re a fit, we hop on a 15-min call to talk vision and logistics.</span></li>
+        <li><span class="inquiry-next-num">02</span><span>If we\u2019re a fit, we hop on a 30-min call to talk vision and logistics.</span></li>
         <li><span class="inquiry-next-num">03</span><span>A custom proposal lands in your inbox within 48 hrs of the call.</span></li>
       </ol>
     </div>
