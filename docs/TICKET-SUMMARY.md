@@ -1,7 +1,7 @@
 # Knoch Media — Ticket Summary
 
 > **Living document.** Updated whenever tickets are created, modified, split, or closed.  
-> Last updated: 2026-05-07 | Total tickets: 30 | Open: 3 | In progress: 0 | In review: 1 | Done: 22 | Deferred: 4 | Phases 1–4 shipped to main 🚀
+> Last updated: 2026-05-07 | Total tickets: 30 | Open: 3 | In progress: 0 | In review: 0 | Done: 23 | Deferred: 4 | Phases 1–4 shipped to main 🚀
 
 ---
 
@@ -95,7 +95,7 @@ Run in this exact order: perf first (changes markup), then mobile (tests perf ch
 | ID | Title | Status | Branch | Notes |
 |----|-------|--------|--------|-------|
 | [KNOCH-019](tickets/KNOCH-019.md) | Performance Optimization — Images, Build, CWV | `✅` | `feature/KNOCH-019-performance` | Done — merged to test (PR #25 + footer polish bundled); Lighthouse verification pending |
-| [KNOCH-020](tickets/KNOCH-020.md) | Responsive / Mobile Adaptations | `🔵` | `feature/KNOCH-020-mobile` | 800px breakpoint; reel → CSS snap |
+| [KNOCH-020](tickets/KNOCH-020.md) | Responsive / Mobile Adaptations | `✅` | `feature/KNOCH-020-mobile` | Done — merged to test (PR #26 + reel-vertical / project-others-hide / per-slide hero meta polish bundled) |
 | [KNOCH-021](tickets/KNOCH-021.md) | Accessibility Pass — WCAG 2.1 AA | `⬜` | — | Reduced motion, focus, ARIA |
 
 ---
@@ -173,6 +173,21 @@ CMS layer (cuts across phases — wire each section after it is built):
 ## Changelog
 
 All modifications to this document and ticket files are logged here. Tester agent and code review feedback should be recorded as entries.
+
+---
+
+### 2026-05-07 — KNOCH-020 merged to test — ✅ DONE
+
+**Action:** PR #26 merged dev → test (regular merge, no squash)
+**Tickets affected:** KNOCH-020
+**Reason:** Mobile pass passed live review on dev. Hamburger menu shipped on all 5 entries; tap-target sweep complete. Polish bundled into the same PR per pre-merge review: homepage reel went from horizontal scroll-snap to vertical stack on mobile, project-page "Keep looking" section hidden on mobile, scroll-tied "text write" effects (reel-intro per-char cascade + interlude line reveal) gated to desktop, hero meta slate now changes per slide (`A QUIET PORTRAIT` → `A NIGHT OF WORSHIP` → `A NIGERIAN INTRODUCTION` → `A WEDDING IN MAY` → `HUSBAND AND WIFE` → `THE WOODSMEN`).
+**Changes:**
+- KNOCH-020: Status 🔵 In review → ✅ Done.
+- PR #26 merged at 2026-05-07T05:13:54Z; dev and test now aligned at c79c510.
+- Header counts updated: In review 1→0, Done 22→23.
+- Phase 5 progress: 2/3 (KNOCH-019 + KNOCH-020 done; KNOCH-021 a11y still open). No squash to main yet — phase rule says only squash after a completed phase.
+
+**Requested by:** Enoch
 
 ---
 

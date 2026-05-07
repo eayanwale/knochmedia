@@ -139,11 +139,11 @@
       <div class="l">In progress</div>
     </div>
     <div class="stat">
-      <div class="n yellow" id="stat-review">1</div>
+      <div class="n yellow" id="stat-review">0</div>
       <div class="l">In review</div>
     </div>
     <div class="stat">
-      <div class="n green" id="stat-done">22</div>
+      <div class="n green" id="stat-done">23</div>
       <div class="l">Done</div>
     </div>
   </div>
@@ -152,10 +152,10 @@
   <div class="progress-wrap">
     <div class="progress-label">
       <span>Overall progress</span>
-      <span id="pct-label">22 / 30 tickets done</span>
+      <span id="pct-label">23 / 30 tickets done</span>
     </div>
     <div class="progress-track">
-      <div class="progress-fill" id="progress-fill" style="width:73.3%"></div>
+      <div class="progress-fill" id="progress-fill" style="width:76.7%"></div>
     </div>
   </div>
 
@@ -454,7 +454,7 @@
         <tr>
           <td class="tid">KNOCH-020</td>
           <td class="ttitle"><a href="docs/tickets/KNOCH-020.md">Responsive / Mobile Adaptations</a></td>
-          <td><span class="badge badge-review"><span class="dot dot-review"></span>In Review</span></td>
+          <td><span class="badge badge-pass"><span class="dot dot-pass"></span>QA Passed</span></td>
           <td class="tbranch">feature/KNOCH-020-mobile</td>
           <td class="tpri p1">P1</td>
         </tr>
@@ -484,11 +484,7 @@
       </thead>
       <tbody>
         <tr>
-          <td><a href="https://github.com/eayanwale/knochmedia/pull/26" target="_blank">#26</a></td>
-          <td>feat(KNOCH-020): mobile pass — hamburger menu, interlude / tile / tap-target polish</td>
-          <td>KNOCH-020</td>
-          <td>dev → test</td>
-          <td><span class="badge badge-review"><span class="dot dot-review"></span>In Review</span></td>
+          <td colspan="5" style="text-align:center; color: rgba(237, 230, 216, 0.4); padding: 1.5rem 0;">No open pull requests. Phase 5 polish — 2 / 3 done.</td>
         </tr>
       </tbody>
     </table>
@@ -506,8 +502,8 @@
   // Live date
   document.getElementById('date-display').textContent = new Date().toLocaleDateString('en-US', { weekday:'short', year:'numeric', month:'short', day:'numeric' });
 
-  // Progress bar — "done" = merged to test (KNOCH-019 just landed; Phase 5 1/3)
-  const total = 30, done = 22;
+  // Progress bar — "done" = merged to test (KNOCH-020 just landed; Phase 5 2/3)
+  const total = 30, done = 23;
   document.getElementById('progress-fill').style.width = (done / total * 100).toFixed(1) + '%';
   document.getElementById('pct-label').textContent = done + ' / ' + total + ' tickets done';
 </script>
