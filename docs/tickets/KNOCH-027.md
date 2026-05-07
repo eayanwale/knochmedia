@@ -1,6 +1,6 @@
 # KNOCH-027 — Sanity CMS: Wire About Page to Sanity
 
-## Status: IN REVIEW
+## Status: DONE — merged to test (PR #29)
 
 ## Description
 Replace hardcoded content on `about.html` (KNOCH-013) with live data fetched from Sanity. The `aboutContent` document type is a singleton — only one document of this type exists; Enoch edits it directly in Studio.

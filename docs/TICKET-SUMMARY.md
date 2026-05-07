@@ -1,7 +1,7 @@
 # Knoch Media — Ticket Summary
 
 > **Living document.** Updated whenever tickets are created, modified, split, or closed.  
-> Last updated: 2026-05-07 | Total tickets: 35 | Open: 6 | In progress: 0 | In review: 1 | Done: 24 | Deferred: 4 | Phases 1–4 shipped to main 🚀
+> Last updated: 2026-05-07 | Total tickets: 35 | Open: 6 | In progress: 0 | In review: 0 | Done: 25 | Deferred: 4 | Phases 1–4 shipped to main 🚀
 
 ---
 
@@ -43,7 +43,7 @@ KNOCH-022 and KNOCH-023 are infrastructure — implement these first. The wiring
 | [KNOCH-024](tickets/KNOCH-024.md) | Wire Testimonials to Sanity | `✅` | `feature/KNOCH-024-wire-testimonials-sanity` | QA PASSED — merged to test |
 | [KNOCH-025](tickets/KNOCH-025.md) | Wire Gallery Reel to Sanity | `✅` | `feature/KNOCH-007-horizontal-reel` | `main.js` fetches `getFeaturedCollections()` → `initReel()`; 3 featured collections with Sanity CDN images; `subtitle` field added to schema |
 | [KNOCH-026](tickets/KNOCH-026.md) | Migrate Hero Images to Sanity CDN | `⏸` | — | Deferred — hero is LCP-critical and design-tied; static files are the correct approach |
-| [KNOCH-027](tickets/KNOCH-027.md) | Wire About Page to Sanity | `🔵` | `feature/KNOCH-027-wire-about-sanity` | In review — PR #29 dev → test |
+| [KNOCH-027](tickets/KNOCH-027.md) | Wire About Page to Sanity | `✅` | `feature/KNOCH-027-wire-about-sanity` | Done — merged to test (PR #29) |
 | [KNOCH-028](tickets/KNOCH-028.md) | Wire Services Page to Sanity | `⬜` | — | After services page is built |
 | [KNOCH-029](tickets/KNOCH-029.md) | Blog Listing Page | `⏸` | — | Deferred — blog schema needs redesign (dynamic related posts, YouTube + Instagram content types) |
 | [KNOCH-030](tickets/KNOCH-030.md) | Blog Post Detail Page | `⏸` | — | Deferred — blocked by KNOCH-029 redesign |
@@ -187,6 +187,20 @@ CMS layer (cuts across phases — wire each section after it is built):
 ## Changelog
 
 All modifications to this document and ticket files are logged here. Tester agent and code review feedback should be recorded as entries.
+
+---
+
+### 2026-05-07 — KNOCH-027 merged to test — ✅ DONE
+
+**Action:** PR #29 merged dev → test (regular merge — merge commit 65f2f3d).
+**Tickets affected:** KNOCH-027
+**Reason:** About-page Sanity hydration shipped clean. Wiring covers headline (with `*word*` italic-marker convention), subheadline, bio, headshot (Sanity CDN, lazy + async-decoded, 220px desktop / 160px mobile), specialties pill row, and the years stat (data-count + visible value + aria-label all sync to `yearsExperience`). Init order via `.finally()` guarantees `initAbout()` runs even on Sanity errors. Live API still returns `[]` for `aboutContent` — the static fallback path is the validated render until Enoch publishes the singleton in Studio.
+**Changes:**
+- KNOCH-027: Status 🔵 In review → ✅ Done.
+- Header counts: In review 1→0, Done 24→25.
+- Phase progress: CMS layer now 4/4 active (022 / 023 / 024 / 025 / 027 ✅; 026 / 029 / 030 deferred). KNOCH-028 (services) status review pending — `getServices()` exists in sanity.js but no services.html page in the build to render it on.
+
+**Requested by:** Enoch
 
 ---
 
