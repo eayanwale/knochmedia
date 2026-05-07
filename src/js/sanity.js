@@ -40,6 +40,14 @@ export function getServices() {
   return fetchQuery(`*[_type == "service"] | order(order asc)`)
 }
 
+/* Singleton — Studio enforces a single aboutContent doc via
+   __experimental_actions: ['update', 'publish']. Returns null if no
+   doc has been published yet, so callers can fall back to static copy. */
+export async function getAboutContent() {
+  const docs = await fetchQuery(`*[_type == "aboutContent"]`)
+  return Array.isArray(docs) ? (docs[0] ?? null) : null
+}
+
 export function imageUrl(source, width = 1500) {
   const ref = source?.asset?._ref ?? ''
   const parts = ref.split('-')
