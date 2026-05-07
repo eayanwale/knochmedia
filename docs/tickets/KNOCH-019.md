@@ -1,6 +1,7 @@
 # KNOCH-019 — Performance Optimization
 
-## Status: TODO
+## Status: IN PROGRESS
+## Branch: feature/KNOCH-019-performance
 ## Priority: P1 (high)
 ## Epic: EPIC-005 — Polish & Ship
 
