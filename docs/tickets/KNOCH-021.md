@@ -1,6 +1,6 @@
 # KNOCH-021 — Accessibility Pass
 
-## Status: IN PROGRESS
+## Status: MERGED TO DEV
 ## Priority: P1 (high)
 ## Epic: EPIC-005 — Polish & Ship
 

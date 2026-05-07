@@ -96,7 +96,7 @@ Run in this exact order: perf first (changes markup), then mobile (tests perf ch
 |----|-------|--------|--------|-------|
 | [KNOCH-019](tickets/KNOCH-019.md) | Performance Optimization — Images, Build, CWV | `✅` | `feature/KNOCH-019-performance` | Done — merged to test (PR #25 + footer polish bundled); Lighthouse verification pending |
 | [KNOCH-020](tickets/KNOCH-020.md) | Responsive / Mobile Adaptations | `✅` | `feature/KNOCH-020-mobile` | Done — merged to test (PR #26 + reel-vertical / project-others-hide / per-slide hero meta polish bundled) |
-| [KNOCH-021](tickets/KNOCH-021.md) | Accessibility Pass — WCAG 2.1 AA | `🔵` | `feature/KNOCH-021-a11y-pass` | In progress — finishing Phase 5 |
+| [KNOCH-021](tickets/KNOCH-021.md) | Accessibility Pass — WCAG 2.1 AA | `🔵` | `feature/KNOCH-021-a11y-pass` | Merged to dev — PR pending; finishes Phase 5 |
 | [KNOCH-041](tickets/KNOCH-041.md) | Mobile Sustainable Mode — strip GSAP / Lenis / scroll-driven animation | `✅` | `feature/KNOCH-041-mobile-sustainable` | Done — merged to test (PR #27 + image culling + chrome wordmark + hamburger close polish bundled) |
 
 ---
@@ -187,6 +187,23 @@ CMS layer (cuts across phases — wire each section after it is built):
 ## Changelog
 
 All modifications to this document and ticket files are logged here. Tester agent and code review feedback should be recorded as entries.
+
+---
+
+### 2026-05-07 — KNOCH-021 merged to dev — awaiting PR open
+
+**Action:** `feature/KNOCH-021-a11y-pass` merged into dev (no-ff). PR to test opens next.
+**Tickets affected:** KNOCH-021
+**Reason:** Accessibility pass complete. Skip-to-content link + `<main id="main-content">` landmark on every page (index, about, portfolio, project, contact); global `prefers-reduced-motion` cascade in `global.css` as a defensive backstop over the existing per-module gates; Lenis itself now respects reduced-motion (hands back to native scroll). Custom cursor swaps to native on Tab. Video lightbox flags `#main-content` as `aria-hidden` while open. Reel cards + portfolio filter tablist both wear the WAI-ARIA keyboard contracts (ArrowLeft/Right/Home/End, roving tabindex, `aria-selected`). Contact form gains `aria-required` on name/email + a hidden `aria-live="polite"` region announcing each step transition. Frame-display counter is now `aria-hidden` site-wide.
+
+A small Lenis fix bundled in (`758c925`): `scrollTo()` now calls `lenis.start()` before issuing programmatic scrolls, so logo / nav clicks from inside the testimonial section (which pauses Lenis for its wheel-paged carousel) actually move the page instead of silently no-op'ing. Surfaced during QA of the a11y work.
+
+Tile-selector native-radio refactor (button[role="radio"] → input[type="radio"]) deferred — current pattern is a valid WAI-ARIA radio implementation with proper aria-checked + radiogroup container, meets AA, and the refactor would be scope creep.
+**Changes:**
+- KNOCH-021: Status 🔵 In progress → 🔵 Merged to dev (still 🔵 until QA gate).
+- Files: 12 src/* changed (+250 lines), plus the Lenis fix and tracking docs.
+
+**Requested by:** Enoch
 
 ---
 
