@@ -1,6 +1,6 @@
 # KNOCH-037 — SEO Basics
 
-## Status: IN PROGRESS
+## Status: MERGED TO DEV
 ## Priority: P1 (high)
 ## Epic: EPIC-006 — Launch & SEO
 

@@ -107,7 +107,7 @@ Three launch-readiness tickets + one post-launch SEO deepening. KNOCH-039 (form 
 
 | ID | Title | Status | Branch | Notes |
 |----|-------|--------|--------|-------|
-| [KNOCH-037](tickets/KNOCH-037.md) | SEO Basics — sitemap, robots, Article schema | `🔵` | `feature/KNOCH-037-seo-basics` | In progress — Phase 6 kickoff |
+| [KNOCH-037](tickets/KNOCH-037.md) | SEO Basics — sitemap, robots, Article schema | `🔵` | `feature/KNOCH-037-seo-basics` | Merged to dev — PR pending |
 | [KNOCH-038](tickets/KNOCH-038.md) | Custom 404 Page | `⬜` | — | Half-day; can bundle with 037 |
 | [KNOCH-039](tickets/KNOCH-039.md) | Contact Form — real submit + anti-spam (Vercel function + Turnstile + honeypot) | `⬜` | — | **Launch-blocker** |
 | [KNOCH-040](tickets/KNOCH-040.md) | Per-project SEO + Static `/project/<slug>` Routes | `⬜` | — | Post-launch deepening |
