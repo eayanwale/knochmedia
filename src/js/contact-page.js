@@ -45,10 +45,10 @@ const SERVICE_LABELS = {
 };
 
 const BUDGET_LABELS = {
-  '3-5k':  '$3–5k',
-  '5-8k':  '$5–8k',
-  '8-12k': '$8–12k',
-  '12k+':  '$12k+',
+  '1-3k': '$1–3k',
+  '3-5k': '$3–5k',
+  '5-8k': '$5–8k',
+  '8k+':  '$8k+',
 };
 
 export function initContactPage() {

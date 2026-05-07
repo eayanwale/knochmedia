@@ -44,7 +44,7 @@ const STEPS = [
     heading: 'What\u2019s the <em>investment?</em>',
     type: 'radio',
     name: 'budget',
-    options: ['$3\u2013$5k', '$5\u2013$8k', '$8\u2013$12k', '$12k+'],
+    options: ['$1\u2013$3k', '$3\u2013$5k', '$5\u2013$8k', '$8k+'],
   },
   {
     id: 'contact',
