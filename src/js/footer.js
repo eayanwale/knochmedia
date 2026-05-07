@@ -68,11 +68,6 @@ const ICON_YOUTUBE = `
 function renderMinimal() {
   return `
     <div class="footer-inner footer-inner--minimal">
-
-      <a class="footer-logo-link" href="/" aria-label="Knoch Media — back to home">
-        <img class="footer-logo" src="/assets/logo/logo.webp" alt="Knoch Media" />
-      </a>
-
       <div class="footer-grid footer-grid--3">
 
         <div class="footer-col footer-col--studio">
@@ -119,11 +114,6 @@ function renderMinimal() {
 function renderExpanded() {
   return `
     <div class="footer-inner footer-inner--expanded">
-
-      <a class="footer-logo-link" href="/" aria-label="Knoch Media — back to home">
-        <img class="footer-logo" src="/assets/logo/logo.webp" alt="Knoch Media" />
-      </a>
-
       <div class="footer-grid footer-grid--4">
 
         <div class="footer-col footer-col--studio">
