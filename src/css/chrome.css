@@ -403,6 +403,14 @@
     display: flex;
   }
 
+  /* Tap-target padding for the wordmark on mobile (KNOCH-020 /
+     WCAG 2.5.5). At 17 px the bare text alone is ~17 px tall - far
+     below 44 px. Block padding raises the click area without
+     visually shifting the wordmark glyph. */
+  .mark {
+    padding: 0.6rem 0;
+  }
+
   .timecode-bar {
     padding: 14px 20px;
   }
