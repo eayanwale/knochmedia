@@ -201,6 +201,26 @@
     padding: 3.5rem 1.4rem 4rem;
   }
 
+  /* Tap-target padding on mobile (KNOCH-020 / WCAG 2.5.5). The 10 px
+     mono links are too small to tap reliably without padding. 0.4 rem
+     vertical block-padding gives each link ~26 px of height before
+     the parent's line-height adds more, comfortably within the
+     44 px guideline once line-height is factored in. */
+  .site-footer a {
+    display: inline-block;
+    padding: 0.4rem 0;
+  }
+  .footer-col--nav ul li {
+    margin-bottom: 0.5rem;
+  }
+  /* Restore inline-flex on the social link so the icon+handle stay
+     side-by-side - inline-block above would stack them. */
+  .footer-social-link,
+  .footer-inline-social {
+    display: inline-flex;
+    padding: 0.4rem 0;
+  }
+
   .footer-grid--3,
   .footer-grid--4 {
     grid-template-columns: 1fr;

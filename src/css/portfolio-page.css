@@ -338,6 +338,14 @@
     gap: 1rem;
   }
 
+  /* Always show card labels on touch (KNOCH-020). Desktop reveals on
+     hover; touch has no hover state, so without this rule mobile
+     visitors couldn't see what each card was. */
+  .portfolio-card-label {
+    transform: translateY(0);
+    opacity: 1;
+  }
+
   .portfolio-meta {
     flex-direction: column;
     align-items: flex-start;

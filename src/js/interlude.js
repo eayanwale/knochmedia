@@ -25,13 +25,18 @@ export function initInterlude() {
   const stripTrack = section.querySelector('.interlude-strip-track');
 
   const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const isMobile       = window.matchMedia('(max-width: 800px)').matches;
 
   /* ── Strip scroll-reactive ──────────────────────────────────────────────
      Scroll down → strip drifts right (x: -600 → 0).
      Scroll up  → strip drifts left  (x: 0 → -600).
      scrub: 1.2 gives a smooth lag that reads as physical weight.
-     fromTo so GSAP owns the initial position — no CSS starting offset needed. */
-  if (stripTrack && !prefersReduced) {
+     fromTo so GSAP owns the initial position — no CSS starting offset needed.
+     KNOCH-020: skip on mobile - Lenis is off (touch device), so scrub
+     against native scroll feels janky on iOS rubber-band. The strip
+     animates via its CSS marquee instead which gives the same
+     ambient drift without the scroll-tied tween. */
+  if (stripTrack && !prefersReduced && !isMobile) {
     gsap.fromTo(stripTrack,
       { x: -600 },
       {
@@ -46,7 +51,7 @@ export function initInterlude() {
       }
     );
   } else if (stripTrack) {
-    gsap.set(stripTrack, { x: -300 }); /* reduced-motion: static midpoint */
+    gsap.set(stripTrack, { x: -300 }); /* reduced-motion / mobile: static midpoint */
   }
 
   if (prefersReduced) {
