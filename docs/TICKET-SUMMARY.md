@@ -1,7 +1,7 @@
 # Knoch Media — Ticket Summary
 
 > **Living document.** Updated whenever tickets are created, modified, split, or closed.  
-> Last updated: 2026-05-07 | Total tickets: 36 | Open: 0 | In progress: 1 | In review: 0 | Done: 30 | Deferred: 5 | Phases 1–6 shipped to main 🚀 (v0.6.0); KNOCH-040 follow-up shipped as v0.7.0
+> Last updated: 2026-05-07 | Total tickets: 36 | Open: 0 | In progress: 0 | In review: 1 | Done: 30 | Deferred: 5 | Phases 1–6 shipped to main 🚀 (v0.6.0); KNOCH-040 follow-up shipped as v0.7.0
 
 ---
 
@@ -120,7 +120,7 @@ Closes the loop on the CMS workflow. Sanity is already wired for testimonials (K
 
 | ID | Title | Status | Branch | Notes |
 |----|-------|--------|--------|-------|
-| [KNOCH-042](tickets/KNOCH-042.md) | Wire Portfolio + Archive Grids to Sanity | `🔵` | `feature/KNOCH-042-sanity-portfolio-grid` | In progress — closes the duplicate-data loop with `projects.js` |
+| [KNOCH-042](tickets/KNOCH-042.md) | Wire Portfolio Grid to Sanity (scope reduced) | `🔵` | `feature/KNOCH-042-sanity-portfolio-grid` | In review — PR #34 dev → test |
 
 ---
 
