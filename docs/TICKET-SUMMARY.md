@@ -190,6 +190,25 @@ All modifications to this document and ticket files are logged here. Tester agen
 
 ---
 
+### 2026-05-07 — Phase 6 shipped to main — 🚀 v0.6.0 — site launchable
+
+**Action:** Squash-merged test → main (commit 9afec52). Tag `v0.6.0` pushed; GitHub release published. Site is **launchable** once Vercel auto-deploy from main lands and Sanity CORS allowlist includes `https://knoch.media`.
+**Tickets affected:** KNOCH-037, KNOCH-038, KNOCH-039
+**Reason:** All Phase 6 launch-prep work QA'd in test and shipped together: SEO basics (sitemap + robots + Article JSON-LD on project pages), custom 404 + 500 error pages, Formspree-wired contact form (with honeypot) on both contact page and homepage inquiry CTA, plus the operative domain swap from `knochmedia.xyz` → `knoch.media` and the email split (public `hello@` vs personal `enoch@`). KNOCH-039 was the last launch-blocker — site can now actually deliver inquiries.
+**Changes:**
+- KNOCH-037 / 038 / 039: Status 🔵 In review → 🚀 Shipped.
+- Header counts: In review 3→0, Done 26→29. Phase tag in header bumped 1–5 → 1–6.
+
+**Operator queue still active (not gating launch):**
+- Sanity CORS: add `https://knoch.media` at sanity.io/manage/personal/project/2779g58e/api → CORS Origins (testimonials / reel / portfolio fail without this)
+- Zoho: confirm `hello@knoch.media` alias on existing user
+- Formspree: optionally swap account email to `hello@knoch.media`
+- Vercel: confirm `knoch.media` is in project Settings → Domains
+
+**Requested by:** Enoch — "push to main, then try again"
+
+---
+
 ### 2026-05-07 — KNOCH-038 merged to dev + bundled into PR #32 — IN REVIEW
 
 **Action:** `feature/KNOCH-038-error-pages` merged into dev. Joins PR #32 dev → test alongside KNOCH-037. PR title + description updated to reflect both tickets.
