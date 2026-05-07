@@ -250,4 +250,93 @@ export function initProjectPage() {
 
   /* ── Update document title for share / bookmark ─── */
   document.title = `${project.title} — Knoch Media`;
+
+  /* ── Article JSON-LD (KNOCH-037) ──────────────────────────────────
+     Inject a schema.org Article block so each project page is
+     eligible for Google's Article rich result on search. Runtime
+     injection (vs. preloaded markup) is the right call here because
+     the project is resolved from `?id=…` — there's no static HTML
+     value we could preload. Removed + re-appended on every init so
+     in-flight client-side navigations between projects don't stack
+     stale blocks. */
+  injectArticleSchema(project);
+}
+
+/* parseDateToISO — best-effort conversion of the human date strings
+   in projects.js ("June 2024", "2024", "May 2024") into ISO 8601 so
+   schema.org datePublished is valid. Returns:
+     "September 2024" → "2024-09"   (yyyy-MM, valid ISO 8601 month)
+     "2024"           → "2024"      (yyyy alone, valid)
+     anything else    → null        (caller omits the field)
+   Schema's spec is permissive about granularity — partial dates
+   (year, year-month) are explicitly OK. */
+const _MONTHS = {
+  january:   '01', february:  '02', march: '03', april: '04', may: '05', june: '06',
+  july:      '07', august:    '08', september: '09', october: '10', november: '11', december: '12',
+  jan: '01', feb: '02', mar: '03', apr: '04', jun: '06',
+  jul: '07', aug: '08', sep: '09', oct: '10', nov: '11', dec: '12',
+};
+function parseDateToISO(raw) {
+  if (!raw) return null;
+  const s = String(raw).trim();
+  /* Year alone: "2024" */
+  if (/^\d{4}$/.test(s)) return s;
+  /* "Month YYYY" → "YYYY-MM". Case-insensitive month lookup. */
+  const m = s.match(/^([A-Za-z]+)\s+(\d{4})$/);
+  if (m) {
+    const month = _MONTHS[m[1].toLowerCase()];
+    if (month) return `${m[2]}-${month}`;
+  }
+  return null;
+}
+
+function injectArticleSchema(project) {
+  /* Idempotent — drop a previously-injected block before adding the
+     new one. Only matches blocks we authored (data-knoch-schema). */
+  document.querySelectorAll('script[type="application/ld+json"][data-knoch-schema="article"]')
+    .forEach(el => el.remove());
+
+  /* Resolve relative cover paths to absolute URLs for the JSON-LD
+     image field. Google's docs recommend absolute. location.origin
+     handles localhost / preview / production transparently — image
+     URLs land at e.g. https://knochmedia.xyz/assets/portfolio/...jpg
+     in production, http://localhost:5173/... in dev. */
+  const absUrl = (path) =>
+    path?.startsWith('http')
+      ? path
+      : `${window.location.origin}${path?.startsWith('/') ? '' : '/'}${path ?? ''}`;
+
+  const data = {
+    '@context': 'https://schema.org',
+    '@type':    'Article',
+    headline:   project.title,
+    image:      absUrl(project.cover),
+    author:     { '@type': 'Organization', name: 'Knoch Media' },
+    publisher:  {
+      '@type': 'Organization',
+      name:    'Knoch Media',
+      logo: {
+        '@type': 'ImageObject',
+        url:     `${window.location.origin}/assets/logo/logo.png`,
+      },
+    },
+    /* Set canonical URL so search treats this rendering as the
+       authoritative location for the project — important since the
+       same content surfaces under different `?id=` values. */
+    mainEntityOfPage: {
+      '@type': 'WebPage',
+      '@id':   window.location.href,
+    },
+  };
+
+  const isoDate = parseDateToISO(project.date);
+  if (isoDate)            data.datePublished = isoDate;
+  if (project.description) data.description  = project.description;
+  if (project.category)    data.keywords     = project.category;
+
+  const script = document.createElement('script');
+  script.type = 'application/ld+json';
+  script.dataset.knochSchema = 'article';
+  script.textContent = JSON.stringify(data);
+  document.head.appendChild(script);
 }

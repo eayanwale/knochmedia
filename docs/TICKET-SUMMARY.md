@@ -1,7 +1,7 @@
 # Knoch Media — Ticket Summary
 
 > **Living document.** Updated whenever tickets are created, modified, split, or closed.  
-> Last updated: 2026-05-07 | Total tickets: 35 | Open: 4 | In progress: 0 | In review: 0 | Done: 26 | Deferred: 5 | Phases 1–5 shipped to main 🚀
+> Last updated: 2026-05-07 | Total tickets: 35 | Open: 3 | In progress: 1 | In review: 0 | Done: 26 | Deferred: 5 | Phases 1–5 shipped to main 🚀
 
 ---
 
@@ -107,7 +107,7 @@ Three launch-readiness tickets + one post-launch SEO deepening. KNOCH-039 (form 
 
 | ID | Title | Status | Branch | Notes |
 |----|-------|--------|--------|-------|
-| [KNOCH-037](tickets/KNOCH-037.md) | SEO Basics — sitemap, robots, Article schema | `⬜` | — | After KNOCH-021 |
+| [KNOCH-037](tickets/KNOCH-037.md) | SEO Basics — sitemap, robots, Article schema | `🔵` | `feature/KNOCH-037-seo-basics` | In progress — Phase 6 kickoff |
 | [KNOCH-038](tickets/KNOCH-038.md) | Custom 404 Page | `⬜` | — | Half-day; can bundle with 037 |
 | [KNOCH-039](tickets/KNOCH-039.md) | Contact Form — real submit + anti-spam (Vercel function + Turnstile + honeypot) | `⬜` | — | **Launch-blocker** |
 | [KNOCH-040](tickets/KNOCH-040.md) | Per-project SEO + Static `/project/<slug>` Routes | `⬜` | — | Post-launch deepening |
@@ -187,6 +187,19 @@ CMS layer (cuts across phases — wire each section after it is built):
 ## Changelog
 
 All modifications to this document and ticket files are logged here. Tester agent and code review feedback should be recorded as entries.
+
+---
+
+### 2026-05-07 — KNOCH-037 started — 🔵 IN PROGRESS
+
+**Action:** Cut `feature/KNOCH-037-seo-basics` from dev to kick off Phase 6.
+**Tickets affected:** KNOCH-037
+**Reason:** First Phase 6 ticket — SEO basics layered on the per-page meta foundation from KNOCH-019. Sitemap + robots checked in to `src/public/` so Vite serves them at root; Article JSON-LD injected at runtime by `project-page.js` once the project is resolved from the URL `?id=` parameter.
+**Changes:**
+- KNOCH-037: Status ⬜ Open → 🔵 In progress; Branch column populated.
+- Header counts: Open 4→3, In progress 0→1.
+
+**Requested by:** Enoch — "do Phase 6 top to bottom"
 
 ---
 
