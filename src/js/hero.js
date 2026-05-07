@@ -80,9 +80,20 @@ let _heroSlides = null;
    loader/reveal sequence can scale it up (transform on the parent .hero-bg
    composites cleanly with the child opacity tweens here).
    Called early in initHero() so the layers exist before the reveal timeline
-   triggers — otherwise the bg would be blank during scale(1.1)→scale(1). */
+   triggers — otherwise the bg would be blank during scale(1.1)→scale(1).
+   KNOCH-041: on mobile we only build slide[0] (the LCP frame) and skip the
+   five subsequent slides. Building all six at module init time triggered
+   six concurrent .webp fetches that fought the film-counter loader for
+   bandwidth and main-thread time, leaving the 00→36 count visibly laggy
+   on real phones. The mobile slideshow is also disabled below, so there's
+   nothing for those extra layers to do. The single static slide is the
+   already-preloaded reel-01.webp (39 KB) - cheap. */
 function _buildHeroSlides(heroBg) {
-  const slides = HERO_SLIDESHOW_IMAGES.map((url, i) => {
+  const isMobile = window.matchMedia('(max-width: 800px)').matches;
+  const sources  = isMobile
+    ? HERO_SLIDESHOW_IMAGES.slice(0, 1)
+    : HERO_SLIDESHOW_IMAGES;
+  const slides = sources.map((url, i) => {
     const slide = document.createElement('div');
     slide.className = 'hero-slide';
     slide.style.backgroundImage = `url('${url}')`;
@@ -446,7 +457,12 @@ function _onLoaderComplete() {
      the reveal timeline so the first crossfade lands well after reel-01
      has had time to settle into place. prefers-reduced-motion users skip
      it entirely — the static reel-01 stays visible. */
-  if (heroBg && _heroSlides && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+  /* KNOCH-041: skip the slideshow on mobile too. _buildHeroSlides only
+     builds slide[0] on mobile so there's nothing to cycle through, and
+     keeping a static hero on phones avoids the every-5.5s repaint that
+     was a battery drain on real devices. */
+  const isMobile = window.matchMedia('(max-width: 800px)').matches;
+  if (heroBg && _heroSlides && !isMobile && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
     tl.call(() => _runHeroSlideshow(heroBg, _heroSlides));
   }
 }

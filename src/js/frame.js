@@ -103,9 +103,15 @@ export function initFrame() {
         composing with scrub's scale + yPercent independently).
      2. Spotlight reveal — a second natural-filter image (bgReveal) is masked
         by a radial-gradient that follows the cursor, revealing the actual photo
-        in a soft feathered circle while the dark base shows everywhere else. */
+        in a soft feathered circle while the dark base shows everywhere else.
+     KNOCH-041: skipped on touch / coarse pointers. The whole feature is
+     mouse-driven; on a phone the .bg-reveal element loads a second copy
+     of the studio banner image (~218 KB WebP via image-set) and never
+     becomes visible because the mousemove listener never fires.
+     Building it on touch was wasted bandwidth + a memory hit. */
   const sticky = section.querySelector('.sticky');
-  if (sticky) {
+  const isCoarsePointer = window.matchMedia('(pointer: coarse)').matches;
+  if (sticky && !isCoarsePointer) {
     const bgReveal = document.createElement('div');
     bgReveal.className = 'bg-reveal';
     bgReveal.setAttribute('aria-hidden', 'true');
