@@ -16,9 +16,14 @@
   references the unhashed dev paths and breaks. Reading dist/project.html
   preserves the hashed asset paths Vite produced.
 
-  String-replace approach (no DOM parser): the head's per-project meta
-  tags follow a fixed pattern, so targeted regex replacement is simpler
-  than spinning up jsdom / cheerio for what amounts to ~10 substitutions.
+  KNOCH-042 note: an earlier draft of this script also fetched
+  galleryCollection from Sanity and substituted portfolio tiles into
+  dist/portfolio.html at build time. That moved to runtime hydration
+  (src/js/portfolio-cms.js) so dev mode + production work the same way
+  — Vite's dev server serves src/ directly and never sees the build
+  step's substitution. Keeping the build script focused on the
+  per-project pages where build-time is the right answer (per-project
+  og:image meta has to be in the static HTML for social-card crawlers).
 */
 
 import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';

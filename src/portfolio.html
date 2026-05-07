@@ -46,11 +46,12 @@
     <link rel="stylesheet" href="/css/footer.css" />
 
     <!--
-      LCP preload — first card image. Cards 2–8 download as part of the
-      initial visible batch but only this first one gets fetchpriority high.
+      KNOCH-042: dropped the cover-alex-morgan.webp LCP preload now
+      that tiles are Sanity-driven at runtime — the LCP image varies
+      per Sanity entry and per filter state, so a static preload no
+      longer maps to anything. Worth ~50–100 ms LCP delay on first
+      paint; acceptable trade for content-driven flexibility.
     -->
-    <!-- LCP preload (KNOCH-019): WebP sibling, 33% smaller than the JPG source -->
-    <link rel="preload" as="image" href="/assets/portfolio/cover-alex-morgan.webp" fetchpriority="high" />
   </head>
   <body>
 
@@ -129,127 +130,33 @@
         </div>
 
         <!--
-          Filter tabs — real <button>s for keyboard access. data-filter
-          values match the data-category values on each card, except
-          "all" which is the always-true match. aria-pressed tracks the
-          active tab for AT users.
+          Filter tabs — KNOCH-042: per-category buttons appended at
+          runtime by portfolio-cms.js based on which categories are
+          present in Sanity. The "All" button stays in the static
+          markup so the filter logic always has its always-true
+          match even if the Sanity fetch fails.
         -->
         <ul class="portfolio-tabs" role="tablist" aria-label="Filter portfolio by category">
-          <li role="presentation"><button class="portfolio-tab is-active" data-filter="all"      role="tab" aria-selected="true"  tabindex="0">All</button></li>
-          <li role="presentation"><button class="portfolio-tab"           data-filter="wedding"  role="tab" aria-selected="false" tabindex="-1">Weddings</button></li>
-          <li role="presentation"><button class="portfolio-tab"           data-filter="brand"    role="tab" aria-selected="false" tabindex="-1">Brand</button></li>
-          <li role="presentation"><button class="portfolio-tab"           data-filter="music"    role="tab" aria-selected="false" tabindex="-1">Music</button></li>
+          <li role="presentation"><button class="portfolio-tab is-active" data-filter="all" role="tab" aria-selected="true" tabindex="0">All</button></li>
         </ul>
 
       </div>
     </section>
 
     <!--
-      Grid of cards — 12 total, mix of real Knoch projects and a few
-      additional portrait sittings. Initial 8 visible (.is-hidden absent
-      on cards 1–8); cards 9–12 start hidden and reveal via "Load more"
-      or filter selection.
+      Portfolio grid — KNOCH-042: tiles populated at runtime from
+      Sanity galleryCollection entries (source of truth) by
+      src/js/portfolio-cms.js. Adding a new client gallery is a
+      Sanity-only operation — no code change here is required.
 
-      Each card has data-category for the filter, a runtime-string
-      data-bg-style equivalent (we use inline style for the bg-image
-      since lazy-load isn't applied here — all 12 cards live in the
-      DOM at page load).
-
-      Anchor href links to the project's external gallery / video for
-      now; KNOCH-012 will replace these with internal project-detail
-      page links when the detail view is built.
+      Click routing: tile-router.js reads data-link-type + data-url
+      directly off each tile. external-gallery → opens Pic-Time URL
+      in a new tab; youtube → opens the lightbox; internal-page →
+      navigates to /project/<slug> static page (KNOCH-040).
     -->
     <section class="portfolio-grid-wrap" aria-label="Portfolio grid">
       <div class="portfolio-grid">
-
-        <!-- 1 — Wedding -->
-        <article class="portfolio-card" data-category="wedding" data-project-id="alex-morgan" tabindex="0" role="button"
-          aria-label="Alex and Morgan — Eastern Shore wedding">
-          <div class="portfolio-card-img" data-bg="/assets/portfolio/cover-alex-morgan.jpg" role="img" aria-hidden="true"></div>
-          <div class="portfolio-card-label">
-            <span class="portfolio-card-cat">№ 005 · Wedding</span>
-            <h3 class="portfolio-card-title">Alex and Morgan</h3>
-            <p class="portfolio-card-sub">Eastern Shore</p>
-          </div>
-        </article>
-
-        <!-- 2 — Wedding -->
-        <article class="portfolio-card" data-category="wedding" data-project-id="fayo-femi" tabindex="0" role="button"
-          aria-label="Fayo and Femi — Maryland introduction">
-          <div class="portfolio-card-img" data-bg="/assets/portfolio/cover-fayo-femi.jpg" style="background-position: 50% 65%" role="img" aria-hidden="true"></div>
-          <div class="portfolio-card-label">
-            <span class="portfolio-card-cat">№ 001 · Wedding</span>
-            <h3 class="portfolio-card-title">Fayo and Femi</h3>
-            <p class="portfolio-card-sub">Introduction · Maryland</p>
-          </div>
-        </article>
-
-        <!-- 3 — Wedding -->
-        <article class="portfolio-card" data-category="wedding" data-project-id="shawn-bekki" tabindex="0" role="button"
-          aria-label="Shawn and Bekki — Pennsylvania wedding">
-          <div class="portfolio-card-img" data-bg="/assets/portfolio/cover-shawn-bekki.jpg" role="img" aria-hidden="true"></div>
-          <div class="portfolio-card-label">
-            <span class="portfolio-card-cat">№ 004 · Wedding</span>
-            <h3 class="portfolio-card-title">Shawn and Bekki</h3>
-            <p class="portfolio-card-sub">Pennsylvania</p>
-          </div>
-        </article>
-
-        <!-- 4 — Brand -->
-        <article class="portfolio-card" data-category="brand" data-project-id="rapha-records" tabindex="0" role="button"
-          aria-label="Rapha Records — brand film">
-          <div class="portfolio-card-img" data-bg="/assets/portfolio/cover-rapha-records.jpg" role="img" aria-hidden="true"></div>
-          <div class="portfolio-card-label">
-            <span class="portfolio-card-cat">№ 007 · Brand</span>
-            <h3 class="portfolio-card-title">Rapha Records</h3>
-            <p class="portfolio-card-sub">Brand film</p>
-          </div>
-        </article>
-
-        <!-- 5 — Music -->
-        <article class="portfolio-card" data-category="music" data-project-id="what-mighty-praise" tabindex="0" role="button"
-          aria-label="What Mighty Praise — worship film">
-          <div class="portfolio-card-img" data-bg="/assets/portfolio/cover-what-mighty-praise.png" role="img" aria-hidden="true"></div>
-          <div class="portfolio-card-label">
-            <span class="portfolio-card-cat">№ 002 · Music</span>
-            <h3 class="portfolio-card-title">What Mighty Praise</h3>
-            <p class="portfolio-card-sub">Music film</p>
-          </div>
-        </article>
-
-        <!-- 6 — Music -->
-        <article class="portfolio-card" data-category="music" data-project-id="yahweh-we-you" tabindex="0" role="button"
-          aria-label="Yahweh We You — worship cover">
-          <div class="portfolio-card-img" data-bg="/assets/portfolio/cover-yahweh-we-you.png" role="img" aria-hidden="true"></div>
-          <div class="portfolio-card-label">
-            <span class="portfolio-card-cat">№ 010 · Music</span>
-            <h3 class="portfolio-card-title">Yahweh We &hearts; You</h3>
-            <p class="portfolio-card-sub">Cover · Music film</p>
-          </div>
-        </article>
-
-        <!-- 7 — Brand (event documentary) -->
-        <article class="portfolio-card" data-category="brand" data-project-id="woodsmen" tabindex="0" role="button"
-          aria-label="Mont Alto Woodsmen — event documentary">
-          <div class="portfolio-card-img" data-bg="/assets/portfolio/cover-woodsmen.jpg" role="img" aria-hidden="true"></div>
-          <div class="portfolio-card-label">
-            <span class="portfolio-card-cat">№ 009 · Brand</span>
-            <h3 class="portfolio-card-title">Mont Alto Woodsmen</h3>
-            <p class="portfolio-card-sub">Competition · Pennsylvania</p>
-          </div>
-        </article>
-
-        <!-- 8 — Brand (charity event film) -->
-        <article class="portfolio-card" data-category="brand" data-project-id="bcf-gala" tabindex="0" role="button"
-          aria-label="BCF Gala Night — charity event film">
-          <div class="portfolio-card-img" data-bg="/assets/reel/reel-02.png" role="img" aria-hidden="true"></div>
-          <div class="portfolio-card-label">
-            <span class="portfolio-card-cat">№ 011 · Brand</span>
-            <h3 class="portfolio-card-title">BCF Gala Night</h3>
-            <p class="portfolio-card-sub">Charity event · Maryland</p>
-          </div>
-        </article>
-
+        <!-- Tiles populated at runtime by portfolio-cms.js -->
       </div><!-- /.portfolio-grid -->
 
       <!--

@@ -12,6 +12,7 @@ dist/
 # Vite cache
 .vite/
 
+
 # Editor / OS artifacts
 .DS_Store
 Thumbs.db
