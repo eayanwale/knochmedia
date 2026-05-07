@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Roll jammed — Knoch Media</title>
+
+    <!-- Primary meta. noindex so transient server errors don't end up
+         indexed as discoverable URLs. -->
+    <meta name="description" content="Something broke in the darkroom. Try again in a moment." />
+    <meta name="robots" content="noindex" />
+    <meta name="theme-color" content="#0a0a0a" />
+
+    <!-- Google Fonts — same triple as the rest of the site -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;1,9..144,400&family=Inter+Tight:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap"
+    />
+
+    <link rel="stylesheet" href="/css/global.css" />
+    <link rel="stylesheet" href="/css/chrome.css" />
+    <link rel="stylesheet" href="/css/cursor.css" />
+    <link rel="stylesheet" href="/css/error.css" />
+    <link rel="stylesheet" href="/css/footer.css" />
+  </head>
+  <body class="grain">
+
+    <!-- Skip-to-content link (KNOCH-021) -->
+    <a class="skip-link" href="#main-content">Skip to content</a>
+
+    <!-- Custom cursor (KNOCH-004) — desktop ring, hidden on touch via CSS -->
+    <div class="cursor" id="cursor" aria-hidden="true"></div>
+
+    <!-- Chrome navigation overlay -->
+    <div class="chrome" id="chrome">
+      <div class="chrome-grid">
+
+        <a class="mark" href="/" aria-label="Knoch — back to home">Knoch<span class="dot" aria-hidden="true">.</span></a>
+
+        <nav class="nav-center" aria-label="Main navigation">
+          <a href="/portfolio.html">Work</a>
+          <a href="/about.html">Studio</a>
+          <a href="/contact.html">Inquire</a>
+        </nav>
+
+        <div class="nav-right" aria-hidden="true">
+          <span class="rec-dot"></span>
+          <span>REC · <span id="tc">00:00:00</span></span>
+        </div>
+
+        <button class="nav-toggle" type="button"
+                aria-label="Open navigation"
+                aria-expanded="false"
+                aria-controls="nav-overlay">
+          <span class="nav-toggle-line" aria-hidden="true"></span>
+          <span class="nav-toggle-line" aria-hidden="true"></span>
+          <span class="nav-toggle-line" aria-hidden="true"></span>
+        </button>
+
+      </div>
+    </div>
+
+    <nav class="nav-overlay" id="nav-overlay" aria-hidden="true" aria-label="Mobile navigation">
+      <div class="nav-overlay-inner"></div>
+    </nav>
+
+    <div class="timecode-bar" aria-hidden="true">
+      <span>K/M · 2026 · MARYLAND</span>
+      <div class="scroll-progress"
+           id="scroll-progress"
+           role="progressbar"
+           aria-valuenow="0"
+           aria-valuemin="0"
+           aria-valuemax="100"
+           aria-label="Page scroll progress"></div>
+      <span id="frame-display" aria-hidden="true">FRAME 01 / 36</span>
+    </div>
+
+    <main id="main-content">
+
+      <!--
+        500 page — same shape as 404, copy varies. Currently unwired:
+        no serverless function emits 500 yet. KNOCH-039 (contact form
+        real submit) will hook this up when the function lands —
+        either via vercel.json error routing or a client-side
+        location.href on a fetch failure.
+      -->
+      <section class="error-page" aria-label="Server error">
+        <p class="error-meta">— ERROR · 500</p>
+        <h1 class="error-headline headline-hover">
+          Roll jammed.<br><em>Something broke in the darkroom.</em>
+        </h1>
+        <p class="error-sub">
+          Our side hit a snag — the camera couldn&rsquo;t develop this
+          frame. Give it a moment and try again, or come back to the
+          <a href="/">studio</a>.
+        </p>
+        <div class="error-actions">
+          <button class="error-cta" type="button" onclick="window.location.reload()">&#x21bb; Try again</button>
+          <a class="error-cta error-cta--secondary" href="/">&larr; Back to studio</a>
+        </div>
+      </section>
+
+    </main>
+
+    <footer id="site-footer"></footer>
+
+    <script type="module" src="/js/error-main.js"></script>
+  </body>
+</html>

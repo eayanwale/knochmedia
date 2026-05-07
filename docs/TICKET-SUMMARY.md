@@ -1,7 +1,7 @@
 # Knoch Media — Ticket Summary
 
 > **Living document.** Updated whenever tickets are created, modified, split, or closed.  
-> Last updated: 2026-05-07 | Total tickets: 35 | Open: 3 | In progress: 0 | In review: 1 | Done: 26 | Deferred: 5 | Phases 1–5 shipped to main 🚀
+> Last updated: 2026-05-07 | Total tickets: 35 | Open: 2 | In progress: 1 | In review: 1 | Done: 26 | Deferred: 5 | Phases 1–5 shipped to main 🚀
 
 ---
 
@@ -108,7 +108,7 @@ Three launch-readiness tickets + one post-launch SEO deepening. KNOCH-039 (form 
 | ID | Title | Status | Branch | Notes |
 |----|-------|--------|--------|-------|
 | [KNOCH-037](tickets/KNOCH-037.md) | SEO Basics — sitemap, robots, Article schema | `🔵` | `feature/KNOCH-037-seo-basics` | In review — PR #32 dev → test |
-| [KNOCH-038](tickets/KNOCH-038.md) | Custom 404 Page | `⬜` | — | Half-day; can bundle with 037 |
+| [KNOCH-038](tickets/KNOCH-038.md) | Custom 404 + 500 Pages | `🔵` | `feature/KNOCH-038-error-pages` | In progress — bundling with 037 in PR #32 |
 | [KNOCH-039](tickets/KNOCH-039.md) | Contact Form — real submit + anti-spam (Vercel function + Turnstile + honeypot) | `⬜` | — | **Launch-blocker** |
 | [KNOCH-040](tickets/KNOCH-040.md) | Per-project SEO + Static `/project/<slug>` Routes | `⬜` | — | Post-launch deepening |
 
@@ -187,6 +187,19 @@ CMS layer (cuts across phases — wire each section after it is built):
 ## Changelog
 
 All modifications to this document and ticket files are logged here. Tester agent and code review feedback should be recorded as entries.
+
+---
+
+### 2026-05-07 — KNOCH-038 started — 🔵 IN PROGRESS (bundling into PR #32)
+
+**Action:** Cut `feature/KNOCH-038-error-pages` from dev. Spec called for an optional 500 page; Enoch wanted both, so 500 is in scope alongside the 404.
+**Tickets affected:** KNOCH-038
+**Reason:** Two static error pages — `src/404.html` (auto-served by Vercel on any 404, preserves 404 status) and `src/500.html` (currently unwired, stages for KNOCH-039 to point its contact-form serverless function at on failure). Same chrome / footer / film-grain treatment as the rest of the site so the visitor never feels they've left the studio. Will bundle into the existing PR #32 alongside KNOCH-037.
+**Changes:**
+- KNOCH-038: Status ⬜ Open → 🔵 In progress; Branch column populated.
+- Header counts: Open 3→2, In progress 0→1.
+
+**Requested by:** Enoch — "different error pages for whatever error could happen"
 
 ---
 

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Roll ended — Knoch Media</title>
+
+    <!-- Primary meta. noindex on the 404 so search engines don't list it
+         as a discoverable URL even if Vercel's auto-handling slips. -->
+    <meta name="description" content="The exposure may have been removed, retired, or never developed in the first place." />
+    <meta name="robots" content="noindex" />
+    <meta name="theme-color" content="#0a0a0a" />
+
+    <!-- Google Fonts — same triple as the rest of the site -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;1,9..144,400&family=Inter+Tight:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap"
+    />
+
+    <link rel="stylesheet" href="/css/global.css" />
+    <link rel="stylesheet" href="/css/chrome.css" />
+    <link rel="stylesheet" href="/css/cursor.css" />
+    <link rel="stylesheet" href="/css/error.css" />
+    <link rel="stylesheet" href="/css/footer.css" />
+  </head>
+  <body class="grain">
+
+    <!-- Skip-to-content link (KNOCH-021) -->
+    <a class="skip-link" href="#main-content">Skip to content</a>
+
+    <!-- Custom cursor (KNOCH-004) — desktop ring, hidden on touch via CSS -->
+    <div class="cursor" id="cursor" aria-hidden="true"></div>
+
+    <!-- Chrome navigation overlay — same component as every other page -->
+    <div class="chrome" id="chrome">
+      <div class="chrome-grid">
+
+        <a class="mark" href="/" aria-label="Knoch — back to home">Knoch<span class="dot" aria-hidden="true">.</span></a>
+
+        <nav class="nav-center" aria-label="Main navigation">
+          <a href="/portfolio.html">Work</a>
+          <a href="/about.html">Studio</a>
+          <a href="/contact.html">Inquire</a>
+        </nav>
+
+        <div class="nav-right" aria-hidden="true">
+          <span class="rec-dot"></span>
+          <span>REC · <span id="tc">00:00:00</span></span>
+        </div>
+
+        <button class="nav-toggle" type="button"
+                aria-label="Open navigation"
+                aria-expanded="false"
+                aria-controls="nav-overlay">
+          <span class="nav-toggle-line" aria-hidden="true"></span>
+          <span class="nav-toggle-line" aria-hidden="true"></span>
+          <span class="nav-toggle-line" aria-hidden="true"></span>
+        </button>
+
+      </div>
+    </div>
+
+    <nav class="nav-overlay" id="nav-overlay" aria-hidden="true" aria-label="Mobile navigation">
+      <div class="nav-overlay-inner"></div>
+    </nav>
+
+    <!-- Bottom timecode bar — same cosmetic chrome as every page -->
+    <div class="timecode-bar" aria-hidden="true">
+      <span>K/M · 2026 · MARYLAND</span>
+      <div class="scroll-progress"
+           id="scroll-progress"
+           role="progressbar"
+           aria-valuenow="0"
+           aria-valuemin="0"
+           aria-valuemax="100"
+           aria-label="Page scroll progress"></div>
+      <span id="frame-display" aria-hidden="true">FRAME 01 / 36</span>
+    </div>
+
+    <main id="main-content">
+
+      <!--
+        Empty-frame error block — Fraunces headline carries the visual
+        weight, mono subtext gives the in-voice explanation, two CTAs
+        offer the visitor a way back into the site.
+      -->
+      <section class="error-page" aria-label="Page not found">
+        <p class="error-meta">— ERROR · 404</p>
+        <h1 class="error-headline headline-hover">
+          Roll ended.<br><em>No frame found.</em>
+        </h1>
+        <p class="error-sub">
+          The exposure may have been removed, retired, or never developed
+          in the first place. Try the <a href="/portfolio.html">archive</a>
+          or come back to the <a href="/">studio</a>.
+        </p>
+        <div class="error-actions">
+          <a class="error-cta" href="/">&larr; Back to studio</a>
+          <a class="error-cta error-cta--secondary" href="/portfolio.html">View the archive &rarr;</a>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Shared footer host (KNOCH-015) — populated by initFooter('expanded') -->
+    <footer id="site-footer"></footer>
+
+    <script type="module" src="/js/error-main.js"></script>
+  </body>
+</html>

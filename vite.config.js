@@ -20,7 +20,14 @@ export default defineConfig({
         about:     resolve(__dirname, 'src/about.html'),
         portfolio: resolve(__dirname, 'src/portfolio.html'),
         project:   resolve(__dirname, 'src/project.html'),
-        contact:   resolve(__dirname, 'src/contact.html')
+        contact:   resolve(__dirname, 'src/contact.html'),
+        /* KNOCH-038: error pages. 404.html lands at dist root and is
+           auto-served by Vercel for any 404 response (preserves the
+           404 HTTP status — important for crawler signal). 500.html
+           is staged for KNOCH-039 — currently unwired since no
+           serverless function emits 5xx yet. */
+        notFound:  resolve(__dirname, 'src/404.html'),
+        serverErr: resolve(__dirname, 'src/500.html')
       }
     }
   }
