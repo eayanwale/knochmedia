@@ -1,7 +1,7 @@
 # Knoch Media — Ticket Summary
 
 > **Living document.** Updated whenever tickets are created, modified, split, or closed.  
-> Last updated: 2026-05-07 | Total tickets: 35 | Open: 6 | In progress: 0 | In review: 0 | Done: 25 | Deferred: 4 | Phases 1–4 shipped to main 🚀
+> Last updated: 2026-05-07 | Total tickets: 35 | Open: 5 | In progress: 0 | In review: 0 | Done: 25 | Deferred: 5 | Phases 1–4 shipped to main 🚀
 
 ---
 
@@ -44,7 +44,7 @@ KNOCH-022 and KNOCH-023 are infrastructure — implement these first. The wiring
 | [KNOCH-025](tickets/KNOCH-025.md) | Wire Gallery Reel to Sanity | `✅` | `feature/KNOCH-007-horizontal-reel` | `main.js` fetches `getFeaturedCollections()` → `initReel()`; 3 featured collections with Sanity CDN images; `subtitle` field added to schema |
 | [KNOCH-026](tickets/KNOCH-026.md) | Migrate Hero Images to Sanity CDN | `⏸` | — | Deferred — hero is LCP-critical and design-tied; static files are the correct approach |
 | [KNOCH-027](tickets/KNOCH-027.md) | Wire About Page to Sanity | `✅` | `feature/KNOCH-027-wire-about-sanity` | Done — merged to test (PR #29) |
-| [KNOCH-028](tickets/KNOCH-028.md) | Wire Services Page to Sanity | `⬜` | — | After services page is built |
+| [KNOCH-028](tickets/KNOCH-028.md) | Wire Services Page to Sanity | `⏸` | — | Deferred — `getServices()` already in `sanity.js`, but no services page exists in the build; contact form's budget tiers cover pricing |
 | [KNOCH-029](tickets/KNOCH-029.md) | Blog Listing Page | `⏸` | — | Deferred — blog schema needs redesign (dynamic related posts, YouTube + Instagram content types) |
 | [KNOCH-030](tickets/KNOCH-030.md) | Blog Post Detail Page | `⏸` | — | Deferred — blocked by KNOCH-029 redesign |
 
@@ -187,6 +187,19 @@ CMS layer (cuts across phases — wire each section after it is built):
 ## Changelog
 
 All modifications to this document and ticket files are logged here. Tester agent and code review feedback should be recorded as entries.
+
+---
+
+### 2026-05-07 — KNOCH-028 deferred — ⏸
+
+**Action:** KNOCH-028 (Wire Services Page to Sanity) marked deferred.
+**Tickets affected:** KNOCH-028
+**Reason:** `getServices()` is already in `src/js/sanity.js:39` and the `service` schema is registered in studio. The remaining ACs require rendering against a services page surface that doesn't exist — the build never created `src/services.html` and the homepage doesn't carry a services section. Matches the pattern of KNOCH-018 / 026 / 029 / 030 where the rendering surface didn't fit the build. Pricing-conversation surface for now is the contact form's budget tiers ($1–3k / $3–5k / $5–8k / $8k+).
+**Changes:**
+- KNOCH-028: Status ⬜ Open → ⏸ Deferred.
+- Header counts: Open 6→5, Deferred 4→5.
+
+**Requested by:** Enoch
 
 ---
 
