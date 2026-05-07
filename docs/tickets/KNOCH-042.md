@@ -1,6 +1,6 @@
 # KNOCH-042 — Wire Portfolio + Archive Grids to Sanity
 
-## Status: TODO
+## Status: IN PROGRESS
 ## Priority: P1 (high — closes the loop on CMS workflow)
 ## Epic: EPIC-007 — Post-Launch CMS Coverage
 
