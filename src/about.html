@@ -55,6 +55,9 @@
   </head>
   <body>
 
+    <!-- Skip-to-content link (KNOCH-021) — first focusable, slides in on focus -->
+    <a class="skip-link" href="#main-content">Skip to content</a>
+
     <!--
       Custom cursor — same desktop ring as the homepage (KNOCH-004).
       Hidden on touch via CSS pointer:coarse media query.
@@ -116,7 +119,7 @@
            aria-valuemin="0"
            aria-valuemax="100"
            aria-label="Page scroll progress"></div>
-      <span id="frame-display">FRAME 01 / 36</span>
+      <span id="frame-display" aria-hidden="true">FRAME 01 / 36</span>
     </div>
 
     <!--
@@ -124,6 +127,8 @@
       headline-hover triggers the per-character proximity hover effect
       (smoke wisps + scale + outline) once char-hover.js splits the text.
     -->
+    <main id="main-content">
+
     <section class="about-hero" aria-label="About — A working studio">
       <div class="about-hero-inner">
         <p class="about-hero-meta">— THE STUDIO &middot; EST. 2018</p>
@@ -289,6 +294,8 @@
         <a class="about-cta-link" href="/contact.html">Start an inquiry &rarr;</a>
       </div>
     </section>
+
+    </main><!-- /#main-content -->
 
     <!-- Shared footer host (KNOCH-015) — populated by initFooter('expanded') -->
     <footer id="site-footer"></footer>

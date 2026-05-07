@@ -9,9 +9,16 @@ let lenis = null;
 /**
  * Call once, after the intro loader finishes (KNOCH-005).
  * Skips entirely on touch/mobile — native scroll is faster there.
+ * Also skips under prefers-reduced-motion (KNOCH-021) — Lenis's
+ * easing-driven smooth scroll is exactly the kind of motion that
+ * vestibular-sensitive users opt out of, so we hand back to native
+ * scroll. ScrollTrigger then reads native scrollY directly (no
+ * proxy installed below), and the per-module GSAP entrance gates
+ * already skip their own animations under the same media query.
  */
 export function initLenis() {
   if (window.matchMedia('(pointer: coarse)').matches) return;
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
   lenis = new Lenis({
     duration: 1.2,
