@@ -1,7 +1,7 @@
 # Knoch Media — Ticket Summary
 
 > **Living document.** Updated whenever tickets are created, modified, split, or closed.  
-> Last updated: 2026-05-07 | Total tickets: 35 | Open: 4 | In progress: 0 | In review: 1 | Done: 25 | Deferred: 5 | Phases 1–4 shipped to main 🚀
+> Last updated: 2026-05-07 | Total tickets: 35 | Open: 4 | In progress: 0 | In review: 0 | Done: 26 | Deferred: 5 | Phases 1–5 shipped to main 🚀
 
 ---
 
@@ -94,10 +94,10 @@ Run in this exact order: perf first (changes markup), then mobile (tests perf ch
 
 | ID | Title | Status | Branch | Notes |
 |----|-------|--------|--------|-------|
-| [KNOCH-019](tickets/KNOCH-019.md) | Performance Optimization — Images, Build, CWV | `✅` | `feature/KNOCH-019-performance` | Done — merged to test (PR #25 + footer polish bundled); Lighthouse verification pending |
-| [KNOCH-020](tickets/KNOCH-020.md) | Responsive / Mobile Adaptations | `✅` | `feature/KNOCH-020-mobile` | Done — merged to test (PR #26 + reel-vertical / project-others-hide / per-slide hero meta polish bundled) |
-| [KNOCH-021](tickets/KNOCH-021.md) | Accessibility Pass — WCAG 2.1 AA | `🔵` | `feature/KNOCH-021-a11y-pass` | In review — PR #30 dev → test (closes Phase 5) |
-| [KNOCH-041](tickets/KNOCH-041.md) | Mobile Sustainable Mode — strip GSAP / Lenis / scroll-driven animation | `✅` | `feature/KNOCH-041-mobile-sustainable` | Done — merged to test (PR #27 + image culling + chrome wordmark + hamburger close polish bundled) |
+| [KNOCH-019](tickets/KNOCH-019.md) | Performance Optimization — Images, Build, CWV | `🚀` | `feature/KNOCH-019-performance` | Shipped — Phase 5 squash to main (v0.5.0) |
+| [KNOCH-020](tickets/KNOCH-020.md) | Responsive / Mobile Adaptations | `🚀` | `feature/KNOCH-020-mobile` | Shipped — Phase 5 squash to main (v0.5.0) |
+| [KNOCH-021](tickets/KNOCH-021.md) | Accessibility Pass — WCAG 2.1 AA | `🚀` | `feature/KNOCH-021-a11y-pass` | Shipped — Phase 5 squash to main (v0.5.0) |
+| [KNOCH-041](tickets/KNOCH-041.md) | Mobile Sustainable Mode — strip GSAP / Lenis / scroll-driven animation | `🚀` | `feature/KNOCH-041-mobile-sustainable` | Shipped — Phase 5 squash to main (v0.5.0) |
 
 ---
 
@@ -187,6 +187,21 @@ CMS layer (cuts across phases — wire each section after it is built):
 ## Changelog
 
 All modifications to this document and ticket files are logged here. Tester agent and code review feedback should be recorded as entries.
+
+---
+
+### 2026-05-07 — Phase 5 shipped to main — 🚀 v0.5.0
+
+**Action:** PR #31 squash-merged test → main (commit 316ac93). Tag `v0.5.0` pushed; GitHub release published.
+**Tickets affected:** KNOCH-019, KNOCH-020, KNOCH-021, KNOCH-041
+**Reason:** All four Phase 5 tickets QA'd in test. Phase 5 covers Performance Optimization (KNOCH-019: WebP pipeline, per-page meta, GSAP fps cap, lazy-load rewrite), Responsive / Mobile Adaptations (KNOCH-020), Mobile Sustainable Mode (KNOCH-041: strip scroll-tied GSAP / image culling / hamburger close affordance), and Accessibility (KNOCH-021: WCAG 2.1 AA — skip link + main landmark, reduced-motion cascade, custom-cursor keyboard mode, video-lightbox aria-hidden, reel + tablist keyboard contracts, contact aria-required + step aria-live, plus the bonus `lenis.start()` resume in `scrollTo()` so chrome nav clicks work from inside wheel-paged sections).
+
+Ride-along bundled into the squash: CMS layer (KNOCH-024 / 025 / 027), liquid-glass mirror onto bottom timecode bar, divergent non-homepage glass triggers, budget tiers shifted to $1–3k / $3–5k / $5–8k / $8k+, phone number stripped, email switched to enoch@knoch.media, mobile testimonial section made fully static, and KNOCH-028 deferred bookkeeping.
+**Changes:**
+- KNOCH-019 / 020 / 021 / 041: Status ✅ / 🔵 → 🚀 Shipped.
+- Header counts: In review 1→0, Done 25→26. Phase tag in header bumped 1–4 → 1–5.
+
+**Requested by:** Enoch — "create the release for phase 5 and we can move on"
 
 ---
 
