@@ -92,6 +92,15 @@ export function startLenis() {
  */
 export function scrollTo(target, options = {}) {
   if (lenis) {
+    /* Resume Lenis before issuing a programmatic scroll. Sections
+       that hijack the wheel for their own paging (testimonial.js
+       pauses Lenis on enter ≥ 60 %, KNOCH-007 reel pauses during
+       its pinned timeline) intend that pause to apply to wheel
+       gestures only. Without this, clicking the logo or a nav
+       anchor while the visitor is mid-testimonial silently no-ops
+       until the section's IntersectionObserver eventually resumes
+       Lenis on its own — chrome navigation should always win. */
+    lenis.start();
     lenis.scrollTo(target, {
       duration: 1.5,
       easing: t => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
