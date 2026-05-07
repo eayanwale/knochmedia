@@ -145,19 +145,9 @@
     <div class="chrome" id="chrome">
       <div class="chrome-grid">
 
-        <!--
-          Wordmark / logo.
-          Image-with-text fallback: the .mark-logo img loads the studio's
-          circular emblem (logo.webp). On successful load, CSS hides the
-          .mark-text serif wordmark next to it. If the image 404s or
-          decode fails, onerror toggles the .mark-fallback class on the
-          parent <a> which restores the text. Browsers without JS just
-          see both rendered — visually weird but never broken.
-        -->
+        <!-- Wordmark — circular emblem; aria-label carries the text equivalent -->
         <a class="mark" href="/" aria-label="Knoch Media — scroll to top">
-          <img class="mark-logo" src="/assets/logo/logo.webp" alt="" aria-hidden="true"
-               onerror="this.parentNode.classList.add('mark-fallback'); this.remove();" />
-          <span class="mark-text">Knoch<span class="dot" aria-hidden="true">.</span></span>
+          <img class="mark-logo" src="/assets/logo/logo.webp" alt="Knoch Media" />
         </a>
 
         <!-- Center nav — hidden on mobile ≤800px -->

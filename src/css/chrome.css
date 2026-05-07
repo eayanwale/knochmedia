@@ -11,7 +11,7 @@
   inset: 0;
   pointer-events: none;
   z-index: var(--z-chrome);
-  padding: 28px 36px;
+  padding: 18px 36px;
   mix-blend-mode: difference;
   /* mix-blend-mode is removed when .is-glass activates so backdrop-filter
      on the ::before pane composes cleanly. See the .is-glass block below. */
@@ -45,7 +45,7 @@
   top: 0;
   left: 0;
   right: 0;
-  height: 84px;
+  height: 96px;
   pointer-events: none;
   background: rgba(10, 10, 10, 0.42);
   backdrop-filter: blur(20px) saturate(1.5);
@@ -96,48 +96,23 @@
 }
 
 /* ── Wordmark / logo ──
-   Markup: <a class="mark"><img class="mark-logo"><span class="mark-text">…</span></a>
-   Default state: img renders at 28 px height, text is hidden via CSS.
-   Failure state: img onerror removes itself + adds .mark-fallback to
-   the parent <a>, which restores the text. */
+   The logo image is the wordmark. No text fallback — the aria-label
+   on the parent <a> handles a11y if the image fails. */
 .mark {
   display: inline-flex;
   align-items: center;
   text-decoration: none;
-  /* Inherit text colour for the fallback span */
   color: var(--paper);
 }
 
 .mark-logo {
   display: block;
-  height: 32px;
+  height: 56px;
   width: auto;
-  /* The logo PNG/WebP is dark-on-white with the brand emblem. The
-     chrome backdrop is dark, so we need the logo to appear light.
-     mix-blend-mode: screen lifts the dark strokes against the dark
-     bg without an inverted asset. If the actual asset turns out to
-     be on transparent bg with light strokes, drop this filter. */
+  /* The logo asset is dark-on-white. Inverting flips it to
+     light-on-transparent so it reads on the dark chrome backdrop.
+     Brightness + contrast tweaks fine-tune the lift. */
   filter: invert(1) brightness(1.1) contrast(1.05);
-  /* Make the image's "dot" / accent areas pick up the amber if needed —
-     handled visually rather than CSS for now. */
-}
-
-.mark-text {
-  font-family: var(--font-serif);
-  font-size: 17px;
-  font-weight: 400;
-  letter-spacing: -0.01em;
-  /* Hidden by default - the .mark-logo above is the visible wordmark.
-     Restored when .mark-fallback lands on the parent <a> (img onerror). */
-  display: none;
-}
-
-.mark.mark-fallback .mark-text {
-  display: inline;
-}
-
-.mark .dot {
-  color: var(--amber);
 }
 
 .mark:focus-visible {
@@ -425,12 +400,19 @@
 /* ── Mobile ≤800px ── */
 @media (max-width: 800px) {
   .chrome {
-    padding: 18px 20px;
+    padding: 12px 20px;
   }
 
-  /* Smaller glass strip to match the tighter mobile padding */
+  /* Smaller glass strip to match the tighter mobile padding +
+     accommodate the slightly smaller mobile logo height. */
   .chrome::before {
-    height: 64px;
+    height: 76px;
+  }
+
+  /* Logo scales down on mobile to keep the chrome row from
+     dominating the viewport on phones. */
+  .mark-logo {
+    height: 44px;
   }
 
   /* Hide center links — logo and REC remain */
@@ -459,7 +441,7 @@
   .nav-toggle {
     display: block;
     position: fixed;
-    top: 18px;
+    top: 12px;
     right: 20px;
     z-index: 12000;
   }
