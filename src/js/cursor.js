@@ -8,6 +8,29 @@ export function initCursor() {
   const cursor = document.getElementById('cursor');
   if (!cursor) return;
 
+  /* KNOCH-021: keyboard-vs-mouse input detection.
+     Pressing Tab flips body.using-keyboard on, which CSS uses to
+     restore the native cursor and hide the custom ring (focus rings
+     drive interaction in keyboard mode, the custom cursor adds
+     nothing). Any subsequent mousemove flips it back off so the
+     custom ring returns for mouse users without page reload.
+     Tab is the only key worth gating on — Enter / Space / arrows
+     don't change input mode (they just activate the focused thing). */
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Tab' && !document.body.classList.contains('using-keyboard')) {
+      document.body.classList.add('using-keyboard');
+    }
+  });
+
+  /* mousemove fires on the very first pixel of motion, so the swap
+     back to mouse mode feels instant. The class check before remove
+     avoids a write on every frame of mouse motion. */
+  window.addEventListener('mousemove', () => {
+    if (document.body.classList.contains('using-keyboard')) {
+      document.body.classList.remove('using-keyboard');
+    }
+  }, { passive: true });
+
   // GSAP quickTo gives smooth lag-behind tracking.
   // duration 0.35 / power3 provides the "magnetic" feel from the reference.
   const xTo = gsap.quickTo(cursor, 'x', { duration: 0.35, ease: 'power3.out' });

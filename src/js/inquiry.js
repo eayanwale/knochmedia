@@ -44,7 +44,7 @@ const STEPS = [
     heading: 'What\u2019s the <em>investment?</em>',
     type: 'radio',
     name: 'budget',
-    options: ['$3\u2013$5k', '$5\u2013$8k', '$8\u2013$12k', '$12k+'],
+    options: ['$1\u2013$3k', '$3\u2013$5k', '$5\u2013$8k', '$8k+'],
   },
   {
     id: 'contact',
@@ -146,8 +146,7 @@ export function initInquiry() {
     </div>
 
     <div class="inquiry-sidebar-block inquiry-sidebar-contact">
-      <p>Direct line \u00b7 <strong>240.714.6933</strong></p>
-      <p>Email \u00b7 <strong>enoch@knochmedia.com</strong></p>
+      <p>Email \u00b7 <strong>enoch@knoch.media</strong></p>
     </div>
   `;
   wrapper.appendChild(sidebar);

@@ -196,6 +196,15 @@ export async function initTestimonial() {
   if (!section) return;
 
   const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  /* KNOCH-021: drop the scroll-tied per-word reveal on phones — touch
+     visitors can't generate the wheel events that drive the reveal,
+     so the section was rendering as outlined ghost text that never
+     filled in. Treat mobile the same as prefers-reduced-motion for
+     the text-reveal flow: render the full quote immediately on each
+     slide, and skip the wheel-intercept setup since there are no
+     wheel events to intercept anyway. */
+  const isMobile = window.matchMedia('(max-width: 800px)').matches;
+  const skipScrollWrite = prefersReduced || isMobile;
 
   const list = document.createElement('div');
   list.className = 'testimonial-list';
@@ -235,7 +244,7 @@ export async function initTestimonial() {
 
     function updateAmbientIdx(idx) {
       const label = String(idx + 1).padStart(2, '0');
-      if (prefersReduced) { ambientIdx.textContent = label; return; }
+      if (skipScrollWrite) { ambientIdx.textContent = label; return; }
       gsap.to(ambientIdx, {
         opacity: 0, duration: 0.2, ease: 'expo.in',
         onComplete: () => {
@@ -326,7 +335,7 @@ export async function initTestimonial() {
         const item = buildItem(testimonials[idx]);
         slider.appendChild(item);
 
-        if (prefersReduced) {
+        if (skipScrollWrite) {
           busy = false;
           textRevealed = true;
           return;
@@ -352,7 +361,7 @@ export async function initTestimonial() {
         }
       };
 
-      if (current === -1 || prefersReduced || wasAnimating) {
+      if (current === -1 || skipScrollWrite || wasAnimating) {
         mount();
       } else {
         gsap.to(slider, {
@@ -471,48 +480,53 @@ export async function initTestimonial() {
       window.removeEventListener('wheel', onWheel);
     }
 
-    /* ── Spotlight — radial-gradient mask follows cursor across the section ── */
+    /* ── Spotlight — radial-gradient mask follows cursor across the section ──
+       Desktop-only: skipped under skipScrollWrite (mobile / reduced-motion).
+       On mobile the bg image is always-visible and cycles with the slide
+       via goTo()'s sectionHovered=false branch + the .testimonial-bg
+       mobile media query in testimonial.css that lifts opacity to 1. */
+    if (!skipScrollWrite) {
+      /* Smooth spotlight position — GSAP tweens a proxy so the circle eases
+         toward the cursor rather than jumping frame to frame. */
+      const spotPos = { x: 0, y: 0 };
 
-    /* Smooth spotlight position — GSAP tweens a proxy so the circle eases
-       toward the cursor rather than jumping frame to frame. */
-    const spotPos = { x: 0, y: 0 };
+      section.addEventListener('mousemove', (e) => {
+        const rect = section.getBoundingClientRect();
+        gsap.to(spotPos, {
+          x: e.clientX - rect.left,
+          y: e.clientY - rect.top,
+          duration: 0.25,
+          ease: 'power2.out',
+          overwrite: 'auto',
+          onUpdate() {
+            const m = buildSpotMask(spotPos.x, spotPos.y);
+            bgEl.style.maskImage = m;
+            bgEl.style.webkitMaskImage = m;
+          },
+        });
+      }, { passive: true });
 
-    section.addEventListener('mousemove', (e) => {
-      const rect = section.getBoundingClientRect();
-      gsap.to(spotPos, {
-        x: e.clientX - rect.left,
-        y: e.clientY - rect.top,
-        duration: 0.25,
-        ease: 'power2.out',
-        overwrite: 'auto',
-        onUpdate() {
-          const m = buildSpotMask(spotPos.x, spotPos.y);
-          bgEl.style.maskImage = m;
-          bgEl.style.webkitMaskImage = m;
-        },
+      /* ── Section hover — timer + bg opacity ────────────────────────────── */
+
+      section.addEventListener('mouseenter', (e) => {
+        stopTimer();
+        sectionHovered = true;
+        /* Set initial spotlight at entry point before fading in — prevents
+           full-image flash while the first mousemove hasn't fired yet. */
+        const rect = section.getBoundingClientRect();
+        spotPos.x = e.clientX - rect.left;
+        spotPos.y = e.clientY - rect.top;
+        const m = buildSpotMask(spotPos.x, spotPos.y);
+        bgEl.style.maskImage = m;
+        bgEl.style.webkitMaskImage = m;
+        gsap.to(bgEl, { opacity: BG_OPACITY, duration: 0.5, ease: 'power2.out', overwrite: 'auto' });
       });
-    }, { passive: true });
-
-    /* ── Section hover — timer + bg opacity ────────────────────────────── */
-
-    section.addEventListener('mouseenter', (e) => {
-      stopTimer();
-      sectionHovered = true;
-      /* Set initial spotlight at entry point before fading in — prevents
-         full-image flash while the first mousemove hasn't fired yet. */
-      const rect = section.getBoundingClientRect();
-      spotPos.x = e.clientX - rect.left;
-      spotPos.y = e.clientY - rect.top;
-      const m = buildSpotMask(spotPos.x, spotPos.y);
-      bgEl.style.maskImage = m;
-      bgEl.style.webkitMaskImage = m;
-      gsap.to(bgEl, { opacity: BG_OPACITY, duration: 0.5, ease: 'power2.out', overwrite: 'auto' });
-    });
-    section.addEventListener('mouseleave', () => {
-      sectionHovered = false;
-      gsap.to(bgEl, { opacity: 0, duration: 0.4, ease: 'power2.out', overwrite: 'auto' });
-      if (inView) startTimer();
-    });
+      section.addEventListener('mouseleave', () => {
+        sectionHovered = false;
+        gsap.to(bgEl, { opacity: 0, duration: 0.4, ease: 'power2.out', overwrite: 'auto' });
+        if (inView) startTimer();
+      });
+    }
 
     /* ── IntersectionObserver ────────────────────────────── */
 
@@ -522,7 +536,7 @@ export async function initTestimonial() {
         if (inView) {
           if (current === -1) goTo(0);
           startTimer();
-          if (!prefersReduced) startIntercepting();
+          if (!skipScrollWrite) startIntercepting();
         } else {
           stopTimer();
           stopIntercepting();

@@ -1,7 +1,7 @@
 # Knoch Media — Ticket Summary
 
 > **Living document.** Updated whenever tickets are created, modified, split, or closed.  
-> Last updated: 2026-05-07 | Total tickets: 35 | Open: 6 | In progress: 0 | In review: 1 | Done: 24 | Deferred: 4 | Phases 1–4 shipped to main 🚀
+> Last updated: 2026-05-07 | Total tickets: 35 | Open: 4 | In progress: 0 | In review: 1 | Done: 25 | Deferred: 5 | Phases 1–4 shipped to main 🚀
 
 ---
 
@@ -43,8 +43,8 @@ KNOCH-022 and KNOCH-023 are infrastructure — implement these first. The wiring
 | [KNOCH-024](tickets/KNOCH-024.md) | Wire Testimonials to Sanity | `✅` | `feature/KNOCH-024-wire-testimonials-sanity` | QA PASSED — merged to test |
 | [KNOCH-025](tickets/KNOCH-025.md) | Wire Gallery Reel to Sanity | `✅` | `feature/KNOCH-007-horizontal-reel` | `main.js` fetches `getFeaturedCollections()` → `initReel()`; 3 featured collections with Sanity CDN images; `subtitle` field added to schema |
 | [KNOCH-026](tickets/KNOCH-026.md) | Migrate Hero Images to Sanity CDN | `⏸` | — | Deferred — hero is LCP-critical and design-tied; static files are the correct approach |
-| [KNOCH-027](tickets/KNOCH-027.md) | Wire About Page to Sanity | `🔵` | `feature/KNOCH-027-wire-about-sanity` | In review — PR #29 dev → test |
-| [KNOCH-028](tickets/KNOCH-028.md) | Wire Services Page to Sanity | `⬜` | — | After services page is built |
+| [KNOCH-027](tickets/KNOCH-027.md) | Wire About Page to Sanity | `✅` | `feature/KNOCH-027-wire-about-sanity` | Done — merged to test (PR #29) |
+| [KNOCH-028](tickets/KNOCH-028.md) | Wire Services Page to Sanity | `⏸` | — | Deferred — `getServices()` already in `sanity.js`, but no services page exists in the build; contact form's budget tiers cover pricing |
 | [KNOCH-029](tickets/KNOCH-029.md) | Blog Listing Page | `⏸` | — | Deferred — blog schema needs redesign (dynamic related posts, YouTube + Instagram content types) |
 | [KNOCH-030](tickets/KNOCH-030.md) | Blog Post Detail Page | `⏸` | — | Deferred — blocked by KNOCH-029 redesign |
 
@@ -96,7 +96,7 @@ Run in this exact order: perf first (changes markup), then mobile (tests perf ch
 |----|-------|--------|--------|-------|
 | [KNOCH-019](tickets/KNOCH-019.md) | Performance Optimization — Images, Build, CWV | `✅` | `feature/KNOCH-019-performance` | Done — merged to test (PR #25 + footer polish bundled); Lighthouse verification pending |
 | [KNOCH-020](tickets/KNOCH-020.md) | Responsive / Mobile Adaptations | `✅` | `feature/KNOCH-020-mobile` | Done — merged to test (PR #26 + reel-vertical / project-others-hide / per-slide hero meta polish bundled) |
-| [KNOCH-021](tickets/KNOCH-021.md) | Accessibility Pass — WCAG 2.1 AA | `⬜` | — | Reduced motion, focus, ARIA |
+| [KNOCH-021](tickets/KNOCH-021.md) | Accessibility Pass — WCAG 2.1 AA | `🔵` | `feature/KNOCH-021-a11y-pass` | In review — PR #30 dev → test (closes Phase 5) |
 | [KNOCH-041](tickets/KNOCH-041.md) | Mobile Sustainable Mode — strip GSAP / Lenis / scroll-driven animation | `✅` | `feature/KNOCH-041-mobile-sustainable` | Done — merged to test (PR #27 + image culling + chrome wordmark + hamburger close polish bundled) |
 
 ---
@@ -187,6 +187,75 @@ CMS layer (cuts across phases — wire each section after it is built):
 ## Changelog
 
 All modifications to this document and ticket files are logged here. Tester agent and code review feedback should be recorded as entries.
+
+---
+
+### 2026-05-07 — KNOCH-021 PR opened — IN REVIEW
+
+**Action:** PR #30 opened dev → test. Awaiting QA gate.
+**Tickets affected:** KNOCH-021
+**Reason:** Implementation merged to dev (commit 88504b5). PR also carries the bundled `lenis.start()`-on-programmatic-scroll fix (758c925) found during QA, plus the recent dev-only polish that hadn't shipped to test yet (chrome glass mirror on bottom bar, divergent non-homepage glass triggers, contact + inquiry budget tier shift, KNOCH-028 defer bookkeeping). Header counts: In progress 1→0, In review 0→1.
+
+When PR #30 merges, Phase 5 is complete (019 + 020 + 041 + 021 all ✅) and ready for the test → main squash.
+
+**Requested by:** Enoch
+
+---
+
+### 2026-05-07 — KNOCH-021 merged to dev — awaiting PR open
+
+**Action:** `feature/KNOCH-021-a11y-pass` merged into dev (no-ff). PR to test opens next.
+**Tickets affected:** KNOCH-021
+**Reason:** Accessibility pass complete. Skip-to-content link + `<main id="main-content">` landmark on every page (index, about, portfolio, project, contact); global `prefers-reduced-motion` cascade in `global.css` as a defensive backstop over the existing per-module gates; Lenis itself now respects reduced-motion (hands back to native scroll). Custom cursor swaps to native on Tab. Video lightbox flags `#main-content` as `aria-hidden` while open. Reel cards + portfolio filter tablist both wear the WAI-ARIA keyboard contracts (ArrowLeft/Right/Home/End, roving tabindex, `aria-selected`). Contact form gains `aria-required` on name/email + a hidden `aria-live="polite"` region announcing each step transition. Frame-display counter is now `aria-hidden` site-wide.
+
+A small Lenis fix bundled in (`758c925`): `scrollTo()` now calls `lenis.start()` before issuing programmatic scrolls, so logo / nav clicks from inside the testimonial section (which pauses Lenis for its wheel-paged carousel) actually move the page instead of silently no-op'ing. Surfaced during QA of the a11y work.
+
+Tile-selector native-radio refactor (button[role="radio"] → input[type="radio"]) deferred — current pattern is a valid WAI-ARIA radio implementation with proper aria-checked + radiogroup container, meets AA, and the refactor would be scope creep.
+**Changes:**
+- KNOCH-021: Status 🔵 In progress → 🔵 Merged to dev (still 🔵 until QA gate).
+- Files: 12 src/* changed (+250 lines), plus the Lenis fix and tracking docs.
+
+**Requested by:** Enoch
+
+---
+
+### 2026-05-07 — KNOCH-021 started — 🔵 IN PROGRESS
+
+**Action:** Cut `feature/KNOCH-021-a11y-pass` from dev to finish Phase 5.
+**Tickets affected:** KNOCH-021
+**Reason:** Final Phase 5 ticket — accessibility pass to complete the polish phase before squashing test → main. Audit (via Explore agent) shows strong ARIA foundations already in place (modals, progress bars, nav landmarks, per-module reduced-motion gates across 17 JS modules + 14 CSS files). Gaps to close in this ticket: skip link + `<main>` landmark on every page, global reduced-motion CSS cascade, Lenis reduced-motion guard, body aria-hidden when video lightbox open, aria-required on form fields, step-transition aria-live region, filter tabs `aria-pressed` → `aria-selected`, frame-display aria-hidden, reel arrow-key navigation, custom-cursor keyboard detection. Tile-selector native-radio refactor (button[role=radio] → input[type=radio]) deferred — current pattern is a valid WAI-ARIA radio implementation and meets AA, refactor is scope creep.
+**Changes:**
+- KNOCH-021: Status ⬜ Open → 🔵 In progress; Branch column populated.
+- Header counts: Open 5→4, In progress 0→1.
+
+**Requested by:** Enoch (defer 28, finish phase 5)
+
+---
+
+### 2026-05-07 — KNOCH-028 deferred — ⏸
+
+**Action:** KNOCH-028 (Wire Services Page to Sanity) marked deferred.
+**Tickets affected:** KNOCH-028
+**Reason:** `getServices()` is already in `src/js/sanity.js:39` and the `service` schema is registered in studio. The remaining ACs require rendering against a services page surface that doesn't exist — the build never created `src/services.html` and the homepage doesn't carry a services section. Matches the pattern of KNOCH-018 / 026 / 029 / 030 where the rendering surface didn't fit the build. Pricing-conversation surface for now is the contact form's budget tiers ($1–3k / $3–5k / $5–8k / $8k+).
+**Changes:**
+- KNOCH-028: Status ⬜ Open → ⏸ Deferred.
+- Header counts: Open 6→5, Deferred 4→5.
+
+**Requested by:** Enoch
+
+---
+
+### 2026-05-07 — KNOCH-027 merged to test — ✅ DONE
+
+**Action:** PR #29 merged dev → test (regular merge — merge commit 65f2f3d).
+**Tickets affected:** KNOCH-027
+**Reason:** About-page Sanity hydration shipped clean. Wiring covers headline (with `*word*` italic-marker convention), subheadline, bio, headshot (Sanity CDN, lazy + async-decoded, 220px desktop / 160px mobile), specialties pill row, and the years stat (data-count + visible value + aria-label all sync to `yearsExperience`). Init order via `.finally()` guarantees `initAbout()` runs even on Sanity errors. Live API still returns `[]` for `aboutContent` — the static fallback path is the validated render until Enoch publishes the singleton in Studio.
+**Changes:**
+- KNOCH-027: Status 🔵 In review → ✅ Done.
+- Header counts: In review 1→0, Done 24→25.
+- Phase progress: CMS layer now 4/4 active (022 / 023 / 024 / 025 / 027 ✅; 026 / 029 / 030 deferred). KNOCH-028 (services) status review pending — `getServices()` exists in sanity.js but no services.html page in the build to render it on.
+
+**Requested by:** Enoch
 
 ---
 

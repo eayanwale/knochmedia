@@ -204,7 +204,12 @@ export function initPortfolioPage() {
     tabs.forEach(t => {
       const match = t.dataset.filter === filter;
       t.classList.toggle('is-active', match);
-      t.setAttribute('aria-pressed', match ? 'true' : 'false');
+      /* KNOCH-021: aria-selected (the WAI-ARIA tablist contract) +
+         roving tabindex — the active tab is the only one in the tab
+         sequence, the rest are reachable via arrow-key navigation
+         (handled below). */
+      t.setAttribute('aria-selected', match ? 'true' : 'false');
+      t.setAttribute('tabindex', match ? '0' : '-1');
     });
   }
 
@@ -228,6 +233,24 @@ export function initPortfolioPage() {
 
   tabs.forEach(t => {
     t.addEventListener('click', () => selectFilter(t.dataset.filter));
+
+    /* KNOCH-021: arrow-key navigation across the tablist. ArrowLeft/
+       Right move focus + selection between tabs; Home / End jump to
+       the ends. Standard WAI-ARIA tablist keyboard contract — pairs
+       with the roving tabindex set in setActiveTab. */
+    t.addEventListener('keydown', (e) => {
+      const filters = tabs.map(x => x.dataset.filter);
+      const i = filters.indexOf(t.dataset.filter);
+      let next = -1;
+      if (e.key === 'ArrowRight') next = (i + 1) % filters.length;
+      else if (e.key === 'ArrowLeft') next = (i - 1 + filters.length) % filters.length;
+      else if (e.key === 'Home') next = 0;
+      else if (e.key === 'End') next = filters.length - 1;
+      if (next < 0) return;
+      e.preventDefault();
+      selectFilter(filters[next]);
+      tabs[next].focus();
+    });
   });
 
   /* ── Load more ────────────────────────────────────────── */

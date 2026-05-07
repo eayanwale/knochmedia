@@ -45,10 +45,10 @@ const SERVICE_LABELS = {
 };
 
 const BUDGET_LABELS = {
-  '3-5k':  '$3–5k',
-  '5-8k':  '$5–8k',
-  '8-12k': '$8–12k',
-  '12k+':  '$12k+',
+  '1-3k': '$1–3k',
+  '3-5k': '$3–5k',
+  '5-8k': '$5–8k',
+  '8k+':  '$8k+',
 };
 
 export function initContactPage() {
@@ -176,6 +176,17 @@ export function initContactPage() {
     /* Update progress indicator immediately so it leads the transition */
     if (stepCurrent) stepCurrent.textContent = String(target);
     dots.forEach((d, i) => d.classList.toggle('is-active', i === target - 1));
+
+    /* KNOCH-021: announce the transition to screen readers via the
+       visually-hidden aria-live region. Pull the step title's text
+       (stripped of italic markup) so the announcement matches the
+       visible heading — e.g. "Step 2 of 3 — Let's connect." */
+    const announce = form.querySelector('[data-step-announce]');
+    if (announce) {
+      const heading = next.querySelector('.contact-step-title');
+      const headingText = heading?.textContent.trim() ?? '';
+      announce.textContent = `Step ${target} of ${steps.length}${headingText ? ' — ' + headingText : ''}`;
+    }
 
     if (skipMotion) {
       /* Instant swap — set classes, no GSAP. Clear any inline styles

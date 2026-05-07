@@ -142,43 +142,63 @@ function _initMobileNav() {
   }, { passive: true });
 }
 
-/* Liquid-glass header — fades a frosted backdrop pane in once the
-   interlude reaches the top of the viewport. The hero stays clean
-   (mix-blend-mode handles its dark cinematography); from interlude
-   onward the navbar sits over a soft glass strip so it reads against
-   any of the busier sections that follow.
+/* Liquid-glass chrome — fades frosted backdrop panes in on the top
+   navbar and the bottom timecode bar. The two surfaces are wired
+   independently because they want different behaviour on secondary
+   pages.
 
-   The trigger element is the homepage interlude. On other pages
-   (about / portfolio / project / contact) the element doesn't exist,
-   so the glass simply turns on at page load via a fallback below.
-   That's the desired behaviour - secondary pages don't have a
-   full-bleed cinematic hero, so the navbar wants the glass surface
-   from frame 1. */
+   Homepage:
+     Top + bottom both lockstep on a ScrollTrigger anchored to
+     #interlude. Hero stays clear-chrome; when the interlude reaches
+     just below the chrome bar both surfaces frost together.
+
+   Other pages (about / portfolio / project / contact):
+     - Bottom timecode bar: glass on at page load. The bottom bar
+       is largely cosmetic (REC tick + scroll progress + frame
+       counter) and reads better with a constant frosted base on
+       these pages — there's no cinematic hero requiring it to
+       step out of the way.
+     - Top navbar: scroll-triggered at ~10 % of document scroll
+       so the page's opening still reads clean (about-hero,
+       portfolio top, contact opening) before the glass kicks in.
+       onLeaveBack reverts when the visitor returns to the top.
+
+   This deliberate top/bottom divergence means the chrome surfaces
+   can be in mismatched states on non-homepage pages between page
+   load and the 10 % scroll threshold (bottom: glass / top: clear).
+   That's the intended look — the bottom strip frames the page
+   while the top still floats over the opening. */
 function _initGlassHeader() {
   const chrome = document.getElementById('chrome');
   if (!chrome) return;
 
+  /* timecode bar may be missing on a future minimal page; guard
+     with optional chaining so the navbar half still works. */
+  const timecodeBar = document.querySelector('.timecode-bar');
+
   const interlude = document.getElementById('interlude');
 
-  if (!interlude) {
-    /* Non-homepage entry — no hero-to-interlude transition to scrub
-       against, so just keep the glass on permanently. The chrome
-       transition still fires once on load so it fades in cleanly
-       rather than snapping. */
-    chrome.classList.add('is-glass');
+  if (interlude) {
+    /* Homepage — top + bottom in lockstep at the interlude. */
+    const setGlass = (on) => {
+      chrome.classList.toggle('is-glass', on);
+      timecodeBar?.classList.toggle('is-glass', on);
+    };
+    ScrollTrigger.create({
+      trigger: interlude,
+      start: 'top top+=80',
+      onEnter:     () => setGlass(true),
+      onLeaveBack: () => setGlass(false),
+    });
     return;
   }
 
-  /* Homepage — toggle on as the interlude top reaches just below the
-     chrome bar. start: 'top top+=80' fires when the interlude's top
-     edge sits 80 px below viewport top, which is roughly the moment
-     the navbar starts visually overlapping interlude content rather
-     than the hero. onLeaveBack reverts when the visitor scrolls back
-     up into the hero so the original mix-blend-mode treatment
-     returns over the cinematography. */
+  /* Non-homepage — divergent treatment. */
+  timecodeBar?.classList.add('is-glass');
+
   ScrollTrigger.create({
-    trigger: interlude,
-    start: 'top top+=80',
+    trigger: document.body,
+    start: '10% top',
     onEnter:     () => chrome.classList.add('is-glass'),
     onLeaveBack: () => chrome.classList.remove('is-glass'),
   });

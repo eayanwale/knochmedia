@@ -127,6 +127,9 @@
   </head>
   <body>
 
+    <!-- Skip-to-content link (KNOCH-021) — first focusable, slides in on focus -->
+    <a class="skip-link" href="#main-content">Skip to content</a>
+
     <!--
       Custom cursor — fixed amber ring tracked by GSAP quickTo.
       Hidden on touch / coarse-pointer devices via CSS.
@@ -202,7 +205,7 @@
            aria-valuemin="0"
            aria-valuemax="100"
            aria-label="Page scroll progress"></div>
-      <span id="frame-display">FRAME 01 / 36</span>
+      <span id="frame-display" aria-hidden="true">FRAME 01 / 36</span>
     </div>
 
     <!--
@@ -267,6 +270,8 @@
       hero-content text on top.
       aria-label provides an accessible region name for screen readers.
     -->
+    <main id="main-content">
+
     <section id="hero" class="grain" aria-label="Hero — cinematic photography studio">
 
       <!-- Full-bleed background image — brightness/contrast/grayscale in CSS;
@@ -572,6 +577,8 @@
 <section id="cta" class="grain" aria-label="Inquire">
       <!-- KNOCH-030: Qualified inquiry form with aperture iris transitions -->
     </section>
+
+    </main><!-- /#main-content -->
 
     <!--
       Footer host element (KNOCH-015) — populated by footer.js via

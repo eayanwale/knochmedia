@@ -54,6 +54,9 @@
   </head>
   <body>
 
+    <!-- Skip-to-content link (KNOCH-021) — first focusable, slides in on focus -->
+    <a class="skip-link" href="#main-content">Skip to content</a>
+
     <!-- Custom cursor — desktop ring (KNOCH-004) -->
     <div class="cursor" id="cursor" aria-hidden="true"></div>
 
@@ -107,8 +110,10 @@
            aria-valuemin="0"
            aria-valuemax="100"
            aria-label="Page scroll progress"></div>
-      <span id="frame-display">FRAME 01 / 36</span>
+      <span id="frame-display" aria-hidden="true">FRAME 01 / 36</span>
     </div>
+
+    <main id="main-content">
 
     <!--
       Page hero — left column has the meta label + headline,
@@ -130,10 +135,10 @@
           active tab for AT users.
         -->
         <ul class="portfolio-tabs" role="tablist" aria-label="Filter portfolio by category">
-          <li role="presentation"><button class="portfolio-tab is-active" data-filter="all"      aria-pressed="true">All</button></li>
-          <li role="presentation"><button class="portfolio-tab"           data-filter="wedding"  aria-pressed="false">Weddings</button></li>
-          <li role="presentation"><button class="portfolio-tab"           data-filter="brand"    aria-pressed="false">Brand</button></li>
-          <li role="presentation"><button class="portfolio-tab"           data-filter="music"    aria-pressed="false">Music</button></li>
+          <li role="presentation"><button class="portfolio-tab is-active" data-filter="all"      role="tab" aria-selected="true"  tabindex="0">All</button></li>
+          <li role="presentation"><button class="portfolio-tab"           data-filter="wedding"  role="tab" aria-selected="false" tabindex="-1">Weddings</button></li>
+          <li role="presentation"><button class="portfolio-tab"           data-filter="brand"    role="tab" aria-selected="false" tabindex="-1">Brand</button></li>
+          <li role="presentation"><button class="portfolio-tab"           data-filter="music"    role="tab" aria-selected="false" tabindex="-1">Music</button></li>
         </ul>
 
       </div>
@@ -262,6 +267,8 @@
       </div>
 
     </section>
+
+    </main><!-- /#main-content -->
 
     <!-- Shared footer host (KNOCH-015) — populated by initFooter('expanded') -->
     <footer id="site-footer"></footer>
