@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Static sitemap (KNOCH-037). Lists the four crawlable static entries.
+  Project-detail URLs (/project.html?id=…) are NOT listed here — they're
+  query-string driven and don't index well as discrete pages. KNOCH-040
+  introduces static /project/<slug> routes and at that point the sitemap
+  becomes a build-time artifact and per-project URLs are added.
+
+  lastmod is the last meaningful content/structure update for that page.
+  Bump it when the page's copy or layout changes; ignore for dependency
+  CSS / JS / asset updates.
+-->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://knochmedia.xyz/</loc>
+    <lastmod>2026-05-07</lastmod>
+    <priority>1.0</priority>
+    <changefreq>monthly</changefreq>
+  </url>
+  <url>
+    <loc>https://knochmedia.xyz/about.html</loc>
+    <lastmod>2026-05-07</lastmod>
+    <priority>0.8</priority>
+    <changefreq>monthly</changefreq>
+  </url>
+  <url>
+    <loc>https://knochmedia.xyz/portfolio.html</loc>
+    <lastmod>2026-05-07</lastmod>
+    <priority>0.8</priority>
+    <changefreq>monthly</changefreq>
+  </url>
+  <url>
+    <loc>https://knochmedia.xyz/contact.html</loc>
+    <lastmod>2026-05-07</lastmod>
+    <priority>0.8</priority>
+    <changefreq>yearly</changefreq>
+  </url>
+</urlset>
