@@ -613,8 +613,30 @@
     position: static;
   }
 
+  /* KNOCH-041: form-col + step layout rewritten for mobile.
+     Desktop has steps at position: absolute with a fixed-height parent
+     (.contact-form-col min-height: 820px) so the GSAP slide
+     transitions can move panels off-screen without re-flowing.
+     On mobile that fixed height was sometimes shorter than the
+     active step's actual rendered content (textarea + tiles +
+     conditional partner field on step 3), so the step content
+     overflowed and the sidebar below ended up overlapping the form
+     ("skip the form" landing on top of "tell me about your day").
+     Mobile fix: active step in normal flow, inactive panels
+     display: none. Form-col sizes to its real content; sidebar
+     follows naturally with the 4 rem grid gap. */
   .contact-form-col {
-    min-height: 820px;
+    min-height: 0;
+  }
+
+  .contact-step {
+    position: relative;
+    top: 0;
+    transform: none;
+  }
+
+  .contact-step:not(.is-active) {
+    display: none;
   }
 
   .contact-field-row {

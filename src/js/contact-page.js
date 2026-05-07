@@ -56,6 +56,17 @@ export function initContactPage() {
   if (!form) return;
 
   const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  /* KNOCH-041: mobile takes the same instant-swap path as
+     prefers-reduced-motion. The GSAP slide transition combined with
+     position: absolute step panels caused two issues on mobile - the
+     min-height: 820px form-col was sometimes shorter than the active
+     step's actual rendered content, leaving the sidebar overlapping
+     the form; and inline GSAP transforms persisted between transitions
+     with the panels off-screen. Mobile CSS now uses position: relative
+     for active step + display: none for inactive, so the form-col
+     sizes to its real content. */
+  const isMobile       = window.matchMedia('(max-width: 800px)').matches;
+  const skipMotion     = prefersReduced || isMobile;
 
   /* ── Element refs ─────────────────────────────────────── */
 
@@ -166,15 +177,15 @@ export function initContactPage() {
     if (stepCurrent) stepCurrent.textContent = String(target);
     dots.forEach((d, i) => d.classList.toggle('is-active', i === target - 1));
 
-    if (prefersReduced) {
-      /* Instant swap — set classes, no GSAP */
+    if (skipMotion) {
+      /* Instant swap — set classes, no GSAP. Clear any inline styles
+         GSAP might have set on the panel previously so they don't
+         interfere with the CSS-driven mobile layout (which makes
+         active step position: relative + inactive display: none). */
       current.classList.remove('is-active');
-      current.style.opacity = '0';
-      current.style.visibility = 'hidden';
+      current.style.cssText = '';
       next.classList.add('is-active');
-      next.style.opacity = '1';
-      next.style.visibility = 'visible';
-      next.style.transform = 'translateX(0)';
+      next.style.cssText = '';
       activeStep = target;
       _focusFirstField(next);
       return;
@@ -329,7 +340,7 @@ export function initContactPage() {
      sub stagger up, then the form column + sidebar blocks fade up
      together. Skipped on prefers-reduced-motion (the gsap.from calls
      would still set the off-state). */
-  if (!prefersReduced) {
+  if (!skipMotion) {
     const banner   = document.querySelector('.contact-banner');
     const heroMeta = document.querySelector('.contact-hero-meta');
     const heroTitle = document.querySelector('.contact-hero-title');
