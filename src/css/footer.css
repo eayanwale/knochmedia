@@ -38,6 +38,37 @@
   margin-bottom: 0.6rem;
 }
 
+/* Footer logo — circular Knoch Media emblem, centred above the
+   credits grid, links back to /. Same filter: invert treatment as
+   the chrome had previously, so the dark-on-white asset reads as
+   light-on-transparent against the footer's --ink background. */
+.footer-logo-link {
+  display: block;
+  margin: 0 auto 3rem;
+  width: fit-content;
+  /* Cancel the default 0.55 opacity inherited from .site-footer a */
+  opacity: 1;
+}
+
+.footer-logo {
+  display: block;
+  height: 120px;
+  width: auto;
+  filter: invert(1) brightness(1.05) contrast(1.05);
+  transition: opacity 0.3s var(--ease-cinematic);
+}
+
+.footer-logo-link:hover .footer-logo,
+.footer-logo-link:focus-visible .footer-logo {
+  opacity: 0.85;
+}
+
+.footer-logo-link:focus-visible {
+  outline: 2px solid var(--amber);
+  outline-offset: 6px;
+  border-radius: 50%;
+}
+
 /* Links inherit the dimmed body colour, brighten on hover. The
    transition is purely opacity / colour — no transform — to keep
    the footer feeling like static print rather than animated UI. */
@@ -199,6 +230,14 @@
   }
   .site-footer--expanded .footer-inner--expanded {
     padding: 3.5rem 1.4rem 4rem;
+  }
+
+  /* Smaller logo so it doesn't dominate the narrow viewport */
+  .footer-logo {
+    height: 84px;
+  }
+  .footer-logo-link {
+    margin-bottom: 2rem;
   }
 
   /* Tap-target padding on mobile (KNOCH-020 / WCAG 2.5.5). The 10 px

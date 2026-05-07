@@ -11,7 +11,7 @@
   inset: 0;
   pointer-events: none;
   z-index: var(--z-chrome);
-  padding: 18px 36px;
+  padding: 24px 36px;
   mix-blend-mode: difference;
   /* mix-blend-mode is removed when .is-glass activates so backdrop-filter
      on the ::before pane composes cleanly. See the .is-glass block below. */
@@ -45,7 +45,7 @@
   top: 0;
   left: 0;
   right: 0;
-  height: 96px;
+  height: 80px;
   pointer-events: none;
   background: rgba(10, 10, 10, 0.42);
   backdrop-filter: blur(20px) saturate(1.5);
@@ -95,24 +95,21 @@
   align-items: start;
 }
 
-/* ── Wordmark / logo ──
-   The logo image is the wordmark. No text fallback — the aria-label
-   on the parent <a> handles a11y if the image fails. */
+/* ── Wordmark ──
+   Serif text wordmark in the chrome. The circular logo asset moved
+   to the footer; chrome stays clean text per Enoch's preference. */
 .mark {
-  display: inline-flex;
-  align-items: center;
-  text-decoration: none;
+  font-family: var(--font-serif);
+  font-size: 20px;
+  font-weight: 400;
   color: var(--paper);
+  letter-spacing: -0.01em;
+  text-decoration: none;
+  display: inline-block;
 }
 
-.mark-logo {
-  display: block;
-  height: 56px;
-  width: auto;
-  /* The logo asset is dark-on-white. Inverting flips it to
-     light-on-transparent so it reads on the dark chrome backdrop.
-     Brightness + contrast tweaks fine-tune the lift. */
-  filter: invert(1) brightness(1.1) contrast(1.05);
+.mark .dot {
+  color: var(--amber);
 }
 
 .mark:focus-visible {
@@ -400,19 +397,18 @@
 /* ── Mobile ≤800px ── */
 @media (max-width: 800px) {
   .chrome {
-    padding: 12px 20px;
+    padding: 18px 20px;
   }
 
-  /* Smaller glass strip to match the tighter mobile padding +
-     accommodate the slightly smaller mobile logo height. */
+  /* Glass strip to match the tighter mobile padding */
   .chrome::before {
-    height: 76px;
+    height: 64px;
   }
 
-  /* Logo scales down on mobile to keep the chrome row from
-     dominating the viewport on phones. */
-  .mark-logo {
-    height: 44px;
+  /* Slightly smaller wordmark on mobile so the chrome row doesn't
+     crowd the hamburger toggle on narrow viewports. */
+  .mark {
+    font-size: 20px;
   }
 
   /* Hide center links — logo and REC remain */
@@ -441,7 +437,7 @@
   .nav-toggle {
     display: block;
     position: fixed;
-    top: 12px;
+    top: 18px;
     right: 20px;
     z-index: 12000;
   }
