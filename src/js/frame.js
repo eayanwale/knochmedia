@@ -26,6 +26,10 @@ export function initFrame() {
   if (!section) return;
 
   const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  /* KNOCH-041: mobile takes the same static path as prefers-reduced-motion -
+     the scrub-tied parallax + count-up was glitching on iOS Safari, sometimes
+     leaving stats stuck on 0. Final values are already written above. */
+  const isMobile       = window.matchMedia('(max-width: 800px)').matches;
 
   const bg       = section.querySelector('.bg');
   const metaTag  = section.querySelector('.meta-tag');
@@ -42,7 +46,7 @@ export function initFrame() {
     el.innerHTML = hasEm ? `<em>${target.toLocaleString()}</em>` : target.toLocaleString();
   });
 
-  if (prefersReduced) return;
+  if (prefersReduced || isMobile) return;
 
   const lines = bigEl ? Array.from(bigEl.querySelectorAll('.frame-line')) : [];
 
@@ -99,9 +103,15 @@ export function initFrame() {
         composing with scrub's scale + yPercent independently).
      2. Spotlight reveal — a second natural-filter image (bgReveal) is masked
         by a radial-gradient that follows the cursor, revealing the actual photo
-        in a soft feathered circle while the dark base shows everywhere else. */
+        in a soft feathered circle while the dark base shows everywhere else.
+     KNOCH-041: skipped on touch / coarse pointers. The whole feature is
+     mouse-driven; on a phone the .bg-reveal element loads a second copy
+     of the studio banner image (~218 KB WebP via image-set) and never
+     becomes visible because the mousemove listener never fires.
+     Building it on touch was wasted bandwidth + a memory hit. */
   const sticky = section.querySelector('.sticky');
-  if (sticky) {
+  const isCoarsePointer = window.matchMedia('(pointer: coarse)').matches;
+  if (sticky && !isCoarsePointer) {
     const bgReveal = document.createElement('div');
     bgReveal.className = 'bg-reveal';
     bgReveal.setAttribute('aria-hidden', 'true');

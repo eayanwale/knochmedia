@@ -27,10 +27,8 @@ const LAST_UPDATED = 'May';     /* short month — full year is in ROLL_YEAR */
 const COPYRIGHT_YEAR = '2026';
 
 const CONTACT = {
-  phone:        '240.714.6933',
-  phoneTel:     'tel:+12407146933',
-  email:        'enoch@knochmedia.com',
-  emailMailto:  'mailto:enoch@knochmedia.com',
+  email:        'enoch@knoch.media',
+  emailMailto:  'mailto:enoch@knoch.media',
   city:         'College Park, MD',
   region:       'East Coast available',
 };
@@ -77,8 +75,7 @@ function renderMinimal() {
         </div>
 
         <div class="footer-col footer-col--contact">
-          <p class="footer-strong">Direct line</p>
-          <p><a href="${CONTACT.phoneTel}">${CONTACT.phone}</a></p>
+          <p class="footer-strong">Contact</p>
           <p><a href="${CONTACT.emailMailto}">${CONTACT.email}</a></p>
         </div>
 
@@ -144,7 +141,6 @@ function renderExpanded() {
         <div class="footer-col footer-col--contact">
           <p class="footer-strong">Contact</p>
           <p><a href="${CONTACT.emailMailto}">${CONTACT.email}</a></p>
-          <p><a href="${CONTACT.phoneTel}">${CONTACT.phone}</a></p>
           <p>
             <a class="footer-inline-social"
                href="${SOCIAL.instagram.url}"

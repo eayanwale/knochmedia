@@ -65,6 +65,28 @@ function buildCard(card) {
     if (e.key === 'Enter' || e.key === ' ') {
       e.preventDefault();
       handleCardClick(card);
+      return;
+    }
+
+    /* KNOCH-021: ArrowLeft / ArrowRight move focus between sibling
+       reel cards. The browser's default focus behaviour scrolls the
+       newly-focused card into view; since the reel is GSAP-pinned
+       and scroll-tied, that vertical scroll is translated into
+       horizontal track motion — so focusing the next card naturally
+       advances the pinned timeline to bring it on-screen. Home / End
+       jump to the ends. */
+    if (e.key === 'ArrowLeft' || e.key === 'ArrowRight' || e.key === 'Home' || e.key === 'End') {
+      const siblings = Array.from(el.parentElement?.querySelectorAll('.reel-card') ?? []);
+      const i = siblings.indexOf(el);
+      let next = -1;
+      if (e.key === 'ArrowRight') next = Math.min(i + 1, siblings.length - 1);
+      else if (e.key === 'ArrowLeft') next = Math.max(i - 1, 0);
+      else if (e.key === 'Home') next = 0;
+      else if (e.key === 'End') next = siblings.length - 1;
+      if (next >= 0 && next !== i) {
+        e.preventDefault();
+        siblings[next].focus();
+      }
     }
   });
 
@@ -171,10 +193,16 @@ function splitChars(el) {
    from below their clip with a stagger, desc lines clip-wipe, hint
    fades last. The per-character split makes "Selected work." land
    noticeably even on a quick scroll-by, where the previous full-clip
-   reveal felt like a single instant flash. */
+   reveal felt like a single instant flash.
+   KNOCH-020: skipped on mobile. The scroll-tied write-on cascade was
+   too much on touch devices (Enoch flagged it after the first mobile
+   PR landed); without the dramatic intro the reel-intro panel just
+   reads as a normal headline + desc, which is the right register for
+   a vertical-stack mobile flow. */
 function animateReelIntro(section) {
   const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if (prefersReduced) return;
+  const isMobile       = window.matchMedia('(max-width: 800px)').matches;
+  if (prefersReduced || isMobile) return;
 
   const label    = section.querySelector('.reel-intro-label');
   const headline = section.querySelector('.reel-intro-headline');

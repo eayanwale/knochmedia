@@ -22,6 +22,7 @@ import { initCharHover, initCharMagnify } from './char-hover.js';
 import { initLenis }    from './lenis.js';
 import { initAbout }    from './about.js';
 import { initFooter }   from './footer.js';
+import { initAboutCMS } from './about-cms.js';
 
 initLazyLoad();
 initChrome();
@@ -31,8 +32,16 @@ initCharHover();
    zoom on hover) instead of .headline-hover. Both initialisers are
    safe to call together — they query disjoint class selectors. */
 initCharMagnify();
-initAbout();
 initFooter('expanded');
+
+/* CMS hydration runs before initAbout so the years stat's data-count
+   target reflects any CMS value when the ScrollTrigger counter binds
+   to it. Static markup in about.html is the fallback if the fetch
+   fails or the singleton hasn't been published yet — `.finally` runs
+   initAbout regardless so a Sanity outage never breaks the page. */
+initAboutCMS().finally(() => {
+  initAbout();
+});
 
 /* Boot Lenis after window.load so any image / font dimensions are
    final before ScrollTrigger registers its proxy. The About page has

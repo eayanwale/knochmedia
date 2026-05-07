@@ -251,30 +251,59 @@
   flex: 0 0 8vw;
 }
 
-/* ── Mobile — CSS snap, no GSAP pin ─────────────────────────────── */
+/* ── Mobile — vertical stack, no horizontal scroll (KNOCH-020) ───
+   The horizontal carousel was deemed too much on mobile during live
+   review (Enoch flagged it after the first KNOCH-020 PR landed):
+   horizontal scroll fights vertical page scroll, the .reel-intro
+   panel was sometimes off-screen, and the section overlapped the
+   pinned-frame stats below because the track's height: 100% inside
+   an auto-height #reel produced an ambiguous layout.
+   The fix: drop horizontal scroll entirely, stack the intro + cards
+   vertically with explicit heights so the section flows like every
+   other vertical section on the page. */
 
 @media (max-width: 800px) {
   #reel {
     height: auto;
-    overflow-x: auto;
-    overflow-y: hidden;
-    scroll-snap-type: x mandatory;
-    -webkit-overflow-scrolling: touch;
+    overflow: visible; /* no horizontal scroll */
   }
 
   .reel-track {
-    padding-left: 6vw;
+    flex-direction: column;
+    align-items: stretch;
+    height: auto;
+    padding: 4rem 6vw 2rem;
+    gap: 1.5rem;
     will-change: auto;
   }
 
+  /* Intro panel sits at the top of the stack — not a flex sidebar */
   .reel-intro {
-    flex: 0 0 80vw;
+    flex: 0 0 auto;
+    padding-right: 0;
+  }
+
+  .reel-intro-headline {
+    /* Pull the headline back to a mobile-friendly size; the desktop
+       clamp() floor of 3.5rem is too tall for narrow viewports. */
+    font-size: clamp(2.5rem, 9vw, 3.6rem);
+  }
+
+  .reel-scroll-hint {
+    /* Hint copy was pointing at horizontal scroll - meaningless now. */
+    display: none;
   }
 
   .reel-card {
-    flex: 0 0 80vw;
+    flex: 0 0 auto;
+    width: 100%;
     height: 60vh;
-    scroll-snap-align: start;
+    /* Reset carousel-only props that desktop set on the same element */
+    scroll-snap-align: none;
+  }
+
+  .reel-spacer {
+    display: none;
   }
 
   /* Always show meta on mobile — no hover */

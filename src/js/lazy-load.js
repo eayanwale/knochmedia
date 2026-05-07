@@ -16,6 +16,51 @@
 
 let observer;
 
+/* WebP support detection (KNOCH-019).
+ * Set once on first call to _supportsWebp() — cached for the page
+ * lifetime. Used to decide whether to swap a /foo.jpg URL for the
+ * pre-generated /foo.webp sibling. The .webp sibling is created by
+ * scripts/optimize-images.mjs at quality 80 and lives next to the
+ * source file in src/public/assets/.
+ *
+ * Detection method: a 1×1 lossy WebP data URL. If the browser can
+ * decode it (Image.complete && naturalWidth > 0 after a sync .src
+ * assignment), it speaks WebP. This is the canonical pre-modernizr
+ * test - works in Safari 14+, Chrome, Firefox, Edge. Older Safari
+ * (12, 13) returns false and falls back to the source format.
+ *
+ * For Sanity CDN URLs (?w=… params already negotiate format), we
+ * skip the rewrite entirely — Sanity serves WebP / AVIF natively
+ * via Accept: image/webp content negotiation. */
+let _webpSupport = null;
+
+function _supportsWebp() {
+  if (_webpSupport !== null) return _webpSupport;
+  try {
+    const probe = new Image();
+    probe.src = 'data:image/webp;base64,UklGRiIAAABXRUJQVlA4IBYAAAAwAQCdASoBAAEADsD+JaQAA3AAAAAA';
+    _webpSupport = probe.complete && probe.naturalWidth > 0;
+  } catch {
+    _webpSupport = false;
+  }
+  return _webpSupport;
+}
+
+/* Rewrite a same-origin asset URL to its .webp sibling if (a) the
+ * browser supports WebP and (b) the URL ends in .jpg / .jpeg / .png
+ * AND lives under /assets/ (the directory the optimizer covers).
+ * Returns the original URL unchanged when either gate fails. */
+function _toWebpIfPossible(url) {
+  if (!url || typeof url !== 'string') return url;
+  /* Sanity CDN already serves modern formats - leave its URLs alone. */
+  if (url.includes('cdn.sanity.io')) return url;
+  if (!_supportsWebp()) return url;
+
+  const m = url.match(/^(\/assets\/[^?#]+)\.(jpe?g|png)(.*)$/i);
+  if (!m) return url;
+  return `${m[1]}.webp${m[3]}`;
+}
+
 /**
  * Initialize lazy loading for all [data-bg] elements currently in the DOM.
  * Safe to call multiple times — already-observed elements are skipped.
@@ -72,8 +117,17 @@ export function loadBgImage(el, url) {
  * and swap classes for the CSS crosshatch→loaded transition.
  */
 function _loadImage(el) {
-  const url = el.dataset.bg;
-  if (!url) return;
+  const sourceUrl = el.dataset.bg;
+  if (!sourceUrl) return;
+
+  /* Rewrite to .webp sibling when the browser supports it AND the
+     asset lives under /assets/. The Sanity CDN guard inside
+     _toWebpIfPossible() prevents rewrites of Sanity URLs (which do
+     their own format negotiation via Accept headers + ?auto=format
+     params). On WebP-supporting browsers this loads the optimised
+     sibling created by scripts/optimize-images.mjs at quality 80,
+     typically 70-95% smaller than the JPG/PNG source. */
+  const url = _toWebpIfPossible(sourceUrl);
 
   const img = new Image();
 
@@ -88,8 +142,27 @@ function _loadImage(el) {
   };
 
   img.onerror = () => {
+    /* WebP rewrite missed (.webp sibling didn't exist because the
+       optimizer hasn't run yet, or 404'd) - retry once with the
+       original source URL before giving up. Keeps the page working
+       when an asset is added without re-running the optimizer. */
+    if (url !== sourceUrl) {
+      const retry = new Image();
+      retry.onload = () => {
+        el.style.backgroundImage = `url('${sourceUrl}')`;
+        el.classList.remove('lazy-placeholder');
+        el.classList.add('lazy-loaded');
+      };
+      retry.onerror = () => {
+        el.style.backgroundImage = `url('${sourceUrl}')`;
+        el.classList.remove('lazy-placeholder');
+        el.classList.add('lazy-loaded');
+      };
+      retry.src = sourceUrl;
+      return;
+    }
     // Fallback: apply image anyway (browser handles broken state)
-    el.style.backgroundImage = `url('${url}')`;
+    el.style.backgroundImage = `url('${sourceUrl}')`;
     el.classList.remove('lazy-placeholder');
     el.classList.add('lazy-loaded');
   };

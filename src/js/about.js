@@ -41,10 +41,19 @@ export function initAbout() {
   if (!aboutHero) return;
 
   const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  /* KNOCH-041: mobile takes the same path as prefers-reduced-motion
+     across this entire module. The pinned-chapter timeline + stat
+     count-up + hero/intro fades all need ScrollTrigger + Lenis
+     positioning that on iOS Safari was leaving sections invisible
+     or in half-faded states. Mobile gets a static stacked layout
+     (CSS handles the position: absolute -> position: relative
+     override under @media (max-width: 800px)). */
+  const isMobile       = window.matchMedia('(max-width: 800px)').matches;
+  const skipMotion     = prefersReduced || isMobile;
 
   /* ── 1. Hero entrance ──────────────────────────────────────── */
 
-  if (!prefersReduced) {
+  if (!skipMotion) {
     const heroMeta     = aboutHero.querySelector('.about-hero-meta');
     const heroHeadline = aboutHero.querySelector('.about-hero-headline');
     const heroSub      = aboutHero.querySelector('.about-hero-sub');
@@ -68,7 +77,7 @@ export function initAbout() {
      Replaced with a single smooth entrance animation — opacity + y
      fade-up when the section enters view, then no further motion. */
   const introBody = document.querySelector('.about-intro-body');
-  if (introBody && !prefersReduced) {
+  if (introBody && !skipMotion) {
     gsap.from(introBody, {
       opacity: 0,
       y: 60,
@@ -111,7 +120,7 @@ export function initAbout() {
   const chapters = Array.from(document.querySelectorAll('.about-chapter'));
   const total    = chapters.length;
 
-  if (story && total && !prefersReduced) {
+  if (story && total && !skipMotion) {
     /* Reveal timelines per chapter — text settles when the chapter
        becomes the active layer. Paused; played by ScrollTrigger
        callbacks below. */
@@ -200,11 +209,12 @@ export function initAbout() {
        on page load — onUpdate doesn't fire until first scroll. */
     reveals[0].play();
     lastChapter = 0;
-  } else if (prefersReduced && chapters.length) {
-    /* Reduced-motion: snap chapters to fully visible state, all stacked.
-       Without the pin, they'd just show as overlapping content — accept
-       that the section won't tell its story scroll-wise, but at least
-       remains readable. */
+  } else if (skipMotion && chapters.length) {
+    /* Reduced-motion + mobile: snap chapters to fully visible state.
+       The CSS mobile media query overrides .about-chapter from
+       position: absolute; inset: 0 to position: relative; height: auto
+       so that with all opacity: 1 the chapters flow vertically as a
+       stacked narrative instead of overlapping in the same 90vh box. */
     chapters.forEach(c => gsap.set(c, { opacity: 1 }));
   }
 
@@ -216,7 +226,7 @@ export function initAbout() {
      than reactive — duration 1.6s with a 0.3s stagger and a wider
      y offset so each step has its own beat. */
   const processSteps = document.querySelectorAll('.about-process-step');
-  if (processSteps.length && !prefersReduced) {
+  if (processSteps.length && !skipMotion) {
     gsap.from(processSteps, {
       opacity: 0,
       y: 50,
@@ -246,7 +256,7 @@ export function initAbout() {
       return hasEm ? `<em>${fmt}</em>` : fmt;
     };
 
-    if (prefersReduced) {
+    if (skipMotion) {
       stat.innerHTML = wrap(target);
       return;
     }

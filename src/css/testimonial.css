@@ -216,4 +216,18 @@
   .testimonial-quote {
     font-size: clamp(20px, 5vw, 28px);
   }
+
+  /* Mobile: testimonial-bg shows full-bleed at low brightness instead of
+     the desktop hover spotlight (no mouseenter on touch). The image still
+     swaps with each slide via goTo()'s sectionHovered=false branch.
+     brightness(0.35) keeps the photo readable as an atmospheric layer
+     while the testimonial text on top stays legible. mask-image override
+     is defensive — ensures any synthesized iOS mouseenter that managed
+     to set an inline mask doesn't survive a slide swap. */
+  .testimonial-bg {
+    opacity: 1;
+    filter: grayscale(0.2) brightness(0.35) contrast(1.05);
+    mask-image: none !important;
+    -webkit-mask-image: none !important;
+  }
 }

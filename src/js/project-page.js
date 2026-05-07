@@ -26,6 +26,7 @@ import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { getProject, listProjects } from './projects.js';
 import { openVideoLightbox } from './video-lightbox.js';
+import { loadBgImage, initLazyLoad } from './lazy-load.js';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -77,7 +78,10 @@ export function initProjectPage() {
   const heroTitle = document.querySelector('.project-hero-title');
   const heroSub   = document.querySelector('.project-hero-sub');
 
-  if (heroImg) heroImg.style.backgroundImage = `url('${project.cover}')`;
+  /* Hero LCP image — route through loadBgImage so the WebP rewrite
+     and lazy-load placeholder both kick in. The .webp sibling is the
+     LCP element and is ~70% smaller than the source JPG (KNOCH-019). */
+  if (heroImg) loadBgImage(heroImg, project.cover);
   if (heroMeta) heroMeta.textContent = `— ${(project.category || '').toUpperCase()}`;
   if (heroTitle) heroTitle.textContent = project.title;
   if (heroSub) {
@@ -164,17 +168,20 @@ export function initProjectPage() {
     if (others.length) {
       /* Append cards after the existing intro panel. innerHTML +=
          preserves the .project-others-intro element that's already
-         present in the HTML. */
+         present in the HTML. data-bg routes through lazy-load so the
+         WebP rewrite happens (KNOCH-019); initLazyLoad() picks up the
+         new elements and observes them for IO entry. */
       gallery.insertAdjacentHTML('beforeend', others.map(p => `
         <a class="project-other" href="/project.html?id=${encodeURIComponent(p.id)}"
            aria-label="${p.title} — ${p.category}">
-          <div class="project-other-img" style="background-image: url('${p.cover}')" role="img" aria-hidden="true"></div>
+          <div class="project-other-img" data-bg="${p.cover}" role="img" aria-hidden="true"></div>
           <div class="project-other-meta">
             <span class="project-other-cat">${(p.category || 'Project').toUpperCase()}</span>
             <h4 class="project-other-title">${p.title}</h4>
           </div>
         </a>
       `).join(''));
+      initLazyLoad();
 
       /* Trailing spacer — gives the pin's `end` position breathing
          room past the last card. */

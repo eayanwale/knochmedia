@@ -23,7 +23,14 @@
 .pinned-frame .bg {
   position: absolute;
   inset: -10%;
-  background-image: url('/assets/studio/banner.jpg');
+  /* KNOCH-019: image-set() lets the browser pick the best supported
+     format. Modern browsers (universal in 2026) use the .webp sibling;
+     legacy Safari falls through to the .jpg. Vite hashes both files
+     into dist/. */
+  background-image: image-set(
+    url('/assets/studio/banner.webp') type('image/webp'),
+    url('/assets/studio/banner.jpg') type('image/jpeg')
+  );
   background-size: cover;
   background-position: center;
   filter: brightness(0.3) grayscale(0.8) contrast(1.0);
@@ -35,7 +42,10 @@
 .pinned-frame .bg-reveal {
   position: absolute;
   inset: -10%;
-  background-image: url('/assets/studio/banner.jpg');
+  background-image: image-set(
+    url('/assets/studio/banner.webp') type('image/webp'),
+    url('/assets/studio/banner.jpg') type('image/jpeg')
+  );
   background-size: cover;
   background-position: center;
   filter: brightness(1.0) grayscale(0) contrast(1.05);

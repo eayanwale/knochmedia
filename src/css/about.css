@@ -91,7 +91,10 @@
 .about-intro {
   padding: 8rem 8vw;
   display: flex;
+  flex-direction: column;
+  align-items: center;
   justify-content: center;
+  gap: 2.5rem;
 }
 
 .about-intro-body {
@@ -104,6 +107,52 @@
   color: rgba(237, 230, 216, 0.85);
   max-width: 32em;
   text-align: center;
+}
+
+/* KNOCH-027: Sanity-injected headshot — only rendered when a
+   `headshot` field is published. Compact 220px circular portrait
+   sitting above the studio statement. The 1px amber inner ring
+   ties it back to the chrome accent palette. */
+.about-intro-headshot {
+  margin: 0;
+  width: 220px;
+  height: 220px;
+  border-radius: 50%;
+  overflow: hidden;
+  box-shadow: 0 0 0 1px rgba(196, 168, 124, 0.45);
+}
+
+.about-intro-headshot img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  filter: grayscale(0.15);
+}
+
+/* KNOCH-027: specialties pill row — only rendered when the
+   `specialties` array is non-empty. Mono-uppercase tags echo the
+   meta-label styling used elsewhere on the page. */
+.about-intro-tags {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  max-width: 40em;
+}
+
+.about-intro-tags li {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: rgba(237, 230, 216, 0.6);
+  padding: 8px 16px;
+  border: 1px solid rgba(237, 230, 216, 0.18);
+  border-radius: 999px;
 }
 
 
@@ -369,10 +418,33 @@
 
   .about-intro {
     padding: 5rem 6vw;
+    gap: 2rem;
+  }
+
+  /* KNOCH-027: smaller portrait on phones — keeps the studio
+     statement as the visual anchor when both are present. */
+  .about-intro-headshot {
+    width: 160px;
+    height: 160px;
+  }
+
+  /* KNOCH-041: chapters flow vertically as a stacked narrative on
+     mobile. Desktop has them stacked absolute inset: 0 inside a
+     100vh .about-story so the GSAP master timeline can scrub
+     between them; mobile has no GSAP (about.js bails on the same
+     gate as prefers-reduced-motion) so we override to natural flow.
+     min-height: 80vh so each chapter still gets a "slide-like"
+     amount of vertical space before the next one starts. */
+  .about-story {
+    height: auto;
+    overflow: visible;
   }
 
   .about-chapter {
-    min-height: 90vh;
+    position: relative;
+    inset: auto;
+    min-height: 80vh;
+    opacity: 1;
   }
 
   .about-chapter-content {

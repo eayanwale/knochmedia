@@ -7,6 +7,21 @@
 
     <!-- Primary meta -->
     <meta name="description" content="The full Knoch Media portfolio — weddings, brand films, sports, portraits. Filter by category to explore the work." />
+    <link rel="canonical" href="https://knochmedia.xyz/portfolio.html" />
+
+    <!-- Open Graph / social share (KNOCH-019) -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Knoch Media" />
+    <meta property="og:title" content="The Work — Knoch Media" />
+    <meta property="og:description" content="The full portfolio — weddings, brand films, music, portraits. Filter to explore." />
+    <meta property="og:url" content="https://knochmedia.xyz/portfolio.html" />
+    <meta property="og:image" content="https://knochmedia.xyz/assets/og/og-default.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="The Work — Knoch Media" />
+    <meta name="twitter:description" content="The full portfolio — weddings, brand films, music, portraits." />
+    <meta name="twitter:image" content="https://knochmedia.xyz/assets/og/og-default.jpg" />
     <meta name="theme-color" content="#0a0a0a" />
 
     <!-- Sanity CMS config (KNOCH-023) — kept consistent across pages -->
@@ -34,9 +49,13 @@
       LCP preload — first card image. Cards 2–8 download as part of the
       initial visible batch but only this first one gets fetchpriority high.
     -->
-    <link rel="preload" as="image" href="/assets/portfolio/cover-alex-morgan.jpg" fetchpriority="high" />
+    <!-- LCP preload (KNOCH-019): WebP sibling, 33% smaller than the JPG source -->
+    <link rel="preload" as="image" href="/assets/portfolio/cover-alex-morgan.webp" fetchpriority="high" />
   </head>
   <body>
+
+    <!-- Skip-to-content link (KNOCH-021) — first focusable, slides in on focus -->
+    <a class="skip-link" href="#main-content">Skip to content</a>
 
     <!-- Custom cursor — desktop ring (KNOCH-004) -->
     <div class="cursor" id="cursor" aria-hidden="true"></div>
@@ -63,8 +82,23 @@
           <span>REC · <span id="tc">00:00:00</span></span>
         </div>
 
+        <!-- Mobile hamburger toggle (KNOCH-020) -->
+        <button class="nav-toggle" type="button"
+                aria-label="Open navigation"
+                aria-expanded="false"
+                aria-controls="nav-overlay">
+          <span class="nav-toggle-line" aria-hidden="true"></span>
+          <span class="nav-toggle-line" aria-hidden="true"></span>
+          <span class="nav-toggle-line" aria-hidden="true"></span>
+        </button>
+
       </div>
     </div>
+
+    <!-- Mobile nav overlay (KNOCH-020) — populated by chrome.js -->
+    <nav class="nav-overlay" id="nav-overlay" aria-hidden="true" aria-label="Mobile navigation">
+      <div class="nav-overlay-inner"></div>
+    </nav>
 
     <!-- Bottom timecode bar — cosmetic chrome -->
     <div class="timecode-bar" aria-hidden="true">
@@ -76,8 +110,10 @@
            aria-valuemin="0"
            aria-valuemax="100"
            aria-label="Page scroll progress"></div>
-      <span id="frame-display">FRAME 01 / 36</span>
+      <span id="frame-display" aria-hidden="true">FRAME 01 / 36</span>
     </div>
+
+    <main id="main-content">
 
     <!--
       Page hero — left column has the meta label + headline,
@@ -99,10 +135,10 @@
           active tab for AT users.
         -->
         <ul class="portfolio-tabs" role="tablist" aria-label="Filter portfolio by category">
-          <li role="presentation"><button class="portfolio-tab is-active" data-filter="all"      aria-pressed="true">All</button></li>
-          <li role="presentation"><button class="portfolio-tab"           data-filter="wedding"  aria-pressed="false">Weddings</button></li>
-          <li role="presentation"><button class="portfolio-tab"           data-filter="brand"    aria-pressed="false">Brand</button></li>
-          <li role="presentation"><button class="portfolio-tab"           data-filter="music"    aria-pressed="false">Music</button></li>
+          <li role="presentation"><button class="portfolio-tab is-active" data-filter="all"      role="tab" aria-selected="true"  tabindex="0">All</button></li>
+          <li role="presentation"><button class="portfolio-tab"           data-filter="wedding"  role="tab" aria-selected="false" tabindex="-1">Weddings</button></li>
+          <li role="presentation"><button class="portfolio-tab"           data-filter="brand"    role="tab" aria-selected="false" tabindex="-1">Brand</button></li>
+          <li role="presentation"><button class="portfolio-tab"           data-filter="music"    role="tab" aria-selected="false" tabindex="-1">Music</button></li>
         </ul>
 
       </div>
@@ -129,7 +165,7 @@
         <!-- 1 — Wedding -->
         <article class="portfolio-card" data-category="wedding" data-project-id="alex-morgan" tabindex="0" role="button"
           aria-label="Alex and Morgan — Eastern Shore wedding">
-          <div class="portfolio-card-img" style="background-image: url('/assets/portfolio/cover-alex-morgan.jpg')" role="img" aria-hidden="true"></div>
+          <div class="portfolio-card-img" data-bg="/assets/portfolio/cover-alex-morgan.jpg" role="img" aria-hidden="true"></div>
           <div class="portfolio-card-label">
             <span class="portfolio-card-cat">№ 005 · Wedding</span>
             <h3 class="portfolio-card-title">Alex and Morgan</h3>
@@ -140,7 +176,7 @@
         <!-- 2 — Wedding -->
         <article class="portfolio-card" data-category="wedding" data-project-id="fayo-femi" tabindex="0" role="button"
           aria-label="Fayo and Femi — Maryland introduction">
-          <div class="portfolio-card-img" style="background-image: url('/assets/portfolio/cover-fayo-femi.jpg'); background-position: 50% 65%" role="img" aria-hidden="true"></div>
+          <div class="portfolio-card-img" data-bg="/assets/portfolio/cover-fayo-femi.jpg" style="background-position: 50% 65%" role="img" aria-hidden="true"></div>
           <div class="portfolio-card-label">
             <span class="portfolio-card-cat">№ 001 · Wedding</span>
             <h3 class="portfolio-card-title">Fayo and Femi</h3>
@@ -151,7 +187,7 @@
         <!-- 3 — Wedding -->
         <article class="portfolio-card" data-category="wedding" data-project-id="shawn-bekki" tabindex="0" role="button"
           aria-label="Shawn and Bekki — Pennsylvania wedding">
-          <div class="portfolio-card-img" style="background-image: url('/assets/portfolio/cover-shawn-bekki.jpg')" role="img" aria-hidden="true"></div>
+          <div class="portfolio-card-img" data-bg="/assets/portfolio/cover-shawn-bekki.jpg" role="img" aria-hidden="true"></div>
           <div class="portfolio-card-label">
             <span class="portfolio-card-cat">№ 004 · Wedding</span>
             <h3 class="portfolio-card-title">Shawn and Bekki</h3>
@@ -162,7 +198,7 @@
         <!-- 4 — Brand -->
         <article class="portfolio-card" data-category="brand" data-project-id="rapha-records" tabindex="0" role="button"
           aria-label="Rapha Records — brand film">
-          <div class="portfolio-card-img" style="background-image: url('/assets/portfolio/cover-rapha-records.jpg')" role="img" aria-hidden="true"></div>
+          <div class="portfolio-card-img" data-bg="/assets/portfolio/cover-rapha-records.jpg" role="img" aria-hidden="true"></div>
           <div class="portfolio-card-label">
             <span class="portfolio-card-cat">№ 007 · Brand</span>
             <h3 class="portfolio-card-title">Rapha Records</h3>
@@ -173,7 +209,7 @@
         <!-- 5 — Music -->
         <article class="portfolio-card" data-category="music" data-project-id="what-mighty-praise" tabindex="0" role="button"
           aria-label="What Mighty Praise — worship film">
-          <div class="portfolio-card-img" style="background-image: url('/assets/portfolio/cover-what-mighty-praise.png')" role="img" aria-hidden="true"></div>
+          <div class="portfolio-card-img" data-bg="/assets/portfolio/cover-what-mighty-praise.png" role="img" aria-hidden="true"></div>
           <div class="portfolio-card-label">
             <span class="portfolio-card-cat">№ 002 · Music</span>
             <h3 class="portfolio-card-title">What Mighty Praise</h3>
@@ -184,7 +220,7 @@
         <!-- 6 — Music -->
         <article class="portfolio-card" data-category="music" data-project-id="yahweh-we-you" tabindex="0" role="button"
           aria-label="Yahweh We You — worship cover">
-          <div class="portfolio-card-img" style="background-image: url('/assets/portfolio/cover-yahweh-we-you.png')" role="img" aria-hidden="true"></div>
+          <div class="portfolio-card-img" data-bg="/assets/portfolio/cover-yahweh-we-you.png" role="img" aria-hidden="true"></div>
           <div class="portfolio-card-label">
             <span class="portfolio-card-cat">№ 010 · Music</span>
             <h3 class="portfolio-card-title">Yahweh We &hearts; You</h3>
@@ -195,7 +231,7 @@
         <!-- 7 — Brand (event documentary) -->
         <article class="portfolio-card" data-category="brand" data-project-id="woodsmen" tabindex="0" role="button"
           aria-label="Mont Alto Woodsmen — event documentary">
-          <div class="portfolio-card-img" style="background-image: url('/assets/portfolio/cover-woodsmen.jpg')" role="img" aria-hidden="true"></div>
+          <div class="portfolio-card-img" data-bg="/assets/portfolio/cover-woodsmen.jpg" role="img" aria-hidden="true"></div>
           <div class="portfolio-card-label">
             <span class="portfolio-card-cat">№ 009 · Brand</span>
             <h3 class="portfolio-card-title">Mont Alto Woodsmen</h3>
@@ -206,7 +242,7 @@
         <!-- 8 — Brand (charity event film) -->
         <article class="portfolio-card" data-category="brand" data-project-id="bcf-gala" tabindex="0" role="button"
           aria-label="BCF Gala Night — charity event film">
-          <div class="portfolio-card-img" style="background-image: url('/assets/reel/reel-02.png')" role="img" aria-hidden="true"></div>
+          <div class="portfolio-card-img" data-bg="/assets/reel/reel-02.png" role="img" aria-hidden="true"></div>
           <div class="portfolio-card-label">
             <span class="portfolio-card-cat">№ 011 · Brand</span>
             <h3 class="portfolio-card-title">BCF Gala Night</h3>
@@ -231,6 +267,8 @@
       </div>
 
     </section>
+
+    </main><!-- /#main-content -->
 
     <!-- Shared footer host (KNOCH-015) — populated by initFooter('expanded') -->
     <footer id="site-footer"></footer>

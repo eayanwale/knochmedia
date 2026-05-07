@@ -11,7 +11,7 @@
   inset: 0;
   pointer-events: none;
   z-index: var(--z-chrome);
-  padding: 28px 36px;
+  padding: 24px 36px;
   mix-blend-mode: difference;
   /* mix-blend-mode is removed when .is-glass activates so backdrop-filter
      on the ::before pane composes cleanly. See the .is-glass block below. */
@@ -45,7 +45,7 @@
   top: 0;
   left: 0;
   right: 0;
-  height: 84px;
+  height: 80px;
   pointer-events: none;
   background: rgba(10, 10, 10, 0.42);
   backdrop-filter: blur(20px) saturate(1.5);
@@ -95,10 +95,12 @@
   align-items: start;
 }
 
-/* ── Wordmark / logo ── */
+/* ── Wordmark ──
+   Serif text wordmark in the chrome. The circular logo asset moved
+   to the footer; chrome stays clean text per Enoch's preference. */
 .mark {
   font-family: var(--font-serif);
-  font-size: 17px;
+  font-size: 20px;
   font-weight: 400;
   color: var(--paper);
   letter-spacing: -0.01em;
@@ -208,10 +210,54 @@
   z-index: var(--z-chrome);
   pointer-events: none;
   mix-blend-mode: difference;
+  /* mix-blend-mode is removed when .is-glass activates so backdrop-filter
+     on the ::before pane composes cleanly. Mirrors the .chrome pattern. */
+  transition: mix-blend-mode 0s;
   font-family: var(--font-mono);
   font-size: 10px;
   letter-spacing: 0.2em;
   color: var(--paper);
+}
+
+/* ── Liquid-glass pane on the bottom bar — mirror of .chrome::before.
+   Inset:0 covers the bar's auto-sized box exactly (the parent is
+   position: fixed so it establishes a containing block + stacking
+   context via z-index), so mobile padding overrides automatically
+   resize the pane without a separate media query. The cut-glass
+   accents flip to the top edge (separator where the bar meets page
+   content above) and a bottom highlight (decorative shimmer at the
+   viewport edge) — symmetric counterpart to the chrome's top-edge
+   highlight + bottom-edge separator. */
+.timecode-bar::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: rgba(10, 10, 10, 0.42);
+  backdrop-filter: blur(20px) saturate(1.5);
+  -webkit-backdrop-filter: blur(20px) saturate(1.5);
+  border-top: 1px solid rgba(237, 230, 216, 0.08);
+  box-shadow: inset 0 -1px 0 rgba(237, 230, 216, 0.07);
+  opacity: 0;
+  transition: opacity 0.55s var(--ease-cinematic);
+  z-index: -1;
+}
+
+/* Glass-on state — chrome.js toggles .is-glass on the bar in the
+   same callbacks that toggle it on .chrome, so the top + bottom
+   chrome surfaces frost together at the interlude crossover. */
+.timecode-bar.is-glass {
+  mix-blend-mode: normal;
+}
+
+.timecode-bar.is-glass::before {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .timecode-bar::before {
+    transition: none;
+  }
 }
 
 /* Scroll-progress line — amber fill via --p CSS variable set by JS */
@@ -233,15 +279,180 @@
   background: var(--amber);
 }
 
+/* ── Mobile hamburger toggle (KNOCH-020) ──
+   Desktop: hidden. Mobile: visible at top-right of the chrome row,
+   replacing the .nav-center which hides at <=800 px. The button is
+   a 44x44 tap target (WCAG 2.5.5) with three 2 px paper lines that
+   animate to an X when .is-open lands. The actual menu lives in
+   .nav-overlay below. */
+.nav-toggle {
+  display: none;
+  appearance: none;
+  -webkit-appearance: none;
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  width: 44px;
+  height: 44px;
+  position: relative;
+  /* Sit at the right end of the chrome grid so it replaces the
+     REC indicator visually on mobile (REC is decorative, lower
+     priority than the menu). */
+  margin-left: auto;
+  z-index: calc(var(--z-chrome) + 2); /* above the overlay so it stays clickable when menu is open */
+  color: var(--paper);
+}
+
+.nav-toggle:focus-visible {
+  outline: 2px solid var(--amber);
+  outline-offset: 4px;
+}
+
+.nav-toggle-line {
+  display: block;
+  position: absolute;
+  left: 10px;
+  width: 24px;
+  height: 1.5px;
+  background: currentColor;
+  border-radius: 1px;
+  transform-origin: center;
+  transition:
+    transform 0.35s var(--ease-cinematic),
+    top 0.35s var(--ease-cinematic),
+    opacity 0.2s var(--ease-cinematic);
+}
+
+.nav-toggle-line:nth-child(1) { top: 16px; }
+.nav-toggle-line:nth-child(2) { top: 22px; }  /* center, exact button mid */
+.nav-toggle-line:nth-child(3) { top: 28px; }
+
+/* Open state: lines collapse into an X. Top + bottom translate to
+   center then rotate; middle fades out so the X reads cleanly. */
+.nav-toggle.is-open .nav-toggle-line:nth-child(1) {
+  top: 22px;
+  transform: rotate(45deg);
+}
+.nav-toggle.is-open .nav-toggle-line:nth-child(2) {
+  opacity: 0;
+}
+.nav-toggle.is-open .nav-toggle-line:nth-child(3) {
+  top: 22px;
+  transform: rotate(-45deg);
+}
+
+/* ── Mobile nav overlay (KNOCH-020) ──
+   Full-viewport ink panel. Hidden by default (visibility hidden +
+   opacity 0). When .is-open lands, fades in over 0.4 s and the
+   links stagger up from y: 24 px (handled by JS via GSAP). */
+.nav-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: calc(var(--z-chrome) + 1);
+  background: var(--ink);
+  /* Frosted-edge feel matches the new liquid-glass header treatment */
+  backdrop-filter: blur(18px) saturate(1.4);
+  -webkit-backdrop-filter: blur(18px) saturate(1.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity 0.4s var(--ease-cinematic),
+    visibility 0s linear 0.4s;
+  /* Hidden on desktop entirely - it's mobile-only chrome. */
+  display: none;
+}
+
+.nav-overlay.is-open {
+  opacity: 1;
+  visibility: visible;
+  transition:
+    opacity 0.4s var(--ease-cinematic),
+    visibility 0s linear 0s;
+}
+
+.nav-overlay-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.6rem;
+  padding: 0 6vw;
+  text-align: center;
+}
+
+.nav-overlay-inner a {
+  font-family: var(--font-serif);
+  font-weight: 300;
+  font-size: clamp(40px, 11vw, 72px);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  color: var(--paper);
+  text-decoration: none;
+  /* Tap target padding so each link is comfortably >=44 px tall
+     even at smaller font sizes (WCAG 2.5.5). */
+  padding: 0.4rem 0;
+  transition: color 0.3s var(--ease-cinematic);
+}
+
+.nav-overlay-inner a:hover,
+.nav-overlay-inner a:focus-visible {
+  color: var(--amber);
+}
+
+.nav-overlay-inner a:focus-visible {
+  outline: none;
+}
+
+.nav-overlay-inner a[aria-current="page"] {
+  color: var(--amber);
+  font-style: italic;
+}
+
+/* Visible Close affordance - sits below the nav links inside the
+   overlay so visitors always have an obvious exit (the morphing
+   hamburger -> X is a backup but not always read as "close").
+   chrome.js inserts this <button> at runtime alongside the cloned
+   nav links. */
+.nav-overlay-close {
+  appearance: none;
+  -webkit-appearance: none;
+  background: none;
+  border: 0;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: rgba(237, 230, 216, 0.55);
+  cursor: pointer;
+  margin-top: 2.4rem;
+  padding: 0.6rem 1rem;
+  transition: color 0.3s var(--ease-cinematic);
+}
+
+.nav-overlay-close:hover,
+.nav-overlay-close:focus-visible {
+  color: var(--amber);
+  outline: none;
+}
+
 /* ── Mobile ≤800px ── */
 @media (max-width: 800px) {
   .chrome {
     padding: 18px 20px;
   }
 
-  /* Smaller glass strip to match the tighter mobile padding */
+  /* Glass strip to match the tighter mobile padding */
   .chrome::before {
     height: 64px;
+  }
+
+  /* Slightly smaller wordmark on mobile so the chrome row doesn't
+     crowd the hamburger toggle on narrow viewports. */
+  .mark {
+    font-size: 20px;
   }
 
   /* Hide center links — logo and REC remain */
@@ -249,7 +460,53 @@
     display: none;
   }
 
+  /* Hide REC indicator on mobile - the hamburger replaces it visually
+     and the chrome-grid's third column needs to free up for the toggle. */
+  .nav-right {
+    display: none;
+  }
+
+  /* Activate hamburger toggle on mobile, AND pin it to the viewport
+     instead of leaving it inside the chrome stacking context.
+     Why position: fixed: the .nav-overlay sits at z-(--z-chrome + 1),
+     forming its own document-level stacking context. The toggle was
+     previously inside .chrome (which forms its own stacking context
+     at z-(--z-chrome)), so its z-index couldn't escape - the overlay
+     visually covered the toggle's X icon when open. Lifting the
+     toggle to position: fixed with a high z-index means it sits
+     above the overlay no matter what, so tapping the X always
+     closes the menu (KNOCH-041 follow-up).
+     Position values match what the toggle's grid-cell location was:
+     same top-right corner the .chrome row would have placed it at. */
+  .nav-toggle {
+    display: block;
+    position: fixed;
+    top: 18px;
+    right: 20px;
+    z-index: 12000;
+  }
+
+  /* Activate the overlay container (display: flex when JS toggles
+     .is-open via the visibility/opacity gate above) */
+  .nav-overlay {
+    display: flex;
+  }
+
+  /* Tap-target padding for the wordmark on mobile (KNOCH-020 /
+     WCAG 2.5.5). At 17 px the bare text alone is ~17 px tall - far
+     below 44 px. Block padding raises the click area without
+     visually shifting the wordmark glyph. */
+  .mark {
+    padding: 0.6rem 0;
+  }
+
   .timecode-bar {
     padding: 14px 20px;
   }
+}
+
+/* Lock body scroll when the mobile nav overlay is open. JS adds this
+   class to <body> so the underlying page can't scroll behind the menu. */
+body.nav-overlay-open {
+  overflow: hidden;
 }

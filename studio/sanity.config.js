@@ -4,6 +4,7 @@ import {visionTool} from '@sanity/vision'
 import {testimonial} from './schemas/testimonial'
 import {galleryCollection} from './schemas/galleryCollection'
 import {service} from './schemas/service'
+import {aboutContent} from './schemas/aboutContent'
 export default defineConfig({
   name: 'knoch-media',
   title: 'Knoch Media',
@@ -14,6 +15,6 @@ export default defineConfig({
     visionTool(),
   ],
   schema: {
-    types: [testimonial, galleryCollection, service],
+    types: [testimonial, galleryCollection, service, aboutContent],
   },
 })

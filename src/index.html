@@ -6,8 +6,51 @@
     <title>Knoch — A Working Studio</title>
 
     <!-- Primary meta -->
-    <meta name="description" content="Knoch Media — cinematic photography and visual storytelling studio." />
+    <meta name="description" content="Knoch Media — cinematic photography and visual storytelling studio. Wedding films, brand work, music videos, portraits — based in Maryland." />
     <meta name="theme-color" content="#0a0a0a" />
+    <link rel="canonical" href="https://knochmedia.xyz/" />
+
+    <!-- Open Graph / social share (KNOCH-019) -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Knoch Media" />
+    <meta property="og:title" content="Knoch — A Working Studio" />
+    <meta property="og:description" content="Cinematic photography and visual storytelling studio based in Maryland." />
+    <meta property="og:url" content="https://knochmedia.xyz/" />
+    <meta property="og:image" content="https://knochmedia.xyz/assets/og/og-default.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="A photograph by Knoch Media" />
+
+    <!-- Twitter card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Knoch — A Working Studio" />
+    <meta name="twitter:description" content="Cinematic photography and visual storytelling studio based in Maryland." />
+    <meta name="twitter:image" content="https://knochmedia.xyz/assets/og/og-default.jpg" />
+
+    <!-- LocalBusiness structured data (KNOCH-019) — helps Google surface the
+         studio in local-pack results for "wedding photographer maryland",
+         "cinematic photography studio", etc. Single JSON-LD block; no
+         runtime cost. -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "LocalBusiness",
+      "name": "Knoch Media",
+      "image": "https://knochmedia.xyz/assets/og/og-default.jpg",
+      "url": "https://knochmedia.xyz/",
+      "description": "Cinematic photography and visual storytelling studio. Wedding films, brand work, music videos, portraits.",
+      "address": {
+        "@type": "PostalAddress",
+        "addressRegion": "MD",
+        "addressCountry": "US"
+      },
+      "areaServed": "Maryland",
+      "priceRange": "$$$",
+      "sameAs": [
+        "https://www.instagram.com/knochmedia_/"
+      ]
+    }
+    </script>
 
     <!-- Sanity CMS config (KNOCH-023) -->
     <meta name="sanity-project-id" content="2779g58e" />
@@ -73,9 +116,19 @@
       it parses the CSS background-image declaration, shaving ~200–400ms off
       LCP on first load. fetchpriority="high" promotes it above other resources.
     -->
-    <link rel="preload" as="image" href="/assets/reel/reel-01.png" fetchpriority="high" />
+    <!--
+      LCP image preload (KNOCH-019): point at the WebP sibling. WebP support is
+      universal in 2026 (Safari 14+, all Chromium, Firefox 65+) and the WebP
+      sibling is ~98% smaller than the source PNG (1.96 MB → 39.6 KB). The
+      lazy-load module's runtime detection still falls the few legacy browsers
+      back to the source format via the .lazy-loaded retry path.
+    -->
+    <link rel="preload" as="image" href="/assets/reel/reel-01.webp" fetchpriority="high" />
   </head>
   <body>
+
+    <!-- Skip-to-content link (KNOCH-021) — first focusable, slides in on focus -->
+    <a class="skip-link" href="#main-content">Skip to content</a>
 
     <!--
       Custom cursor — fixed amber ring tracked by GSAP quickTo.
@@ -111,8 +164,33 @@
           <span>REC · <span id="tc">00:00:00</span></span>
         </div>
 
+        <!--
+          Mobile hamburger toggle (KNOCH-020) — replaces .nav-center
+          on ≤800 px. CSS hides on desktop (display: none), mobile
+          breakpoint flips it on. chrome.js binds the click handler
+          and animates the overlay below.
+        -->
+        <button class="nav-toggle" type="button"
+                aria-label="Open navigation"
+                aria-expanded="false"
+                aria-controls="nav-overlay">
+          <span class="nav-toggle-line" aria-hidden="true"></span>
+          <span class="nav-toggle-line" aria-hidden="true"></span>
+          <span class="nav-toggle-line" aria-hidden="true"></span>
+        </button>
+
       </div>
     </div>
+
+    <!--
+      Mobile nav overlay (KNOCH-020). chrome.js clones the
+      .nav-center > a links into .nav-overlay-inner at init so the
+      mobile menu always reflects the current page's nav set.
+      Hidden on desktop via CSS; opens via .is-open class.
+    -->
+    <nav class="nav-overlay" id="nav-overlay" aria-hidden="true" aria-label="Mobile navigation">
+      <div class="nav-overlay-inner"><!-- populated by chrome.js --></div>
+    </nav>
 
     <!--
       Bottom timecode bar — cosmetic chrome, aria-hidden.
@@ -127,7 +205,7 @@
            aria-valuemin="0"
            aria-valuemax="100"
            aria-label="Page scroll progress"></div>
-      <span id="frame-display">FRAME 01 / 36</span>
+      <span id="frame-display" aria-hidden="true">FRAME 01 / 36</span>
     </div>
 
     <!--
@@ -192,6 +270,8 @@
       hero-content text on top.
       aria-label provides an accessible region name for screen readers.
     -->
+    <main id="main-content">
+
     <section id="hero" class="grain" aria-label="Hero — cinematic photography studio">
 
       <!-- Full-bleed background image — brightness/contrast/grayscale in CSS;
@@ -202,8 +282,13 @@
       <!-- Centered content stack — meta label, headline, sub text -->
       <div class="hero-content">
 
-        <!-- Amber mono label — film roll identifier / editorial context -->
-        <p class="hero-meta">[ FILM 01 &mdash; A WEDDING IN MAY ]</p>
+        <!--
+          Amber mono label — film-slate identifier per slide. JS owns
+          this text at runtime (hero.js HERO_SLIDESHOW_META) so the
+          label always matches the active slide. The default below is
+          the slide-01 string and is what readers see if JS fails.
+        -->
+        <p class="hero-meta">[ FILM 01 &mdash; A QUIET PORTRAIT ]</p>
 
         <!--
           H1 headline — four lines, each in a clip-reveal wrapper.
@@ -243,23 +328,23 @@
       <!-- Vintage film-strip background — two identical sets for seamless CSS marquee loop -->
       <div class="interlude-strip" aria-hidden="true">
         <div class="interlude-strip-track">
-          <div class="interlude-strip-img" style="background-image: url('/assets/portfolio/cover-alex-morgan.jpg')"></div>
-          <div class="interlude-strip-img" style="background-image: url('/assets/portfolio/cover-fayo-femi.jpg')"></div>
-          <div class="interlude-strip-img" style="background-image: url('/assets/portfolio/cover-woodsmen.jpg')"></div>
-          <div class="interlude-strip-img" style="background-image: url('/assets/portfolio/cover-jojos-graduation.jpg')"></div>
-          <div class="interlude-strip-img" style="background-image: url('/assets/portfolio/cover-what-mighty-praise.png')"></div>
-          <div class="interlude-strip-img" style="background-image: url('/assets/portfolio/cover-rapha-records.jpg')"></div>
-          <div class="interlude-strip-img" style="background-image: url('/assets/portfolio/cover-shawn-bekki.jpg')"></div>
-          <div class="interlude-strip-img" style="background-image: url('/assets/portfolio/cover-alex-morgan.jpg')"></div>
+          <div class="interlude-strip-img" data-bg="/assets/portfolio/cover-alex-morgan.jpg"></div>
+          <div class="interlude-strip-img" data-bg="/assets/portfolio/cover-fayo-femi.jpg"></div>
+          <div class="interlude-strip-img" data-bg="/assets/portfolio/cover-woodsmen.jpg"></div>
+          <div class="interlude-strip-img" data-bg="/assets/portfolio/cover-jojos-graduation.jpg"></div>
+          <div class="interlude-strip-img" data-bg="/assets/portfolio/cover-what-mighty-praise.png"></div>
+          <div class="interlude-strip-img" data-bg="/assets/portfolio/cover-rapha-records.jpg"></div>
+          <div class="interlude-strip-img" data-bg="/assets/portfolio/cover-shawn-bekki.jpg"></div>
+          <div class="interlude-strip-img" data-bg="/assets/portfolio/cover-alex-morgan.jpg"></div>
           <!-- Second copy — makes -50% translateX a perfect seamless loop -->
-          <div class="interlude-strip-img" style="background-image: url('/assets/portfolio/cover-fayo-femi.jpg')"></div>
-          <div class="interlude-strip-img" style="background-image: url('/assets/portfolio/cover-woodsmen.jpg')"></div>
-          <div class="interlude-strip-img" style="background-image: url('/assets/portfolio/cover-jojos-graduation.jpg')"></div>
-          <div class="interlude-strip-img" style="background-image: url('/assets/portfolio/cover-what-mighty-praise.png')"></div>
-          <div class="interlude-strip-img" style="background-image: url('/assets/portfolio/cover-rapha-records.jpg')"></div>
-          <div class="interlude-strip-img" style="background-image: url('/assets/portfolio/cover-shawn-bekki.jpg')"></div>
-          <div class="interlude-strip-img" style="background-image: url('/assets/portfolio/cover-alex-morgan.jpg')"></div>
-          <div class="interlude-strip-img" style="background-image: url('/assets/portfolio/cover-fayo-femi.jpg')"></div>
+          <div class="interlude-strip-img" data-bg="/assets/portfolio/cover-fayo-femi.jpg"></div>
+          <div class="interlude-strip-img" data-bg="/assets/portfolio/cover-woodsmen.jpg"></div>
+          <div class="interlude-strip-img" data-bg="/assets/portfolio/cover-jojos-graduation.jpg"></div>
+          <div class="interlude-strip-img" data-bg="/assets/portfolio/cover-what-mighty-praise.png"></div>
+          <div class="interlude-strip-img" data-bg="/assets/portfolio/cover-rapha-records.jpg"></div>
+          <div class="interlude-strip-img" data-bg="/assets/portfolio/cover-shawn-bekki.jpg"></div>
+          <div class="interlude-strip-img" data-bg="/assets/portfolio/cover-alex-morgan.jpg"></div>
+          <div class="interlude-strip-img" data-bg="/assets/portfolio/cover-fayo-femi.jpg"></div>
         </div>
       </div>
 
@@ -492,6 +577,8 @@
 <section id="cta" class="grain" aria-label="Inquire">
       <!-- KNOCH-030: Qualified inquiry form with aperture iris transitions -->
     </section>
+
+    </main><!-- /#main-content -->
 
     <!--
       Footer host element (KNOCH-015) — populated by footer.js via

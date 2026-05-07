@@ -9,6 +9,23 @@
     <meta name="description" content="A Knoch Media project — full gallery, metadata, and inquiry path." />
     <meta name="theme-color" content="#0a0a0a" />
 
+    <!-- Open Graph / social share (KNOCH-019). Per-project enrichment is
+         deferred — project.html is dynamically rendered from URL params, and
+         a per-project og:image swap would need server-side rendering or a
+         static-rendered /project/<slug> route. The studio-default fallback
+         is good enough for an MVP. -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Knoch Media" />
+    <meta property="og:title" content="Project — Knoch Media" />
+    <meta property="og:description" content="A Knoch Media project — full gallery, metadata, and inquiry path." />
+    <meta property="og:image" content="https://knochmedia.xyz/assets/og/og-default.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Project — Knoch Media" />
+    <meta name="twitter:description" content="A Knoch Media project — full gallery, metadata, and inquiry path." />
+    <meta name="twitter:image" content="https://knochmedia.xyz/assets/og/og-default.jpg" />
+
     <meta name="sanity-project-id" content="2779g58e" />
     <meta name="sanity-dataset" content="production" />
 
@@ -28,6 +45,9 @@
     <link rel="stylesheet" href="/css/footer.css" />
   </head>
   <body>
+
+    <!-- Skip-to-content link (KNOCH-021) — first focusable, slides in on focus -->
+    <a class="skip-link" href="#main-content">Skip to content</a>
 
     <!--
       Black veil — fades from opaque to transparent on page load to
@@ -61,8 +81,23 @@
           <span>REC · <span id="tc">00:00:00</span></span>
         </div>
 
+        <!-- Mobile hamburger toggle (KNOCH-020) -->
+        <button class="nav-toggle" type="button"
+                aria-label="Open navigation"
+                aria-expanded="false"
+                aria-controls="nav-overlay">
+          <span class="nav-toggle-line" aria-hidden="true"></span>
+          <span class="nav-toggle-line" aria-hidden="true"></span>
+          <span class="nav-toggle-line" aria-hidden="true"></span>
+        </button>
+
       </div>
     </div>
+
+    <!-- Mobile nav overlay (KNOCH-020) — populated by chrome.js -->
+    <nav class="nav-overlay" id="nav-overlay" aria-hidden="true" aria-label="Mobile navigation">
+      <div class="nav-overlay-inner"></div>
+    </nav>
 
     <!-- Bottom timecode bar -->
     <div class="timecode-bar" aria-hidden="true">
@@ -74,7 +109,7 @@
            aria-valuemin="0"
            aria-valuemax="100"
            aria-label="Page scroll progress"></div>
-      <span id="frame-display">FRAME 01 / 36</span>
+      <span id="frame-display" aria-hidden="true">FRAME 01 / 36</span>
     </div>
 
     <!--
@@ -82,6 +117,8 @@
       the bg-image style on .project-hero-img and rewrites the meta /
       title / sub strings from the project data lookup.
     -->
+    <main id="main-content">
+
     <section class="project-hero" aria-label="Project hero">
 
       <!-- Back link sits on top of the hero, top-left -->
@@ -158,6 +195,8 @@
       <h2 class="project-cta-headline">Book a similar project.</h2>
       <a class="project-cta-link" href="/contact.html">Start an inquiry &rarr;</a>
     </section>
+
+    </main><!-- /#main-content -->
 
     <!-- Shared footer host (KNOCH-015) — populated by initFooter('expanded') -->
     <footer id="site-footer"></footer>

@@ -50,7 +50,14 @@ function _navigateToProject(slug) {
    element rather than a teleporting one. */
 function _transitionAndNavigate(tile, slug) {
   const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if (prefersReduced) {
+  /* KNOCH-041: mobile skips the transition entirely. The clone-+-veil
+     overlay was getting preserved by Safari's bfcache when the user
+     hit "back to works", leaving the project image stuck on screen
+     with the rest of the page hidden behind it. Plain navigation is
+     reliable on touch and the page-load veil fade on /project.html
+     gives a clean enough seam without the clone gymnastics. */
+  const isMobile = window.matchMedia('(max-width: 800px)').matches;
+  if (prefersReduced || isMobile) {
     _navigateToProject(slug);
     return;
   }
@@ -63,8 +70,12 @@ function _transitionAndNavigate(tile, slug) {
 
   /* Build a fresh clone of just the image element with the same
      background-image — avoids cloning the label / hover state and
-     keeps the transition focused on the visual subject. */
+     keeps the transition focused on the visual subject.
+     The .tile-router-overlay class is the cleanup hook used by the
+     pageshow listener below to scrub leftover clones when Safari
+     restores the page from bfcache (KNOCH-041). */
   const clone = document.createElement('div');
+  clone.className = 'tile-router-overlay';
   clone.style.position = 'fixed';
   clone.style.top = `${rect.top}px`;
   clone.style.left = `${rect.left}px`;
@@ -81,8 +92,9 @@ function _transitionAndNavigate(tile, slug) {
 
   /* Black veil — fades in over the second half of the transition so
      the page navigation cuts behind it rather than under a still
-     visible page. */
+     visible page. Same cleanup-class hook as the clone above. */
   const veil = document.createElement('div');
+  veil.className = 'tile-router-overlay';
   veil.style.position = 'fixed';
   veil.style.inset = '0';
   veil.style.background = '#0a0a0a';
@@ -149,3 +161,31 @@ export function bindTileRouter(tiles) {
     });
   });
 }
+
+/* bfcache cleanup (KNOCH-041).
+   Reproduction: visitor on /portfolio.html clicks a tile -> the
+   transition appends a .tile-router-overlay clone + black veil to
+   <body> at z-index 12000 just before navigation. They land on
+   /project.html, then hit the back button. Safari restores
+   /portfolio.html from bfcache (window.history.back without a fresh
+   fetch) - and bfcache restores the WHOLE document, including those
+   leftover overlay divs that were on body when the page froze. The
+   visitor sees the project image stuck on screen with the rest of
+   the page hidden behind it.
+
+   Fix: pageshow with event.persisted === true means we're being
+   restored from bfcache. Sweep any .tile-router-overlay descendants
+   of body and remove them. Body scroll lock (if any was applied) is
+   also released - defensive, the lock-release path runs in
+   _initMobileNav's close() but a bfcache restore could re-mount the
+   page with .nav-overlay-open still on body if the menu was open
+   when the visitor navigated away.
+
+   Listener registered at module scope so it fires once per page
+   load no matter which entry imports tile-router. */
+window.addEventListener('pageshow', (event) => {
+  if (!event.persisted) return;
+  document.querySelectorAll('.tile-router-overlay').forEach(el => el.remove());
+  document.body.classList.remove('nav-overlay-open');
+  document.body.style.overflow = '';
+});

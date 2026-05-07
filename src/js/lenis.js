@@ -9,9 +9,16 @@ let lenis = null;
 /**
  * Call once, after the intro loader finishes (KNOCH-005).
  * Skips entirely on touch/mobile — native scroll is faster there.
+ * Also skips under prefers-reduced-motion (KNOCH-021) — Lenis's
+ * easing-driven smooth scroll is exactly the kind of motion that
+ * vestibular-sensitive users opt out of, so we hand back to native
+ * scroll. ScrollTrigger then reads native scrollY directly (no
+ * proxy installed below), and the per-module GSAP entrance gates
+ * already skip their own animations under the same media query.
  */
 export function initLenis() {
   if (window.matchMedia('(pointer: coarse)').matches) return;
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
   lenis = new Lenis({
     duration: 1.2,
@@ -85,6 +92,15 @@ export function startLenis() {
  */
 export function scrollTo(target, options = {}) {
   if (lenis) {
+    /* Resume Lenis before issuing a programmatic scroll. Sections
+       that hijack the wheel for their own paging (testimonial.js
+       pauses Lenis on enter ≥ 60 %, KNOCH-007 reel pauses during
+       its pinned timeline) intend that pause to apply to wheel
+       gestures only. Without this, clicking the logo or a nav
+       anchor while the visitor is mid-testimonial silently no-ops
+       until the section's IntersectionObserver eventually resumes
+       Lenis on its own — chrome navigation should always win. */
+    lenis.start();
     lenis.scrollTo(target, {
       duration: 1.5,
       easing: t => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
