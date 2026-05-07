@@ -1,7 +1,7 @@
 # Knoch Media — Ticket Summary
 
 > **Living document.** Updated whenever tickets are created, modified, split, or closed.  
-> Last updated: 2026-05-07 | Total tickets: 35 | Open: 3 | In progress: 1 | In review: 0 | Done: 26 | Deferred: 5 | Phases 1–5 shipped to main 🚀
+> Last updated: 2026-05-07 | Total tickets: 35 | Open: 3 | In progress: 0 | In review: 1 | Done: 26 | Deferred: 5 | Phases 1–5 shipped to main 🚀
 
 ---
 
@@ -107,7 +107,7 @@ Three launch-readiness tickets + one post-launch SEO deepening. KNOCH-039 (form 
 
 | ID | Title | Status | Branch | Notes |
 |----|-------|--------|--------|-------|
-| [KNOCH-037](tickets/KNOCH-037.md) | SEO Basics — sitemap, robots, Article schema | `🔵` | `feature/KNOCH-037-seo-basics` | Merged to dev — PR pending |
+| [KNOCH-037](tickets/KNOCH-037.md) | SEO Basics — sitemap, robots, Article schema | `🔵` | `feature/KNOCH-037-seo-basics` | In review — PR #32 dev → test |
 | [KNOCH-038](tickets/KNOCH-038.md) | Custom 404 Page | `⬜` | — | Half-day; can bundle with 037 |
 | [KNOCH-039](tickets/KNOCH-039.md) | Contact Form — real submit + anti-spam (Vercel function + Turnstile + honeypot) | `⬜` | — | **Launch-blocker** |
 | [KNOCH-040](tickets/KNOCH-040.md) | Per-project SEO + Static `/project/<slug>` Routes | `⬜` | — | Post-launch deepening |
@@ -187,6 +187,16 @@ CMS layer (cuts across phases — wire each section after it is built):
 ## Changelog
 
 All modifications to this document and ticket files are logged here. Tester agent and code review feedback should be recorded as entries.
+
+---
+
+### 2026-05-07 — KNOCH-037 PR opened — IN REVIEW
+
+**Action:** PR #32 opened dev → test. Awaiting QA gate.
+**Tickets affected:** KNOCH-037
+**Reason:** Implementation merged to dev. PR carries the SEO basics work plus the recent dev-only commits that hadn't shipped to test yet (Phase 5 SHIPPED bookkeeping, dashboard sync, reference/ folder move). Header counts: In progress 1→0, In review 0→1.
+
+**Requested by:** Enoch
 
 ---
 
