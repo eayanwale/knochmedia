@@ -1,7 +1,7 @@
 # Knoch Media — Ticket Summary
 
 > **Living document.** Updated whenever tickets are created, modified, split, or closed.  
-> Last updated: 2026-05-07 | Total tickets: 35 | Open: 1 | In progress: 0 | In review: 0 | Done: 29 | Deferred: 5 | Phases 1–6 shipped to main 🚀
+> Last updated: 2026-05-07 | Total tickets: 35 | Open: 0 | In progress: 1 | In review: 0 | Done: 29 | Deferred: 5 | Phases 1–6 shipped to main 🚀
 
 ---
 
@@ -110,7 +110,7 @@ Three launch-readiness tickets + one post-launch SEO deepening. KNOCH-039 (form 
 | [KNOCH-037](tickets/KNOCH-037.md) | SEO Basics — sitemap, robots, Article schema | `🚀` | `feature/KNOCH-037-seo-basics` | Shipped — Phase 6 squash to main (v0.6.0) |
 | [KNOCH-038](tickets/KNOCH-038.md) | Custom 404 + 500 Pages | `🚀` | `feature/KNOCH-038-error-pages` | Shipped — Phase 6 squash to main (v0.6.0) |
 | [KNOCH-039](tickets/KNOCH-039.md) | Contact form — real submit via Formspree + honeypot | `🚀` | `feature/KNOCH-039-formspree` | Shipped — Phase 6 squash to main (v0.6.0) |
-| [KNOCH-040](tickets/KNOCH-040.md) | Per-project SEO + Static `/project/<slug>` Routes | `⬜` | — | Post-launch deepening |
+| [KNOCH-040](tickets/KNOCH-040.md) | Per-project SEO + Static `/project/<slug>` Routes | `🔵` | `feature/KNOCH-040-static-project-routes` | In progress — final ticket, post-launch deepening |
 
 ---
 
