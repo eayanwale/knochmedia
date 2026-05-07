@@ -111,11 +111,23 @@ export function openVideoLightbox(youtubeId, triggerEl) {
   _trigger = triggerEl ?? document.activeElement;
 
   /* Build a fresh iframe each open so the player starts from 0 and
-     the previous video's audio is fully torn down on close. */
+     the previous video's audio is fully torn down on close.
+     Player params:
+       autoplay=1        — start immediately on open (user-intent click satisfies
+                           the autoplay-with-sound gesture requirement).
+       rel=0             — restrict the post-roll "related videos" panel to the
+                           same channel only (YouTube no longer fully disables
+                           it; this is the closest available switch).
+       modestbranding=1  — drop the YouTube logo in the control bar.
+       playsinline=1     — iOS Safari plays inline instead of forcing fullscreen.
+       color=white       — recolour the progress bar from YouTube red to white
+                           (KNOCH-017 AC). Closer to the paper / amber design
+                           language than the default red, and stops the bar
+                           from clashing with the rust accent. */
   _embed.innerHTML = '';
   const iframe = document.createElement('iframe');
   iframe.src =
-    `https://www.youtube.com/embed/${youtubeId}?autoplay=1&rel=0&modestbranding=1&playsinline=1`;
+    `https://www.youtube.com/embed/${youtubeId}?autoplay=1&rel=0&modestbranding=1&playsinline=1&color=white`;
   iframe.setAttribute('title', 'Video player');
   iframe.setAttribute('allow', 'autoplay; encrypted-media; picture-in-picture; fullscreen');
   iframe.setAttribute('allowfullscreen', '');

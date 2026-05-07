@@ -1,6 +1,7 @@
 # KNOCH-017 — YouTube Integration
 
-## Status: TODO
+## Status: IN PROGRESS
+## Branch: feature/KNOCH-017-youtube-integration
 ## Priority: P2 (medium)
 ## Epic: EPIC-004 — Integrations
 

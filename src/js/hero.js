@@ -369,6 +369,19 @@ function _onLoaderComplete() {
     }, 1.4);
   }
 
+  // PLAY REEL CTA fade in (KNOCH-017) — same offset as #hero-sub so
+  // both the button and the scroll prompt arrive together as the
+  // closing beat of the hero reveal. Kept here (rather than in
+  // hero-reel.js) so the reveal choreography lives in one timeline.
+  const heroReel = document.querySelector('.hero-reel');
+  if (heroReel) {
+    tl.to(heroReel, {
+      opacity: 1,
+      duration: 0.8,
+      ease: 'power2.out',
+    }, 1.4);
+  }
+
   // Set up scroll-exit triggers once the reveal completes
   tl.call(_setupScrollExit);
 

@@ -1,0 +1,208 @@
+/*
+  hero-reel.css — Cinematic PLAY REEL CTA in hero (KNOCH-017)
+  =============================================================
+  Compact bordered card sitting between the hero headline and the
+  SCROLL prompt. Background is the YouTube maxresdefault thumbnail
+  for the showreel video; chrome overlays mirror the cinema-vérité
+  reference (concept_02_cinema_verite demo.html, lines 35–46):
+    top-left  — amber "▢ 16:9 · 24FPS" aspect label
+    top-right — muted "TC 00:01:42:11" timecode
+    center    — 40px circle with play triangle
+    bottom-right — bordered "▶ PLAY REEL" chip
+
+  The card itself is the <button> — no nested clickable elements
+  beyond the surface, so the entire 16:9 frame is the click target
+  (matches expectations from picking a YouTube thumbnail).
+
+  Initial state: opacity 0 — the GSAP hero reveal timeline tweens
+  this to 1 at the same offset as #hero-sub. Keeps the entry pacing
+  cohesive with the existing hero choreography (see hero.js
+  _onLoaderComplete).
+
+  Sizing strategy: width is clamp() so the chip stays compact on
+  large monitors (~280px) and shrinks gracefully down to 200px on
+  narrow phones. aspect-ratio: 16/9 mirrors the YouTube thumbnail's
+  native crop so the maxres image fits without letterboxing.
+*/
+
+.hero-reel {
+  /* Reset button defaults */
+  appearance: none;
+  -webkit-appearance: none;
+  background: none;
+  border: 1px solid rgba(237, 230, 216, 0.18);
+  padding: 0;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+
+  position: relative;
+  display: block;
+  width: clamp(200px, 22vw, 280px);
+  aspect-ratio: 16 / 9;
+  margin: 2.4rem auto 0;
+  background-color: #0a0a0a; /* fallback while thumb loads */
+  background-size: cover;
+  background-position: center;
+  overflow: hidden;
+
+  opacity: 0;            /* revealed by GSAP hero timeline */
+  transform: translateZ(0); /* promote to its own layer for the hover transform */
+  transition: border-color 0.4s var(--ease-cinematic),
+              transform 0.5s var(--ease-cinematic);
+}
+
+/*
+  Backdrop dim — ::before sits above the bg image and below the
+  chrome overlays. Drops the thumbnail's brightness ~35% so the
+  chrome text reads cleanly on any frame YouTube hands us. Hovering
+  lifts the dim slightly so the underlying frame becomes visible.
+*/
+.hero-reel::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    /* Vignette toward corners — keeps the chrome text from sitting
+       on a too-bright midpoint of the thumbnail. */
+    radial-gradient(ellipse at center, rgba(10,10,10,0.25) 0%, rgba(10,10,10,0.65) 100%);
+  transition: background 0.4s var(--ease-cinematic);
+  pointer-events: none;
+}
+
+.hero-reel:hover,
+.hero-reel:focus-visible {
+  border-color: rgba(232, 162, 58, 0.55); /* amber lift */
+  transform: translateY(-2px);
+  outline: none;
+}
+
+.hero-reel:hover::before,
+.hero-reel:focus-visible::before {
+  background:
+    radial-gradient(ellipse at center, rgba(10,10,10,0.1) 0%, rgba(10,10,10,0.45) 100%);
+}
+
+/* Aspect chrome — top-left, amber. Matches mockup line 36. */
+.hero-reel-aspect {
+  position: absolute;
+  top: 10px;
+  left: 12px;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  color: var(--amber);
+  z-index: 2;
+  pointer-events: none;
+}
+
+/* Timecode chrome — top-right, muted paper. Matches mockup line 37. */
+.hero-reel-tc {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  color: rgba(237, 230, 216, 0.45);
+  z-index: 2;
+  pointer-events: none;
+}
+
+/* Center play circle — 40px ring with triangle glyph. Matches mockup
+   line 46. The triangle is a CSS shape (no SVG needed) so it scales
+   with the container's font-size and inherits currentColor. */
+.hero-reel-play {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 40px;
+  height: 40px;
+  border: 1px solid rgba(237, 230, 216, 0.55);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 2;
+  pointer-events: none;
+  transition: border-color 0.3s var(--ease-cinematic),
+              background 0.3s var(--ease-cinematic);
+}
+
+.hero-reel-play::after {
+  /* Triangle: CSS-only ▶, slightly nudged right of center so the
+     visual weight feels balanced (the shape's centroid is offset). */
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 53%;
+  width: 0;
+  height: 0;
+  border-left: 9px solid var(--paper);
+  border-top: 6px solid transparent;
+  border-bottom: 6px solid transparent;
+  transform: translate(-50%, -50%);
+  transition: border-left-color 0.3s var(--ease-cinematic);
+}
+
+.hero-reel:hover .hero-reel-play,
+.hero-reel:focus-visible .hero-reel-play {
+  border-color: var(--amber);
+  background: rgba(232, 162, 58, 0.12);
+}
+
+.hero-reel:hover .hero-reel-play::after,
+.hero-reel:focus-visible .hero-reel-play::after {
+  border-left-color: var(--amber);
+}
+
+/* Bordered "▶ PLAY REEL" chip — bottom-right. Matches mockup line 44. */
+.hero-reel-label {
+  position: absolute;
+  bottom: 10px;
+  right: 12px;
+  border: 1px solid rgba(237, 230, 216, 0.3);
+  padding: 5px 10px;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.15em;
+  color: var(--paper);
+  text-transform: uppercase;
+  z-index: 2;
+  pointer-events: none;
+  transition: border-color 0.3s var(--ease-cinematic),
+              color 0.3s var(--ease-cinematic);
+}
+
+.hero-reel:hover .hero-reel-label,
+.hero-reel:focus-visible .hero-reel-label {
+  border-color: var(--amber);
+  color: var(--amber);
+}
+
+/* ── Reduced motion ──────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .hero-reel,
+  .hero-reel::before,
+  .hero-reel-play,
+  .hero-reel-play::after,
+  .hero-reel-label {
+    transition: none !important;
+  }
+  .hero-reel:hover,
+  .hero-reel:focus-visible {
+    transform: none !important;
+  }
+}
+
+/* ── Mobile ──────────────────────────────────────────────── */
+@media (max-width: 800px) {
+  .hero-reel {
+    width: 220px;
+    margin-top: 2rem;
+  }
+  /* Drop the timecode label on small screens — too cramped against
+     the aspect chip and adds no information; aspect chip alone reads
+     as "this is a video frame". */
+  .hero-reel-tc {
+    display: none;
+  }
+}
