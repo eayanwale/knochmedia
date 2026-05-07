@@ -1,6 +1,6 @@
 # KNOCH-040 — Per-project SEO + Static Project Routes
 
-## Status: TODO
+## Status: IN PROGRESS
 ## Priority: P3 (nice-to-have, post-launch)
 ## Epic: EPIC-006 — Launch & SEO
 
