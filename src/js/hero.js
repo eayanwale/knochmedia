@@ -49,10 +49,11 @@ const HERO_SLIDESHOW_IMAGES = [
 
    Mapped from the actual reel imagery:
      01  studio portrait silhouette          - "A QUIET PORTRAIT"
-     02  cellist at a formal event           - "A NIGHT OF STRINGS"
+     02  cellist at an anniversary / worship - "A NIGHT OF WORSHIP"
+                                                gathering
      03  Nigerian introduction ceremony      - "A NIGERIAN INTRODUCTION"
      04  outdoor woods wedding (triangle arch)- "A WEDDING IN MAY"
-     05  B&W wedding processional            - "A FATHER, A DAUGHTER"
+     05  B&W wedding recessional, the couple - "HUSBAND AND WIFE"
      06  Mont Alto Woodsmen competition      - "THE WOODSMEN"
 
    Format mirrors the existing markup default: bracketed mono caps
@@ -60,10 +61,10 @@ const HERO_SLIDESHOW_IMAGES = [
    label fits the hero-meta line on narrow viewports. */
 const HERO_SLIDESHOW_META = [
   '[ FILM 01 — A QUIET PORTRAIT ]',
-  '[ FILM 02 — A NIGHT OF STRINGS ]',
+  '[ FILM 02 — A NIGHT OF WORSHIP ]',
   '[ FILM 03 — A NIGERIAN INTRODUCTION ]',
   '[ FILM 04 — A WEDDING IN MAY ]',
-  '[ FILM 05 — A FATHER, A DAUGHTER ]',
+  '[ FILM 05 — HUSBAND AND WIFE ]',
   '[ FILM 06 — THE WOODSMEN ]',
 ];
 
