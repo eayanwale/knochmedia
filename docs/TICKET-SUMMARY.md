@@ -1,7 +1,7 @@
 # Knoch Media — Ticket Summary
 
 > **Living document.** Updated whenever tickets are created, modified, split, or closed.  
-> Last updated: 2026-05-06 | Total tickets: 30 | Open: 5 | In progress: 1 | In review: 0 | Done: 20 | Deferred: 4 | Phases 1–3 shipped to main 🚀
+> Last updated: 2026-05-06 | Total tickets: 30 | Open: 5 | In progress: 0 | In review: 1 | Done: 20 | Deferred: 4 | Phases 1–3 shipped to main 🚀
 
 ---
 
@@ -173,6 +173,29 @@ CMS layer (cuts across phases — wire each section after it is built):
 ## Changelog
 
 All modifications to this document and ticket files are logged here. Tester agent and code review feedback should be recorded as entries.
+
+---
+
+### 2026-05-06 — KNOCH-017 PR opened — IN REVIEW
+
+**Action:** PR #24 opened dev → test
+**Tickets affected:** KNOCH-017
+**Reason:** Builder closed the three remaining KNOCH-017 acceptance gaps left by KNOCH-012's lightbox base. (1) `&color=white` added to the YouTube iframe URL so the player progress bar renders white instead of red. (2) Reel cards with `linkType: 'youtube'` now route through `openVideoLightbox()` instead of opening in a new tab — new shared parser `src/js/youtube-id.js` extracts the 11-char ID from any youtu.be / watch?v= / embed / shorts URL. (3) New cinematic PLAY REEL CTA in the hero — bordered card overlaid on the showreel's YouTube `maxresdefault.jpg`, with the chrome details lifted from the cinema-vérité reference (`▢ 16:9 · 24FPS` chip top-left, `TC 00:01:42:11` top-right, 40 px play ring centre, bordered `▶ PLAY REEL` chip bottom-right). Default video is Hs25JK7WcZQ (Rapha Records — the studio's brand introduction film); swap by editing `data-youtube-id` on the `.hero-reel` button.
+**Changes:**
+- KNOCH-017: Status IN PROGRESS → IN REVIEW; PR line added to the ticket file.
+- PR #24 opened: dev → test at https://github.com/eayanwale/knochmedia/pull/24
+- Files delivered:
+  - `src/js/youtube-id.js` — new ~65-line parser; bare-ID short-circuit + URL-shape branching
+  - `src/js/hero-reel.js` — new ~55-line module; thumbnail probe + click handler
+  - `src/css/hero-reel.css` — new ~165-line stylesheet; button + chrome overlays + reduced-motion + ≤800px mobile
+  - `src/js/video-lightbox.js` — `&color=white` added to iframe URL + comment block documenting all params
+  - `src/js/reel.js` — `handleCardClick` rewritten as a clean three-branch router (youtube → lightbox, external-gallery → new tab, default → same-tab)
+  - `src/js/hero.js` — opacity tween for `.hero-reel` at offset 1.4 in the reveal timeline (same beat as `#hero-sub`)
+  - `src/js/main.js` — `initHeroReel()` import + call after `initHero()`
+  - `src/index.html` — `<link rel="stylesheet" href="/css/hero-reel.css">` + `<button class="hero-reel" data-youtube-id="Hs25JK7WcZQ">…</button>` with chrome spans
+- Build: 87 modules → emit; main 32.59 kB / 10.12 kB gz; main.css 27.38 kB; 166 ms.
+- Header counts updated: In progress 1→0, In review 0→1.
+**Requested by:** Builder agent
 
 ---
 
