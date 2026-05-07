@@ -12,11 +12,6 @@ dist/
 # Vite cache
 .vite/
 
-# Sanity build-time fetch cache (KNOCH-042) — populated by
-# scripts/render-projects.mjs when it successfully fetches
-# galleryCollection from Sanity. Used as a fallback on subsequent
-# builds if Sanity is unreachable. Local-only, regenerated.
-.sanity-cache.json
 
 # Editor / OS artifacts
 .DS_Store

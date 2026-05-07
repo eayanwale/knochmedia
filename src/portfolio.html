@@ -46,11 +46,12 @@
     <link rel="stylesheet" href="/css/footer.css" />
 
     <!--
-      LCP preload — first card image. Cards 2–8 download as part of the
-      initial visible batch but only this first one gets fetchpriority high.
+      KNOCH-042: dropped the cover-alex-morgan.webp LCP preload now
+      that tiles are Sanity-driven at runtime — the LCP image varies
+      per Sanity entry and per filter state, so a static preload no
+      longer maps to anything. Worth ~50–100 ms LCP delay on first
+      paint; acceptable trade for content-driven flexibility.
     -->
-    <!-- LCP preload (KNOCH-019): WebP sibling, 33% smaller than the JPG source -->
-    <link rel="preload" as="image" href="/assets/portfolio/cover-alex-morgan.webp" fetchpriority="high" />
   </head>
   <body>
 
@@ -129,29 +130,24 @@
         </div>
 
         <!--
-          Filter tabs — KNOCH-042: build-time generated from the
-          unique categories present in Sanity galleryCollection.
-          Source of truth: scripts/render-projects.mjs. Markers
-          delimit the substitution zone; never edit the lines
-          between BEGIN and END by hand — they get overwritten on
-          every build.
+          Filter tabs — KNOCH-042: per-category buttons appended at
+          runtime by portfolio-cms.js based on which categories are
+          present in Sanity. The "All" button stays in the static
+          markup so the filter logic always has its always-true
+          match even if the Sanity fetch fails.
         -->
         <ul class="portfolio-tabs" role="tablist" aria-label="Filter portfolio by category">
-          <!-- KNOCH-042 portfolio filters: BEGIN -->
           <li role="presentation"><button class="portfolio-tab is-active" data-filter="all" role="tab" aria-selected="true" tabindex="0">All</button></li>
-          <!-- KNOCH-042 portfolio filters: END -->
         </ul>
 
       </div>
     </section>
 
     <!--
-      Portfolio grid — KNOCH-042: tiles are build-time generated from
-      Sanity galleryCollection entries (source of truth). Markers
-      delimit the substitution zone; the lines between BEGIN and END
-      are overwritten by scripts/render-projects.mjs on every build.
-      Adding a new client gallery is a Sanity-only operation; no
-      code change here is required.
+      Portfolio grid — KNOCH-042: tiles populated at runtime from
+      Sanity galleryCollection entries (source of truth) by
+      src/js/portfolio-cms.js. Adding a new client gallery is a
+      Sanity-only operation — no code change here is required.
 
       Click routing: tile-router.js reads data-link-type + data-url
       directly off each tile. external-gallery → opens Pic-Time URL
@@ -160,9 +156,7 @@
     -->
     <section class="portfolio-grid-wrap" aria-label="Portfolio grid">
       <div class="portfolio-grid">
-        <!-- KNOCH-042 portfolio tiles: BEGIN -->
-        <!-- Tiles populated from Sanity at build time — see scripts/render-projects.mjs -->
-        <!-- KNOCH-042 portfolio tiles: END -->
+        <!-- Tiles populated at runtime by portfolio-cms.js -->
       </div><!-- /.portfolio-grid -->
 
       <!--

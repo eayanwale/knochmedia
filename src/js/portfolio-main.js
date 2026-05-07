@@ -21,6 +21,7 @@ import { initCharHover }      from './char-hover.js';
 import { initLenis }          from './lenis.js';
 import { initVideoLightbox }  from './video-lightbox.js';
 import { initPortfolioPage }  from './portfolio-page.js';
+import { initPortfolioCMS }   from './portfolio-cms.js';
 import { initFooter }         from './footer.js';
 
 initLazyLoad();
@@ -28,8 +29,17 @@ initChrome();
 initCursor();
 initCharHover();
 initVideoLightbox();
-initPortfolioPage();
 initFooter('expanded');
+
+/* KNOCH-042: hydrate tiles + filter buttons from Sanity BEFORE
+   initPortfolioPage runs. initPortfolioPage queries `.portfolio-card`
+   at init time and bails on zero cards — so the Sanity fetch must
+   complete first. .finally() guarantees the page logic still wires
+   up if the fetch errors (the grid stays empty rather than the
+   filter / load-more / animation hooks never running). */
+initPortfolioCMS().finally(() => {
+  initPortfolioPage();
+});
 
 window.addEventListener('load', () => {
   initLenis();
