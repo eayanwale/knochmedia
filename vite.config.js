@@ -1,12 +1,41 @@
 import { defineConfig } from 'vite'
 import { resolve } from 'path'
 
+/* KNOCH-043: dev-server middleware that rewrites /project/<slug>
+   requests to /project.html?id=<slug>. In production, Vercel serves
+   the per-slug static files emitted by scripts/render-projects.mjs
+   (dist/project/<slug>.html) directly, so the URL path works as-is.
+   In dev, those static files don't exist (Vite serves src/ on the
+   fly), so without this rewrite a tile click → /project/<slug> would
+   404. The rewrite preserves the URL in the browser address bar
+   (visitor's perspective: /project/<slug>) but Vite resolves the
+   request as /project.html?id=<slug>. project-page.js already
+   handles both URL shapes via its _slugFromUrl() helper. */
+const projectPathRewritePlugin = {
+  name: 'project-path-rewrite',
+  configureServer(server) {
+    server.middlewares.use((req, _res, next) => {
+      const m = req.url?.match(/^\/project\/([^/?#]+)(\?.*)?$/);
+      if (m) {
+        const slug = decodeURIComponent(m[1]);
+        const existingQuery = m[2]?.slice(1) ?? '';
+        const newQuery = existingQuery
+          ? `id=${encodeURIComponent(slug)}&${existingQuery}`
+          : `id=${encodeURIComponent(slug)}`;
+        req.url = `/project.html?${newQuery}`;
+      }
+      next();
+    });
+  },
+};
+
 export default defineConfig({
   // root: 'src' makes index.html the entry at the Vite root so the build
   // outputs dist/index.html (not dist/src/index.html). Asset paths in HTML
   // use /css/... and /js/... (relative to src root, no /src/ prefix needed).
   root: 'src',
   base: '/',
+  plugins: [projectPathRewritePlugin],
 
   build: {
     outDir: '../dist',

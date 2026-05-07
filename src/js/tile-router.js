@@ -149,9 +149,13 @@ export function handleTileActivate(tile) {
   const url      = tile.dataset.url;
 
   if (linkType === 'external-gallery' && url) {
-    /* External galleries (Pic-Time, Pixieset) open in a new tab.
-       Matches the homepage reel's behaviour for the same linkType. */
-    window.open(url, '_blank', 'noopener,noreferrer');
+    /* KNOCH-043: external-gallery tiles route to the on-site
+       /project/<slug> detail page (cinematic transition + branded
+       landing) rather than going straight to Pic-Time. The detail
+       page hosts a "View the full gallery →" CTA that opens the
+       external URL — keeps visitors on knoch.media a beat longer
+       and gives the experience the studio chrome. */
+    _transitionAndNavigate(tile, id);
     return;
   }
 
