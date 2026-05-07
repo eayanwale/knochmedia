@@ -277,8 +277,13 @@
       <!-- Centered content stack — meta label, headline, sub text -->
       <div class="hero-content">
 
-        <!-- Amber mono label — film roll identifier / editorial context -->
-        <p class="hero-meta">[ FILM 01 &mdash; A WEDDING IN MAY ]</p>
+        <!--
+          Amber mono label — film-slate identifier per slide. JS owns
+          this text at runtime (hero.js HERO_SLIDESHOW_META) so the
+          label always matches the active slide. The default below is
+          the slide-01 string and is what readers see if JS fails.
+        -->
+        <p class="hero-meta">[ FILM 01 &mdash; A QUIET PORTRAIT ]</p>
 
         <!--
           H1 headline — four lines, each in a clip-reveal wrapper.
