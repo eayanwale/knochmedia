@@ -1,7 +1,7 @@
 # Knoch Media — Ticket Summary
 
 > **Living document.** Updated whenever tickets are created, modified, split, or closed.  
-> Last updated: 2026-05-07 | Total tickets: 35 | Open: 4 | In progress: 1 | In review: 0 | Done: 25 | Deferred: 5 | Phases 1–4 shipped to main 🚀
+> Last updated: 2026-05-07 | Total tickets: 35 | Open: 4 | In progress: 0 | In review: 1 | Done: 25 | Deferred: 5 | Phases 1–4 shipped to main 🚀
 
 ---
 
@@ -96,7 +96,7 @@ Run in this exact order: perf first (changes markup), then mobile (tests perf ch
 |----|-------|--------|--------|-------|
 | [KNOCH-019](tickets/KNOCH-019.md) | Performance Optimization — Images, Build, CWV | `✅` | `feature/KNOCH-019-performance` | Done — merged to test (PR #25 + footer polish bundled); Lighthouse verification pending |
 | [KNOCH-020](tickets/KNOCH-020.md) | Responsive / Mobile Adaptations | `✅` | `feature/KNOCH-020-mobile` | Done — merged to test (PR #26 + reel-vertical / project-others-hide / per-slide hero meta polish bundled) |
-| [KNOCH-021](tickets/KNOCH-021.md) | Accessibility Pass — WCAG 2.1 AA | `🔵` | `feature/KNOCH-021-a11y-pass` | Merged to dev — PR pending; finishes Phase 5 |
+| [KNOCH-021](tickets/KNOCH-021.md) | Accessibility Pass — WCAG 2.1 AA | `🔵` | `feature/KNOCH-021-a11y-pass` | In review — PR #30 dev → test (closes Phase 5) |
 | [KNOCH-041](tickets/KNOCH-041.md) | Mobile Sustainable Mode — strip GSAP / Lenis / scroll-driven animation | `✅` | `feature/KNOCH-041-mobile-sustainable` | Done — merged to test (PR #27 + image culling + chrome wordmark + hamburger close polish bundled) |
 
 ---
@@ -187,6 +187,18 @@ CMS layer (cuts across phases — wire each section after it is built):
 ## Changelog
 
 All modifications to this document and ticket files are logged here. Tester agent and code review feedback should be recorded as entries.
+
+---
+
+### 2026-05-07 — KNOCH-021 PR opened — IN REVIEW
+
+**Action:** PR #30 opened dev → test. Awaiting QA gate.
+**Tickets affected:** KNOCH-021
+**Reason:** Implementation merged to dev (commit 88504b5). PR also carries the bundled `lenis.start()`-on-programmatic-scroll fix (758c925) found during QA, plus the recent dev-only polish that hadn't shipped to test yet (chrome glass mirror on bottom bar, divergent non-homepage glass triggers, contact + inquiry budget tier shift, KNOCH-028 defer bookkeeping). Header counts: In progress 1→0, In review 0→1.
+
+When PR #30 merges, Phase 5 is complete (019 + 020 + 041 + 021 all ✅) and ready for the test → main squash.
+
+**Requested by:** Enoch
 
 ---
 
