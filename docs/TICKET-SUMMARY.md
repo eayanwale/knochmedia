@@ -176,6 +176,24 @@ All modifications to this document and ticket files are logged here. Tester agen
 
 ---
 
+### 2026-05-06 — KNOCH-017 hero PLAY REEL CTA descoped (still IN REVIEW)
+
+**Action:** Hero CTA portion of KNOCH-017 dropped post-review; lightbox + reel-routing portions kept
+**Tickets affected:** KNOCH-017
+**Reason:** Enoch reviewed the freshly-pushed hero CTA in the browser, screenshotted it, and rejected immediately: "remove that youtube section. it is ruining the hero." The dark `maxresdefault.jpg` thumbnail competed with the moody hero backdrop and broke the headline → SCROLL-prompt cinematic pacing. The other two KNOCH-017 deliverables — `&color=white` on the lightbox iframe URL, and reel cards routing through the lightbox instead of opening in a new tab — stand. The lightbox itself is still reachable from every video tile, reel card, and project-page CTA, so removing the hero entry point doesn't strand any video; visitors still have multiple cinematic paths to play any film.
+**Changes:**
+- src/index.html: `<button class="hero-reel">` markup + `<link rel="stylesheet" href="/css/hero-reel.css">` removed; hero composition restored to its KNOCH-005 shape (meta → headline → SCROLL prompt).
+- src/js/main.js: `initHeroReel` import + call removed.
+- src/js/hero.js: opacity tween for `.hero-reel` removed from the reveal timeline.
+- src/css/hero-reel.css: deleted (was new in this PR — never reached test).
+- src/js/hero-reel.js: deleted (same).
+- docs/tickets/KNOCH-017.md: Showreel-section AC items struck through with a 2026-05-06 DESCOPED note; rationale + reference to feedback memory recorded.
+- New auto-memory: `feedback_hero_no_extra_ctas.md` — never insert CTAs / video chips / chrome between the hero headline and the SCROLL prompt; the cinematic pacing is the whole composition.
+- PR #24 auto-updates from dev — no PR re-open needed.
+**Requested by:** Enoch (live screenshot review)
+
+---
+
 ### 2026-05-06 — KNOCH-017 PR opened — IN REVIEW
 
 **Action:** PR #24 opened dev → test

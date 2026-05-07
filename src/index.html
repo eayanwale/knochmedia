@@ -48,8 +48,6 @@
     <link rel="stylesheet" href="/css/cursor.css" />
     <!-- Hero section + film-counter loader (KNOCH-005) -->
     <link rel="stylesheet" href="/css/hero.css" />
-    <!-- Hero PLAY REEL cinematic CTA (KNOCH-017) -->
-    <link rel="stylesheet" href="/css/hero-reel.css" />
     <!-- Interlude / manifesto word-reveal section (KNOCH-006) -->
     <link rel="stylesheet" href="/css/interlude.css" />
     <!-- Horizontal reel carousel (KNOCH-007) -->
@@ -219,27 +217,6 @@
           <div class="line"><span>Everything</span></div>
           <div class="line"><span><em>remembered.</em></span></div>
         </h1>
-
-        <!--
-          PLAY REEL CTA (KNOCH-017) — opens the showreel in the
-          KNOCH-012 video lightbox. data-youtube-id is the single
-          source of truth — to swap the showreel video, change this
-          one attribute. hero-reel.js paints the maxresdefault
-          thumbnail on init (with hqdefault fallback for shorter
-          videos that lack a maxres) and binds the click handler.
-          The default video is Rapha Records (Hs25JK7WcZQ), described
-          in projects.js as a long-form trailer / brand introduction
-          film — the closest thing the studio has to a showreel.
-        -->
-        <button type="button"
-                class="hero-reel"
-                data-youtube-id="Hs25JK7WcZQ"
-                aria-label="Play showreel — Knoch Media">
-          <span class="hero-reel-aspect" aria-hidden="true">&#9634; 16:9 &middot; 24FPS</span>
-          <span class="hero-reel-tc" aria-hidden="true">TC 00:01:42:11</span>
-          <span class="hero-reel-play" aria-hidden="true"></span>
-          <span class="hero-reel-label">&#9654; PLAY REEL</span>
-        </button>
 
         <!-- Scroll prompt — all-caps mono, muted; fades in last -->
         <p id="hero-sub" aria-label="Cinematic photography and film — scroll to explore">
