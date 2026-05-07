@@ -299,7 +299,7 @@ function injectArticleSchema(project) {
   /* Resolve relative cover paths to absolute URLs for the JSON-LD
      image field. Google's docs recommend absolute. location.origin
      handles localhost / preview / production transparently — image
-     URLs land at e.g. https://knochmedia.xyz/assets/portfolio/...jpg
+     URLs land at e.g. https://knoch.media/assets/portfolio/...jpg
      in production, http://localhost:5173/... in dev. */
   const absUrl = (path) =>
     path?.startsWith('http')

@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://knochmedia.xyz/sitemap.xml
+Sitemap: https://knoch.media/sitemap.xml

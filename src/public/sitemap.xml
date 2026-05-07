@@ -12,25 +12,25 @@
 -->
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://knochmedia.xyz/</loc>
+    <loc>https://knoch.media/</loc>
     <lastmod>2026-05-07</lastmod>
     <priority>1.0</priority>
     <changefreq>monthly</changefreq>
   </url>
   <url>
-    <loc>https://knochmedia.xyz/about.html</loc>
+    <loc>https://knoch.media/about.html</loc>
     <lastmod>2026-05-07</lastmod>
     <priority>0.8</priority>
     <changefreq>monthly</changefreq>
   </url>
   <url>
-    <loc>https://knochmedia.xyz/portfolio.html</loc>
+    <loc>https://knoch.media/portfolio.html</loc>
     <lastmod>2026-05-07</lastmod>
     <priority>0.8</priority>
     <changefreq>monthly</changefreq>
   </url>
   <url>
-    <loc>https://knochmedia.xyz/contact.html</loc>
+    <loc>https://knoch.media/contact.html</loc>
     <lastmod>2026-05-07</lastmod>
     <priority>0.8</priority>
     <changefreq>yearly</changefreq>

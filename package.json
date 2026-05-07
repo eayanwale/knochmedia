@@ -1,7 +1,7 @@
 {
   "name": "knoch-portfolio",
   "version": "0.1.0",
-  "description": "Knoch Media photography portfolio — knochmedia.xyz",
+  "description": "Knoch Media photography portfolio — knoch.media",
   "private": true,
   "type": "module",
   "scripts": {
