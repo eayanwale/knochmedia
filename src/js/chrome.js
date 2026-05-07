@@ -58,6 +58,20 @@ function _initMobileNav() {
   const sourceLinks = navCenter.querySelectorAll('a');
   sourceLinks.forEach(a => inner.appendChild(a.cloneNode(true)));
 
+  /* Visible Close affordance below the nav links (KNOCH-041 follow-up).
+     The hamburger toggle morphs to an X when open and is now lifted
+     above the overlay via position: fixed, so it's always tappable -
+     but the X glyph isn't always read as "close". This explicit
+     mono-caps "✕ Close" link makes the exit unmissable. Clicks
+     route through the same close() handler. */
+  const closeBtn = document.createElement('button');
+  closeBtn.type = 'button';
+  closeBtn.className = 'nav-overlay-close';
+  closeBtn.setAttribute('aria-label', 'Close navigation');
+  closeBtn.textContent = '✕  CLOSE';
+  inner.appendChild(closeBtn);
+  closeBtn.addEventListener('click', () => close());
+
   /* Re-bind the data-scroll-to handlers on the cloned anchors - the
      original handlers in _initNavLinks() are bound to the desktop DOM
      nodes only. */
@@ -78,7 +92,10 @@ function _initMobileNav() {
     link.addEventListener('click', () => close());
   });
 
-  const links = inner.querySelectorAll('a');
+  /* Stagger animation targets - include the close button so it
+     cascades up alongside the nav links rather than appearing
+     instantly while the rest fade in. */
+  const links = inner.querySelectorAll('a, .nav-overlay-close');
 
   function open() {
     toggle.classList.add('is-open');

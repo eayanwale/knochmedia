@@ -1,7 +1,7 @@
 # Knoch Media — Ticket Summary
 
 > **Living document.** Updated whenever tickets are created, modified, split, or closed.  
-> Last updated: 2026-05-07 | Total tickets: 35 | Open: 7 | In progress: 0 | In review: 1 | Done: 23 | Deferred: 4 | Phases 1–4 shipped to main 🚀
+> Last updated: 2026-05-07 | Total tickets: 35 | Open: 7 | In progress: 0 | In review: 0 | Done: 24 | Deferred: 4 | Phases 1–4 shipped to main 🚀
 
 ---
 
@@ -97,7 +97,7 @@ Run in this exact order: perf first (changes markup), then mobile (tests perf ch
 | [KNOCH-019](tickets/KNOCH-019.md) | Performance Optimization — Images, Build, CWV | `✅` | `feature/KNOCH-019-performance` | Done — merged to test (PR #25 + footer polish bundled); Lighthouse verification pending |
 | [KNOCH-020](tickets/KNOCH-020.md) | Responsive / Mobile Adaptations | `✅` | `feature/KNOCH-020-mobile` | Done — merged to test (PR #26 + reel-vertical / project-others-hide / per-slide hero meta polish bundled) |
 | [KNOCH-021](tickets/KNOCH-021.md) | Accessibility Pass — WCAG 2.1 AA | `⬜` | — | Reduced motion, focus, ARIA |
-| [KNOCH-041](tickets/KNOCH-041.md) | Mobile Sustainable Mode — strip GSAP / Lenis / scroll-driven animation | `🔵` In review | `feature/KNOCH-041-mobile-sustainable` | PR #27 — strips scroll-tied GSAP across hero/frame/portfolio-grid/inquiry/about/contact; fixes back-to-works + contact sidebar overlap |
+| [KNOCH-041](tickets/KNOCH-041.md) | Mobile Sustainable Mode — strip GSAP / Lenis / scroll-driven animation | `✅` | `feature/KNOCH-041-mobile-sustainable` | Done — merged to test (PR #27 + image culling + chrome wordmark + hamburger close polish bundled) |
 
 ---
 
@@ -187,6 +187,21 @@ CMS layer (cuts across phases — wire each section after it is built):
 ## Changelog
 
 All modifications to this document and ticket files are logged here. Tester agent and code review feedback should be recorded as entries.
+
+---
+
+### 2026-05-07 — KNOCH-041 merged to test — ✅ DONE
+
+**Action:** PR #27 merged dev → test (regular merge, no squash)
+**Tickets affected:** KNOCH-041
+**Reason:** Mobile sustainable mode passed live device review. The originally-shipped commit (5ae0a27) carried the scroll-tied GSAP gates across hero / frame / portfolio-grid / inquiry / about / contact, plus the back-to-works bfcache fix and the contact sidebar overlap fix. Then a series of post-PR-open polish commits landed on dev and rode along: cutting wasted image fetches on phones (hero slideshow build of 6 → 1 slide, interlude marquee strip hidden, frame .bg-reveal skipped on touch); a hamburger close affordance pass (toggle lifted to position: fixed at z-12000 above the overlay, plus a visible "✕ CLOSE" button inside the overlay); and three iterations on the chrome wordmark / footer logo (logo image with text fallback → bigger logo, drop fallback → drop chrome logo entirely, text wordmark restored at 20 px → footer logo added → footer logo dropped).
+**Changes:**
+- KNOCH-041: Status 🔵 In review → ✅ Done.
+- PR #27 merged at 2026-05-07T05:43:42Z; dev and test now aligned at ed6997c.
+- Header counts updated: In review 1→0, Done 23→24.
+- Phase 5 progress: 3/4 (KNOCH-019 + KNOCH-020 + KNOCH-041 done; KNOCH-021 a11y still open). No squash to main yet — phase rule says only squash after a completed phase.
+
+**Requested by:** Enoch
 
 ---
 

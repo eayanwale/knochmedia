@@ -156,6 +156,21 @@
     height: auto;
     min-height: 100vh;
   }
+
+  /* KNOCH-041: hide the marquee strip on mobile. The strip is 14
+     decorative bg-image divs (alex-morgan ×2, fayo-femi ×2, etc.)
+     that get fetched as soon as the lazy-load IO fires - on real
+     phones that's 14 simultaneous image requests on top of whatever
+     else the section is doing. The strip is pure desktop polish;
+     dropping it leaves the manifesto blockquote (the only content
+     that matters) front-and-centre.
+
+     display: none keeps it out of the document entirely so
+     lazy-load never observes the data-bg attributes - the .webp
+     siblings never get fetched. */
+  .interlude-strip {
+    display: none;
+  }
 }
 
 /* ── Reduced motion ── */

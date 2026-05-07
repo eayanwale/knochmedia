@@ -11,7 +11,7 @@
   inset: 0;
   pointer-events: none;
   z-index: var(--z-chrome);
-  padding: 28px 36px;
+  padding: 24px 36px;
   mix-blend-mode: difference;
   /* mix-blend-mode is removed when .is-glass activates so backdrop-filter
      on the ::before pane composes cleanly. See the .is-glass block below. */
@@ -45,7 +45,7 @@
   top: 0;
   left: 0;
   right: 0;
-  height: 84px;
+  height: 80px;
   pointer-events: none;
   background: rgba(10, 10, 10, 0.42);
   backdrop-filter: blur(20px) saturate(1.5);
@@ -95,10 +95,12 @@
   align-items: start;
 }
 
-/* ── Wordmark / logo ── */
+/* ── Wordmark ──
+   Serif text wordmark in the chrome. The circular logo asset moved
+   to the footer; chrome stays clean text per Enoch's preference. */
 .mark {
   font-family: var(--font-serif);
-  font-size: 17px;
+  font-size: 20px;
   font-weight: 400;
   color: var(--paper);
   letter-spacing: -0.01em;
@@ -365,15 +367,48 @@
   font-style: italic;
 }
 
+/* Visible Close affordance - sits below the nav links inside the
+   overlay so visitors always have an obvious exit (the morphing
+   hamburger -> X is a backup but not always read as "close").
+   chrome.js inserts this <button> at runtime alongside the cloned
+   nav links. */
+.nav-overlay-close {
+  appearance: none;
+  -webkit-appearance: none;
+  background: none;
+  border: 0;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: rgba(237, 230, 216, 0.55);
+  cursor: pointer;
+  margin-top: 2.4rem;
+  padding: 0.6rem 1rem;
+  transition: color 0.3s var(--ease-cinematic);
+}
+
+.nav-overlay-close:hover,
+.nav-overlay-close:focus-visible {
+  color: var(--amber);
+  outline: none;
+}
+
 /* ── Mobile ≤800px ── */
 @media (max-width: 800px) {
   .chrome {
     padding: 18px 20px;
   }
 
-  /* Smaller glass strip to match the tighter mobile padding */
+  /* Glass strip to match the tighter mobile padding */
   .chrome::before {
     height: 64px;
+  }
+
+  /* Slightly smaller wordmark on mobile so the chrome row doesn't
+     crowd the hamburger toggle on narrow viewports. */
+  .mark {
+    font-size: 20px;
   }
 
   /* Hide center links — logo and REC remain */
@@ -387,14 +422,24 @@
     display: none;
   }
 
-  /* Activate hamburger toggle on mobile. Force into the third grid
-     column with justify-self end so it pins to the right edge -
-     without this, auto-flow places it in col 2 (since .nav-center
-     and .nav-right are display:none and don't take a slot). */
+  /* Activate hamburger toggle on mobile, AND pin it to the viewport
+     instead of leaving it inside the chrome stacking context.
+     Why position: fixed: the .nav-overlay sits at z-(--z-chrome + 1),
+     forming its own document-level stacking context. The toggle was
+     previously inside .chrome (which forms its own stacking context
+     at z-(--z-chrome)), so its z-index couldn't escape - the overlay
+     visually covered the toggle's X icon when open. Lifting the
+     toggle to position: fixed with a high z-index means it sits
+     above the overlay no matter what, so tapping the X always
+     closes the menu (KNOCH-041 follow-up).
+     Position values match what the toggle's grid-cell location was:
+     same top-right corner the .chrome row would have placed it at. */
   .nav-toggle {
     display: block;
-    grid-column: 3;
-    justify-self: end;
+    position: fixed;
+    top: 18px;
+    right: 20px;
+    z-index: 12000;
   }
 
   /* Activate the overlay container (display: flex when JS toggles

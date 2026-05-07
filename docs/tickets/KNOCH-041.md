@@ -1,8 +1,8 @@
 # KNOCH-041 — Mobile Sustainable Mode
 
-## Status: IN REVIEW
+## Status: DONE — merged to test (2026-05-07)
 ## Branch: feature/KNOCH-041-mobile-sustainable
-## PR: https://github.com/eayanwale/knochmedia/pull/27
+## PR: https://github.com/eayanwale/knochmedia/pull/27 (merged)
 ## Priority: P0 (mobile site is breaking)
 ## Epic: EPIC-005 — Polish & Ship
 
