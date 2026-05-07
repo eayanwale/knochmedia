@@ -1,7 +1,7 @@
 # Knoch Media — Ticket Summary
 
 > **Living document.** Updated whenever tickets are created, modified, split, or closed.  
-> Last updated: 2026-05-07 | Total tickets: 35 | Open: 7 | In progress: 1 | In review: 0 | Done: 23 | Deferred: 4 | Phases 1–4 shipped to main 🚀
+> Last updated: 2026-05-07 | Total tickets: 35 | Open: 7 | In progress: 0 | In review: 1 | Done: 23 | Deferred: 4 | Phases 1–4 shipped to main 🚀
 
 ---
 
@@ -97,7 +97,7 @@ Run in this exact order: perf first (changes markup), then mobile (tests perf ch
 | [KNOCH-019](tickets/KNOCH-019.md) | Performance Optimization — Images, Build, CWV | `✅` | `feature/KNOCH-019-performance` | Done — merged to test (PR #25 + footer polish bundled); Lighthouse verification pending |
 | [KNOCH-020](tickets/KNOCH-020.md) | Responsive / Mobile Adaptations | `✅` | `feature/KNOCH-020-mobile` | Done — merged to test (PR #26 + reel-vertical / project-others-hide / per-slide hero meta polish bundled) |
 | [KNOCH-021](tickets/KNOCH-021.md) | Accessibility Pass — WCAG 2.1 AA | `⬜` | — | Reduced motion, focus, ARIA |
-| [KNOCH-041](tickets/KNOCH-041.md) | Mobile Sustainable Mode — strip GSAP / Lenis / scroll-driven animation | `🔵` | `feature/KNOCH-041-mobile-sustainable` | P0 — second pass after KNOCH-020; fixes back-to-works + contact overlap |
+| [KNOCH-041](tickets/KNOCH-041.md) | Mobile Sustainable Mode — strip GSAP / Lenis / scroll-driven animation | `🔵` In review | `feature/KNOCH-041-mobile-sustainable` | PR #27 — strips scroll-tied GSAP across hero/frame/portfolio-grid/inquiry/about/contact; fixes back-to-works + contact sidebar overlap |
 
 ---
 
@@ -187,6 +187,21 @@ CMS layer (cuts across phases — wire each section after it is built):
 ## Changelog
 
 All modifications to this document and ticket files are logged here. Tester agent and code review feedback should be recorded as entries.
+
+---
+
+### 2026-05-07 — KNOCH-041 PR opened — IN REVIEW
+
+**Action:** PR #27 opened dev → test
+**Tickets affected:** KNOCH-041
+**Reason:** Mobile sustainable mode shipped. Strips scroll-tied GSAP work across hero / frame / portfolio-grid / inquiry / about / contact-page modules so touch devices get a static, simple-transition experience. Fixes the two specific bugs flagged on live device review: (1) "Back to works" leaving the project image stuck on screen — tile-router now skips the expanding-tile transition on mobile + has a `pageshow` listener that wipes any leftover overlay clones when Safari restores from bfcache; (2) contact form sidebar overlapping the form region on mobile — CSS rewritten so the active step is `position: relative` and inactive steps `display: none`, letting the form-col size to its real content. About page chapters also stack vertically on mobile (CSS override from `position: absolute; inset: 0` to `position: relative; min-height: 80vh`) since the GSAP scrub timeline no longer runs to scrub between them.
+**Changes:**
+- KNOCH-041: Status IN PROGRESS → IN REVIEW; PR line added.
+- PR #27 opened: dev → test at https://github.com/eayanwale/knochmedia/pull/27
+- Files modified: src/js/hero.js, src/js/frame.js, src/js/portfolio-grid.js, src/js/inquiry.js, src/js/about.js, src/js/contact-page.js, src/js/tile-router.js (mobile gates + bfcache cleanup); src/css/about.css, src/css/contact-page.css (mobile layout overrides).
+- Build: 159 ms; main.js 32.09 kB / 9.97 kB gz; bundle delta nil. Desktop unchanged.
+- Header counts updated: In progress 1→0, In review 0→1.
+**Requested by:** Builder agent
 
 ---
 
