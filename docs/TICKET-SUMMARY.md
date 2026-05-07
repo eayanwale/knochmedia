@@ -1,7 +1,7 @@
 # Knoch Media — Ticket Summary
 
 > **Living document.** Updated whenever tickets are created, modified, split, or closed.  
-> Last updated: 2026-05-06 | Total tickets: 30 | Open: 6 | In progress: 0 | In review: 0 | Done: 20 | Deferred: 4 | Phase 3 shipped to main 🚀
+> Last updated: 2026-05-06 | Total tickets: 30 | Open: 6 | In progress: 0 | In review: 0 | Done: 20 | Deferred: 4 | Phases 1–3 shipped to main 🚀
 
 ---
 
@@ -24,11 +24,11 @@ These must be completed before any other ticket can be built. No component shoul
 
 | ID | Title | Status | Branch | Notes |
 |----|-------|--------|--------|-------|
-| [KNOCH-001](tickets/KNOCH-001.md) | Project Scaffolding & Build Setup (Vite) | `✅` | `feature/KNOCH-001-project-scaffold` | Entry point for all other work |
-| [KNOCH-002](tickets/KNOCH-002.md) | Design Tokens & CSS Custom Properties | `✅` | `feature/KNOCH-002-design-tokens` | QA PASSED — merged to test |
-| [KNOCH-016](tickets/KNOCH-016.md) | Smooth Scrolling — Lenis + ScrollTrigger Sync | `✅` | `feature/KNOCH-016-lenis-smooth-scroll` | QA PASSED — merged to test |
-| [KNOCH-003](tickets/KNOCH-003.md) | Cinematic Chrome Navigation + Timecode Bar | `✅` | `feature/KNOCH-003-chrome-navigation` | QA PASSED — merged to test |
-| [KNOCH-004](tickets/KNOCH-004.md) | Custom Cursor & Film-Grain Overlay | `✅` | `feature/KNOCH-004-cursor-film-grain` | QA PASSED — merged to test |
+| [KNOCH-001](tickets/KNOCH-001.md) | Project Scaffolding & Build Setup (Vite) | `🚀` | `feature/KNOCH-001-project-scaffold` | Shipped — Phase 1 squash to main |
+| [KNOCH-002](tickets/KNOCH-002.md) | Design Tokens & CSS Custom Properties | `🚀` | `feature/KNOCH-002-design-tokens` | Shipped — Phase 1 squash to main |
+| [KNOCH-016](tickets/KNOCH-016.md) | Smooth Scrolling — Lenis + ScrollTrigger Sync | `🚀` | `feature/KNOCH-016-lenis-smooth-scroll` | Shipped — Phase 1 squash to main |
+| [KNOCH-003](tickets/KNOCH-003.md) | Cinematic Chrome Navigation + Timecode Bar | `🚀` | `feature/KNOCH-003-chrome-navigation` | Shipped — Phase 1 squash to main |
+| [KNOCH-004](tickets/KNOCH-004.md) | Custom Cursor & Film-Grain Overlay | `🚀` | `feature/KNOCH-004-cursor-film-grain` | Shipped — Phase 1 squash to main |
 
 ---
 
@@ -56,12 +56,12 @@ Build top-to-bottom in scroll order. Wire each section to Sanity immediately aft
 
 | ID | Title | Status | Branch | Notes |
 |----|-------|--------|--------|-------|
-| [KNOCH-005](tickets/KNOCH-005.md) | Hero — Film Counter Loader + Reveal Sequence | `✅` | `feature/KNOCH-005-hero-section` | QA PASSED — merged to test. Hero images stay static. |
-| [KNOCH-006](tickets/KNOCH-006.md) | Interlude — Word-by-Word Scroll Reveal | `✅` | `feature/KNOCH-006-interlude-manifesto` | QA PASSED — merged to test |
-| [KNOCH-007](tickets/KNOCH-007.md) | Horizontal Reel — Pinned Scroll Carousel | `✅` | `feature/KNOCH-007-horizontal-reel` | Sanity-driven (3 featured collections); cinematic full-greyscale filter; inner parallax; KNOCH-025 included |
-| [KNOCH-008](tickets/KNOCH-008.md) | Pinned Frame — Parallax + Animated Counters | `✅` | `feature/KNOCH-008-pinned-frame` | QA PASSED — merged to test |
-| [KNOCH-009](tickets/KNOCH-009.md) | Testimonial Pull-Quote Section | `✅` | `feature/KNOCH-009-testimonial-section` | QA PASSED — merged to test |
-| [KNOCH-010](tickets/KNOCH-010.md) | Portfolio Grid — Asymmetric 12-Col Archive | `✅` | `feature/KNOCH-010-portfolio-grid` | QA PASSED — merged to test |
+| [KNOCH-005](tickets/KNOCH-005.md) | Hero — Film Counter Loader + Reveal Sequence | `🚀` | `feature/KNOCH-005-hero-section` | Shipped — Phase 2 squash to main (hero images stay static) |
+| [KNOCH-006](tickets/KNOCH-006.md) | Interlude — Word-by-Word Scroll Reveal | `🚀` | `feature/KNOCH-006-interlude-manifesto` | Shipped — Phase 2 squash to main |
+| [KNOCH-007](tickets/KNOCH-007.md) | Horizontal Reel — Pinned Scroll Carousel | `🚀` | `feature/KNOCH-007-horizontal-reel` | Shipped — Phase 2 squash to main (Sanity-driven, KNOCH-025 included) |
+| [KNOCH-008](tickets/KNOCH-008.md) | Pinned Frame — Parallax + Animated Counters | `🚀` | `feature/KNOCH-008-pinned-frame` | Shipped — Phase 2 squash to main |
+| [KNOCH-009](tickets/KNOCH-009.md) | Testimonial Pull-Quote Section | `🚀` | `feature/KNOCH-009-testimonial-section` | Shipped — Phase 2 squash to main |
+| [KNOCH-010](tickets/KNOCH-010.md) | Portfolio Grid — Asymmetric 12-Col Archive | `🚀` | `feature/KNOCH-010-portfolio-grid` | Shipped — Phase 2 squash to main |
 
 ---
 
@@ -173,6 +173,22 @@ CMS layer (cuts across phases — wire each section after it is built):
 ## Changelog
 
 All modifications to this document and ticket files are logged here. Tester agent and code review feedback should be recorded as entries.
+
+---
+
+### 2026-05-06 — Phase 1 + Phase 2 status backfilled to SHIPPED 🚀
+
+**Action:** Bookkeeping flip — 11 ticket files + table rows + dashboard badges
+**Tickets affected:** Phase 1 — KNOCH-001, KNOCH-002, KNOCH-003, KNOCH-004, KNOCH-016. Phase 2 — KNOCH-005, KNOCH-006, KNOCH-007, KNOCH-008, KNOCH-009, KNOCH-010.
+**Reason:** Phase 1 (squashed to main as `676f2bd` / `e2a0549`) and Phase 2 (squashed to main as `f14c0c1`) both reached production weeks ago, but their trackers were still showing `✅ QA Passed` instead of the `🚀 Shipped` state introduced when Phase 3 closed. This entry brings the trackers in line with reality so all three completed phases read consistently.
+**Changes:**
+- 11 ticket files: Status `QA PASSED` (or `DONE — merged to test` for KNOCH-007) → `SHIPPED — Phase 1 squash to main` / `SHIPPED — Phase 2 squash to main`.
+- TICKET-SUMMARY.md Phase 1 + Phase 2 table rows: `✅` → `🚀` with shipped notes; ticket-flavour details preserved (KNOCH-005 hero static, KNOCH-007 Sanity + KNOCH-025).
+- Header line: `Phase 3 shipped to main 🚀` → `Phases 1–3 shipped to main 🚀`.
+- dashboard.html: 11 row badges flipped `QA Passed` → `Shipped` (badge-pass → badge-shipped).
+- Counts unchanged: 🚀 already counts under "Done" so totals (Done: 20) stay the same.
+
+**Requested by:** Enoch
 
 ---
 
