@@ -134,10 +134,26 @@
         -->
         <div class="contact-form-col">
           <form class="contact-form"
-                action="/__contact-pending"
+                action="https://formspree.io/f/xlgzwdjj"
                 method="POST"
                 novalidate
                 aria-label="Qualified inquiry form">
+
+            <!-- KNOCH-039: honeypot. Formspree's reserved field name is
+                 _gotcha — bots fill every visible input, so a non-empty
+                 value here triggers Formspree's server-side spam filter
+                 BEFORE the submission counts against our monthly quota.
+                 Off-screen + tabindex="-1" + aria-hidden so neither
+                 sighted nor screen-reader users encounter it. -->
+            <input type="text" name="_gotcha" tabindex="-1" autocomplete="off"
+                   aria-hidden="true"
+                   style="position:absolute; left:-9999px; opacity:0; height:0; width:0; pointer-events:none;" />
+
+            <!-- KNOCH-039: subject line for the studio inbox. Formspree
+                 interpolates `{field}` references against form data, so
+                 the email lands as "[Knoch · Inquiry] wedding — Alex Smith"
+                 making mid-week triage one-glance. -->
+            <input type="hidden" name="_subject" value="[Knoch · Inquiry] {serviceType} — {name}" />
 
             <!-- KNOCH-021: live region for step transitions. contact-page.js
                  sets textContent on each goToStep so screen readers announce
