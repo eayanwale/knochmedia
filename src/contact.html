@@ -7,21 +7,21 @@
 
     <meta name="description" content="A short qualified inquiry — three steps, two minutes. Every inquiry gets a personal reply within 24 hours." />
     <meta name="theme-color" content="#0a0a0a" />
-    <link rel="canonical" href="https://knochmedia.xyz/contact.html" />
+    <link rel="canonical" href="https://knoch.media/contact.html" />
 
     <!-- Open Graph / social share (KNOCH-019) -->
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="Knoch Media" />
     <meta property="og:title" content="Inquire — Knoch Media" />
     <meta property="og:description" content="A short qualified inquiry — three steps, two minutes." />
-    <meta property="og:url" content="https://knochmedia.xyz/contact.html" />
-    <meta property="og:image" content="https://knochmedia.xyz/assets/og/og-default.jpg" />
+    <meta property="og:url" content="https://knoch.media/contact.html" />
+    <meta property="og:image" content="https://knoch.media/assets/og/og-default.jpg" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="Inquire — Knoch Media" />
     <meta name="twitter:description" content="A short qualified inquiry — three steps, two minutes." />
-    <meta name="twitter:image" content="https://knochmedia.xyz/assets/og/og-default.jpg" />
+    <meta name="twitter:image" content="https://knoch.media/assets/og/og-default.jpg" />
 
     <meta name="sanity-project-id" content="2779g58e" />
     <meta name="sanity-dataset" content="production" />
@@ -134,10 +134,26 @@
         -->
         <div class="contact-form-col">
           <form class="contact-form"
-                action="/__contact-pending"
+                action="https://formspree.io/f/xlgzwdjj"
                 method="POST"
                 novalidate
                 aria-label="Qualified inquiry form">
+
+            <!-- KNOCH-039: honeypot. Formspree's reserved field name is
+                 _gotcha — bots fill every visible input, so a non-empty
+                 value here triggers Formspree's server-side spam filter
+                 BEFORE the submission counts against our monthly quota.
+                 Off-screen + tabindex="-1" + aria-hidden so neither
+                 sighted nor screen-reader users encounter it. -->
+            <input type="text" name="_gotcha" tabindex="-1" autocomplete="off"
+                   aria-hidden="true"
+                   style="position:absolute; left:-9999px; opacity:0; height:0; width:0; pointer-events:none;" />
+
+            <!-- KNOCH-039: subject line for the studio inbox. Formspree
+                 interpolates `{field}` references against form data, so
+                 the email lands as "[Knoch · Inquiry] wedding — Alex Smith"
+                 making mid-week triage one-glance. -->
+            <input type="hidden" name="_subject" value="[Knoch · Inquiry] {serviceType} — {name}" />
 
             <!-- KNOCH-021: live region for step transitions. contact-page.js
                  sets textContent on each goToStep so screen readers announce
@@ -299,12 +315,12 @@
 
           <div class="contact-sidebar-block">
             <p class="contact-sidebar-meta">— Or skip the form</p>
-            <h3 class="contact-sidebar-title">Book a 15-min call.</h3>
+            <h3 class="contact-sidebar-title">Book a 30-min call.</h3>
             <p class="contact-sidebar-body">
               If you&rsquo;d rather just talk through it, drop a quick call on
               the calendar. No prep needed &mdash; bring your questions.
             </p>
-            <a class="contact-sidebar-link" href="https://calendly.com/knochmedia/15min" target="_blank" rel="noopener noreferrer">
+            <a class="contact-sidebar-link" href="https://calendly.com/knochmedia/30min" target="_blank" rel="noopener noreferrer">
               Pick a time on my calendar &rarr;
             </a>
           </div>
@@ -318,7 +334,7 @@
               </li>
               <li>
                 <span class="contact-sidebar-step-num">02</span>
-                <span>15-minute call to talk through the day.</span>
+                <span>30-minute call to talk through the day.</span>
               </li>
               <li>
                 <span class="contact-sidebar-step-num">03</span>
@@ -330,7 +346,7 @@
           <div class="contact-sidebar-block">
             <p class="contact-sidebar-meta">— Direct contact</p>
             <p class="contact-sidebar-direct">
-              <a href="mailto:enoch@knoch.media">enoch@knoch.media</a>
+              <a href="mailto:hello@knoch.media">hello@knoch.media</a>
             </p>
           </div>
 

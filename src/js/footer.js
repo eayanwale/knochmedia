@@ -27,8 +27,8 @@ const LAST_UPDATED = 'May';     /* short month — full year is in ROLL_YEAR */
 const COPYRIGHT_YEAR = '2026';
 
 const CONTACT = {
-  email:        'enoch@knoch.media',
-  emailMailto:  'mailto:enoch@knoch.media',
+  email:        'hello@knoch.media',
+  emailMailto:  'mailto:hello@knoch.media',
   city:         'College Park, MD',
   region:       'East Coast available',
 };
