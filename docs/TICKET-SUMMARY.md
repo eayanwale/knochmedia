@@ -43,7 +43,7 @@ KNOCH-022 and KNOCH-023 are infrastructure — implement these first. The wiring
 | [KNOCH-024](tickets/KNOCH-024.md) | Wire Testimonials to Sanity | `✅` | `feature/KNOCH-024-wire-testimonials-sanity` | QA PASSED — merged to test |
 | [KNOCH-025](tickets/KNOCH-025.md) | Wire Gallery Reel to Sanity | `✅` | `feature/KNOCH-007-horizontal-reel` | `main.js` fetches `getFeaturedCollections()` → `initReel()`; 3 featured collections with Sanity CDN images; `subtitle` field added to schema |
 | [KNOCH-026](tickets/KNOCH-026.md) | Migrate Hero Images to Sanity CDN | `⏸` | — | Deferred — hero is LCP-critical and design-tied; static files are the correct approach |
-| [KNOCH-027](tickets/KNOCH-027.md) | Wire About Page to Sanity | `🔵` | `feature/KNOCH-027-wire-about-sanity` | In progress — singleton aboutContent doc, headline / sub / bio / headshot / specialties / years |
+| [KNOCH-027](tickets/KNOCH-027.md) | Wire About Page to Sanity | `🔵` | `feature/KNOCH-027-wire-about-sanity` | Merged to dev — PR pending; singleton aboutContent doc, headline / sub / bio / headshot / specialties / years |
 | [KNOCH-028](tickets/KNOCH-028.md) | Wire Services Page to Sanity | `⬜` | — | After services page is built |
 | [KNOCH-029](tickets/KNOCH-029.md) | Blog Listing Page | `⏸` | — | Deferred — blog schema needs redesign (dynamic related posts, YouTube + Instagram content types) |
 | [KNOCH-030](tickets/KNOCH-030.md) | Blog Post Detail Page | `⏸` | — | Deferred — blocked by KNOCH-029 redesign |
@@ -187,6 +187,19 @@ CMS layer (cuts across phases — wire each section after it is built):
 ## Changelog
 
 All modifications to this document and ticket files are logged here. Tester agent and code review feedback should be recorded as entries.
+
+---
+
+### 2026-05-07 — KNOCH-027 merged to dev — awaiting PR open
+
+**Action:** `feature/KNOCH-027-wire-about-sanity` merged into `dev` (no-ff). PR to `test` opens next.
+**Tickets affected:** KNOCH-027
+**Reason:** Implementation complete: `aboutContent` schema registered in `studio/sanity.config.js`, `getAboutContent()` added to `src/js/sanity.js`, and `src/js/about-cms.js` hydrates `.about-hero-headline` (with `*word*` italic-marker convention), `.about-hero-sub`, `.about-intro-body`, an injected headshot figure, an injected specialties pill row, and the `data-stat="years"` stat's `data-count` + visible value + aria-label. CMS init runs before `initAbout()` so the years counter tweens to the CMS target instead of the static 8. Static markup remains the fallback — Sanity API currently returns `[]`, exercising the no-doc path; page renders unchanged.
+**Changes:**
+- KNOCH-027: Status 🔵 In progress → 🔵 Merged to dev (still 🔵 until QA gate).
+- Files: 6 changed, +219 lines (`sanity.config.js`, `sanity.js`, `about-cms.js` new, `about-main.js`, `about.html`, `about.css`).
+
+**Requested by:** Enoch (auto-selected via /implement-ticket)
 
 ---
 
