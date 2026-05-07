@@ -73,7 +73,14 @@
       it parses the CSS background-image declaration, shaving ~200–400ms off
       LCP on first load. fetchpriority="high" promotes it above other resources.
     -->
-    <link rel="preload" as="image" href="/assets/reel/reel-01.png" fetchpriority="high" />
+    <!--
+      LCP image preload (KNOCH-019): point at the WebP sibling. WebP support is
+      universal in 2026 (Safari 14+, all Chromium, Firefox 65+) and the WebP
+      sibling is ~98% smaller than the source PNG (1.96 MB → 39.6 KB). The
+      lazy-load module's runtime detection still falls the few legacy browsers
+      back to the source format via the .lazy-loaded retry path.
+    -->
+    <link rel="preload" as="image" href="/assets/reel/reel-01.webp" fetchpriority="high" />
   </head>
   <body>
 
@@ -243,23 +250,23 @@
       <!-- Vintage film-strip background — two identical sets for seamless CSS marquee loop -->
       <div class="interlude-strip" aria-hidden="true">
         <div class="interlude-strip-track">
-          <div class="interlude-strip-img" style="background-image: url('/assets/portfolio/cover-alex-morgan.jpg')"></div>
-          <div class="interlude-strip-img" style="background-image: url('/assets/portfolio/cover-fayo-femi.jpg')"></div>
-          <div class="interlude-strip-img" style="background-image: url('/assets/portfolio/cover-woodsmen.jpg')"></div>
-          <div class="interlude-strip-img" style="background-image: url('/assets/portfolio/cover-jojos-graduation.jpg')"></div>
-          <div class="interlude-strip-img" style="background-image: url('/assets/portfolio/cover-what-mighty-praise.png')"></div>
-          <div class="interlude-strip-img" style="background-image: url('/assets/portfolio/cover-rapha-records.jpg')"></div>
-          <div class="interlude-strip-img" style="background-image: url('/assets/portfolio/cover-shawn-bekki.jpg')"></div>
-          <div class="interlude-strip-img" style="background-image: url('/assets/portfolio/cover-alex-morgan.jpg')"></div>
+          <div class="interlude-strip-img" data-bg="/assets/portfolio/cover-alex-morgan.jpg"></div>
+          <div class="interlude-strip-img" data-bg="/assets/portfolio/cover-fayo-femi.jpg"></div>
+          <div class="interlude-strip-img" data-bg="/assets/portfolio/cover-woodsmen.jpg"></div>
+          <div class="interlude-strip-img" data-bg="/assets/portfolio/cover-jojos-graduation.jpg"></div>
+          <div class="interlude-strip-img" data-bg="/assets/portfolio/cover-what-mighty-praise.png"></div>
+          <div class="interlude-strip-img" data-bg="/assets/portfolio/cover-rapha-records.jpg"></div>
+          <div class="interlude-strip-img" data-bg="/assets/portfolio/cover-shawn-bekki.jpg"></div>
+          <div class="interlude-strip-img" data-bg="/assets/portfolio/cover-alex-morgan.jpg"></div>
           <!-- Second copy — makes -50% translateX a perfect seamless loop -->
-          <div class="interlude-strip-img" style="background-image: url('/assets/portfolio/cover-fayo-femi.jpg')"></div>
-          <div class="interlude-strip-img" style="background-image: url('/assets/portfolio/cover-woodsmen.jpg')"></div>
-          <div class="interlude-strip-img" style="background-image: url('/assets/portfolio/cover-jojos-graduation.jpg')"></div>
-          <div class="interlude-strip-img" style="background-image: url('/assets/portfolio/cover-what-mighty-praise.png')"></div>
-          <div class="interlude-strip-img" style="background-image: url('/assets/portfolio/cover-rapha-records.jpg')"></div>
-          <div class="interlude-strip-img" style="background-image: url('/assets/portfolio/cover-shawn-bekki.jpg')"></div>
-          <div class="interlude-strip-img" style="background-image: url('/assets/portfolio/cover-alex-morgan.jpg')"></div>
-          <div class="interlude-strip-img" style="background-image: url('/assets/portfolio/cover-fayo-femi.jpg')"></div>
+          <div class="interlude-strip-img" data-bg="/assets/portfolio/cover-fayo-femi.jpg"></div>
+          <div class="interlude-strip-img" data-bg="/assets/portfolio/cover-woodsmen.jpg"></div>
+          <div class="interlude-strip-img" data-bg="/assets/portfolio/cover-jojos-graduation.jpg"></div>
+          <div class="interlude-strip-img" data-bg="/assets/portfolio/cover-what-mighty-praise.png"></div>
+          <div class="interlude-strip-img" data-bg="/assets/portfolio/cover-rapha-records.jpg"></div>
+          <div class="interlude-strip-img" data-bg="/assets/portfolio/cover-shawn-bekki.jpg"></div>
+          <div class="interlude-strip-img" data-bg="/assets/portfolio/cover-alex-morgan.jpg"></div>
+          <div class="interlude-strip-img" data-bg="/assets/portfolio/cover-fayo-femi.jpg"></div>
         </div>
       </div>
 

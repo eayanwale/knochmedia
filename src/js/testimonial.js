@@ -35,11 +35,14 @@ const ADVANCE_MS  = 7000;
 const QUOTE_MAX   = 180;
 
 /* Index → background image. Files in src/public/assets/testimonials/
-   are named testimonial-01.jpg…testimonial-NN.jpg matching Sanity's
-   `order asc` sort, so testimonials[i] pairs with testimonial-(i+1).jpg. */
+   are named testimonial-01.webp…testimonial-NN.webp (KNOCH-019 - the
+   .jpg sources stay alongside as the optimize-images.mjs pipeline
+   inputs, but runtime loads the .webp sibling for ~50% byte savings).
+   testimonials[i] pairs with testimonial-(i+1) matching Sanity's
+   `order asc` sort. */
 function getTestimonialImage(idx) {
   const num = String((idx ?? 0) + 1).padStart(2, '0');
-  return `/assets/testimonials/testimonial-${num}.jpg`;
+  return `/assets/testimonials/testimonial-${num}.webp`;
 }
 /* Cooldown tuned to match the word-stagger reveal duration so the user
    can advance again as soon as the text has visually settled.
