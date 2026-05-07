@@ -1,6 +1,6 @@
 # KNOCH-037 — SEO Basics
 
-## Status: TODO
+## Status: IN PROGRESS
 ## Priority: P1 (high)
 ## Epic: EPIC-006 — Launch & SEO
 
