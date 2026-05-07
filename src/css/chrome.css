@@ -13,11 +13,79 @@
   z-index: var(--z-chrome);
   padding: 28px 36px;
   mix-blend-mode: difference;
+  /* mix-blend-mode is removed when .is-glass activates so backdrop-filter
+     on the ::before pane composes cleanly. See the .is-glass block below. */
+  transition: mix-blend-mode 0s; /* instant - no in-between blend modes */
 }
 
 /* Re-enable pointer events for interactive children only */
 .chrome > * {
   pointer-events: auto;
+}
+
+/* ── Liquid-glass pane (KNOCH-017+ chrome polish) ──
+   Fixed strip pinned to the top of the viewport, sitting BEHIND the
+   chrome-grid content. Off by default (opacity 0); fades in when
+   .is-glass lands on .chrome (chrome.js triggers it once the interlude
+   section reaches the top). The pane provides a frosted backdrop so
+   the navbar reads cleanly over busy interlude / reel / archive frames
+   instead of relying solely on mix-blend-mode (which only inverts and
+   can fail over mid-grey content).
+
+   Why a ::before pseudo and not a sibling element: keeps the markup
+   untouched (purely a CSS+JS enhancement), and the pseudo inherits
+   the parent's fixed positioning context so it pins to the same
+   coords without needing its own stacking root.
+
+   Strip height matches the visual chrome bar: 28 px top padding +
+   ~20 px content + breathing room. Tune the 84 px if the bar grows. */
+.chrome::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 84px;
+  pointer-events: none;
+  background: rgba(10, 10, 10, 0.42);
+  backdrop-filter: blur(20px) saturate(1.5);
+  -webkit-backdrop-filter: blur(20px) saturate(1.5);
+  /* Hairline edges - top highlight + bottom separator give the pane
+     a cut-glass quality. Both are paper-tinted at very low alpha so
+     they read as light catching an edge, not as visible borders. */
+  border-bottom: 1px solid rgba(237, 230, 216, 0.08);
+  box-shadow: inset 0 1px 0 rgba(237, 230, 216, 0.07);
+  opacity: 0;
+  transition: opacity 0.55s var(--ease-cinematic);
+  /* CSS painting order: static descendants render BEFORE positioned
+     ones, so without this z-index the position:fixed ::before would
+     paint on top of .mark / .nav-center / .nav-right (all statically
+     positioned). z-index: -1 keeps the pane inside .chrome's stacking
+     context (the parent has z-index:50, so this stays inside that
+     context and never escapes behind the page) while moving it below
+     the static children. */
+  z-index: -1;
+}
+
+/* Glass-on state — set by chrome.js ScrollTrigger when interlude top
+   reaches the viewport top. mix-blend-mode flips to normal so the text
+   stops inverting (it's already paper-coloured in markup, which reads
+   well over the dark glass tint). */
+.chrome.is-glass {
+  mix-blend-mode: normal;
+}
+
+.chrome.is-glass::before {
+  opacity: 1;
+}
+
+/* Reduced motion — keep the state change but drop the fade transition.
+   The visual is still useful (glass != no-glass tells the user where
+   they are), only the animation is opt-out. */
+@media (prefers-reduced-motion: reduce) {
+  .chrome::before {
+    transition: none;
+  }
 }
 
 /* Three-column grid: logo | nav | rec */
@@ -169,6 +237,11 @@
 @media (max-width: 800px) {
   .chrome {
     padding: 18px 20px;
+  }
+
+  /* Smaller glass strip to match the tighter mobile padding */
+  .chrome::before {
+    height: 64px;
   }
 
   /* Hide center links — logo and REC remain */
