@@ -1,7 +1,7 @@
 # Knoch Media — Ticket Summary
 
 > **Living document.** Updated whenever tickets are created, modified, split, or closed.  
-> Last updated: 2026-05-06 | Total tickets: 30 | Open: 5 | In progress: 0 | In review: 1 | Done: 20 | Deferred: 4 | Phases 1–3 shipped to main 🚀
+> Last updated: 2026-05-07 | Total tickets: 30 | Open: 5 | In progress: 0 | In review: 0 | Done: 21 | Deferred: 4 | Phases 1–4 shipped to main 🚀
 
 ---
 
@@ -83,7 +83,7 @@ Build in this order: About → Portfolio page → Project detail → Contact →
 
 | ID | Title | Status | Branch | Notes |
 |----|-------|--------|--------|-------|
-| [KNOCH-017](tickets/KNOCH-017.md) | YouTube Integration — Lightbox + Showreel | `🔵` | `feature/KNOCH-017-youtube-integration` | Lazy iframe inject on click |
+| [KNOCH-017](tickets/KNOCH-017.md) | YouTube Integration — Lightbox + Showreel | `🚀` | `feature/KNOCH-017-youtube-integration` | Shipped — Phase 4 squash to main (PR #24 + chrome glass polish bundled; hero PLAY REEL CTA descoped) |
 | [KNOCH-018](tickets/KNOCH-018.md) | Instagram Feed Integration | `⏸` | — | Deferred — footer icon link covers it |
 
 ---
@@ -173,6 +173,30 @@ CMS layer (cuts across phases — wire each section after it is built):
 ## Changelog
 
 All modifications to this document and ticket files are logged here. Tester agent and code review feedback should be recorded as entries.
+
+---
+
+### 2026-05-07 — Phase 4 SHIPPED — squash-merged to main 🚀
+
+**Action:** test → main squash merge (commit `21bf31c`)
+**Tickets affected:** KNOCH-017 (and the bundled chrome liquid-glass polish on KNOCH-003)
+**Reason:** Phase 4 closed at 1/1 non-deferred. KNOCH-017 (YouTube integration — lightbox `&color=white`, reel cards routing through the lightbox via the new shared `youtube-id.js` parser) landed on test via PR #24 and passed live review on dev. KNOCH-018 (Instagram feed) was deferred earlier in favour of the footer icon link to @knochmedia_, so this single ticket completes Phase 4. The hero PLAY REEL CTA portion of the AC was built and removed in-PR after Enoch's screenshot review — the hero composition is treated as sacred going forward (`feedback_hero_no_extra_ctas.md`). The chrome liquid-glass header polish was also bundled into this squash per Enoch's pre-merge ask — it's a KNOCH-003 follow-up rather than a separate ticket.
+**Changes:**
+- Single squash commit on main covering 12 test commits.
+- KNOCH-017 status flipped IN REVIEW → 🚀 in the ticket file and in the table above.
+- Header counts updated: In review 1→0, Done 20→21. Phase 4 shipped marker added to header line (`Phases 1–3` → `Phases 1–4`).
+- Branch lineage: main `21bf31c` ← squash of test `065c2b0` ← merge of dev (PR #24).
+- Live site (knochmedia.xyz on Vercel) will redeploy from main automatically.
+
+**What's new on main:**
+- YouTube progress bar renders white (not red) inside the lightbox modal.
+- Reel cards with `linkType: 'youtube'` (Sanity-driven) open in the in-place lightbox instead of a new tab.
+- Shared `src/js/youtube-id.js` parser handles youtu.be / watch?v= / embed / shorts URL shapes.
+- Liquid-glass navbar — frosted backdrop fades in once the homepage interlude reaches the top of the viewport; permanent on secondary pages (about / portfolio / project / contact). `mix-blend-mode: difference` returns over the homepage hero so cinematography keeps its inversion treatment.
+
+**Next phase:** Phase 5 polish trio before launch — KNOCH-019 (perf, Lighthouse ≥85 mobile target) → KNOCH-020 (mobile / responsive) → KNOCH-021 (a11y, WCAG 2.1 AA).
+
+**Requested by:** Enoch
 
 ---
 
