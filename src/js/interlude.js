@@ -54,8 +54,20 @@ export function initInterlude() {
     gsap.set(stripTrack, { x: -300 }); /* reduced-motion / mobile: static midpoint */
   }
 
-  if (prefersReduced) {
-    lines.forEach(l => { l.style.transform = 'translateY(0)'; l.style.filter = 'none'; });
+  /* Mobile + reduced-motion both bail out of the scroll-tied line
+     reveal. Mobile flagged on review: the y/blur/letter-spacing
+     write-on read as too much on a phone-sized canvas, and (worse) if
+     ScrollTrigger.refresh hadn't fired by the time the user scrolled
+     past the section, the lines stayed stuck at y: 115% / blur(14px)
+     so the manifesto was invisible. The static path renders the
+     final state immediately - text reads as plain editorial without
+     any cinematic write-on. */
+  if (prefersReduced || isMobile) {
+    lines.forEach(l => {
+      l.style.transform = 'translateY(0)';
+      l.style.filter = 'none';
+      l.style.letterSpacing = '-0.015em';
+    });
     if (accentLine) accentLine.style.transform = 'scaleX(1)';
     section.classList.add('is-visible');
     return;
