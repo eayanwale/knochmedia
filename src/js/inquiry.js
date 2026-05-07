@@ -146,7 +146,7 @@ export function initInquiry() {
     </div>
 
     <div class="inquiry-sidebar-block inquiry-sidebar-contact">
-      <p>Email \u00b7 <strong>enoch@knoch.media</strong></p>
+      <p>Email \u00b7 <strong>hello@knoch.media</strong></p>
     </div>
   `;
   wrapper.appendChild(sidebar);

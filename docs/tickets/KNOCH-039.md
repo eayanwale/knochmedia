@@ -10,11 +10,11 @@ Wire `/contact.html` and the homepage inquiry CTA to Formspree with a honeypot
 ## Description
 The contact form (KNOCH-014) ships with a placeholder submit handler — pressing the button on the third step does nothing useful. **This is a launch-blocker**: the entire qualified-inquiry flow exists to deliver inquiries to the studio's inbox, and currently it doesn't.
 
-Original scope had a Vercel serverless function + Resend + Cloudflare Turnstile. Re-scoped to Formspree per Enoch's preference for the lightest possible setup — submissions land at `enoch@knoch.media` with zero infrastructure on our side. Honeypot stays as the spam guard; Turnstile dropped since Formspree's free tier already filters obvious spam and a honeypot stops 80% of bots on its own.
+Original scope had a Vercel serverless function + Resend + Cloudflare Turnstile. Re-scoped to Formspree per Enoch's preference for the lightest possible setup — submissions land at `hello@knoch.media` (the public-facing studio address; routes to the same Zoho inbox as `enoch@`) with zero infrastructure on our side. Honeypot stays as the spam guard; Turnstile dropped since Formspree's free tier already filters obvious spam and a honeypot stops 80% of bots on its own.
 
 ## Operator setup (Enoch — before implementation)
 - [ ] Sign up at [formspree.io](https://formspree.io) (free tier = 50 submissions/month, plenty for this site)
-- [ ] Create a new form, configure the destination email as `enoch@knoch.media` (use the temporary inbox until DNS resolves the new domain)
+- [ ] Create a new form, configure the destination email as `hello@knoch.media` (the public-facing studio address — Zoho aliases route both `hello@` and `enoch@` to the same inbox)
 - [ ] In the form settings: enable autoresponder, set the autoresponder copy in-voice, set the Reply-To header to use the visitor's `email` field so a studio reply hits them directly
 - [ ] Note the form's unique ID — looks like `xrgjabcd` — and hand it to me. The endpoint becomes `https://formspree.io/f/xrgjabcd`.
 
@@ -37,7 +37,7 @@ Original scope had a Vercel serverless function + Resend + Cloudflare Turnstile.
 - [ ] `contact-page.js` and `inquiry.js` already have a placeholder submit handler. Replace with a real `fetch(formspreeUrl, { method: 'POST', body: new FormData(form), headers: { 'Accept': 'application/json' } })`.
 - [ ] Submit button shows loading state during POST (disabled + "SENDING…" label).
 - [ ] On `{ ok: true }` from Formspree: advance to the existing step-3 confirmation panel with the summary list (already built in `contact-page.js`).
-- [ ] On non-OK response: in-form error near the submit button — "Couldn't deliver right now. Try again, or email enoch@knoch.media directly." Preserves all entered data.
+- [ ] On non-OK response: in-form error near the submit button — "Couldn't deliver right now. Try again, or email hello@knoch.media directly." Preserves all entered data.
 - [ ] Network error / timeout (10 s) → same fallback message.
 
 **Edge cases:**
