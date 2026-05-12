@@ -29,6 +29,11 @@ The focus is on:
 - GSAP  
 - ScrollTrigger  
 
+## Development
+This site is built and managed using an agentic AI development system.
+See [agentic-dev-system](https://github.com/eayanwale/agentic-dev-system) for 
+the Claude Code agents, commands, and project documentation.
+
 ## Features
 
 - Scroll-driven narrative structure  
