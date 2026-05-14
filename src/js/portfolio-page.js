@@ -7,7 +7,7 @@
   State model:
     activeFilter   — 'all' | 'wedding' | 'brand' | 'sport' | 'portrait'
     visibleCount   — how many of the matching cards are currently shown
-    PAGE_SIZE      — 8 cards revealed per "Load more" click
+    PAGE_SIZE      — 9 cards revealed per "Load more" click
 
   Match logic:
     - "all"  → every card matches
@@ -47,7 +47,7 @@
 import { gsap } from 'gsap';
 import { bindTileRouter } from './tile-router.js';
 
-const PAGE_SIZE = 8;
+const PAGE_SIZE = 9;
 
 /* Map of URL-hash slugs → data-category values. Keeping them separate
    lets the URL read more naturally (#weddings, plural) than the data
