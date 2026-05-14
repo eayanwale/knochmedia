@@ -1,16 +1,3 @@
 {
-  "cleanUrls": true,
-  "redirects": [
-    { "source": "/",                "destination": "/coming-soon", "permanent": false },
-    { "source": "/index",           "destination": "/coming-soon", "permanent": false },
-    { "source": "/index.html",      "destination": "/coming-soon", "permanent": false },
-    { "source": "/about",           "destination": "/coming-soon", "permanent": false },
-    { "source": "/about.html",      "destination": "/coming-soon", "permanent": false },
-    { "source": "/portfolio",       "destination": "/coming-soon", "permanent": false },
-    { "source": "/portfolio.html",  "destination": "/coming-soon", "permanent": false },
-    { "source": "/contact",         "destination": "/coming-soon", "permanent": false },
-    { "source": "/contact.html",    "destination": "/coming-soon", "permanent": false },
-    { "source": "/project.html",    "destination": "/coming-soon", "permanent": false },
-    { "source": "/project/:slug*",  "destination": "/coming-soon", "permanent": false }
-  ]
+  "cleanUrls": true
 }

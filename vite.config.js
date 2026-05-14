@@ -56,13 +56,7 @@ export default defineConfig({
            is staged for KNOCH-039 — currently unwired since no
            serverless function emits 5xx yet. */
         notFound:  resolve(__dirname, 'src/404.html'),
-        serverErr: resolve(__dirname, 'src/500.html'),
-        /* Pre-launch holding page — visitors hitting any route on
-           knoch.media get bounced here via vercel.json redirects
-           until the new site is launch-ready. Standalone HTML, no
-           JS deps, no /assets/ refs — ships independent of build
-           state. To launch: remove the redirects in vercel.json.  */
-        comingSoon: resolve(__dirname, 'src/coming-soon.html')
+        serverErr: resolve(__dirname, 'src/500.html')
       }
     }
   }
